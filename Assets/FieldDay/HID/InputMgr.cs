@@ -1,6 +1,8 @@
+using System;
 using System.Diagnostics;
 using BeauUtil;
 using BeauUtil.Debugger;
+using FieldDay.Debugging;
 using NativeUtils;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -289,6 +291,7 @@ namespace FieldDay.HID {
         /// </summary>
         public void ConsumeAllInputForFrame() {
             m_InputConsumed = true;
+            DebugInput.ConsumeAllForFrame();
         }
 
         #endregion // Consume
@@ -314,6 +317,30 @@ namespace FieldDay.HID {
         LMeta = KeyCode.LeftMeta,
         RightMeta = KeyCode.RightMeta,
         RMeta = KeyCode.RightMeta
+    }
+
+    [Flags]
+    public enum InputModifierKeys : uint {
+        Ctrl = 0x01,
+        Shift = 0x02,
+        Alt = 0x04,
+        Platform = 0x08,
+
+        CtrlAlt = Ctrl | Alt,
+        CtrlShift = Ctrl | Shift,
+        AltShift = Alt | Shift,
+        CtrlAltShift = Ctrl | Alt | Shift,
+
+        L1 = 0x10,
+        R1 = 0x20,
+        L2 = 0x40,
+        R2 = 0x80,
+
+        BothGripButtons = L1 | R1,
+        BothTriggerButtons = L2 | R2,
+
+        BothShoulderButtons = L1 | R1,
+        BothShoulderTriggers = L2 | R2,
     }
 
     public enum MouseButton {

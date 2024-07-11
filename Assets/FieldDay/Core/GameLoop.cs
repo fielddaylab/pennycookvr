@@ -2,9 +2,9 @@
 #define USE_SRP
 #endif // UNITY_2019_1_OR_NEWER
 
-#if USING_VR && !UNITY_EDITOR
+#if USING_XR && !UNITY_EDITOR
 #define SKIP_ONGUI
-#endif // USING_VR && !UNITY_EDITOR
+#endif // USING_XR && !UNITY_EDITOR
 
 #if (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
 #define DEVELOPMENT
@@ -688,6 +688,7 @@ namespace FieldDay {
 
                 SetCurrentPhase(GameLoopPhase.DebugUpdate);
                 DebugFlags.HandleFrameRollover();
+                DebugInput.Update();
                 s_PrevUpdateFrameIndex = Frame.Index;
                 Frame.UnscaledDeltaTime = Time.unscaledDeltaTime;
                 DequeueNextValues();

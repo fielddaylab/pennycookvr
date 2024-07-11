@@ -104,7 +104,7 @@ namespace FieldDay {
 
         #region Allocator
 
-        internal const int EditorHeapSize = 1024;
+        internal const int EditorHeapSize = 2048;
         internal const int RuntimeHeapSize = 256;
 
         static private bool s_AllocatorReady;

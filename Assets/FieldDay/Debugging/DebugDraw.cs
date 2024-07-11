@@ -2,9 +2,9 @@
 #define DEVELOPMENT
 #endif // (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
 
-#if USING_VR && !UNITY_EDITOR
+#if USING_XR && !UNITY_EDITOR
 #define SKIP_ONGUI
-#endif // USING_VR && !UNITY_EDITOR
+#endif // USING_XR && !UNITY_EDITOR
 
 using System;
 using BeauUtil;
@@ -26,7 +26,7 @@ namespace FieldDay.Debugging {
     /// </summary>
     [DefaultExecutionOrder(32000)]
     public sealed class DebugDraw : MonoBehaviour {
-        #if DEVELOPMENT
+#if DEVELOPMENT
 
         #region Types
 

@@ -11,6 +11,7 @@ using BeauUtil.Debugger;
 using BeauUtil.UI;
 using EasyBugReporter;
 using FieldDay.HID;
+using FieldDay.HID.XR;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Scripting;
@@ -40,6 +41,12 @@ namespace FieldDay.Debugging {
 
 #if DEVELOPMENT
 
+        private enum StepState {
+            Uninitialized,
+            Queued,
+            Executing
+        }
+
         #region Inspector
 
         [SerializeField] private Canvas m_Canvas = null;
@@ -65,6 +72,7 @@ namespace FieldDay.Debugging {
         [NonSerialized] private bool m_CursorWhenDebugMenuOpened;
         [NonSerialized] private bool m_MenuOpen;
         [NonSerialized] private bool m_MenuUIInitialized;
+        [NonSerialized] private StepState m_SingleStepState;
 
         static private DMInfo s_RootMenu;
         static private DMInfo s_QuickMenu;
@@ -85,7 +93,7 @@ namespace FieldDay.Debugging {
         }
 
         private void OnDestroy() {
-            GameLoop.OnPreUpdate.Deregister(OnPreUpdate);
+            GameLoop.OnDebugUpdate.Deregister(OnPreUpdate);
         }
 
         private void OnPreUpdate() {
@@ -107,11 +115,10 @@ namespace FieldDay.Debugging {
         #region Keyboard Shortcuts
 
         private void CheckKeyboardShortcuts() {
-            if ((Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift))
-                || (Input.GetKey(KeyCode.RightControl) && Input.GetKey(KeyCode.RightShift))) {
-                if (Input.GetKeyDown(KeyCode.F9) || Input.GetKeyDown(KeyCode.Backspace)) {
-                    BugReporter.DumpContext();
-                }
+            if (DebugInput.IsPressed(InputModifierKeys.CtrlShift, KeyCode.F9)
+                || DebugInput.IsPressed(InputModifierKeys.CtrlShift, KeyCode.Backspace)
+                || DebugInput.IsPressed(InputModifierKeys.R1 | InputModifierKeys.R2, XRHandIndex.Right, XRHandButtons.Menu)) {
+                BugReporter.DumpContext();
             }
         }
 
@@ -186,11 +193,11 @@ namespace FieldDay.Debugging {
                 } else {
                     m_DebugMenus.UpdateElements();
 
-                    if (Input.GetMouseButtonDown(1)) {
+                    if (DebugInput.IsPressed(DebugInputButtons.Cancel)) {
                         m_DebugMenus.TryPopMenu();
-                    } else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) {
+                    } else if (DebugInput.IsPressed(DebugInputButtons.DPadLeft)) {
                         m_DebugMenus.TryPreviousPage();
-                    } else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) {
+                    } else if (DebugInput.IsPressed(DebugInputButtons.DPadRight)) {
                         m_DebugMenus.TryNextPage();
                     }
                 }
@@ -303,6 +310,29 @@ namespace FieldDay.Debugging {
                 m_MinimalGroup.interactable = false;
                 SetMinimalVisible(m_VisibilityWhenDebugMenuOpened);
                 SetPaused(false);
+            }
+        }
+
+        private void QueueSingleStep() {
+            if (m_SingleStepState == StepState.Uninitialized) {
+                m_SingleStepState = StepState.Queued;
+                GameLoop.QueueEndOfFrame(AdvanceSingleStep);
+            }
+        }
+
+        private void AdvanceSingleStep() {
+            switch (m_SingleStepState) {
+                case StepState.Executing: {
+                    m_SingleStepState = StepState.Uninitialized;
+                    SetPaused(true);
+                    break;
+                }
+                case StepState.Queued: {
+                    m_SingleStepState = StepState.Executing;
+                    SetPaused(false);
+                    GameLoop.QueueEndOfFrame(AdvanceSingleStep);
+                    break;
+                }
             }
         }
 

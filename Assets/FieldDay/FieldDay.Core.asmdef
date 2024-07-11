@@ -16,7 +16,9 @@
         "UWTStream",
         "EasyAssetStreaming",
         "NativeInput",
-        "OGD.Log"
+        "OGD.Log",
+        "Unity.XR.Oculus",
+        "Unity.XR.OpenXR"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -32,14 +34,19 @@
             "define": "HAS_URP"
         },
         {
-            "name": "com.unity.modules.vr",
+            "name": "com.unity.xr.management",
             "expression": "0.0.1",
-            "define": "USING_VR"
+            "define": "USING_XR"
         },
         {
             "name": "com.fieldday.opengamedata-unity",
             "expression": "1.0.6",
             "define": "USING_OGDLOG"
+        },
+        {
+            "name": "com.unity.xr.oculus",
+            "expression": "0.0.1",
+            "define": "USING_OCULUSXR"
         }
     ],
     "noEngineReferences": false
