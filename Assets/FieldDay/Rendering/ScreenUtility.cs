@@ -46,7 +46,7 @@ namespace FieldDay.Rendering {
             return new Resolution() {
                 width = Screen.width,
                 height = Screen.height,
-                refreshRate = 60
+                refreshRateRatio = new RefreshRate() { numerator = 60, denominator = 1 }
             };
 #else
             return Screen.currentResolution;

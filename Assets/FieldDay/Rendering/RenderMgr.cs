@@ -44,10 +44,12 @@ namespace FieldDay.Rendering {
 
 #if USING_URP
                 var data = camera.GetUniversalAdditionalCameraData();
-                data.renderPostProcessing = PostProcessing;
+                if (data) {
+                    data.renderPostProcessing = PostProcessing;
 
-                data.antialiasing = AA;
-                data.antialiasingQuality = AAQuality;
+                    data.antialiasing = AA;
+                    data.antialiasingQuality = AAQuality;
+                }
 #endif // USING_URP
             }
 
@@ -60,10 +62,12 @@ namespace FieldDay.Rendering {
 
 #if USING_URP
                 var data = camera.GetUniversalAdditionalCameraData();
-                PostProcessing = data.renderPostProcessing;
+                if (data) {
+                    PostProcessing = data.renderPostProcessing;
 
-                AA = data.antialiasing;
-                AAQuality = data.antialiasingQuality;
+                    AA = data.antialiasing;
+                    AAQuality = data.antialiasingQuality;
+                }
 #endif // USING_URP
             }
         }
@@ -337,12 +341,14 @@ namespace FieldDay.Rendering {
             }
 #if USING_URP
             var data = m_FallbackCamera.GetUniversalAdditionalCameraData();
-            if (uiCam != null) {
-                if (!data.cameraStack.Contains(uiCam)) {
-                    data.cameraStack.Add(uiCam);
+            if (data) {
+                if (uiCam != null) {
+                    if (!data.cameraStack.Contains(uiCam)) {
+                        data.cameraStack.Add(uiCam);
+                    }
+                } else {
+                    data.cameraStack.Clear();
                 }
-            } else {
-                data.cameraStack.Clear();
             }
 #endif // USING_URP
         }

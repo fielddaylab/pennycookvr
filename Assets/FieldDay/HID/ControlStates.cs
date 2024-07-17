@@ -15,13 +15,14 @@ namespace FieldDay.HID {
 
         #region Modifiers
 
-        public void Update(uint current) {
+        public bool Update(uint current) {
             Prev = Current;
             Current = current;
 
             uint changes = Current ^ Prev;
             Pressed = changes & Current;
             Released = changes & (~Current);
+            return changes != 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -32,6 +33,28 @@ namespace FieldDay.HID {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ClearChanges() {
             Pressed = Released = 0;
+        }
+
+        /// <summary>
+        /// Consumes a press.
+        /// Returns if it was pressed.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool ConsumePress(uint mask) {
+            bool had = (Pressed & mask) != 0;
+            Pressed &= ~mask;
+            return had;
+        }
+
+        /// <summary>
+        /// Consumes a release.
+        /// Returns if it was released.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool ConsumeRelease(uint mask) {
+            bool had = (Released & mask) != 0;
+            Released &= ~mask;
+            return had;
         }
 
         #endregion // Modifiers
@@ -73,13 +96,14 @@ namespace FieldDay.HID {
 
         #region Modifiers
 
-        public void Update(TEnum current) {
+        public bool Update(TEnum current) {
             Prev = Current;
             Current = current;
 
             uint changes = Enums.ToUInt(Current) ^ Enums.ToUInt(Prev);
             Pressed = Enums.ToEnum<TEnum>(changes & Enums.ToUInt(Current));
             Released = Enums.ToEnum<TEnum>(changes & ~Enums.ToUInt(Current));
+            return changes != 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -90,6 +114,32 @@ namespace FieldDay.HID {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ClearChanges() {
             Pressed = Released = default(TEnum);
+        }
+
+        /// <summary>
+        /// Consumes a press.
+        /// Returns if it was pressed.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool ConsumePress(TEnum mask) {
+            uint pressedInt = Enums.ToUInt(Pressed);
+            uint maskInt = Enums.ToUInt(mask);
+            bool had = (pressedInt & maskInt) != 0;
+            Pressed = Enums.ToEnum<TEnum>(pressedInt & ~maskInt);
+            return had;
+        }
+
+        /// <summary>
+        /// Consumes a release.
+        /// Returns if it was released.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool ConsumeRelease(TEnum mask) {
+            uint releasedInt = Enums.ToUInt(Released);
+            uint maskInt = Enums.ToUInt(mask);
+            bool had = (releasedInt & maskInt) != 0;
+            Released = Enums.ToEnum<TEnum>(releasedInt & ~maskInt);
+            return had;
         }
 
         #endregion // Modifiers

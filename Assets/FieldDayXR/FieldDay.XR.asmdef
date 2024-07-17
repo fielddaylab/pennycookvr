@@ -1,0 +1,49 @@
+{
+    "name": "FieldDay.XR",
+    "rootNamespace": "",
+    "references": [
+        "BeauUtil",
+        "Unity.TextMeshPro",
+        "EasyBugReporter",
+        "BeauRoutine",
+        "BeauPools",
+        "BeauData",
+        "BeauUtil.Parse",
+        "BeauRoutine-Extensions",
+        "BeauRoutine-Spline",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "ScriptableBake",
+        "UWTStream",
+        "EasyAssetStreaming",
+        "NativeInput",
+        "OGD.Log",
+        "Unity.XR.Oculus",
+        "Unity.XR.OpenXR",
+        "FieldDay.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "0.0.1",
+            "define": "HAS_URP"
+        },
+        {
+            "name": "com.fieldday.opengamedata-unity",
+            "expression": "1.0.6",
+            "define": "USING_OGDLOG"
+        },
+        {
+            "name": "com.unity.xr.oculus",
+            "expression": "0.0.1",
+            "define": "USING_OCULUSXR"
+        }
+    ],
+    "noEngineReferences": false
+}

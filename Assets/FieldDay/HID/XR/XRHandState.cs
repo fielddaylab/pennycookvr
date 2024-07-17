@@ -1,9 +1,11 @@
+using System;
 using UnityEngine;
 
 namespace FieldDay.HID.XR {
     /// <summary>
     /// XR hand button mask
     /// </summary>
+    [Flags]
     public enum XRHandButtons : uint {
         None = 0,
 
@@ -53,6 +55,7 @@ namespace FieldDay.HID.XR {
     /// <summary>
     /// Deadzones for XR hand axis inputs.
     /// </summary>
+    [Serializable]
     public struct XRHandAxisDeadzones {
         public float Primary;
         public float PrimaryDpad;
@@ -75,11 +78,13 @@ namespace FieldDay.HID.XR {
     public enum XRHandIndex {
         Left = 0,
         Right = 1,
+        Any = 2
     }
 
     /// <summary>
     /// XR hand axis mask.
     /// </summary>
+    [Flags]
     public enum XRHandAxes : uint {
         PrimaryStick = 0x01,
         SecondaryStick = 0x02,

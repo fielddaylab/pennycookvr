@@ -89,7 +89,7 @@ namespace FieldDay {
 
             if ((toRemove & GameLoopPhaseMask.LateFixedUpdate) != 0) {
                 buckets[GameLoopPhase.LateFixedUpdate].FastRemove(data);
-            } else if ((toAdd & GameLoopPhaseMask.FixedUpdate) != 0) {
+            } else if ((toAdd & GameLoopPhaseMask.LateFixedUpdate) != 0) {
                 buckets[GameLoopPhase.LateFixedUpdate].PushBack(data);
             }
 

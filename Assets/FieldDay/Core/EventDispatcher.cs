@@ -437,14 +437,16 @@ namespace FieldDay {
     /// Event arguments struct. Represents unmanaged data, boxed structs, and object references.
     /// </summary>
     public struct EvtArgs {
-        private const int MaxUnmanagedSize = (int) (64 - 4 - 8); // 64 bytes, StringHash32, object reference
+        // would be great to have a queued event data fit entirely on a cache line
+        // 64 bytes total, minus the event id and object reference (assume 64bit pointer)
+        private const int MaxUnmanagedSize = (int) (64 - 4 - 8);
 
         private struct UnmanagedData {
             public unsafe fixed ulong Data[MaxUnmanagedSize / 8];
         }
 
-        private UnmanagedData m_Unmanaged;
         private object m_Instance;
+        private UnmanagedData m_Unmanaged;
 
         #region Accessors
 

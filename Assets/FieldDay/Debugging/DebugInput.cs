@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using FieldDay.HID;
 using UnityEngine;
+using FieldDay.HID.XR;
 
 #if USING_XR && !UNITY_WEBGL
-using FieldDay.HID.XR;
 using UnityEngine.XR;
 #endif // USING_XR && !UNITY_WEBGL
 
