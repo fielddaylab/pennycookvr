@@ -19,6 +19,7 @@ namespace FieldDay.Physics {
             interpolator.transform.GetPositionAndRotation(out Vector3 pos, out Quaternion rot);
             interpolator.Target.position = pos;
             interpolator.Target.rotation = rot;
+            interpolator.Target.transform.SetPositionAndRotation(pos, rot);
             interpolator.Target.velocity = default;
             interpolator.Target.angularVelocity = default;
         }

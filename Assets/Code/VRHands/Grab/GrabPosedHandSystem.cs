@@ -16,8 +16,8 @@ namespace FieldDay.VRHands {
             }
 
             if (isPosed) {
-                Pose pose = GrabUtility.ResolveSnapNodePose(component.Grabber.HeldObject, component.Grabber.HeldObjectSnapNodeIndex);
-                component.CachedTransform.SetPositionAndRotation(pose.position, pose.rotation);
+                Pose pose = GrabUtility.ResolveSnapNodePose(component.Grabber.HeldObject, component.Grabber.HeldObjectSnapNodeIndex, component.Grabber);
+                component.CachedTransform.SetPositionAndRotation(pose.position, pose.rotation * component.Rotation);
             }
 
             if (component.Animator) {

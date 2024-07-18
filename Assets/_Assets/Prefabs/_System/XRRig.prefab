@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1680744753290061309}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -203,6 +203,7 @@ GameObject:
   - component: {fileID: 253608567401956945}
   - component: {fileID: 1893214113130953307}
   - component: {fileID: 4293925879804897042}
+  - component: {fileID: 5633654691540329238}
   m_Layer: 0
   m_Name: XRRig
   m_TagString: Untagged
@@ -268,6 +269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveRoot: {fileID: 6237778692169586876}
   HeadRoot: {fileID: 2137271047055412891}
+  HeadLook: {fileID: 2137271047055412891}
   LeftHand: {fileID: 8533205300523023808}
   RightHand: {fileID: 4029950433204272065}
 --- !u!114 &4293925879804897042
@@ -283,6 +285,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InitialCapacity: 2
+--- !u!114 &5633654691540329238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7112237354622681849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e79aff3d3b759b24ba7c6c2123ee57e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4273779476689860011
 PrefabInstance:
   m_ObjectHideFlags: 0

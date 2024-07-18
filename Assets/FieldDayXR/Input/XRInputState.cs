@@ -57,5 +57,6 @@ namespace FieldDay.XR {
 
     static public class XRInputUtility {
         static public readonly CastableEvent<bool> OnUserPresenceUpdated = new CastableEvent<bool>(4);
+        static public readonly CastableEvent<XRSourceMask> OnAvailableNodesUpdated = new CastableEvent<XRSourceMask>(4);
     }
 }

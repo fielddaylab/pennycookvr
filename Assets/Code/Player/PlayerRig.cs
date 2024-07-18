@@ -1,3 +1,4 @@
+using System;
 using FieldDay.Physics;
 using FieldDay.SharedState;
 using FieldDay.VRHands;
@@ -7,6 +8,7 @@ namespace Pennycook {
     public class PlayerRig : SharedStateComponent {
         public Transform MoveRoot;
         public Transform HeadRoot;
+        public Transform HeadLook;
 
         public PlayerHandRig LeftHand;
         public PlayerHandRig RightHand;

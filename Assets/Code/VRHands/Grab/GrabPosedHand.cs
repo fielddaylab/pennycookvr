@@ -11,6 +11,9 @@ namespace FieldDay.VRHands {
         [Required] public Grabber Grabber;
         public Animator Animator;
 
+        [Header("Offsets")]
+        public Quaternion Rotation = Quaternion.identity;
+
         #endregion // Inspector
 
         [NonSerialized] public Transform CachedTransform;

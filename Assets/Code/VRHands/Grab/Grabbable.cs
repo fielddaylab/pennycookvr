@@ -20,21 +20,14 @@ namespace FieldDay.VRHands {
         public bool MustGrabAtSnap = false;
         public GrabbablePoseAnim GrabberAnim;
 
-        [HideInInspector] public GrabbableSnapNodeData[] SnapNodes;
-        [HideInInspector] public OffsetLengthU16 BothSnapNodeRange;
-        [HideInInspector] public OffsetLengthU16 LeftSnapNodeRange;
-        [HideInInspector] public OffsetLengthU16 RightSnapNodeRange;
-        [HideInInspector] public OffsetLengthU16 DynamicBothSnapNodeRange;
-        [HideInInspector] public OffsetLengthU16 DynamicLeftSnapNodeRange;
-        [HideInInspector] public OffsetLengthU16 DynamicRightSnapNodeRange;
-
-        #region Events
-
-        public readonly CastableEvent<Grabber> OnGrabbed = new CastableEvent<Grabber>();
-        public readonly CastableEvent<Grabber> OnGrabUpdate = new CastableEvent<Grabber>();
-        public readonly CastableEvent<Grabber> OnReleased = new CastableEvent<Grabber>();
-
-        #endregion // Events
+        [Header("Snap Node Data -- DO NOT EDIT")]
+        public GrabbableSnapNodeData[] SnapNodes;
+        public OffsetLengthU16 BothSnapNodeRange;
+        public OffsetLengthU16 LeftSnapNodeRange;
+        public OffsetLengthU16 RightSnapNodeRange;
+        public OffsetLengthU16 DynamicBothSnapNodeRange;
+        public OffsetLengthU16 DynamicLeftSnapNodeRange;
+        public OffsetLengthU16 DynamicRightSnapNodeRange;
 
         #endregion // Inspector
 
@@ -47,6 +40,14 @@ namespace FieldDay.VRHands {
 
         [NonSerialized] public BitSet32 DisabledSnapNodes;
         [NonSerialized] public BitSet32 UsedSnapNodes;
+
+        #region Events
+
+        public readonly CastableEvent<Grabber> OnGrabbed = new CastableEvent<Grabber>();
+        public readonly CastableEvent<Grabber> OnGrabUpdate = new CastableEvent<Grabber>();
+        public readonly CastableEvent<Grabber> OnReleased = new CastableEvent<Grabber>();
+
+        #endregion // Events
 
         private void Awake() {
             this.CacheComponent(ref CachedTransform);
@@ -98,8 +99,11 @@ namespace FieldDay.VRHands {
                     Pose nodePose;
                     node.transform.GetPositionAndRotation(out nodePose.position, out nodePose.rotation);
 
+                    Vector3 rotForward = Geom.Forward(nodePose.rotation);
+                    Vector3 rotUp = Geom.Up(nodePose.rotation);
+
                     nodePose.position = transform.InverseTransformPoint(nodePose.position);
-                    nodePose.rotation = Quaternion.Inverse(transform.rotation) * nodePose.rotation;
+                    nodePose.rotation = Quaternion.LookRotation(transform.InverseTransformDirection(rotForward), transform.InverseTransformDirection(rotUp));
 
                     data.RelativePose = nodePose;
                     staticLocations.Add(data);
@@ -163,7 +167,7 @@ namespace FieldDay.VRHands {
     [Serializable]
     public struct GrabbableSnapNodeData {
         public Pose RelativePose;
-        public GrabbableSnapFlags Flags;
+        [AutoEnum] public GrabbableSnapFlags Flags;
         public Transform DynamicPose;
         public StringHash32 Name;
     }

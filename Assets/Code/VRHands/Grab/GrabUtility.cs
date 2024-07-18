@@ -21,15 +21,17 @@ namespace FieldDay.VRHands {
             int closestIdx = -1;
             float closestDistSq = float.MaxValue;
 
-            ProcessClosestSnapNodesStatic(grabbable, worldPos, worldRot, grabbable.BothSnapNodeRange, ref closestIdx, ref closestDistSq);
-            ProcessClosestSnapNodesDynamic(grabbable, worldPos, worldRot, grabbable.DynamicBothSnapNodeRange, ref closestIdx, ref closestDistSq);
+            Vector3 worldLook = Geom.Forward(worldRot);
+
+            ProcessClosestSnapNodesStatic(grabbable, worldPos, worldLook, grabbable.BothSnapNodeRange, ref closestIdx, ref closestDistSq);
+            ProcessClosestSnapNodesDynamic(grabbable, worldPos, worldLook, grabbable.DynamicBothSnapNodeRange, ref closestIdx, ref closestDistSq);
 
             if (handType == XRHandIndex.Left) {
-                ProcessClosestSnapNodesStatic(grabbable, worldPos, worldRot, grabbable.LeftSnapNodeRange, ref closestIdx, ref closestDistSq);
-                ProcessClosestSnapNodesDynamic(grabbable, worldPos, worldRot, grabbable.DynamicLeftSnapNodeRange, ref closestIdx, ref closestDistSq);
+                ProcessClosestSnapNodesStatic(grabbable, worldPos, worldLook, grabbable.LeftSnapNodeRange, ref closestIdx, ref closestDistSq);
+                ProcessClosestSnapNodesDynamic(grabbable, worldPos, worldLook, grabbable.DynamicLeftSnapNodeRange, ref closestIdx, ref closestDistSq);
             } else if (handType == XRHandIndex.Right) {
-                ProcessClosestSnapNodesStatic(grabbable, worldPos, worldRot, grabbable.RightSnapNodeRange, ref closestIdx, ref closestDistSq);
-                ProcessClosestSnapNodesDynamic(grabbable, worldPos, worldRot, grabbable.DynamicRightSnapNodeRange, ref closestIdx, ref closestDistSq);
+                ProcessClosestSnapNodesStatic(grabbable, worldPos, worldLook, grabbable.RightSnapNodeRange, ref closestIdx, ref closestDistSq);
+                ProcessClosestSnapNodesDynamic(grabbable, worldPos, worldLook, grabbable.DynamicRightSnapNodeRange, ref closestIdx, ref closestDistSq);
             }
 
             if (closestIdx >= 0) {
@@ -43,7 +45,7 @@ namespace FieldDay.VRHands {
 
         [Il2CppSetOption(Option.NullChecks, false)]
         [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
-        static private void ProcessClosestSnapNodesStatic(Grabbable grabbable, Vector3 worldPos, Quaternion worldRot, OffsetLengthU16 range, ref int closestIdx, ref float closestDistSq) {
+        static private void ProcessClosestSnapNodesStatic(Grabbable grabbable, Vector3 worldPos, Vector3 worldForward, OffsetLengthU16 range, ref int closestIdx, ref float closestDistSq) {
             if (range.Length <= 0) {
                 return;
             }
@@ -59,7 +61,7 @@ namespace FieldDay.VRHands {
                 Assert.True((node.Flags & GrabbableSnapFlags.IsDynamic) == 0);
                 Vector3 transformedPos = grabbable.CachedTransform.TransformPoint(node.RelativePose.position);
                 Quaternion transformedRot = grabbable.CachedTransform.rotation * node.RelativePose.rotation;
-                float align = Quaternion.Dot(worldRot, transformedRot);
+                float align = Vector3.Dot(worldForward, Geom.Forward(transformedRot));
 
                 if (align >= GrabConfig.MinAlignmentForSnap) {
                     float sqDist = Vector3.SqrMagnitude(transformedPos - worldPos);
@@ -73,7 +75,7 @@ namespace FieldDay.VRHands {
 
         [Il2CppSetOption(Option.NullChecks, false)]
         [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
-        static private void ProcessClosestSnapNodesDynamic(Grabbable grabbable, Vector3 worldPos, Quaternion worldRot, OffsetLengthU16 range, ref int closestIdx, ref float closestDistSq) {
+        static private void ProcessClosestSnapNodesDynamic(Grabbable grabbable, Vector3 worldPos, Vector3 worldForward, OffsetLengthU16 range, ref int closestIdx, ref float closestDistSq) {
             if (range.Length <= 0) {
                 return;
             }
@@ -88,7 +90,7 @@ namespace FieldDay.VRHands {
                 ref GrabbableSnapNodeData node = ref data[i];
                 Assert.True((node.Flags & GrabbableSnapFlags.IsDynamic) != 0);
                 node.DynamicPose.GetPositionAndRotation(out Vector3 transformedPos, out Quaternion transformedRot);
-                float align = Quaternion.Dot(worldRot, transformedRot);
+                float align = Vector3.Dot(worldForward, Geom.Forward(transformedRot));
 
                 if (align >= GrabConfig.MinAlignmentForSnap) {
                     float sqDist = Vector3.SqrMagnitude(transformedPos - worldPos);
@@ -103,7 +105,7 @@ namespace FieldDay.VRHands {
         /// <summary>
         /// Resolves the pose for a snapping node.
         /// </summary>
-        static public Pose ResolveSnapNodePose(Grabbable grabbable, int nodeIndex) {
+        static public Pose ResolveSnapNodePose(Grabbable grabbable, int nodeIndex, Grabber grabberReference) {
             Assert.True(nodeIndex >= 0 && nodeIndex < grabbable.SnapNodes.Length);
             Pose p;
             var node = grabbable.SnapNodes[nodeIndex];
@@ -113,6 +115,13 @@ namespace FieldDay.VRHands {
                 p.position = grabbable.CachedTransform.TransformPoint(node.RelativePose.position);
                 p.rotation = grabbable.CachedTransform.rotation * node.RelativePose.rotation;
             }
+
+            if (!ReferenceEquals(grabberReference.CachedTransform, grabberReference.GripCenter)) {
+                grabberReference.GripCenter.GetLocalPositionAndRotation(out Vector3 localGripPos, out Quaternion localGripRot);
+                p.position -= grabberReference.CachedTransform.TransformVector(localGripPos);
+                p.rotation = p.rotation * Quaternion.Inverse(localGripRot);
+            }
+
             return p;
         }
 
@@ -149,20 +158,19 @@ namespace FieldDay.VRHands {
             // snap grabber to snap node
 
             if (snapIndex >= 0) {
-                Pose p = ResolveSnapNodePose(grabbable, snapIndex);
-                if (grabber.CachedTransform != grabber.GripCenter) {
-                    grabber.GripCenter.GetLocalPositionAndRotation(out Vector3 localGripPos, out Quaternion localGripRot);
-                    p.rotation = p.rotation * localGripRot;
-                    // inverse transform to account for grip center offsets
-                }
+                Pose p = ResolveSnapNodePose(grabbable, snapIndex, grabber);
+                grabber.CachedRB.position = p.position;
+                grabber.CachedRB.rotation = p.rotation;
                 grabber.CachedTransform.SetPositionAndRotation(p.position, p.rotation);
                 grabbable.UsedSnapNodes.Set(snapIndex);
             }
 
             // configure joint
-
             if (!grabber.Joint) {
                 grabber.Joint = grabber.gameObject.AddComponent<FixedJoint>();
+                grabber.Joint.enableCollision = false;
+                grabber.Joint.enablePreprocessing = false;
+                grabber.Joint.autoConfigureConnectedAnchor = true;
             }
 
             grabber.Joint.connectedBody = grabbable.CachedRB;

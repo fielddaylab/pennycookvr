@@ -33,8 +33,10 @@ namespace FieldDay.XR {
             for(int i = 0, len = m_NodeStateWorkList.Count; i < len; i++) {
                 XRNodeState state = m_NodeStateWorkList[i];
 
-                if (state.TryGetPose(out Pose pose)) {
-                    sourcesAvailable |= (XRSourceMask) (1 << (int) state.nodeType);
+                XRSourceMask mask = (XRSourceMask) (1 << (int) state.nodeType);
+
+                if ((mask & XRSourceMask.Everything) != 0 && state.TryGetPose(out Pose pose)) {
+                    sourcesAvailable |= mask;
 
                     switch (state.nodeType) {
                         case XRNode.LeftEye: {
@@ -97,6 +99,7 @@ namespace FieldDay.XR {
             if (inputState.AvailableSources != sourcesAvailable) {
                 inputState.AvailableSources = sourcesAvailable;
                 Log.Msg("[XRInputUpdateSystem] Available sources updated to {0}", sourcesAvailable);
+                XRInputUtility.OnAvailableNodesUpdated.Invoke(sourcesAvailable);
             }
         }
 

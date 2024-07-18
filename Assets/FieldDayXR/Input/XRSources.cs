@@ -1,3 +1,5 @@
+using System;
+using BeauUtil;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -5,6 +7,7 @@ namespace FieldDay.XR {
     /// <summary>
     /// XR data source mask.
     /// </summary>
+    [Flags]
     public enum XRSourceMask : uint {
         None = 0,
 
@@ -13,6 +16,8 @@ namespace FieldDay.XR {
         CenterEye = 1 << XRNode.CenterEye,
         Head = 1 << XRNode.Head,
         LeftHand = 1 << XRNode.LeftHand,
-        RightHand = 1 << XRNode.RightHand
+        RightHand = 1 << XRNode.RightHand,
+
+        [Hidden] Everything = LeftEye | RightEye | CenterEye | Head | LeftHand | RightHand
     }
 }

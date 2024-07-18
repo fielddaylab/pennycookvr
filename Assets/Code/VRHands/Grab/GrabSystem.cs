@@ -35,8 +35,11 @@ namespace FieldDay.VRHands {
 
         static private void UpdateHolding(Grabber grabber) {
             // if object is deleted, deactivated, or otherwise set to not be grabbable
-            if (!grabber.HeldObject || !grabber.HeldObject.GrabEnabled || !grabber.HeldObject.isActiveAndEnabled || (grabber.HeldObjectSnapNodeIndex >= 0 && grabber.HeldObject.DisabledSnapNodes[grabber.HeldObjectSnapNodeIndex])) {
+            if (!grabber.HeldObject || !grabber.HeldObject.GrabEnabled || !grabber.HeldObject.isActiveAndEnabled || (grabber.HeldObjectSnapNodeIndex >= 0 && grabber.HeldObject.DisabledSnapNodes[grabber.HeldObjectSnapNodeIndex]) || (grabber.Joint && !grabber.Joint.connectedBody)) {
                 GrabUtility.DropCurrent(grabber, false);
+            } else {
+                DebugDraw.AddPoint(grabber.CachedTransform.TransformPoint(grabber.Joint.anchor), 0.05f, Color.yellow);
+                DebugDraw.AddPoint(grabber.Joint.connectedBody.transform.TransformPoint(grabber.Joint.connectedAnchor), 0.05f, Color.green);
             }
         }
 
