@@ -640,7 +640,7 @@ namespace FieldDay.Scenes {
                 QueueMainLoadInternal(SceneManager.GetActiveScene().path, false, true);
             }
 
-            // need to ensure we still have a scene reamining when unloading,
+            // need to ensure we still have a scene remaining when unloading,
             // even if it's just an empty dummy scene
             Scene dummyScene = SceneManager.CreateScene("__DummyScene");
         }

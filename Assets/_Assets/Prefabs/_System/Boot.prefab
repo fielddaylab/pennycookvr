@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8433995206781990439}
   - component: {fileID: 7760320193434431331}
   - component: {fileID: 3557432181508536058}
+  - component: {fileID: 8500695164362322292}
   m_Layer: 0
   m_Name: XR
   m_TagString: Untagged
@@ -46,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b47f9b2810d1ec49bb7ec3bac0bb14f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TrackedButtonMask: 129523
+  TrackedButtonMask: 129535
   TrackedAxisMask: 13
   TrackedAxisDeadzones:
     Primary: 0
@@ -81,6 +82,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InitialCapacity: 8
   WorldScale: 1.44
+--- !u!114 &8500695164362322292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1361580430691565794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b017bde58fad9b43b71452e4981b6cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 2
 --- !u!1 &3014072093385646274
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,7 +221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SingleFrameAllocBufferSize: 1024
   m_TargetFramerate: 90
-  m_DefaultPixelSprite: {fileID: 0}
+  m_DefaultPixelSprite: {fileID: 21300000, guid: 0ecf9a0372df4cf4fb588b863f7144b9, type: 3}
   m_AllowMultiTouchInput: 0
   m_MemoryConfig:
     MeshCapacity: 16

@@ -9,11 +9,11 @@ namespace Pennycook {
     public class PlayerMovementSystem : SharedStateSystemBehaviour<PlayerRig, XRInputState> {
         public override void ProcessWork(float deltaTime) {
             var eitherHandButtons = m_StateB.LeftHand.Buttons | m_StateB.RightHand.Buttons;
-            if (eitherHandButtons.IsPressed(XRHandButtons.PrimaryAxisLeft)) {
-                m_StateA.MoveRoot.Rotate(new Vector3(0, -30, 0));
+            if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisLeft)) {
+                m_StateA.MoveRoot.Rotate(new Vector3(0, -30, 0), Space.Self);
             }
-            if (eitherHandButtons.IsPressed(XRHandButtons.PrimaryAxisRight)) {
-                m_StateA.MoveRoot.Rotate(new Vector3(0, 30, 0));
+            if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisRight)) {
+                m_StateA.MoveRoot.Rotate(new Vector3(0, 30, 0), Space.Self);
             }
 
 #if UNITY_EDITOR
@@ -22,11 +22,16 @@ namespace Pennycook {
             flattenedLook.y = 0;
             flattenedLook.Normalize();
 
-            if (eitherHandButtons.IsPressed(XRHandButtons.PrimaryAxisUp)) {
-                m_StateA.MoveRoot.Translate(flattenedLook * 0.3f);
+            if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisUp)) {
+                m_StateA.MoveRoot.Translate(flattenedLook * 0.3f, Space.World);
             }
-            if (eitherHandButtons.IsPressed(XRHandButtons.PrimaryAxisDown)) {
-                m_StateA.MoveRoot.Translate(flattenedLook * -0.3f);
+            if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisDown)) {
+                m_StateA.MoveRoot.Translate(flattenedLook * -0.3f, Space.World);
+            }
+
+            if (m_StateB.LeftHand.Buttons.IsDownAll(XRHandButtons.PrimaryAxisClick | XRHandButtons.TriggerButton)
+                && m_StateB.RightHand.Buttons.IsDownAll(XRHandButtons.PrimaryAxisClick | XRHandButtons.TriggerButton)) {
+                Debug.Break();
             }
 
 #endif // UNITY_EDITOR
