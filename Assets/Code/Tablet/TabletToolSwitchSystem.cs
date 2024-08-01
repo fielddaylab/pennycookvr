@@ -24,7 +24,7 @@ namespace Pennycook.Tablet {
             if (shift != 0) {
                 int maxTools = m_StateA.Configs.Length;
                 int newIdx = (m_StateA.CurrentToolIndex + maxTools + shift) % maxTools;
-                TabletToolUtility.SetTool(m_StateA, newIdx, true);
+                TabletUtility.SetTool(m_StateA, newIdx, true);
             }
         }
     }

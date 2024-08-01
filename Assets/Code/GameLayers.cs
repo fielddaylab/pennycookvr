@@ -24,9 +24,9 @@ static public class LayerMasks {
     // Layer 7: Grabbable
     public const int Grabbable_Index = 7;
     public const int Grabbable_Mask = 128;
-    // Layer 8: Scannable
-    public const int Scannable_Index = 8;
-    public const int Scannable_Mask = 256;
+    // Layer 8: Highlightable
+    public const int Highlightable_Index = 8;
+    public const int Highlightable_Mask = 256;
     // Layer 31: OffscreenTabletInterface
     public const int OffscreenTabletInterface_Index = 31;
     public const int OffscreenTabletInterface_Mask = -2147483648;
@@ -35,6 +35,8 @@ static public class SortingLayers {
     
     // Layer Default
     public const int Default = 0;
+    // Layer ForegroundCanvas
+    public const int ForegroundCanvas = 1320863815;
 }
 static public class UnityTags {
     

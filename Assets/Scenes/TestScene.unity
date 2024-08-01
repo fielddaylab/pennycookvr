@@ -737,6 +737,8 @@ GameObject:
   - component: {fileID: 1313995512}
   - component: {fileID: 1313995511}
   - component: {fileID: 1313995514}
+  - component: {fileID: 1313995516}
+  - component: {fileID: 1313995515}
   m_Layer: 7
   m_Name: Ball (1)
   m_TagString: Untagged
@@ -841,7 +843,34 @@ MonoBehaviour:
   HighlightCollider: {fileID: 347206075}
   ShortLabel: Ball
   DetailedHeader: Ball
-  DetailedText: A spherical object. Somewhat bouncy.
+  DetailedText: A spherical object. Remarkably average.
+--- !u!114 &1313995515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313995510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5209d76f01830044b803a1bbd20b06e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Force: {x: 0, y: -40, z: 0}
+--- !u!114 &1313995516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313995510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c0bc643dcce1824198e9d5f264a45a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CanInteract: 1
+  InteractionCooldown: 0
 --- !u!1 &1386004533
 GameObject:
   m_ObjectHideFlags: 0
@@ -854,6 +883,8 @@ GameObject:
   - component: {fileID: 1386004534}
   - component: {fileID: 1386004536}
   - component: {fileID: 1386004537}
+  - component: {fileID: 1386004539}
+  - component: {fileID: 1386004538}
   m_Layer: 7
   m_Name: Ball
   m_TagString: Untagged
@@ -959,6 +990,33 @@ MonoBehaviour:
   ShortLabel: Ball
   DetailedHeader: Ball
   DetailedText: A spherical object. Somewhat bouncy.
+--- !u!114 &1386004538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386004533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5209d76f01830044b803a1bbd20b06e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Force: {x: 0, y: 40, z: 0}
+--- !u!114 &1386004539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386004533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c0bc643dcce1824198e9d5f264a45a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CanInteract: 1
+  InteractionCooldown: 0
 --- !u!1 &1470967200
 GameObject:
   m_ObjectHideFlags: 0
@@ -1311,6 +1369,14 @@ PrefabInstance:
       propertyPath: Loop
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2982448304355483050, guid: 6c11317d292faae45b59be04e75893d2, type: 3}
+      propertyPath: m_Volume
+      value: 0.227
+      objectReference: {fileID: 0}
+    - target: {fileID: 2982448304355483050, guid: 6c11317d292faae45b59be04e75893d2, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: e0aa548261aca064da42ba8a83124dcb, type: 3}
     - target: {fileID: 2982448304355483050, guid: 6c11317d292faae45b59be04e75893d2, type: 3}
       propertyPath: m_PlayOnAwake
       value: 1

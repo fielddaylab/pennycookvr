@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace FieldDay {
 
@@ -523,6 +524,10 @@ namespace FieldDay {
         }
 
         static public implicit operator EvtArgs(StringHash64 data) {
+            return Create(data);
+        }
+
+        static public implicit operator EvtArgs(RuntimeObjectHandle data) {
             return Create(data);
         }
 

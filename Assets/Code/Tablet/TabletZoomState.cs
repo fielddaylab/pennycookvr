@@ -27,7 +27,7 @@ namespace Pennycook.Tablet {
         }
     }
 
-    static public class TabletZoomUtility {
+    static public partial class TabletUtility {
         static public void AdjustZoom(TabletZoomState zoomState, int index, bool playFeedback) {
             int prevIdx = zoomState.ZoomIndex;
             if (prevIdx == index) {

@@ -10,26 +10,30 @@ namespace Pennycook.Tablet {
     [SysUpdate(GameLoopPhase.Update, 10)]
     public class TabletHighlightSystem : SharedStateSystemBehaviour<TabletHighlightState, TabletToolState, TabletControlState> {
         public override void ProcessWork(float deltaTime) {
-            if (!ReferenceEquals(m_StateA.HighlightedScannable, null)) {
-                if (!m_StateA.HighlightedScannable || !m_StateA.HighlightedScannable.isActiveAndEnabled || m_StateC.GrippedHandMask.IsEmpty) {
+			bool isGripping = !m_StateC.GrippedHandMask.IsEmpty;
+			
+            if (!ReferenceEquals(m_StateA.HighlightedObject, null)) {
+                if (!m_StateA.HighlightedObject || !m_StateA.HighlightedObject.isActiveAndEnabled || !isGripping) {
                     ClearSelection(m_StateA);
                     return;
                 }
             }
 
-            if (Frame.Interval(5) && !m_StateC.GrippedHandMask.IsEmpty) {
+            if (Frame.Interval(5) && isGripping) {
+				TabletZoomState zoomState = Find.State<TabletZoomState>();
+				
                 m_StateA.CachedLookCameraTransform.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
                 Ray r = new Ray(cameraPos, Geom.Forward(cameraRot));
-                TabletScannable scannable = TabletHighlightUtility.FindBestScannableAlongRay(r, 300);
+                TabletHighlightable scannable = TabletUtility.FindBestHighlightableAlongRay(r, 40 * zoomState.ZoomMultiplier);
 
                 if (!scannable) {
-                    if (m_StateA.HighlightedScannable != null) {
+                    if (m_StateA.HighlightedObject != null) {
                         ClearSelection(m_StateA);
                     }
                 } else {
-                    Rect viewportRect = TabletHighlightUtility.CalculateViewportAlignedBoundingBox(scannable.HighlightCollider.bounds, m_StateA.LookCamera, m_StateA.CachedHighlightCornerScale);
+                    Rect viewportRect = TabletUtility.CalculateViewportAlignedBoundingBox(scannable.HighlightCollider.bounds, m_StateA.LookCamera, m_StateA.CachedHighlightCornerScale);
 
-                    if (m_StateA.HighlightedScannable != scannable) {
+                    if (m_StateA.HighlightedObject != scannable) {
                         SetSelection(m_StateA, scannable, viewportRect);
                     } else {
                         m_StateA.TargetHighlightCorners = viewportRect;
@@ -37,7 +41,7 @@ namespace Pennycook.Tablet {
                 }
             }
 
-            if (m_StateA.HighlightedScannable) {
+            if (m_StateA.HighlightedObject) {
                 Vector2 targetAnchor = m_StateA.TargetHighlightCorners.center;
                 Vector2 targetSize = m_StateA.TargetHighlightCorners.size;
 
@@ -58,10 +62,16 @@ namespace Pennycook.Tablet {
             }
         }
 
-        static private void SetSelection(TabletHighlightState highlight, TabletScannable scannable, Rect rect) {
-            bool wasNotSelected = !highlight.HighlightedScannable;
+        static private void SetSelection(TabletHighlightState highlight, TabletHighlightable scannable, Rect rect) {
+            bool wasNotSelected = !highlight.HighlightedObject;
 
-            highlight.HighlightedScannable = scannable;
+            if (!wasNotSelected) {
+                VRGame.Events.Queue(GameEvents.ObjectUnhighlighted, EvtArgs.Ref(highlight.HighlightedObject));
+            }
+
+            VRGame.Events.Queue(GameEvents.ObjectHighlighted, EvtArgs.Ref(scannable));
+
+            highlight.HighlightedObject = scannable;
             highlight.TargetHighlightCorners = rect;
             if (!highlight.IsBoxVisible) {
                 highlight.HighlightBox.sizeDelta = default;
@@ -83,7 +93,8 @@ namespace Pennycook.Tablet {
 
         static private void ClearSelection(TabletHighlightState highlight) {
             ClearObjectDetails(highlight);
-            highlight.HighlightedScannable = null;
+            VRGame.Events.Queue(GameEvents.ObjectUnhighlighted, EvtArgs.Ref(highlight.HighlightedObject));
+            highlight.HighlightedObject = null;
             highlight.TargetHighlightCorners = highlight.HighlightBox.rect;
             if (highlight.IsBoxVisible) {
                 highlight.BoxTransitionRoutine.Replace(highlight, ScaleBoxDown(highlight));

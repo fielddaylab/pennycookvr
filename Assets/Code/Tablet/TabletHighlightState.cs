@@ -27,7 +27,7 @@ namespace Pennycook.Tablet {
         [NonSerialized] public Transform CachedLookCameraTransform;
         [NonSerialized] public Vector2 CachedHighlightCornerScale;
 
-        [NonSerialized] public TabletScannable HighlightedScannable;
+        [NonSerialized] public TabletHighlightable HighlightedObject;
         [NonSerialized] public Rect TargetHighlightCorners;
         [NonSerialized] public Routine BoxTransitionRoutine;
         [NonSerialized] public bool IsBoxVisible;
@@ -43,20 +43,19 @@ namespace Pennycook.Tablet {
         }
     }
 
-    static public class TabletHighlightUtility {
+    static public partial class TabletUtility {
         //static private readonly RaycastHit[] s_RaycastHitBuffer = new RaycastHit[32];
 
-        static public TabletScannable FindBestScannableAlongRay(Ray ray, float maxDistance) {
-            const int layerMask = LayerMasks.Default_Mask | LayerMasks.Grabbable_Mask | LayerMasks.Scannable_Mask;
-            // TODO: evaluate if we need a spherecast instead
-            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, layerMask)) {
+        static public TabletHighlightable FindBestHighlightableAlongRay(Ray ray, float maxDistance) {
+            const int layerMask = LayerMasks.Default_Mask | LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask;
+            if (Physics.SphereCast(ray, 0.05f, out RaycastHit hit, maxDistance, layerMask)) {
                 //DebugDraw.AddLine(ray.origin, hit.point, Color.blue, 0.2f, 0.1f);
-                TabletScannable scannable = hit.collider.GetComponent<TabletScannable>();
+                TabletHighlightable highlightable = hit.collider.GetComponent<TabletHighlightable>();
                 Rigidbody body;
-                if (!scannable && (body = hit.rigidbody)) {
-                    scannable = body.GetComponent<TabletScannable>();
+                if (!highlightable && (body = hit.rigidbody)) {
+                    highlightable = body.GetComponent<TabletHighlightable>();
                 }
-                return scannable;
+                return highlightable;
             } else {
                 return null;
             }
@@ -76,16 +75,24 @@ namespace Pennycook.Tablet {
 
             //DebugDraw.AddBounds(bounds, Color.blue.WithAlpha(0.2f), 0.2f, 0.1f);
 
+			Vector2* viewCorners = stackalloc Vector2[8];
             for (int i = 0; i < 8; i++) {
-                corners[i] = referenceCamera.WorldToViewportPoint(corners[i], Camera.MonoOrStereoscopicEye.Mono);
+                viewCorners[i] = ClampTo01Space(referenceCamera.WorldToViewportPoint(corners[i], Camera.MonoOrStereoscopicEye.Mono));
             }
 
-            Rect r = Geom.BoundsToRect(Geom.MinAABB(new UnsafeSpan<Vector3>(corners, 8)));
+            Rect r = Geom.MinRect(new UnsafeSpan<Vector2>(viewCorners, 8));
             r.x *= scale.x;
             r.y *= scale.y;
             r.width *= scale.x;
             r.height *= scale.y;
             return r;
         }
+		
+		static private Vector2 ClampTo01Space(Vector3 input) {
+			Vector2 output;
+			output.x = Mathf.Clamp01(input.x);
+			output.y = Mathf.Clamp01(input.y);
+			return output;
+		}
     }
 }
