@@ -164,12 +164,12 @@ namespace FieldDay.Debugging {
 
             if (paused) {
                 Time.timeScale = 0;
-                m_TimeDisplay.UpdateStateLabel("PAUSED");
+                m_TimeDisplay.UpdateState(true);
                 OnTimeScaleUpdated.Invoke(0);
                 EventSystem.current?.SetSelectedGameObject(null);
             } else {
                 Time.timeScale = m_TimeScale;
-                m_TimeDisplay.UpdateStateLabel("PLAYING");
+                m_TimeDisplay.UpdateState(false);
                 OnTimeScaleUpdated.Invoke(m_TimeScale);
             }
         }

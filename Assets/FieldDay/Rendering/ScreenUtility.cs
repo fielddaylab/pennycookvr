@@ -46,11 +46,15 @@ namespace FieldDay.Rendering {
             return new Resolution() {
                 width = Screen.width,
                 height = Screen.height,
+#if UNITY_2022_2_OR_NEWER
                 refreshRateRatio = new RefreshRate() { numerator = 60, denominator = 1 }
+#else
+                refreshRate = 60
+#endif // UNITY_2022_2_OR_NEWER
             };
 #else
             return Screen.currentResolution;
 #endif // UNITY_EDITOR || UNITY_WEBGL
-        }
+            }
     }
 }

@@ -25,6 +25,7 @@ namespace Pennycook.Tablet {
                 m_StateA.ScreenCamera.enabled = canBeFacing;
                 m_StateA.ScreenOverlayCamera.enabled = canBeFacing;
                 m_StateA.ScreenOverlayCanvas.enabled = canBeFacing;
+                m_StateA.ScreenCameraRefresh.Paused = !canBeFacing;
             }
         }
     }

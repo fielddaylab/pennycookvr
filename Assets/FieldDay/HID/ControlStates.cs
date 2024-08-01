@@ -230,39 +230,33 @@ namespace FieldDay.HID {
         #region Helper Functions
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [IntrinsicIL("ldarg.0; ldarg.1; and; ret;")]
         static private TEnum And(TEnum a, TEnum b) {
-            return Enums.ToEnum<TEnum>(Enums.ToUInt(a) & Enums.ToUInt(b));
+            return Enums.And(a, b);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [IntrinsicIL("ldarg.0; ldarg.1; or; ret;")]
         static private TEnum Or(TEnum a, TEnum b) {
-            return Enums.ToEnum<TEnum>(Enums.ToUInt(a) | Enums.ToUInt(b));
+            return Enums.Or(a, b);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [IntrinsicIL("ldarg.0; ldarg.1; xor; ret;")]
         static private TEnum Xor(TEnum a, TEnum b) {
-            return Enums.ToEnum<TEnum>(Enums.ToUInt(a) ^ Enums.ToUInt(b));
+            return Enums.Xor(a, b);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [IntrinsicIL("ldarg.0; not; ret;")]
         static private TEnum Not(TEnum a) {
-            return Enums.ToEnum<TEnum>(~Enums.ToUInt(a));
+            return Enums.Not(a);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [IntrinsicIL("ldarg.0; conv.u4; ldc.i4.0; cgt.un; ret;")]
         static private bool NotZero(TEnum a) {
-            return Enums.ToUInt(a) != 0;
+            return !Enums.AreEqual(a, default(TEnum));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [IntrinsicIL("ldarg.0; ldarg.1; ceq; ret;")]
         static private bool AreEqual(TEnum a, TEnum b) {
-            return Enums.ToUInt(a) == Enums.ToUInt(b);
+            return Enums.AreEqual(a, b);
         }
 
         #endregion // Helper Functions

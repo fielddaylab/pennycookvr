@@ -17,6 +17,11 @@ namespace FieldDay.VRHands {
                     break;
                 }
 
+                case GrabberState.AttemptReleaseSocketOnly: {
+                    ReleaseSocketOnly(component);
+                    break;
+                }
+
                 case GrabberState.AttemptGrab: {
                     AttemptGrab(component);
                     break;
@@ -99,6 +104,22 @@ namespace FieldDay.VRHands {
                 GrabUtility.DropCurrent(grabber, true);
             }
             grabber.State = GrabberState.Empty;
+        }
+
+        static private void ReleaseSocketOnly(Grabber grabber) {
+            if (grabber.HeldObject) {
+                if (grabber.HeldObject.TryGetComponent(out Socketable socketable) && socketable.HighlightedSocket) {
+                    if (SocketUtility.TryAddToSocket(socketable, socketable.HighlightedSocket, false)) {
+                        grabber.State = GrabberState.Empty;
+                    } else {
+                        grabber.State = GrabberState.Holding;
+                    }
+                } else {
+                    grabber.State = GrabberState.Holding;
+                }
+            } else {
+                grabber.State = GrabberState.Empty;
+            }
         }
     }
 }

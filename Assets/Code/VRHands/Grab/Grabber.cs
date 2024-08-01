@@ -60,6 +60,7 @@ namespace FieldDay.VRHands {
         Empty,
         AttemptGrab,
         Holding,
-        AttemptRelease
+        AttemptRelease,
+        AttemptReleaseSocketOnly
     }
 }

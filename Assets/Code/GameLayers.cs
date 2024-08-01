@@ -18,6 +18,18 @@ static public class LayerMasks {
     // Layer 5: UI
     public const int UI_Index = 5;
     public const int UI_Mask = 32;
+    // Layer 6: PlayerHand
+    public const int PlayerHand_Index = 6;
+    public const int PlayerHand_Mask = 64;
+    // Layer 7: Grabbable
+    public const int Grabbable_Index = 7;
+    public const int Grabbable_Mask = 128;
+    // Layer 8: Scannable
+    public const int Scannable_Index = 8;
+    public const int Scannable_Mask = 256;
+    // Layer 31: OffscreenTabletInterface
+    public const int OffscreenTabletInterface_Index = 31;
+    public const int OffscreenTabletInterface_Mask = -2147483648;
 }
 static public class SortingLayers {
     

@@ -207,129 +207,135 @@ namespace FieldDay {
             m_Initialized = true;
             DontDestroyOnLoad(gameObject);
             Log.Msg("[GameLoop] Starting...");
-            Frame.MarkTimestampOffset();
-            Frame.CreateAllocator(m_SingleFrameAllocBufferSize);
-            CounterHandle.InitializeAllocator(256);
 
-            Input.multiTouchEnabled = m_AllowMultiTouchInput;
-            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
-            BuildInfo.Load();
+            using (Profiling.Time("GameLoop.Awake")) {
+                Frame.MarkTimestampOffset();
+                Frame.CreateAllocator(m_SingleFrameAllocBufferSize);
+                CounterHandle.InitializeAllocator(256);
 
-            CommandLineArgs.Initialize();
-            ApplyCommandLineArguments();
+                Input.multiTouchEnabled = m_AllowMultiTouchInput;
+                CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+                CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+                BuildInfo.Load();
 
-            Log.Msg("[GameLoop] Creating memory manager...");
-            Game.Memory = new MemoryMgr();
-            Game.Memory.Initialize(m_MemoryConfig);
+                CommandLineArgs.Initialize();
+                ApplyCommandLineArguments();
 
-            Log.Msg("[GameLoop] Creating systems manager...");
-            Game.Systems = new SystemsMgr();
+                Log.Msg("[GameLoop] Creating memory manager...");
+                Game.Memory = new MemoryMgr();
+                Game.Memory.Initialize(m_MemoryConfig);
 
-            Log.Msg("[GameLoop] Creating component manager...");
-            Game.Components = new ComponentMgr(Game.Systems);
+                Log.Msg("[GameLoop] Creating systems manager...");
+                Game.Systems = new SystemsMgr();
 
-            Log.Msg("[GameLoop] Creating shared state manager...");
-            Game.SharedState = new SharedStateMgr();
+                Log.Msg("[GameLoop] Creating component manager...");
+                Game.Components = new ComponentMgr(Game.Systems);
 
-            Log.Msg("[GameLoop] Creating process manager...");
-            Game.Processes = new ProcessMgr();
+                Log.Msg("[GameLoop] Creating shared state manager...");
+                Game.SharedState = new SharedStateMgr();
 
-            Log.Msg("[GameLoop] Creating audio manager...");
-            Game.Audio = new AudioMgr(m_AudioConfig);
+                Log.Msg("[GameLoop] Creating process manager...");
+                Game.Processes = new ProcessMgr();
 
-            Log.Msg("[GameLoop] Creating scene manager...");
-            Game.Scenes = new SceneMgr();
+                Log.Msg("[GameLoop] Creating audio manager...");
+                Game.Audio = new AudioMgr(m_AudioConfig);
 
-            Log.Msg("[GameLoop] Creating rendering manager...");
-            Game.Rendering = new RenderMgr();
-            Game.Rendering.Initialize();
+                Log.Msg("[GameLoop] Creating scene manager...");
+                Game.Scenes = new SceneMgr();
 
-            Log.Msg("[GameLoop] Creating input manager...");
-            Game.Input = new InputMgr();
+                Log.Msg("[GameLoop] Creating rendering manager...");
+                Game.Rendering = new RenderMgr();
+                Game.Rendering.Initialize();
 
-            Log.Msg("[GameLoop] Creating gui manager...");
-            Game.Gui = new GuiMgr(Game.Input);
+                Log.Msg("[GameLoop] Creating input manager...");
+                Game.Input = new InputMgr();
 
-            Log.Msg("[GameLoop] Creating asset manager...");
-            Game.Assets = new AssetMgr();
+                Log.Msg("[GameLoop] Creating gui manager...");
+                Game.Gui = new GuiMgr(Game.Input);
 
-            Log.Msg("[GameLoop] Creating animation manager...");
-            Game.Animation = new AnimationMgr();
+                Log.Msg("[GameLoop] Creating asset manager...");
+                Game.Assets = new AssetMgr();
 
-            CursorUtility.PlatformInit();
+                Log.Msg("[GameLoop] Creating animation manager...");
+                Game.Animation = new AnimationMgr();
+
+                CursorUtility.PlatformInit();
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-            if (m_TargetFramerate == 60) {
-                Application.targetFrameRate = -1;
-            } else {
-                Application.targetFrameRate = m_TargetFramerate;
-            }
-            QualitySettings.vSyncCount = 0;
+                if (m_TargetFramerate == 60) {
+                    Application.targetFrameRate = -1;
+                } else {
+                    Application.targetFrameRate = m_TargetFramerate;
+                }
+                QualitySettings.vSyncCount = 0;
 #else
-            Application.targetFrameRate = m_TargetFramerate;
+                Application.targetFrameRate = m_TargetFramerate;
 #endif // UNITY_WEBGL
 
-            Log.Msg("[GameLoop] Loading config vars...");
-            ConfigVar.ReadAllFromResources();
-            ConfigVar.ReadUserFromPlayerPrefs();
-            SharedCanvasResources.DefaultWhiteSprite = m_DefaultPixelSprite;
+                Log.Msg("[GameLoop] Loading config vars...");
+                ConfigVar.ReadAllFromResources();
+                ConfigVar.ReadUserFromPlayerPrefs();
+                SharedCanvasResources.DefaultWhiteSprite = m_DefaultPixelSprite;
 
-            // find all pre-boot
-            foreach (var entrypoint in Reflect.FindMethods<InvokePreBootAttribute>(ReflectionCache.UserAssemblies, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
-                entrypoint.Info.Invoke(null, null);
-            }
+                // find all pre-boot
+                foreach (var entrypoint in Reflect.FindMethods<InvokePreBootAttribute>(ReflectionCache.UserAssemblies, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
+                    entrypoint.Info.Invoke(null, null);
+                }
 
-            enabled = false;
-            useGUILayout = false;
-            StartCoroutine(DelayedBoot());
+                enabled = false;
+                useGUILayout = false;
+                StartCoroutine(DelayedBoot());
 
-            Game.Components.Lock();
+                Game.Components.Lock();
 
-            Async.InvokeAsync(PotentiallyExpensiveSystemResourceRetrieval);
+                Async.InvokeAsync(PotentiallyExpensiveSystemResourceRetrieval);
 
-            CrashHandler.Register();
-            CrashHandler.DisplayCrash += OnCrash;
+                CrashHandler.Register();
+                CrashHandler.DisplayCrash += OnCrash;
 #if !UNITY_EDITOR
-            CrashHandler.Enabled = true;
+                CrashHandler.Enabled = true;
 #endif // UNITY_EDITOR
+
+            }
         }
 
         private void Start() {
             Log.Msg("[GameLoop] Boot finished");
-            SetCurrentPhase(GameLoopPhase.Booted);
-            Game.Components.Unlock();
-            Game.Input.Initialize();
-            Game.Gui.Initialize();
-            Game.Rendering.LateInitialize();
-            Game.Animation.Initialize();
-			Game.Scenes.Prepare();
-            Game.Systems.ProcessInitQueue();
-            FlushQueue(s_OnBootQueue);
+            using (Profiling.Time("GameLoop.Start")) {
+                SetCurrentPhase(GameLoopPhase.Booted);
+                Game.Components.Unlock();
+                Game.Input.Initialize();
+                Game.Gui.Initialize();
+                Game.Rendering.LateInitialize();
+                Game.Animation.Initialize();
+                Game.Scenes.Prepare();
+                Game.Systems.ProcessInitQueue();
+                FlushQueue(s_OnBootQueue);
 
-            FinishCallbackRegistration();
+                FinishCallbackRegistration();
 
-            // find all boot
-            foreach (var entrypoint in Reflect.FindMethods<InvokeOnBootAttribute>(ReflectionCache.UserAssemblies, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
-                entrypoint.Info.Invoke(null, null);
-            }
+                // find all boot
+                foreach (var entrypoint in Reflect.FindMethods<InvokeOnBootAttribute>(ReflectionCache.UserAssemblies, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
+                    entrypoint.Info.Invoke(null, null);
+                }
 
 #if PREVIEW || DEVELOPMENT
-            FramerateDisplay.Show();
-#else
-            if (CommandLineArgs.HasFlag("show-fps")) {
                 FramerateDisplay.Show();
-                Debug.LogWarning("[GameLoop] 'show-fps' flag found, framerate counter displayed");
-            }
+#else
+                if (CommandLineArgs.HasFlag("show-fps")) {
+                    FramerateDisplay.Show();
+                    Debug.LogWarning("[GameLoop] 'show-fps' flag found, framerate counter displayed");
+                }
 #endif // PREVIEW || DEVELOPMENT
 
-            if (!Game.Rendering.HasFallbackCamera()) {
-                Game.Rendering.CreateDefaultFallbackCamera();
-            }
+                if (!Game.Rendering.HasFallbackCamera()) {
+                    Game.Rendering.CreateDefaultFallbackCamera();
+                }
 
-            // fallback
-            if (Game.Events == null) {
-                Game.SetEventDispatcher(new EventDispatcher<EvtArgs>());
+                // fallback
+                if (Game.Events == null) {
+                    Game.SetEventDispatcher(new EventDispatcher<EvtArgs>());
+                }
             }
         }
 
@@ -511,6 +517,7 @@ namespace FieldDay {
                 Game.Components.Lock();
                 Game.Systems.FixedUpdate(Frame.DeltaTime, s_UpdateMask);
                 Game.Processes.FixedUpdate(Frame.DeltaTime, s_UpdateMask);
+                Game.Animation.FixedUpdateLite(Frame.DeltaTime);
                 Game.Components.Unlock();
                 OnFixedUpdate.Invoke(Frame.DeltaTime);
             }

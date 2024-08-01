@@ -270,6 +270,7 @@ namespace FieldDay.HID {
             if (m_EventPauseCounter++ == 0) {
                 m_EventSystem.SetSelectedGameObject(null);
                 m_DefaultInputModule.DeactivateModule();
+                NativeInput.SetEventSystemEnabled(false);
             }
         }
 
@@ -279,6 +280,7 @@ namespace FieldDay.HID {
         public void ResumeRaycasts() {
             if (m_EventPauseCounter > 0 && m_EventPauseCounter-- == 1) {
                 m_DefaultInputModule.ActivateModule();
+                NativeInput.SetEventSystemEnabled(true);
             }
         }
 

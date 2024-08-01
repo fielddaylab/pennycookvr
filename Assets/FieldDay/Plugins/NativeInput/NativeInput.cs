@@ -124,13 +124,25 @@ namespace NativeUtils
             EventSystemIntegration.EventData = system ? new PointerEventData(system) : null;
         }
 
+        /// <summary>
+        /// Enables/disables native pointer event funneling.
+        /// </summary>
+        static public void SetEventSystemEnabled(bool enabled) {
+            EventSystemIntegration.Enabled = enabled;
+        }
+
         static internal class EventSystemIntegration {
 
             static public EventSystem System;
             static public PointerEventData EventData;
             static private List<RaycastResult> s_RaycastCache = new List<RaycastResult>(16);
+            static public bool Enabled = true;
 
             static public void OnPointerDown(EventSystem evtSystem, PointerEventData ptrData, float x, float y) {
+                if (!Enabled) {
+                    return;
+                }
+
                 ptrData.button = PointerEventData.InputButton.Left;
                 GetNativePointerData(evtSystem, ptrData, x, y);
                 GameObject press = ExecuteEvents.ExecuteHierarchy(ptrData.pointerCurrentRaycast.gameObject, ptrData, NativeMouseDownHandler);
@@ -138,6 +150,10 @@ namespace NativeUtils
             }
 
             static public void OnPointerUp(EventSystem evtSystem, PointerEventData ptrData, float x, float y) {
+                if (!Enabled) {
+                    return;
+                }
+
                 GetNativePointerData(evtSystem, ptrData, x, y);
                 GameObject pressed = ptrData.pointerPress;
                 if (pressed != null) {

@@ -17,6 +17,7 @@ namespace FieldDay.Animation {
 
         #region State
 
+        private readonly RingBuffer<LiteAnimatorRecord> m_FixedUpdateLiteAnimators = new RingBuffer<LiteAnimatorRecord>(16, RingBufferMode.Expand);
         private readonly RingBuffer<LiteAnimatorRecord> m_UpdateLiteAnimators = new RingBuffer<LiteAnimatorRecord>(16, RingBufferMode.Expand);
         private readonly RingBuffer<LiteAnimatorRecord> m_UnscaledUpdateLiteAnimators = new RingBuffer<LiteAnimatorRecord>(16, RingBufferMode.Expand);
 
@@ -49,6 +50,8 @@ namespace FieldDay.Animation {
         public void AddLiteAnimator(ILiteAnimator animator, object target, LiteAnimatorState state, GameLoopPhase phase = GameLoopPhase.Update) {
             Assert.NotNull(animator);
             var liteAnimators = GetLiteAnimators(phase);
+
+            animator.InitAnimation(target, ref state);
 
             for (int i = 0; i < liteAnimators.Count; i++) {
                 if (liteAnimators[i].Animator == animator && liteAnimators[i].Target == target) {
@@ -89,12 +92,14 @@ namespace FieldDay.Animation {
 
         private RingBuffer<LiteAnimatorRecord> GetLiteAnimators(GameLoopPhase phase) {
             switch (phase) {
+                case GameLoopPhase.FixedUpdate:
+                    return m_FixedUpdateLiteAnimators;
                 case GameLoopPhase.Update:
                     return m_UpdateLiteAnimators;
                 case GameLoopPhase.UnscaledUpdate:
                     return m_UnscaledUpdateLiteAnimators;
                 default:
-                    Assert.Fail("LiteAnimators can only be updated on Update or UnscaledUpdate");
+                    Assert.Fail("LiteAnimators can only be updated on FixedUpdate, Update, or UnscaledUpdate");
                     return null;
             }
         }
@@ -105,6 +110,11 @@ namespace FieldDay.Animation {
 
         internal void Initialize() {
 
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void FixedUpdateLite(float deltaTime) {
+            HandleLiteUpdate(GameLoopPhase.FixedUpdate, deltaTime);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

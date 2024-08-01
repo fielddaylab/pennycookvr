@@ -125,6 +125,28 @@ namespace FieldDay.VRHands {
             return p;
         }
 
+        /// <summary>
+        /// Resolves the name for a snapping node.
+        /// </summary>
+        static public StringHash32 ResolveSnapNodeName(Grabbable grabbable, int nodeIndex) {
+            if (nodeIndex < 0 || nodeIndex >= grabbable.SnapNodes.Length) {
+                return default(StringHash32);
+            }
+
+            return grabbable.SnapNodes[nodeIndex].Name;
+        }
+
+        /// <summary>
+        /// Resolves the name of the currently gripped snap node.
+        /// </summary>
+        static public StringHash32 ResolveSnapNodeName(Grabber grabber) {
+            if (grabber.HeldObject && grabber.HeldObjectSnapNodeIndex >= 0) {
+                return ResolveSnapNodeName(grabber.HeldObject, grabber.HeldObjectSnapNodeIndex);
+            }
+
+            return default(StringHash32);
+        }
+
         #endregion // Snap Nodes
 
         #region Grab
@@ -307,6 +329,34 @@ namespace FieldDay.VRHands {
         }
 
         #endregion // Release
+
+        #region Checks
+
+        /// <summary>
+        /// Returns if the given grabbable is being grabbed.
+        /// </summary>
+        static public bool IsGrabbed(Grabbable grabbable) {
+            return grabbable.CurrentGrabberCount > 0;
+        }
+
+        /// <summary>
+        /// Returns if the given grabbable is being grabbed by a specific hand.
+        /// </summary>
+        static public bool IsGrabbed(Grabbable grabbable, XRHandIndex hand) {
+            if (hand == XRHandIndex.Any) {
+                return grabbable.CurrentGrabberCount > 0;
+            }
+
+            for(int i = 0; i < grabbable.CurrentGrabberCount; i++) {
+                if (grabbable.CurrentGrabbers[i].Chirality == hand) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        #endregion // Checks
     }
 
     static public class GrabConfig {

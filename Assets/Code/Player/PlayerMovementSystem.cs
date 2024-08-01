@@ -1,4 +1,5 @@
 using FieldDay;
+using FieldDay.HID;
 using FieldDay.HID.XR;
 using FieldDay.Systems;
 using FieldDay.XR;
@@ -22,10 +23,18 @@ namespace Pennycook {
             flattenedLook.y = 0;
             flattenedLook.Normalize();
 
-            if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisUp)) {
+            var notGrippedHands = default(DigitalControlStates<XRHandButtons>);
+            if (!m_StateA.LeftHand.Grabber.HeldObject) {
+                notGrippedHands |= m_StateB.LeftHand.Buttons;
+            }
+            if (!m_StateA.RightHand.Grabber.HeldObject) {
+                notGrippedHands |= m_StateB.RightHand.Buttons;
+            }
+
+            if (notGrippedHands.ConsumePress(XRHandButtons.PrimaryAxisUp)) {
                 m_StateA.MoveRoot.Translate(flattenedLook * 0.3f, Space.World);
             }
-            if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisDown)) {
+            if (notGrippedHands.ConsumePress(XRHandButtons.PrimaryAxisDown)) {
                 m_StateA.MoveRoot.Translate(flattenedLook * -0.3f, Space.World);
             }
 
