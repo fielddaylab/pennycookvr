@@ -11,6 +11,8 @@ namespace FieldDay.Scripting {
     /// Scripting node.
     /// </summary>
     public class ScriptNode : LeafNode {
+        static public readonly StringHash32 AnyTarget = "*";
+
         public readonly string FullName;
         public ScriptNodeFlags Flags;
 
@@ -21,7 +23,7 @@ namespace FieldDay.Scripting {
         public StringHash32 TargetId;
         public ScriptNodePriority Priority = ScriptNodePriority.Medium;
         public ScriptNodeCooldown RepeatPeriod;
-        public ScriptNodeMemoryTarget PersistenceType;
+        public ScriptNodeMemoryScope PersistenceScope;
         public float SelectionWeight = 1;
         [BlockMeta("tag")] public StringHash32 Tag;
 
@@ -75,10 +77,10 @@ namespace FieldDay.Scripting {
             }
         }
 
-        [BlockMeta("evalPriority")]
+        [BlockMeta("boostScore")]
         private void AdjustEvalPriority(int priority) {
             if ((Flags & ScriptNodeFlags.Trigger) == 0) {
-                Log.Warn("[ScriptNode] 'evalPriority' is not compatible with non-trigger node '{0}'", FullName);
+                Log.Warn("[ScriptNode] 'boostSccore' is not compatible with non-trigger node '{0}'", FullName);
             } else {
                 SortingScore += priority;
             }
@@ -138,18 +140,39 @@ namespace FieldDay.Scripting {
 
         [BlockMeta("once")]
         private void SetOnce(StringSlice type) {
-            if (RepeatPeriod.NodeWindow > 0 || RepeatPeriod.TimeWindow > 0) {
-                Log.Warn("[ScriptNode] 'once' is not compatible with repeat node '{0}'", FullName);
-            } else if (type.Equals("untracked", true)) {
-                Log.Warn("[ScriptNode] 'untracked' is an unsupported value for 'once' on node '{0}'", FullName);
+            if ((Flags & (ScriptNodeFlags.Trigger | ScriptNodeFlags.Function)) == 0) {
+                Log.Warn("[ScriptNode] 'once' is not compatible with non-function, non-trigger node '{0}'", FullName);
+            } else if (RepeatPeriod.NodeWindow > 0 || RepeatPeriod.TimeWindow > 0) {
+                Log.Warn("[ScriptNode] 'once' is not compatible with repeat/cooldown node '{0}'", FullName);
             } else {
                 Flags |= ScriptNodeFlags.Once;
                 if (type.Equals("session", true)) {
-                    PersistenceType = ScriptNodeMemoryTarget.Session;
+                    PersistenceScope = ScriptNodeMemoryScope.Session;
                 } else if (type.Equals("chapter", true)) {
-                    PersistenceType = ScriptNodeMemoryTarget.Chapter;
+                    PersistenceScope = ScriptNodeMemoryScope.Chapter;
+                } else if (type.IsEmpty || type.Equals("save", true)) {
+                    PersistenceScope = ScriptNodeMemoryScope.Persistent;
                 } else {
-                    PersistenceType = ScriptNodeMemoryTarget.Persistent;
+                    Log.Warn("[ScriptNode] '{0}' is an unsupported value for 'once' on node '{1}'", type, FullName);
+                    PersistenceScope = ScriptNodeMemoryScope.Persistent;
+                }
+            }
+        }
+
+        [BlockMeta("tracked")]
+        private void SetTracked(StringSlice type) {
+            if ((Flags & ScriptNodeFlags.Once) != 0) {
+                Log.Warn("[ScriptNode] 'tracked' cannot be called on `once` node '{0}'", FullName);
+            } else {
+                if (type.Equals("session", true)) {
+                    PersistenceScope = ScriptNodeMemoryScope.Session;
+                } else if (type.Equals("chapter", true)) {
+                    PersistenceScope = ScriptNodeMemoryScope.Chapter;
+                } else if (type.IsEmpty || type.Equals("save", true)) {
+                    PersistenceScope = ScriptNodeMemoryScope.Persistent;
+                } else {
+                    Log.Warn("[ScriptNode] '{0}' is an unsupported value for 'tracked' on node '{1}'", type, FullName);
+                    PersistenceScope = ScriptNodeMemoryScope.Persistent;
                 }
             }
         }
@@ -174,8 +197,8 @@ namespace FieldDay.Scripting {
         private void SetSelectionWeight(float probability) {
             if ((Flags & ScriptNodeFlags.Trigger) == 0) {
                 Log.Warn("[ScriptNode] 'weight' is not compatible with non-trigger node '{0}'", FullName);
-            } else if (probability <= 0) {
-                Log.Warn("[ScriptNode] 'weight' does not support values of 0 or less on node '{0}'", FullName);
+            } else if (probability < 0) {
+                Log.Warn("[ScriptNode] 'weight' does not support values of less than 0 on node '{0}'", FullName);
             } else if (probability != SelectionWeight) {
                 SelectionWeight = probability;
                 Flags |= ScriptNodeFlags.IsWeighted;
@@ -183,8 +206,6 @@ namespace FieldDay.Scripting {
         }
 
         #endregion // Internal
-
-        static public readonly StringHash32 AnyTarget = "*";
     }
 
     /// <summary>
@@ -267,12 +288,12 @@ namespace FieldDay.Scripting {
     }
 
     /// <summary>
-    /// Persistence target for once and repeat.
+    /// Persistence scope for once and repeat.
     /// </summary>
-    public enum ScriptNodeMemoryTarget : byte {
+    public enum ScriptNodeMemoryScope : byte {
         Untracked,
-        Chapter,
         Session,
+        Chapter,
         Persistent,
     }
 }

@@ -5,7 +5,6 @@
  * 
  * File:    RuntimeObjectHandle.cs
  * Purpose: Weak runtime UnityEngine.Object handle. Allows for weak Object references in unmanaged structs.
-            Also provides Object lookups based on unity's internal InstanceID.
  */
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD || DEVELOPMENT

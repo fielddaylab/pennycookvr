@@ -3,34 +3,28 @@ using BeauUtil;
 using Leaf.Runtime;
 
 namespace FieldDay.Scripting {
+    /// <summary>
+    /// Map of actor ids ("who") to threads.
+    /// </summary>
     public sealed class ScriptThreadMap {
-        public Dictionary<StringHash32, LeafThreadHandle> Threads = new Dictionary<StringHash32, LeafThreadHandle>(16, CompareUtils.DefaultEquals<StringHash32>());
+        /// <summary>
+        /// Map of actor ids to script thread handles.
+        /// </summary>
+        public readonly Dictionary<StringHash32, LeafThreadHandle> Threads;
 
-        public ScriptNodePriority GetCurrentPriority(StringHash32 targetId) {
-            if (Threads.TryGetValue(targetId, out LeafThreadHandle handle)) {
-                ScriptThread thread = handle.GetThread<ScriptThread>();
-                if (thread != null) {
-                    return thread.Priority();
-                }
-            }
-
-            return ScriptNodePriority.None;
+        public ScriptThreadMap(int capacity) {
+            Threads = MapUtils.Create<StringHash32, LeafThreadHandle>(capacity);
         }
 
+        /// <summary>
+        /// Returns the current thread for the given actor id.
+        /// </summary>
         public ScriptThread GetCurrentThread(StringHash32 targetId) {
             if (Threads.TryGetValue(targetId, out LeafThreadHandle handle)) {
                 return handle.GetThread<ScriptThread>();
             }
 
             return null;
-        }
-
-        public LeafThreadHandle GetCurrentHandle(StringHash32 targetId) {
-            if (Threads.TryGetValue(targetId, out LeafThreadHandle handle)) {
-                return handle;
-            }
-
-            return default;
         }
     }
 }

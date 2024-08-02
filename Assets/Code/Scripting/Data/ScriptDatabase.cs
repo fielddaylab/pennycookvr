@@ -9,7 +9,6 @@ using BeauPools;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
-using BeauUtil.IO;
 using BeauUtil.Variants;
 using FieldDay.Data;
 using FieldDay.Debugging;
@@ -238,7 +237,7 @@ namespace FieldDay.Scripting {
             }
 
             // if set to be once
-            if ((node.Flags & ScriptNodeFlags.Once) != 0 && request.PersistenceMap.HasSeen(node.Id(), node.PersistenceType)) {
+            if ((node.Flags & ScriptNodeFlags.Once) != 0 && request.PersistenceMap.HasSeen(node.Id(), node.PersistenceScope)) {
                 if (DebugFlags.IsFlagSet(ScriptDebugFlags.LogNodeEvaluation)) {
                     Log.Trace("...node has already been visited");
                 }
@@ -264,7 +263,7 @@ namespace FieldDay.Scripting {
             }
 
             // if target is playing a node that this node cannot interrupt
-            StringHash32 targetId = request.TargetId.IsEmpty ? node.TargetId : request.TargetId;
+            StringHash32 targetId = request.TargetId.IsEmpty ? ((node.Flags & ScriptNodeFlags.AnyTarget) == 0 ? node.TargetId : default(StringHash32)) : request.TargetId;
             if (!targetId.IsEmpty) {
                 ScriptThread currentThread = request.ThreadMap.GetCurrentThread(targetId);
                 if (currentThread != null) {
@@ -334,7 +333,7 @@ namespace FieldDay.Scripting {
             }
 
             // if set to be once
-            if ((node.Flags & ScriptNodeFlags.Once) != 0 && request.PersistenceMap.HasSeen(node.Id(), node.PersistenceType)) {
+            if ((node.Flags & ScriptNodeFlags.Once) != 0 && request.PersistenceMap.HasSeen(node.Id(), node.PersistenceScope)) {
                 if (DebugFlags.IsFlagSet(ScriptDebugFlags.LogNodeEvaluation)) {
                     Log.Trace("...node has already been visited");
                 }
@@ -367,7 +366,7 @@ namespace FieldDay.Scripting {
         public StringHash32 TargetId;
         public bool IsCutscenePlaying;
         public ScriptThreadMap ThreadMap;
-        public ScriptPersistenceMap PersistenceMap;
+        public ScriptPersistenceData PersistenceMap;
         public float CurrentTime;
 
         public System.Random Randomizer;

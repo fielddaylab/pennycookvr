@@ -51,9 +51,7 @@ namespace FieldDay.Memory {
             }
 
             if (genMask != 0) {
-                //using (Log.DisableMsgStackTrace()) {
-                //    Log.Msg("[MemoryMgr] Garbage collected {0}", genMask);
-                //}
+                Log.Trace("[MemoryMgr] Garbage collected {0}", genMask);
                 m_MostRecentGCTimestamp = now;
                 Mem.InvokeGCOccurred(genMask);
             }
@@ -61,9 +59,7 @@ namespace FieldDay.Memory {
             long allocated = GC.GetTotalMemory(false);
             if (m_MainThreadAllocationTracker != allocated) {
                 long diff = allocated - m_MainThreadAllocationTracker;
-                //using (Log.DisableMsgStackTrace()) {
-                //    Log.Msg("[MemoryMgr] GC allocated {0}b", diff);
-                //}
+                Log.Trace("[MemoryMgr] GC allocated {0}b", diff);
                 m_MainThreadAllocationTracker = allocated;
             }
         }

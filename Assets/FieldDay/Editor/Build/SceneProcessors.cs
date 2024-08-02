@@ -2,7 +2,9 @@
 #define DEVELOPMENT
 #endif // UNITY_EDITOR || DEVELOPMENT_BUILD
 
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Data;
@@ -182,6 +184,8 @@ namespace FieldDay.Editor {
                 for (int i = 0; i < dynamicImports.Count; i++) {
                     ext.DynamicSubscenes[i] = (Component) dynamicImports[i];
                 }
+
+                ext.CustomData = Array.Empty<Component>();
             }
         }
     }
@@ -256,6 +260,47 @@ namespace FieldDay.Editor {
         public void OnProcessScene(Scene scene, BuildReport report) {
             if (Baking.CleanUpMissingComponents(scene.GetRootGameObjects())) {
                 Debug.LogWarningFormat("[CleanUpMissingComponentsSceneProcessor] Missing component types cleaned up in '{0}'", scene.path);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gathers additional custom scene data.
+    /// </summary>
+    public class GatherCustomSceneDataSceneProcessor : IProcessSceneWithReport {
+        public int callbackOrder { get { return 32000; } }
+
+        public void OnProcessScene(Scene scene, BuildReport report) {
+            using (Profiling.Time("generating custom scene data")) {
+                List<SceneDataExt> list = new List<SceneDataExt>();
+                scene.GetAllComponents(true, list);
+                SceneDataExt ext = list.Count > 0 ? list[0] : null;
+                if (ext == null) {
+                    Debug.LogErrorFormat("[GatherCustomSceneDataSceneProcessor] No SceneDataExt has gone missing");
+                    return;
+                }
+
+                List<Component> customList = new List<Component>(8);
+
+                foreach (var type in TypeCache.GetTypesDerivedFrom(typeof(ISceneCustomData))) {
+                    if (type.IsAbstract || type.IsInterface) {
+                        continue;
+                    }
+
+                    if (!typeof(MonoBehaviour).IsAssignableFrom(type)) {
+                        Debug.LogErrorFormat("[GatherCustomSceneDataSceneProcessor] Custom type '{0}' is not derived from MonoBehaviour", type.FullName);
+                        continue;
+                    }
+
+                    ISceneCustomData c = (ISceneCustomData) ext.gameObject.AddComponent(type);
+                    if (c.Build(scene)) {
+                        customList.Add((Component) c);
+                    } else {
+                        Baking.Destroy((UnityEngine.Object) c);
+                    }
+                }
+
+                ext.CustomData = customList.ToArray();
             }
         }
     }

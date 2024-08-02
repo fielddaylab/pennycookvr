@@ -192,7 +192,9 @@ namespace FieldDay.Scenes {
         public readonly CastableEvent<SceneEventArgs> OnPrepareScene = new CastableEvent<SceneEventArgs>();
         public readonly CastableEvent<SceneEventArgs> OnScenePreload = new CastableEvent<SceneEventArgs>();
         public readonly CastableEvent<SceneEventArgs> OnSceneReady = new CastableEvent<SceneEventArgs>();
+        public readonly ActionEvent OnMainSceneLateEnable = new ActionEvent();
         public readonly ActionEvent OnMainSceneReady = new ActionEvent();
+        public readonly ActionEvent OnMainSceneUnloading = new ActionEvent();
         public readonly CastableEvent<SceneEventArgs> OnSceneUnload = new CastableEvent<SceneEventArgs>();
         public readonly ActionEvent OnAnySceneUnloaded = new ActionEvent();
         public readonly ActionEvent OnAnySceneEnabled = new ActionEvent();
@@ -996,6 +998,9 @@ namespace FieldDay.Scenes {
                         m_CurrentUnloadOperation.Fill(args);
                         var scene = args.Data.Scene;
                         FlushCallbacks(args.Data.UnloadingCallbackQueue);
+                        foreach (ISceneCustomData custom in args.Data.CustomData) {
+                            custom.OnUnload();
+                        }
                         SceneHelper.OnUnload(scene);
                         if (!OnSceneUnload.IsEmpty) {
                             OnSceneUnload.Invoke(new SceneEventArgs() {
@@ -1135,6 +1140,9 @@ namespace FieldDay.Scenes {
                         foreach (var obj in args.Data.LateEnable) {
                             obj.SetActive(true);
                         }
+                        foreach (ISceneCustomData custom in args.Data.CustomData) {
+                            custom.OnLateEnable();
+                        }
                         FlushCallbacks(args.Data.LateEnableCallbackQueue);
                         if (!OnAnySceneEnabled.IsEmpty) {
                             OnAnySceneEnabled.Invoke();
@@ -1184,6 +1192,7 @@ namespace FieldDay.Scenes {
                     m_MainSceneTransition.Stop();
 
                     Game.Events.Dispatch(SceneUtility.Events.PreUnload);
+                    OnMainSceneUnloading.Invoke();
 
                     if (m_MainTransitionUnload != null) {
                         if (m_MainScene != null || m_AuxScenes.Count > 0) {
@@ -1311,6 +1320,10 @@ namespace FieldDay.Scenes {
                     yield return null;
                 }
 
+                if (args.Type == SceneType.Main) {
+                    OnMainSceneLateEnable.Invoke();
+                }
+
                 // one more check for dependencies
 
                 while (!AreDependenciesAndStreamingLoaded(SceneLoadPhase.BeforeReady)) {
@@ -1327,6 +1340,9 @@ namespace FieldDay.Scenes {
                         Scene = data.Scene,
                         LoadType = data.SceneType
                     });
+                    foreach (ISceneCustomData custom in data.CustomData) {
+                        custom.OnReady();
+                    }
                     FlushCallbacks(data.LoadedCallbackQueue);
                 }
 
@@ -1464,6 +1480,32 @@ namespace FieldDay.Scenes {
         /// </summary>
         static public string ActiveSceneName() {
             return SceneManager.GetActiveScene().name;
+        }
+
+        /// <summary>
+        /// Retrieves additional baked scene data for the current scene.
+        /// </summary>
+        static public TData GetActiveSceneBakedData<TData>() where TData : MonoBehaviour, ISceneCustomData {
+            var sceneData = SceneDataExt.Get(SceneManager.GetActiveScene());
+            if (sceneData) {
+                return sceneData.GetComponent<TData>();
+            } else {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns if the given GameObject will persist across scenes.
+        /// </summary>
+        static public bool IsPersistent(GameObject gameObject) {
+            return gameObject.TryGetComponent(out Persist _);
+        }
+
+        /// <summary>
+        /// Returns if the given component's GameObject will persist across scenes.
+        /// </summary>
+        static public bool IsPersistent(Component component) {
+            return component.TryGetComponent(out Persist _);
         }
     }
 

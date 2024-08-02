@@ -46,6 +46,11 @@ namespace FieldDay.Scenes {
         /// </summary>
         public GameObject[] LateEnable;
 
+        /// <summary>
+        /// Additional data objects.
+        /// </summary>
+        public Component[] CustomData;
+
         #region Temp State
 
         /// <summary>
@@ -205,5 +210,17 @@ namespace FieldDay.Scenes {
         Main,
         Aux,
         Persistent
+    }
+
+    /// <summary>
+    /// Custom scene data.
+    /// </summary>
+    public interface ISceneCustomData {
+#if UNITY_EDITOR
+        bool Build(Scene scene);
+#endif // UNITY_EDITOR
+        void OnLateEnable();
+        void OnReady();
+        void OnUnload();
     }
 }
