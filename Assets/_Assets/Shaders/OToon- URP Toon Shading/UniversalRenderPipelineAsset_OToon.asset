@@ -25,8 +25,8 @@ MonoBehaviour:
   m_SupportsTerrainHoles: 1
   m_SupportsHDR: 1
   m_HDRColorBufferPrecision: 0
-  m_MSAA: 8
-  m_RenderScale: 1
+  m_MSAA: 2
+  m_RenderScale: 2
   m_UpscalingFilter: 0
   m_FsrOverrideSharpness: 0
   m_FsrSharpness: 0.92
@@ -38,23 +38,23 @@ MonoBehaviour:
   m_MainLightShadowmapResolution: 4096
   m_AdditionalLightsRenderingMode: 1
   m_AdditionalLightsPerObjectLimit: 8
-  m_AdditionalLightShadowsSupported: 0
-  m_AdditionalLightsShadowmapResolution: 512
+  m_AdditionalLightShadowsSupported: 1
+  m_AdditionalLightsShadowmapResolution: 2048
   m_AdditionalLightsShadowResolutionTierLow: 128
   m_AdditionalLightsShadowResolutionTierMedium: 256
   m_AdditionalLightsShadowResolutionTierHigh: 512
   m_ReflectionProbeBlending: 0
   m_ReflectionProbeBoxProjection: 0
-  m_ShadowDistance: 50
+  m_ShadowDistance: 44.7
   m_ShadowCascadeCount: 4
   m_Cascade2Split: 0.25
   m_Cascade3Split: {x: 0.1, y: 0.3}
-  m_Cascade4Split: {x: 0.084, y: 0.192, z: 0.39}
-  m_CascadeBorder: 0.1
-  m_ShadowDepthBias: 2.03
-  m_ShadowNormalBias: 1.48
+  m_Cascade4Split: {x: 0.084, y: 0.38852227, z: 0.5639132}
+  m_CascadeBorder: 0.07182037
+  m_ShadowDepthBias: 0.62
+  m_ShadowNormalBias: 2
   m_AnyShadowsSupported: 1
-  m_SoftShadowsSupported: 1
+  m_SoftShadowsSupported: 0
   m_ConservativeEnclosingSphere: 0
   m_NumIterationsEnclosingSphere: 64
   m_SoftShadowQuality: 2
@@ -104,6 +104,10 @@ MonoBehaviour:
   m_PrefilterDBufferMRT1: 0
   m_PrefilterDBufferMRT2: 0
   m_PrefilterDBufferMRT3: 0
+  m_PrefilterSoftShadowsQualityLow: 0
+  m_PrefilterSoftShadowsQualityMedium: 0
+  m_PrefilterSoftShadowsQualityHigh: 0
+  m_PrefilterSoftShadows: 0
   m_PrefilterScreenCoord: 0
   m_PrefilterNativeRenderPass: 0
   m_ShaderVariantLogLevel: 0
