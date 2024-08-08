@@ -13,6 +13,7 @@ namespace FieldDay.Data {
         [SerializeField, HideInEditor] internal SerializedAttributeSet InvokeBoot;
         [SerializeField, HideInEditor] internal SerializedAttributeSet ConfigVars;
         [SerializeField, HideInEditor] internal SerializedAttributeSet DebugMenu;
+        [SerializeField, HideInEditor] internal SerializedAttributeSet EngineMenu;
         [SerializeField, HideInEditor] internal SerializedAttributeSet QuickMenu;
 
         static private ReflectionBootData s_Mounted;
@@ -42,9 +43,10 @@ namespace FieldDay.Data {
 
             if ((flags & BakeFlags.IsDevelopment) != 0) {
                 DebugMenu = SerializedAttributeSet.Create<DebugMenuFactoryAttribute>(ReflectionCache.UserAssemblies, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                EngineMenu = SerializedAttributeSet.Create<EngineMenuFactoryAttribute>(ReflectionCache.UserAssemblies, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
                 QuickMenu = SerializedAttributeSet.Create<QuickMenuFactoryAttribute>(ReflectionCache.UserAssemblies, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             } else {
-                DebugMenu = QuickMenu = null;
+                DebugMenu = QuickMenu = EngineMenu = null;
             }
 
             return true;

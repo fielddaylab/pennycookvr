@@ -195,6 +195,8 @@ namespace FieldDay {
 
         [NonSerialized] private bool m_Initialized;
 
+        static private GameLoop s_Instance;
+
         #region Unity Events
 
         private void Awake() {
@@ -206,6 +208,7 @@ namespace FieldDay {
             s_Initialized = true;
             m_Initialized = true;
             DontDestroyOnLoad(gameObject);
+            s_Instance = this;
             Log.Msg("[GameLoop] Starting...");
 
             using (Profiling.Time("GameLoop.Awake")) {
@@ -410,6 +413,7 @@ namespace FieldDay {
             CounterHandle.DestroyAllocator();
             CrashHandler.Deregister();
             s_Initialized = m_Initialized = false;
+            s_Instance = null;
         }
 
         private void OnApplicationQuit() {
@@ -986,6 +990,17 @@ namespace FieldDay {
         }
 
         #endregion // Debug
+
+        #region Hosting
+
+        /// <summary>
+        /// The global host.
+        /// </summary>
+        static public GameLoop Host {
+            get { return s_Instance; }
+        }
+
+        #endregion // Hosting
     }
 
     /// <summary>

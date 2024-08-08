@@ -13,18 +13,25 @@ namespace Pennycook.Tablet {
 			bool isGripping = !m_StateC.GrippedHandMask.IsEmpty;
 			
             if (!ReferenceEquals(m_StateA.HighlightedObject, null)) {
-                if (!m_StateA.HighlightedObject || !m_StateA.HighlightedObject.isActiveAndEnabled || !isGripping) {
+                if (!m_StateA.HighlightedObject || !m_StateA.HighlightedObject.isActiveAndEnabled || !isGripping || m_StateB.CurrentTool == TabletTool.None) {
                     ClearSelection(m_StateA);
                     return;
                 }
             }
 
-            if (Frame.Interval(5) && isGripping) {
+            if (Frame.Interval(3) && isGripping && m_StateB.CurrentTool != TabletTool.None) {
 				TabletZoomState zoomState = Find.State<TabletZoomState>();
+
+                LayerMask searchMask;
+                if (m_StateB.CurrentTool == TabletTool.Move) {
+                    searchMask = TabletUtility.TravelSearchMask;
+                } else {
+                    searchMask = TabletUtility.DefaultSearchMask;
+                }
 				
                 m_StateA.CachedLookCameraTransform.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
                 Ray r = new Ray(cameraPos, Geom.Forward(cameraRot));
-                TabletHighlightable scannable = TabletUtility.FindBestHighlightableAlongRay(r, 40 * zoomState.ZoomMultiplier);
+                TabletHighlightable scannable = TabletUtility.FindBestHighlightableAlongRay(r, searchMask, 40 * zoomState.ZoomMultiplier);
 
                 if (!scannable) {
                     if (m_StateA.HighlightedObject != null) {

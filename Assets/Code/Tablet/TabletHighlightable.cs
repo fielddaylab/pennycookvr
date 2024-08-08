@@ -15,8 +15,10 @@ namespace Pennycook.Tablet {
         [Multiline] public string DetailedText;
 
         [NonSerialized] public TabletInteractable CachedInteraction;
+        [NonSerialized] public TabletWarpPoint CachedWarp;
         void IRegistrationCallbacks.OnRegister() {
             this.CacheComponent(ref CachedInteraction);
+            this.CacheComponent(ref CachedWarp);
         }
 
         void IRegistrationCallbacks.OnDeregister() {

@@ -12,6 +12,9 @@ static public class LayerMasks {
     // Layer 2: Ignore Raycast
     public const int IgnoreRaycast_Index = 2;
     public const int IgnoreRaycast_Mask = 4;
+    // Layer 3: Solid
+    public const int Solid_Index = 3;
+    public const int Solid_Mask = 8;
     // Layer 4: Water
     public const int Water_Index = 4;
     public const int Water_Mask = 16;
@@ -27,6 +30,12 @@ static public class LayerMasks {
     // Layer 8: Highlightable
     public const int Highlightable_Index = 8;
     public const int Highlightable_Mask = 256;
+    // Layer 9: Warpable
+    public const int Warpable_Index = 9;
+    public const int Warpable_Mask = 512;
+    // Layer 10: SeeThroughSolid
+    public const int SeeThroughSolid_Index = 10;
+    public const int SeeThroughSolid_Mask = 1024;
     // Layer 31: OffscreenTabletInterface
     public const int OffscreenTabletInterface_Index = 31;
     public const int OffscreenTabletInterface_Mask = -2147483648;

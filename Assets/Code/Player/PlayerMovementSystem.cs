@@ -11,10 +11,14 @@ namespace Pennycook {
         public override void ProcessWork(float deltaTime) {
             var eitherHandButtons = m_StateB.LeftHand.Buttons | m_StateB.RightHand.Buttons;
             if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisLeft)) {
-                m_StateA.MoveRoot.Rotate(new Vector3(0, -30, 0), Space.Self);
+                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
+                    move.Rotate(new Vector3(0, -30, 0));
+                }
             }
             if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisRight)) {
-                m_StateA.MoveRoot.Rotate(new Vector3(0, 30, 0), Space.Self);
+                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
+                    move.Rotate(new Vector3(0, 30, 0));
+                }
             }
 
 #if UNITY_EDITOR
@@ -32,10 +36,14 @@ namespace Pennycook {
             }
 
             if (notGrippedHands.ConsumePress(XRHandButtons.PrimaryAxisUp)) {
-                m_StateA.MoveRoot.Translate(flattenedLook * 0.3f, Space.World);
+                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
+                    move.Translate(flattenedLook * 0.3f);
+                }
             }
             if (notGrippedHands.ConsumePress(XRHandButtons.PrimaryAxisDown)) {
-                m_StateA.MoveRoot.Translate(flattenedLook * -0.3f, Space.World);
+                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
+                    move.Translate(flattenedLook * -0.3f);
+                }
             }
 
             if (m_StateB.LeftHand.Buttons.IsDownAll(XRHandButtons.PrimaryAxisClick | XRHandButtons.TriggerButton)

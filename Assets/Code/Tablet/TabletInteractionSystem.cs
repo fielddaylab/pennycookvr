@@ -38,25 +38,56 @@ namespace Pennycook.Tablet {
             if (desiredState == TabletInteractionState.State.Available && m_StateD.GrippedHandMask.IsSet((int) XRHandIndex.Right)) {
                 XRInputState input = Find.State<XRInputState>();
                 if (input.RightHand.Buttons.ConsumePress(XRHandButtons.Primary)) {
-                    TabletInteractionUtility.TryInteract(m_StateB.HighlightedObject.CachedInteraction, ts);
+                    DoInteraction(ts);
+                }
+            }
+        }
+
+        private void DoInteraction(double timestamp) {
+            switch (m_StateC.CurrentTool) {
+                case TabletTool.Scan: {
+                    TabletInteractionUtility.TryInteract(m_StateB.HighlightedObject.CachedInteraction, timestamp);
+                    break;
+                }
+
+                case TabletTool.Move: {
+                    PlayerMovementState moveState = Find.State<PlayerMovementState>();
+                    PlayerMovementUtility.WarpTo(moveState, m_StateB.HighlightedObject.CachedWarp);
+                    break;
                 }
             }
         }
 
         private TabletInteractionState.State GetDesiredState(double timestamp) {
-            if (m_StateC.CurrentTool != TabletTool.Scan) {
+            PlayerMovementState moveState = Find.State<PlayerMovementState>();
+            if (moveState.CurrentState == PlayerMovementState.State.Warping) {
                 return TabletInteractionState.State.Disabled;
             }
 
-            if (m_StateD.GrippedHandMask.IsEmpty || !m_StateB.HighlightedObject || !m_StateB.HighlightedObject.CachedInteraction || !TabletInteractionUtility.HasInteractions(m_StateB.HighlightedObject.CachedInteraction)) {
-                return TabletInteractionState.State.Unavailable;
-            }
+            switch (m_StateC.CurrentTool) {
+                case TabletTool.Scan: {
+                    if (m_StateD.GrippedHandMask.IsEmpty || !m_StateB.HighlightedObject || !m_StateB.HighlightedObject.CachedInteraction || !TabletInteractionUtility.HasInteractions(m_StateB.HighlightedObject.CachedInteraction)) {
+                        return TabletInteractionState.State.Unavailable;
+                    }
 
-            if (!TabletInteractionUtility.CanInteract(m_StateB.HighlightedObject.CachedInteraction, timestamp)) {
-                return TabletInteractionState.State.Disabled;
-            }
+                    if (!TabletInteractionUtility.CanInteract(m_StateB.HighlightedObject.CachedInteraction, timestamp)) {
+                        return TabletInteractionState.State.Disabled;
+                    }
 
-            return TabletInteractionState.State.Available;
+                    return TabletInteractionState.State.Available;
+                }
+
+                case TabletTool.Move: {
+                    if (m_StateD.GrippedHandMask.IsEmpty || !m_StateB.HighlightedObject || !m_StateB.HighlightedObject.CachedWarp || !m_StateB.HighlightedObject.CachedWarp.CanWarp) {
+                        return TabletInteractionState.State.Unavailable;
+                    }
+
+                    return TabletInteractionState.State.Available;
+                }
+
+                default:
+                    return TabletInteractionState.State.Unavailable;
+            }
         }
     }
 }

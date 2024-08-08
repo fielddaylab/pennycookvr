@@ -280,8 +280,6 @@ namespace FieldDay.Editor {
                     return;
                 }
 
-                List<Component> customList = new List<Component>(8);
-
                 foreach (var type in TypeCache.GetTypesDerivedFrom(typeof(ISceneCustomData))) {
                     if (type.IsAbstract || type.IsInterface) {
                         continue;
@@ -293,14 +291,12 @@ namespace FieldDay.Editor {
                     }
 
                     ISceneCustomData c = (ISceneCustomData) ext.gameObject.AddComponent(type);
-                    if (c.Build(scene)) {
-                        customList.Add((Component) c);
-                    } else {
-                        Baking.Destroy((UnityEngine.Object) c);
+                    if (!c.Build(scene)) {
+                        GameObject.DestroyImmediate((UnityEngine.Object) c);
                     }
                 }
 
-                ext.CustomData = customList.ToArray();
+                ext.CustomData = ext.GetComponents(typeof(ISceneCustomData));
             }
         }
     }

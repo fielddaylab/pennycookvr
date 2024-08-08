@@ -9,6 +9,10 @@ namespace Pennycook {
     public class PlayerHandGripSystem : ComponentSystemBehaviour<PlayerHandRig> {
         public override void ProcessWork(float deltaTime) {
             XRInputState input = Find.State<XRInputState>();
+            PlayerMovementState moveState = Find.State<PlayerMovementState>();
+            if (moveState.CurrentState == PlayerMovementState.State.Warping) {
+                return;
+            }
 
             foreach(var c in m_Components) {
                 ref XRHandState hand = ref input.Hand(c.Hand);

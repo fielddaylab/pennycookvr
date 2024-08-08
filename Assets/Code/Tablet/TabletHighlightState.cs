@@ -44,16 +44,20 @@ namespace Pennycook.Tablet {
     }
 
     static public partial class TabletUtility {
-        //static private readonly RaycastHit[] s_RaycastHitBuffer = new RaycastHit[32];
+        static private readonly RaycastHit[] s_RaycastHitBuffer = new RaycastHit[32];
 
-        static public TabletHighlightable FindBestHighlightableAlongRay(Ray ray, float maxDistance) {
-            const int layerMask = LayerMasks.Default_Mask | LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask;
-            if (Physics.SphereCast(ray, 0.05f, out RaycastHit hit, maxDistance, layerMask)) {
+        public const int DefaultSearchMask = LayerMasks.Default_Mask | LayerMasks.Solid_Mask | LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask;
+        public const int TravelSearchMask = LayerMasks.Default_Mask | LayerMasks.Solid_Mask | LayerMasks.Default_Mask | LayerMasks.Warpable_Mask;
+
+        static public TabletHighlightable FindBestHighlightableAlongRay(Ray ray, LayerMask mask, float maxDistance) {
+            if (Physics.SphereCast(ray, 0.12f, out RaycastHit hit, maxDistance, mask)) {
                 //DebugDraw.AddLine(ray.origin, hit.point, Color.blue, 0.2f, 0.1f);
                 TabletHighlightable highlightable = hit.collider.GetComponent<TabletHighlightable>();
                 Rigidbody body;
                 if (!highlightable && (body = hit.rigidbody)) {
                     highlightable = body.GetComponent<TabletHighlightable>();
+                } else {
+                    highlightable = hit.collider.GetComponentInParent<TabletHighlightable>();
                 }
                 return highlightable;
             } else {

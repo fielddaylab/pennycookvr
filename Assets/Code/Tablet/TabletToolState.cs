@@ -35,7 +35,8 @@ namespace Pennycook.Tablet {
         None,
         Scan,
         Capture,
-        Count
+        Count,
+        Move,
     }
 
     static public partial class TabletUtility {

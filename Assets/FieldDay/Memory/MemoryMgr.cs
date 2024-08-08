@@ -4,6 +4,7 @@ using System.Runtime;
 using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
+using FieldDay.Debugging;
 using UnityEngine;
 
 namespace FieldDay.Memory {
@@ -51,15 +52,19 @@ namespace FieldDay.Memory {
             }
 
             if (genMask != 0) {
-                Log.Trace("[MemoryMgr] Garbage collected {0}", genMask);
+                if (DebugFlags.IsFlagSet(DebuggingFlags.LogGCState)) {
+                    Log.Trace("[MemoryMgr] Garbage collected {0}", genMask);
+                }
                 m_MostRecentGCTimestamp = now;
                 Mem.InvokeGCOccurred(genMask);
             }
 
             long allocated = GC.GetTotalMemory(false);
             if (m_MainThreadAllocationTracker != allocated) {
-                long diff = allocated - m_MainThreadAllocationTracker;
-                Log.Trace("[MemoryMgr] GC allocated {0}b", diff);
+                if (DebugFlags.IsFlagSet(DebuggingFlags.LogGCState)) {
+                    long diff = allocated - m_MainThreadAllocationTracker;
+                    Log.Trace("[MemoryMgr] GC allocated {0}b", diff);
+                }
                 m_MainThreadAllocationTracker = allocated;
             }
         }
@@ -99,6 +104,27 @@ namespace FieldDay.Memory {
         }
 
         #endregion // Events
+
+        #region Debugging
+
+        private enum DebuggingFlags {
+            LogGCState
+        }
+
+#if DEVELOPMENT
+
+        [EngineMenuFactory]
+        static private DMInfo CreateDebugMenu() {
+            DMInfo info = new DMInfo("MemoryMgr");
+
+            DebugFlags.Menu.AddFlagToggle(info, "Log All GC Events", DebuggingFlags.LogGCState);
+
+            return info;
+        }
+
+#endif // DEVELOPMENT
+        
+        #endregion // Debugging
     }
 
     [Serializable]
