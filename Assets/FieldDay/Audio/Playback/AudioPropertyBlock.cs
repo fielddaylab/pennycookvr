@@ -50,14 +50,14 @@ namespace FieldDay.Audio {
             if (mixFactor <= 0) {
                 target = s_Default;
             } else if (mixFactor < 1) {
-                target.Volume = MixVal(target.Volume, mixFactor);
-                target.Pitch = MixVal(target.Pitch, mixFactor);
+                target.Volume = MixVal1(target.Volume, mixFactor);
+                target.Pitch = MixVal1(target.Pitch, mixFactor);
                 target.Pan *= mixFactor;
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static private float MixVal(float val, float t) {
+        static private float MixVal1(float val, float t) {
             return 1 + (val - 1) * t;
         }
 
@@ -73,6 +73,7 @@ namespace FieldDay.Audio {
         static private readonly AudioPropertyBlock s_Default = new AudioPropertyBlock() {
             Volume = 1,
             Pitch = 1,
+            Pan = 0,
             Pause = false,
             Mute = false
         };
@@ -83,5 +84,16 @@ namespace FieldDay.Audio {
         static public AudioPropertyBlock Default { get { return s_Default; } }
 
         #endregion // Defaults
+    }
+
+    public enum AudioFloatPropertyType {
+        Volume,
+        Pitch,
+        Pan
+    }
+
+    public enum AudioBoolPropertyType {
+        Pause,
+        Mute
     }
 }

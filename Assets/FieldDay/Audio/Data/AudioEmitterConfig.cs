@@ -1,4 +1,5 @@
 using System;
+using BeauRoutine;
 using BeauUtil;
 using UnityEngine;
 
@@ -21,10 +22,10 @@ namespace FieldDay.Audio {
         [AutoEnum] public AudioRolloffMode Rolloff;
 
         /// <summary>
-        /// Index of the custom rolloff curve.
+        /// Custom rolloff curve.
         /// </summary>
-        [Tooltip("Custom rolloff curve index")]
-        public int CustomRolloffCurveIndex;
+        [Tooltip("Custom rolloff curve")]
+        public AnimationCurve CustomRolloffCurve;
 
         /// <summary>
         /// Rolloff minimum distance.
@@ -92,6 +93,41 @@ namespace FieldDay.Audio {
             DopplerLevel = 1,
             ReverbZoneMix = 1,
         };
+
+        #region Utility
+
+        /// <summary>
+        /// Applies the given audio emitter configuration to the given audio source.
+        /// </summary>
+        static public void ApplyConfiguration(AudioSource source, in AudioEmitterConfig config) {
+            source.bypassListenerEffects = (config.EffectBypasses & AudioEmitterBypassFlags.ListenerEffects) != 0;
+            source.bypassReverbZones = (config.EffectBypasses & AudioEmitterBypassFlags.ReverbZones) != 0;
+            source.bypassEffects = (config.EffectBypasses & AudioEmitterBypassFlags.LocalEffects) != 0;
+
+            source.reverbZoneMix = config.ReverbZoneMix;
+
+            switch (config.Mode) {
+                case AudioEmitterMode.Fixed: {
+                    source.spatialBlend = 0;
+                    break;
+                }
+
+                default: {
+                    source.dopplerLevel = config.DopplerLevel;
+                    source.spread = config.Spread;
+                    source.rolloffMode = config.Rolloff;
+                    if (config.Rolloff == AudioRolloffMode.Custom) {
+                        source.SetCustomCurve(AudioSourceCurveType.CustomRolloff, config.CustomRolloffCurve);
+                    }
+                    source.minDistance = config.MinDistance;
+                    source.maxDistance = config.MaxDistance;
+                    source.spatialBlend = 1 - config.DespatializeFactor;
+                    break;
+                }
+            }
+        }
+
+        #endregion // Utility
     }
 
     /// <summary>

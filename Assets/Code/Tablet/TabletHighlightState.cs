@@ -50,7 +50,53 @@ namespace Pennycook.Tablet {
         public const int TravelSearchMask = LayerMasks.Default_Mask | LayerMasks.Solid_Mask | LayerMasks.Default_Mask | LayerMasks.Warpable_Mask;
 
         static public TabletHighlightable FindBestHighlightableAlongRay(Ray ray, LayerMask mask, float maxDistance) {
-            if (Physics.SphereCast(ray, 0.12f, out RaycastHit hit, maxDistance, mask)) {
+            if (Physics.SphereCast(ray, 0.3f, out RaycastHit hit, maxDistance, mask)) {
+                //DebugDraw.AddLine(ray.origin, hit.point, Color.blue, 0.2f, 0.1f);
+                TabletHighlightable highlightable = hit.collider.GetComponent<TabletHighlightable>();
+                Rigidbody body;
+                if (!highlightable && (body = hit.rigidbody)) {
+                    highlightable = body.GetComponent<TabletHighlightable>();
+                } else {
+                    highlightable = hit.collider.GetComponentInParent<TabletHighlightable>();
+                }
+                return highlightable;
+            } else {
+                return null;
+            }
+        }
+
+        static private TabletHighlightable FindBestHighlightableAlongRay_ScoredMethod(Ray ray, LayerMask mask, float maxDistance) {
+            int allCasted = Physics.SphereCastNonAlloc(ray, 1.25f, s_RaycastHitBuffer, maxDistance, mask);
+            if (allCasted == 0) {
+                return null;
+            }
+
+            RaycastHit hit = default;
+            float hitAlignment = 0;
+            for (int i = 0; i < allCasted; i++) {
+                RaycastHit potential = s_RaycastHitBuffer[i];
+                Vector3 potentialPos;
+                Rigidbody body;
+                if ((body = potential.rigidbody)) {
+                    potentialPos = body.position;
+                } else {
+                    potentialPos = potential.collider.bounds.center;
+                }
+
+                float alignment = Vector3.Dot(ray.direction, potentialPos - ray.origin);
+                if (alignment < 0.7f) {
+                    continue;
+                }
+
+                if (alignment > hitAlignment) {
+                    hit = potential;
+                    hitAlignment = alignment;
+                }
+            }
+
+            Array.Clear(s_RaycastHitBuffer, 0, allCasted);
+
+            if (hit.colliderInstanceID != 0) {
                 //DebugDraw.AddLine(ray.origin, hit.point, Color.blue, 0.2f, 0.1f);
                 TabletHighlightable highlightable = hit.collider.GetComponent<TabletHighlightable>();
                 Rigidbody body;

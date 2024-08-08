@@ -8,16 +8,15 @@ namespace FieldDay.Audio {
         private int m_AllocHead;
 
         public void Create(Unsafe.ArenaHandle arena, int amount) {
-            m_BitMap = new UnsafeBitSet(arena.AllocSpan<uint>(Unsafe.AlignUp8(amount) / 32));
+            m_BitMap = new UnsafeBitSet(arena.AllocSpan<uint>(Unsafe.AlignUp32(amount) / 32));
             m_BitMap.Clear();
 
             m_Data = arena.AllocSpan<T>(amount);
         }
 
         /// <summary>
-        /// Allocates a new instance from the 
+        /// Allocates a new instance from the pool.
         /// </summary>
-        /// <returns></returns>
         public T* Alloc() {
             while(!m_BitMap.IsSet(m_AllocHead)) {
                 m_AllocHead = (m_AllocHead + 1) % m_Data.Length;

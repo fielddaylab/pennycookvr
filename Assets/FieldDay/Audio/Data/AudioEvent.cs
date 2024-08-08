@@ -1,34 +1,30 @@
 using System;
 using BeauRoutine.Extensions;
 using BeauUtil;
-using EasyAssetStreaming;
+using FieldDay.Assets;
 using UnityEngine;
 
 namespace FieldDay.Audio {
     /// <summary>
-    /// Audio Event information.
+    /// Audio event information.
     /// </summary>
-    //[CreateAssetMenu(menuName = "Field Day/Audio/Audio Event")]
-    public class AudioEvent : ScriptableObject {
-        public AudioVoiceType VoiceType;
-        public ushort BusIndex;
-
+    [CreateAssetMenu(menuName = "Field Day/Audio/Audio Event")]
+    public class AudioEvent : NamedAsset {
         public AudioClip[] Samples = Array.Empty<AudioClip>();
-        [StreamingAudioPath] public string StreamingPath;
 
+        [Header("Playback Parameters")]
         public FloatRange Volume = new FloatRange(1);
         public FloatRange Pitch = new FloatRange(1);
         public FloatRange Pan = new FloatRange(0);
         public FloatRange Delay = new FloatRange(0);
+        [Space]
         public bool Loop;
-        public bool RandomizeStartLocation;
+        public bool RandomizeStartTime;
 
-        [Range(0, 1)]
-        public byte Priority = 128;
+        [Header("Other Parameters")]
+        [Range(0, 1)] public byte Priority = 128;
+        [AssetName(typeof(AudioEmitterProfile))] public StringHash32 EmitterConfiguration;
 
-        public AudioEmitterConfig Spatial = AudioEmitterConfig.Default2D;
-
-        [NonSerialized] public string OverrideStreaming;
         [NonSerialized] internal StringHash32 CachedId;
         [NonSerialized] internal RandomDeck<AudioClip> SampleSelector;
         
@@ -36,19 +32,18 @@ namespace FieldDay.Audio {
         /// Returns if this is a valid event.
         /// </summary>
         public bool IsValid() {
-            if (BusIndex >= AudioMgr.MaxBuses) {
-                return false;
-            }
-
-            if (VoiceType == AudioVoiceType.Stream) {
-                return !string.IsNullOrEmpty(ResolveStreamingPath());
-            } else {
-                return Samples.Length > 0;
-            }
+            return Samples.Length > 0;
         }
+    }
 
-        public string ResolveStreamingPath() {
-            return !string.IsNullOrEmpty(OverrideStreaming) ? OverrideStreaming : StreamingPath;
+    /// <summary>
+    /// Event reference attribute.
+    /// </summary>
+    public class AudioEventRefAttribute : AssetNameAttribute {
+        public AudioEventRefAttribute() : base(typeof(AudioEvent), true) { }
+
+        protected internal override string Name(UnityEngine.Object obj) {
+            return base.Name(obj).Replace('-', '/');
         }
     }
 }

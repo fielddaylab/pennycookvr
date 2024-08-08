@@ -68,8 +68,8 @@ namespace Pennycook {
             }
 
             public void Dispose() {
-                UnparentHand(ref Left);
                 UnparentHand(ref Right);
+                UnparentHand(ref Left);
 
                 SyncPhysicsHands(Rig, false);
             }

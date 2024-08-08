@@ -1,14 +1,8 @@
 using System;
 using System.Collections;
 using BeauRoutine;
-using BeauUtil;
-using BeauUtil.UI;
 using FieldDay;
-using FieldDay.HID;
-using FieldDay.HID.XR;
 using FieldDay.SharedState;
-using FieldDay.Systems;
-using FieldDay.XR;
 using Pennycook.Tablet;
 using UnityEngine;
 
@@ -38,7 +32,7 @@ namespace Pennycook {
 
         static private IEnumerator WarpRoutine(PlayerMovementState state, TabletWarpPoint warpPoint) {
             state.WarpFader.enabled = true;
-            yield return state.WarpFader.FadeTo(1, 0.25f);
+            yield return state.WarpFader.FadeTo(1, 0.4f);
             yield return 0.1f;
             PlayerRig rig = Find.State<PlayerRig>();
             using (var move = new PlayerRigUtils.MovementRequest(rig)) {
@@ -49,7 +43,8 @@ namespace Pennycook {
                     move.Teleport(location.position);
                 }
             }
-            yield return state.WarpFader.FadeTo(0, 0.25f);
+            yield return 0.1f;
+            yield return state.WarpFader.FadeTo(0, 0.4f);
             state.WarpFader.enabled = false;
             state.CurrentState = PlayerMovementState.State.Default;
         }

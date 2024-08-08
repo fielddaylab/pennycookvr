@@ -11,7 +11,12 @@ namespace FieldDay.Audio {
             SpectrumData = 0x02
         }
 
+        internal AudioHandle Handle;
+        internal object Context;
+
         internal CallbackTypes Callbacks;
+        internal AudioOutputPCMCallback OutputCallback;
+        internal AudioOutputPCMCallback SpectrumCallback;
     }
 
     public delegate void AudioOutputPCMCallback(AudioHandle handle, UnsafeSpan<byte> data, int channel, object context);
