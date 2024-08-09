@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using BeauUtil.Debugger;
+
 
 #if UNITY_EDITOR
 using ScriptableBake;
@@ -12,10 +14,12 @@ namespace FieldDay.Assets {
     /// Default asset package.
     /// </summary>
     [CreateAssetMenu(menuName = "Field Day/Assets/Asset Package")]
-    public class AssetPack : ScriptableObject, IAssetPackage {
+    public sealed class AssetPack : ScriptableObject, IAssetPackage {
         [SerializeField] private GlobalAsset[] m_GlobalAssets = Array.Empty<GlobalAsset>();
         [SerializeField] private NamedAsset[] m_NamedAssets = Array.Empty<NamedAsset>();
         // TODO: lite asset groups
+
+        [NonSerialized] private int m_RefCount;
 
         #region IAssetPackage
 
@@ -37,6 +41,19 @@ namespace FieldDay.Assets {
             foreach(var named in m_NamedAssets) {
                 mgr.RemoveNamed(named.name, named);
             }
+        }
+
+        bool IRefCountedAsset.AddRef() {
+            return (m_RefCount++) == 0;
+        }
+
+        bool IRefCountedAsset.RemoveRef() {
+            Assert.True(m_RefCount > 0, "Unbalanced AssetPack.AddRef/RemoveRef calls");
+            return (m_RefCount--) == 1;
+        }
+
+        bool IRefCountedAsset.IsReferenced() {
+            return m_RefCount > 0;
         }
 
         #endregion // IAssetPackage

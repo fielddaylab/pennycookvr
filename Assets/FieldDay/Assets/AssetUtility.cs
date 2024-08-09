@@ -116,6 +116,52 @@ namespace FieldDay.Assets {
 
             return asset.ToString();
         }
+
+        /// <summary>
+        /// Adds a reference to the given asset.
+        /// If this is an IRefCountedAsset, this will only return true on the first reference.
+        /// Otherwise, this will always return true;
+        /// </summary>
+        static public bool AddReference(object asset) {
+            IRefCountedAsset counted = asset as IRefCountedAsset;
+            if (counted != null) {
+                return counted.AddRef();
+            } else {
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Adds a reference to the given asset.
+        /// If this is an IRefCountedAsset, this will only return true on the first reference.
+        /// Otherwise, this will always return true;
+        /// </summary>
+        static public bool AddReference(IRefCountedAsset asset) {
+            return asset.AddRef();
+        }
+
+        /// <summary>
+        /// Removes a reference from the given asset.
+        /// If this is an IRefCountedAsset, this will only return true on the last dereference.
+        /// Otherwise, this will always return true;
+        /// </summary>
+        static public bool RemoveReference(object asset) {
+            IRefCountedAsset counted = asset as IRefCountedAsset;
+            if (counted != null) {
+                return counted.RemoveRef();
+            } else {
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Removes a reference from the given asset.
+        /// If this is an IRefCountedAsset, this will only return true on the last dereference.
+        /// Otherwise, this will always return true;
+        /// </summary>
+        static public bool RemoveReference(IRefCountedAsset asset) {
+            return asset.RemoveRef();
+        }
     }
 
     /// <summary>

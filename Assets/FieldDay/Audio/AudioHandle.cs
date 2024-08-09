@@ -7,9 +7,9 @@ namespace FieldDay.Audio {
     /// <summary>
     /// Audio playback handle.
     /// </summary>
-    [StructLayout(LayoutKind.Explicit, Size = 4)]
+    [StructLayout(LayoutKind.Explicit)]
     public struct AudioHandle {
-        [FieldOffset(0)] private readonly UniqueId16 m_Id;
+        [FieldOffset(0)] internal readonly UniqueId16 m_Id;
 
         internal AudioHandle(UniqueId16 id) {
             m_Id = id;

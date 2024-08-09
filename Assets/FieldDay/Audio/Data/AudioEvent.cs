@@ -9,7 +9,7 @@ namespace FieldDay.Audio {
     /// Audio event information.
     /// </summary>
     [CreateAssetMenu(menuName = "Field Day/Audio/Audio Event")]
-    public class AudioEvent : NamedAsset {
+    public sealed class AudioEvent : NamedAsset, IRegistrationCallbacks {
         public AudioClip[] Samples = Array.Empty<AudioClip>();
 
         [Header("Playback Parameters")]
@@ -22,10 +22,12 @@ namespace FieldDay.Audio {
         public bool RandomizeStartTime;
 
         [Header("Other Parameters")]
-        [Range(0, 1)] public byte Priority = 128;
+        [Range(0, 256)] public byte Priority = 128;
         [AssetName(typeof(AudioEmitterProfile))] public StringHash32 EmitterConfiguration;
+        public SerializedHash32 Tag;
 
         [NonSerialized] internal StringHash32 CachedId;
+        [NonSerialized] internal AudioEmitterProfile CachedEmitterProfile;
         [NonSerialized] internal RandomDeck<AudioClip> SampleSelector;
         
         /// <summary>
@@ -33,6 +35,13 @@ namespace FieldDay.Audio {
         /// </summary>
         public bool IsValid() {
             return Samples.Length > 0;
+        }
+
+        void IRegistrationCallbacks.OnDeregister() {
+        }
+
+        void IRegistrationCallbacks.OnRegister() {
+            CachedId = name;
         }
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using BeauUtil.Debugger;
 using UnityEngine;
 
 namespace FieldDay.Audio {
@@ -8,18 +9,20 @@ namespace FieldDay.Audio {
     /// Audio playback properties.
     /// </summary>
     [Serializable]
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct AudioPropertyBlock {
         public float Volume;
         public float Pitch;
         public float Pan;
+        public float LoPass;
+        public float HiPass;
         public bool Pause;
         public bool Mute;
 
         /// <summary>
         /// Returns if these parameters result in an audible waveform.
         /// </summary>
-        public bool IsAudible() {
+        public readonly bool IsAudible() {
             return Volume > 0 && !Mathf.Approximately(Pitch, 0) && !Mute && !Pause;
         }
 
@@ -29,6 +32,46 @@ namespace FieldDay.Audio {
         public void Reset() {
             this = s_Default;
         }
+
+        #region Properties
+
+        public readonly float GetFloat(AudioFloatPropertyType property) {
+            Assert.True(property >= AudioFloatPropertyType.Volume && property <= AudioFloatPropertyType.HiPass);
+            unsafe {
+                fixed(float* p = &Volume) {
+                    return p[(int) property];
+                }
+            }
+        }
+
+        public void SetFloat(AudioFloatPropertyType property, float value) {
+            Assert.True(property >= AudioFloatPropertyType.Volume && property <= AudioFloatPropertyType.HiPass);
+            unsafe {
+                fixed (float* p = &Volume) {
+                    p[(int) property] = value;
+                }
+            }
+        }
+
+        public readonly bool GetBool(AudioBoolPropertyType property) {
+            Assert.True(property >= AudioBoolPropertyType.Pause && property <= AudioBoolPropertyType.Mute);
+            unsafe {
+                fixed (bool* p = &Pause) {
+                    return p[(int) property];
+                }
+            }
+        }
+
+        public void SetBool(AudioBoolPropertyType property, bool value) {
+            Assert.True(property >= AudioBoolPropertyType.Pause && property <= AudioBoolPropertyType.Mute);
+            unsafe {
+                fixed (bool* p = &Pause) {
+                    p[(int) property] = value;
+                }
+            }
+        }
+
+        #endregion // Properties
 
         #region Combinations
 
@@ -86,13 +129,15 @@ namespace FieldDay.Audio {
         #endregion // Defaults
     }
 
-    public enum AudioFloatPropertyType {
+    public enum AudioFloatPropertyType : byte {
         Volume,
         Pitch,
-        Pan
+        Pan,
+        LoPass,
+        HiPass
     }
 
-    public enum AudioBoolPropertyType {
+    public enum AudioBoolPropertyType : byte {
         Pause,
         Mute
     }

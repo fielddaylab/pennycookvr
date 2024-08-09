@@ -18,7 +18,8 @@ namespace FieldDay.Audio {
         /// Allocates a new instance from the pool.
         /// </summary>
         public T* Alloc() {
-            while(!m_BitMap.IsSet(m_AllocHead)) {
+            Assert.True(m_BitMap.Count < m_Data.Length, "Pool is full");
+            while(m_BitMap.IsSet(m_AllocHead)) {
                 m_AllocHead = (m_AllocHead + 1) % m_Data.Length;
             }
             T* ptr = m_Data.Ptr + m_AllocHead;
@@ -28,10 +29,23 @@ namespace FieldDay.Audio {
             return ptr;
         }
 
+        /// <summary>
+        /// Frees the given instance back to the pool.
+        /// </summary>
         public void Free(T* ptr) {
             int chunkIdx = (int) (ptr - m_Data.Ptr);
             Assert.True(chunkIdx >= 0 && chunkIdx < m_Data.Length);
             m_BitMap.Unset(chunkIdx);
+        }
+
+        /// <summary>
+        /// Frees the given instance back to the pool.
+        /// </summary>
+        public void TryFree(ref T* ptr) {
+            if (ptr != null) {
+                Free(ptr);
+                ptr = null;
+            }
         }
     }
 }

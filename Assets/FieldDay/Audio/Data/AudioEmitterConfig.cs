@@ -15,6 +15,8 @@ namespace FieldDay.Audio {
         /// </summary>
         [AutoEnum] public AudioEmitterMode Mode;
 
+        [Header("Attenuation")]
+
         /// <summary>
         /// Rolloff type.
         /// </summary>
@@ -39,6 +41,8 @@ namespace FieldDay.Audio {
         [Tooltip("Maximum rolloff distance")]
         [Range(0, 300)] public float MaxDistance;
 
+        [Header("Spatialization")]
+
         /// <summary>
         /// Factor by which the audio is "despatialized".
         /// </summary>
@@ -50,6 +54,8 @@ namespace FieldDay.Audio {
         /// </summary>
         [Range(0, 360)]
         public float Spread;
+
+        [Header("Effects")]
 
         /// <summary>
         /// Doppler level of sound.
@@ -148,28 +154,28 @@ namespace FieldDay.Audio {
         [Label("Fixed (Not Spatial)")]
         Fixed,
 
-        [Label("2D (XY)")]
+        [Label("2D/XY")]
         Flat,
 
-        [Label("2D (XZ)")]
+        [Label("2D/XZ")]
         FlatXZ,
 
-        [Label("2D (YZ)")]
+        [Label("2D/YZ")]
         FlatYZ,
 
-        [Label("3D")]
+        [Label("3D/World")]
         World,
 
-        [Label("3D (Relative to Listener)")]
+        [Label("3D/Relative to Listener")]
         ListenerRelative,
 
-        [Label("Screen Space")]
+        [Label("2D/Screen Space")]
         ScreenSpace,
 
-        [Label("Custom A")]
+        [Label("Custom/A")]
         CustomA,
 
-        [Label("Custom B")]
+        [Label("Custom/B")]
         CustomB
     }
 }

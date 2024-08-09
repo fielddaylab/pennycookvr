@@ -67,6 +67,8 @@ namespace FieldDay {
         [SerializeField]
         private bool m_AllowMultiTouchInput = false;
 
+        [Header("Modules")]
+
         [SerializeField]
         private AudioMgr.Config m_AudioConfig = new AudioMgr.Config();
 
@@ -75,6 +77,9 @@ namespace FieldDay {
             MaterialCapacity = 16,
             MeshCapacity = 16
         };
+
+        [SerializeField]
+        private AssetPack[] m_GlobalAssetPacks = Array.Empty<AssetPack>();
 
         #endregion // Inspector
 
@@ -228,6 +233,9 @@ namespace FieldDay {
                 Game.Memory = new MemoryMgr();
                 Game.Memory.Initialize(m_MemoryConfig);
 
+                Log.Msg("[GameLoop] Creating asset manager...");
+                Game.Assets = new AssetMgr();
+
                 Log.Msg("[GameLoop] Creating systems manager...");
                 Game.Systems = new SystemsMgr();
 
@@ -255,9 +263,6 @@ namespace FieldDay {
 
                 Log.Msg("[GameLoop] Creating gui manager...");
                 Game.Gui = new GuiMgr(Game.Input);
-
-                Log.Msg("[GameLoop] Creating asset manager...");
-                Game.Assets = new AssetMgr();
 
                 Log.Msg("[GameLoop] Creating animation manager...");
                 Game.Animation = new AnimationMgr();
@@ -306,6 +311,11 @@ namespace FieldDay {
             Log.Msg("[GameLoop] Boot finished");
             using (Profiling.Time("GameLoop.Start")) {
                 SetCurrentPhase(GameLoopPhase.Booted);
+
+                foreach(var pack in m_GlobalAssetPacks) {
+                    Game.Assets.LoadPackage(pack);
+                }
+
                 Game.Components.Unlock();
                 Game.Input.Initialize();
                 Game.Gui.Initialize();
@@ -435,10 +445,6 @@ namespace FieldDay {
             Game.Animation.Shutdown();
             Game.Animation = null;
 
-            Log.Msg("[GameLoop] Shutting down asset manager...");
-            Game.Assets.Shutdown();
-            Game.Assets = null;
-
             Log.Msg("[GameLoop] Shutting down gui manager...");
             Game.Gui.Shutdown();
             Game.Gui = null;
@@ -480,6 +486,10 @@ namespace FieldDay {
                 Game.Events.Clear();
                 Game.SetEventDispatcher(null);
             }
+
+            Log.Msg("[GameLoop] Shutting down asset manager...");
+            Game.Assets.Shutdown();
+            Game.Assets = null;
 
             Log.Msg("[GameLoop] Shutting down memory manager...");
             Game.Memory.Shutdown();
@@ -571,6 +581,7 @@ namespace FieldDay {
             // flush event queue
             Game.Events.Flush();
             Game.Gui.FlushCommands();
+            Game.Audio.Update(Frame.UnscaledDeltaTime);
         }
 
         private void LateUpdate() {
@@ -595,11 +606,11 @@ namespace FieldDay {
             }
 
             Game.Gui.ProcessUpdate();
-            Game.Audio.Update(Frame.UnscaledDeltaTime);
 
             // flush event queue
             Game.Events.Flush();
             Game.Gui.FlushCommands();
+            Game.Audio.LateUpdate(Frame.UnscaledDeltaTime);
 
             FlushQueue(s_AfterLateUpdateQueue);
             Game.Scenes.Update();

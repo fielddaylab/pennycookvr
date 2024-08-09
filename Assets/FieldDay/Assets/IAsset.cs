@@ -27,9 +27,18 @@ namespace FieldDay.Assets {
     }
 
     /// <summary>
+    /// Interface for a reference-counted asset.
+    /// </summary>
+    public interface IRefCountedAsset {
+        bool AddRef();
+        bool RemoveRef();
+        bool IsReferenced();
+    }
+
+    /// <summary>
     /// Interface for an asset package.
     /// </summary>
-    public interface IAssetPackage {
+    public interface IAssetPackage : IRefCountedAsset {
         void Mount(AssetMgr mgr);
         void Unmount(AssetMgr mgr);
     }

@@ -1,15 +1,36 @@
+using System;
 using System.Runtime.InteropServices;
+using BeauRoutine;
 using BeauUtil;
+using UnityEngine;
 
 namespace FieldDay.Audio {
+    #region Enums
+
+    [Flags]
+    public enum AudioPlaybackFlags : ushort {
+        Loop = 0x01,
+        UserProvidedSource = 0x02,
+        RandomizePlaybackStart = 0x04,
+    }
+
+    /// <summary>
+    /// Audio command type.
+    /// </summary>
     internal enum AudioCommandType : ushort {
         PlayClipFromName,
+        PlayClipFromAssetRef,
+        PlayFromHandle,
         StopWithHandle,
         StopWithTag,
         StopAll,
-        SetFloatParameter,
-        SetBoolParameter
+        SetVoiceFloatParameter,
+        SetVoiceBoolParameter,
+        SetBusFloatParameter,
+        SetBusBoolParameter
     }
+
+    #endregion // Enums
 
     #region Unions
 
@@ -19,13 +40,13 @@ namespace FieldDay.Audio {
     [StructLayout(LayoutKind.Explicit)]
     internal struct AudioIdRef {
         [FieldOffset(0)] public StringHash32 Id;
-        [FieldOffset(0)] public AudioHandle Handle;
+        [FieldOffset(0)] public UniqueId16 Handle;
 
         static public implicit operator AudioIdRef(StringHash32 id) {
             return new AudioIdRef() { Id = id };
         }
 
-        static public implicit operator AudioIdRef(AudioHandle handle) {
+        static public implicit operator AudioIdRef(UniqueId16 handle) {
             return new AudioIdRef() { Handle = handle };
         }
     }
@@ -49,7 +70,72 @@ namespace FieldDay.Audio {
 
     #endregion // Unions
 
-    internal struct AudioCommand {
+    #region Command Data
 
+    /// <summary>
+    /// Data for PlayClipFromName and PlayClipFromAssetRef
+    /// </summary>
+    internal struct PlayCommandData {
+        public AudioAssetRef Asset;
+        public float Volume;
+        public float Pitch;
+        public StringHash32 Tag;
+        public AudioPlaybackFlags Flags;
+        public UniqueId16 Handle;
+
+        public int TransformOrAudioSourceId;
+        public Vector3 TransformOffset;
+        public Quaternion RotationOffset;
+        public Space TransformOffsetSpace;
+
+        private int m_Padding;
+    }
+
+    /// <summary>
+    /// Data for PlayClipFromHandle
+    /// </summary>
+    internal struct PlayExistingCommandData {
+        public UniqueId16 Handle;
+    }
+
+    /// <summary>
+    /// Data for StopWithHandle and StopWithTag
+    /// </summary>
+    internal struct StopCommandData {
+        public AudioIdRef Id;
+        public float FadeOut;
+        public Curve FadeOutCurve;
+    }
+
+    /// <summary>
+    /// Data for SetFloatParameter
+    /// </summary>
+    internal struct FloatParamChangeCommandData {
+        public UniqueId16 Handle;
+        public AudioFloatPropertyType Property;
+        public float Target;
+        public float Duration;
+        public Curve Easing;
+    }
+
+    /// <summary>
+    /// Data for SetBoolParameter
+    /// </summary>
+    internal struct BoolParamChangeCommandData {
+        public UniqueId16 Handle;
+        public AudioBoolPropertyType Property;
+        public bool Target;
+    }
+
+    #endregion // Command Data
+
+    [StructLayout(LayoutKind.Explicit)]
+    internal struct AudioCommand {
+        [FieldOffset(0)] public AudioCommandType Type;
+        [FieldOffset(4)] public PlayCommandData Play;
+        [FieldOffset(4)] public PlayExistingCommandData Resume;
+        [FieldOffset(4)] public StopCommandData Stop;
+        [FieldOffset(4)] public FloatParamChangeCommandData FloatParam;
+        [FieldOffset(4)] public BoolParamChangeCommandData BoolParam;
     }
 }

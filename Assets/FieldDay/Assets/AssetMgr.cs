@@ -20,6 +20,7 @@ namespace FieldDay.Assets {
         private readonly IAssetCollection[] m_LiteAssetTable = new IAssetCollection[LiteAssetIndex.Capacity];
         private readonly NamedAssetCollection[] m_NamedAssetTable = new NamedAssetCollection[NamedAssetIndex.Capacity];
         private readonly HashSet<IAssetPackage> m_LoadedPackages = new HashSet<IAssetPackage>(16);
+        private readonly RingBuffer<IAssetPackage> m_UnloadQueue = new RingBuffer<IAssetPackage>(16, RingBufferMode.Expand);
 
         #region Events
 
@@ -134,7 +135,7 @@ namespace FieldDay.Assets {
         /// Loads the given package into the asset manager.
         /// </summary>
         public void LoadPackage(IAssetPackage package) {
-            if (!m_LoadedPackages.Add(package)) {
+            if (!AssetUtility.AddReference(package) || !m_LoadedPackages.Add(package)) {
                 return;
             }
 
@@ -147,7 +148,7 @@ namespace FieldDay.Assets {
         /// Unloads the given package from the asset manager.
         /// </summary>
         public void UnloadPackage(IAssetPackage package) {
-            if (!m_LoadedPackages.Remove(package)) {
+            if (!AssetUtility.RemoveReference(package) || !m_LoadedPackages.Remove(package)) {
                 return;
             }
 
