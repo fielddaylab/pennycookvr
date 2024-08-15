@@ -52,7 +52,7 @@ namespace FieldDay.Audio {
         public AudioEventRefAttribute() : base(typeof(AudioEvent), true) { }
 
         protected internal override string Name(UnityEngine.Object obj) {
-            return base.Name(obj).Replace('-', '/');
+            return base.Name(obj).Replace('-', '/').Replace('.', '/');
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Pennycook.Tablet {
 				
                 m_StateA.CachedLookCameraTransform.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
                 Ray r = new Ray(cameraPos, Geom.Forward(cameraRot));
-                TabletHighlightable scannable = TabletUtility.FindBestHighlightableAlongRay(r, searchMask, 40 * zoomState.ZoomMultiplier);
+                TabletHighlightable scannable = TabletUtility.FindBestHighlightableAlongRay(r, searchMask, m_StateA.RaycastSize, m_StateA.RaycastMinDistance, 20 * zoomState.ZoomMultiplier);
 
                 if (!scannable) {
                     if (m_StateA.HighlightedObject != null) {

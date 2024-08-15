@@ -2,18 +2,22 @@ using System.Collections.Generic;
 using BeauUtil;
 
 namespace FieldDay.Assets {
+    [NonIndexed]
+    public interface IAsset {
+    }
+
     /// <summary>
     /// Interface for a named asset.
     /// </summary>
-    [TypeIndexCapacity(512)]
-    public interface INamedAsset {
+    [TypeIndexCapacity(256)]
+    public interface INamedAsset : IAsset {
     }
 
     /// <summary>
     /// Interface for a global configuration asset.
     /// </summary>
-    [TypeIndexCapacity(512)]
-    public interface IGlobalAsset {
+    [TypeIndexCapacity(128)]
+    public interface IGlobalAsset : IAsset {
         void Mount();
         void Unmount();
     }

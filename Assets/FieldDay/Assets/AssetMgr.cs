@@ -22,6 +22,9 @@ namespace FieldDay.Assets {
         private readonly HashSet<IAssetPackage> m_LoadedPackages = new HashSet<IAssetPackage>(16);
         private readonly RingBuffer<IAssetPackage> m_UnloadQueue = new RingBuffer<IAssetPackage>(16, RingBufferMode.Expand);
 
+        private readonly CastableAction<INamedAsset>[] m_NamedAssetPostLoadCallbackTable = new CastableAction<INamedAsset>[NamedAssetIndex.Capacity];
+        private readonly CastableAction<INamedAsset>[] m_NamedAssetUnloadCallbackTable = new CastableAction<INamedAsset>[NamedAssetIndex.Capacity];
+
         #region Events
 
         internal void Shutdown() {
@@ -107,6 +110,7 @@ namespace FieldDay.Assets {
             }
 
             RegistrationCallbacks.InvokeRegister(asset);
+            InvokeNamedCallbacks(m_NamedAssetPostLoadCallbackTable, assetType, asset);
             Log.Msg("[AssetMgr] Named asset '{0}' of type '{1}' registered", id.ToDebugString(), assetType.FullName);
         }
 
@@ -123,6 +127,7 @@ namespace FieldDay.Assets {
                 GetNamedCollection(index, false)?.Deregister(id);
             }
 
+            InvokeNamedCallbacks(m_NamedAssetUnloadCallbackTable, assetType, asset);
             RegistrationCallbacks.InvokeDeregister(asset);
             Log.Msg("[AssetMgr] Named asset '{0}' of type '{1}' deregistered", id.ToDebugString(), assetType.FullName);
         }
@@ -403,6 +408,38 @@ namespace FieldDay.Assets {
         }
 
         #endregion // Internal
+
+        #region Callbacks
+
+        /// <summary>
+        /// Sets load and unload handlers for a given asset type.
+        /// </summary>
+        public void SetNamedAssetLoadCallbacks<T>(Action<T> onLoad, Action<T> onUnload) where T : INamedAsset {
+            int index = NamedAssetIndex.Get<T>();
+            if (onLoad != null) {
+                m_NamedAssetPostLoadCallbackTable[index] = CastableAction<INamedAsset>.Create(onLoad);
+            } else {
+                m_NamedAssetPostLoadCallbackTable[index] = default;
+            }
+
+            if (onUnload != null) {
+                m_NamedAssetUnloadCallbackTable[index] = CastableAction<INamedAsset>.Create(onUnload);
+            } else {
+                m_NamedAssetUnloadCallbackTable[index] = default;
+            }
+        }
+
+        static private void InvokeNamedCallbacks(CastableAction<INamedAsset>[] assets, Type assetType, INamedAsset asset) {
+            var typeIndices = NamedAssetIndex.GetAll(assetType);
+            foreach(var index in typeIndices) {
+                var action = assets[index];
+                if (!action.IsEmpty) {
+                    action.Invoke(asset);
+                }
+            }
+        }
+
+        #endregion // Callbacks
     }
 
     /// <summary>

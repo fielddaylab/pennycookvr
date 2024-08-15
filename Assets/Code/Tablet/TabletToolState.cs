@@ -9,7 +9,7 @@ namespace Pennycook.Tablet {
         [Serializable]
         public struct ToolConfig {
             public TabletTool Tool;
-            public InvertedLabelDisplay Label;
+            public ModeLabelDisplay Label;
             public Color ThemeColor;
         }
 

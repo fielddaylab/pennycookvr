@@ -52,7 +52,7 @@ namespace FieldDay.Editor {
                 items = new Dictionary<StringHash32, UnityEngine.Object>(all.Length, CompareUtils.DefaultEquals<StringHash32>());
             }
 
-            Debug.Log("[AssetNameAttributePropertyDrawer] Rebuilding cache for asset type " + type.Name);
+            Console.WriteLine("[AssetNameAttributePropertyDrawer] Rebuilding cache for asset type " + type.Name);
 
             foreach(var asset in all) {
                 StringHash32 key = new StringHash32(asset.name);

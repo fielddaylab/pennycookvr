@@ -260,9 +260,16 @@ namespace FieldDay.Audio {
             src.clip = clip;
             src.priority = priority;
             src.loop = (cmd.Flags & AudioPlaybackFlags.Loop) != 0;
-            clip.LoadAudioData();
 
-            AudioEmitterConfig.ApplyConfiguration(src, emitterConfig);
+            if (clip.loadState == AudioDataLoadState.Unloaded) {
+                if (delay > 0) {
+                    m_PreloadQueue.PushBack(clip);
+                } else {
+                    m_PreloadQueue.PushFront(clip);
+                }
+            }
+
+            AudioEmitterConfig.ApplyConfiguration(src, emitterConfig, m_HasSpatializationPlugin);
             voiceComponents.gameObject.SetActive(true);
             voiceComponents.enabled = true;
             voiceComponents.Source.enabled = true;

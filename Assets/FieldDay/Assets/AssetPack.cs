@@ -13,7 +13,7 @@ namespace FieldDay.Assets {
     /// <summary>
     /// Default asset package.
     /// </summary>
-    [CreateAssetMenu(menuName = "Field Day/Assets/Asset Package")]
+    [CreateAssetMenu(menuName = "Field Day/Assets/Asset Pack")]
     public sealed class AssetPack : ScriptableObject, IAssetPackage {
         [SerializeField] private GlobalAsset[] m_GlobalAssets = Array.Empty<GlobalAsset>();
         [SerializeField] private NamedAsset[] m_NamedAssets = Array.Empty<NamedAsset>();
@@ -66,8 +66,10 @@ namespace FieldDay.Assets {
         static public void ReadFromEditorDirectory(AssetPack pack) {
             Baking.PrepareUndo(pack, "locating all assets in directory");
             string myDir = Baking.GetAssetDirectory(pack);
-            pack.m_GlobalAssets= Baking.FindAssets<GlobalAsset>(myDir);
+            pack.m_GlobalAssets = Baking.FindAssets<GlobalAsset>(myDir);
             pack.m_NamedAssets = Baking.FindAssets<NamedAsset>(myDir);
+
+            Array.Sort(pack.m_NamedAssets, (a, b) => a.GetType().FullName.CompareTo(b.GetType().FullName));
         }
 
 #endif // UNITY_EDITOR

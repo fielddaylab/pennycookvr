@@ -9,7 +9,7 @@ using UnityEngine;
 namespace FieldDay.VRHands {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Rigidbody))]
-    public class Grabbable : BatchedComponent, IBaked {
+    public class Grabbable : BatchedComponent, IBaked, IRegistrationCallbacks {
         #region Inspector
 
         public bool GrabEnabled = true;
@@ -57,6 +57,16 @@ namespace FieldDay.VRHands {
             CurrentGrabbers = new Grabber[MaxGrabbers];
         }
 
+        void IRegistrationCallbacks.OnRegister() {
+            if (MaxGrabbers > 1 && SnapNodes.Length > 1) {
+                CachedRB.solverIterations = 10;
+                CachedRB.solverVelocityIterations = 4;
+            }
+        }
+
+        void IRegistrationCallbacks.OnDeregister() {
+        }
+
         #region IBaked
 
 #if UNITY_EDITOR
@@ -73,6 +83,10 @@ namespace FieldDay.VRHands {
             // gather locations
 
             foreach(var node in snapNodes) {
+                if (!node.isActiveAndEnabled) {
+                    continue;
+                }
+
                 GrabbableSnapNodeData data = default;
                 data.Name = node.gameObject.name;
 

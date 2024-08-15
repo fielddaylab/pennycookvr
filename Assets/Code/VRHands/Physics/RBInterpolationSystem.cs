@@ -5,7 +5,7 @@ using UnityEngine;
 namespace FieldDay.Physics {
     [SysUpdate(GameLoopPhase.FixedUpdate, -100)]
     public class RBInterpolationSystem : ComponentSystemBehaviour<RBInterpolator> {
-        private const float DejitterMultiplier = 0.92f;
+        private const float DejitterMultiplier = 0.94f;
 
         public override void ProcessWorkForComponent(RBInterpolator component, float deltaTime) {
             if (component.Target) {
@@ -34,7 +34,7 @@ namespace FieldDay.Physics {
         }
 
         protected override void OnComponentAdded(RBInterpolator component) {
-            component.Target.maxAngularVelocity = float.MaxValue;
+            component.Target.maxAngularVelocity = 90;
         }
     }
 }

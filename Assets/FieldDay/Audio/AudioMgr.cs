@@ -24,6 +24,7 @@ namespace FieldDay.Audio {
 
         private GameObject m_AudioSourceRoot;
         private AudioEmitterConfig m_DefaultEmitterConfig;
+        private bool m_HasSpatializationPlugin;
 
         private Pipe<AudioCommand> m_CommandPipe = new Pipe<AudioCommand>(128, true);
         private UniqueIdAllocator16 m_VoiceIdAllocator = new UniqueIdAllocator16(MaxVoices);
@@ -41,6 +42,8 @@ namespace FieldDay.Audio {
         private IPool<VoiceData> m_VoiceDataPool;
 
         private RingBuffer<VoiceData> m_ActiveVoices = new RingBuffer<VoiceData>(MaxVoices);
+
+        private RingBuffer<AudioClip> m_PreloadQueue = new RingBuffer<AudioClip>(32, RingBufferMode.Expand);
 
         #endregion // State
 
@@ -78,6 +81,10 @@ namespace FieldDay.Audio {
             } else {
                 m_DefaultEmitterConfig = config.Is3D ? AudioEmitterConfig.Default3D : AudioEmitterConfig.Default2D;
             }
+
+            m_HasSpatializationPlugin = !string.IsNullOrEmpty(AudioSettings.GetSpatializerPluginName());
+
+            Game.Assets.SetNamedAssetLoadCallbacks<AudioEvent>(OnAudioEventLoaded, OnAudioEventUnloaded);
         }
 
         #region Events
@@ -99,16 +106,29 @@ namespace FieldDay.Audio {
             using (Profiling.Sample("AudioMgr::LateUpdate")) {
                 FlushCommandPipe();
 
+                WorkSlicer.TimeSliced(m_PreloadQueue, HandlePreload, 1);
+
                 SyncEmitterLocations();
                 UpdateTweens(deltaTime);
                 UpdateVoices(deltaTime, Time.realtimeSinceStartupAsDouble);
 
-                if (Frame.Interval(60, 0)) {
-                    m_FloatTweenTable.Linearize(ref m_FloatTweenList);
-                    m_FloatTweenTable.OptimizeFreeList();
-                } else if (Frame.Interval(60, 1)) {
-                    m_PositionSyncTable.Linearize(ref m_PositionSyncList);
-                    m_PositionSyncTable.OptimizeFreeList();
+                switch (Frame.Index % 60) {
+                    case 0: {
+                        m_FloatTweenTable.Linearize(ref m_FloatTweenList);
+                        break;
+                    }
+                    case 1: {
+                        m_FloatTweenTable.OptimizeFreeList();
+                        break;
+                    }
+                    case 2: {
+                        m_PositionSyncTable.Linearize(ref m_PositionSyncList);
+                        break;
+                    }
+                    case 3: {
+                        m_PositionSyncTable.OptimizeFreeList();
+                        break;
+                    }
                 }
             }
         }
@@ -122,15 +142,44 @@ namespace FieldDay.Audio {
 
         #endregion // Events
 
+        #region Asset Handlers
+
+        static private void HandlePreload(AudioClip clip) {
+            if (clip.loadState == AudioDataLoadState.Unloaded) {
+                using (Profiling.Time("AudioMgr.HandlePreload", ProfileTimeUnits.Microseconds)) {
+                    clip.LoadAudioData();
+                }
+                Log.Debug("[AudioMgr] Preloaded clip '{0}'", clip.name);
+            }
+        }
+
+        private void OnAudioEventLoaded(AudioEvent evt) {
+            foreach(var clip in evt.Samples) {
+                if (!clip.preloadAudioData && clip.loadState == AudioDataLoadState.Unloaded) {
+                    m_PreloadQueue.PushBack(clip);
+                }
+            }
+        }
+
+        private void OnAudioEventUnloaded(AudioEvent evt) {
+
+        }
+
+        #endregion // Asset Handlers
+
+        #region Command Pipe
+
         internal void QueueAudioCommand(in AudioCommand cmd) {
             m_CommandPipe.Write(cmd);
         }
 
-        internal UniqueId16 QueuePlayAudioCommand(AudioCommand cmd) {
+        internal AudioHandle QueuePlayAudioCommand(AudioCommand cmd) {
             UniqueId16 id = m_VoiceIdAllocator.Alloc();
             cmd.Play.Handle = id;
             m_CommandPipe.Write(cmd);
-            return id;
+            return new AudioHandle(id);
         }
+
+        #endregion // Command Pipe
     }
 }

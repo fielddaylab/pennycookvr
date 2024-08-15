@@ -105,7 +105,7 @@ namespace FieldDay.Audio {
         /// <summary>
         /// Applies the given audio emitter configuration to the given audio source.
         /// </summary>
-        static public void ApplyConfiguration(AudioSource source, in AudioEmitterConfig config) {
+        static public void ApplyConfiguration(AudioSource source, in AudioEmitterConfig config, bool hasSpatializationPlugin) {
             source.bypassListenerEffects = (config.EffectBypasses & AudioEmitterBypassFlags.ListenerEffects) != 0;
             source.bypassReverbZones = (config.EffectBypasses & AudioEmitterBypassFlags.ReverbZones) != 0;
             source.bypassEffects = (config.EffectBypasses & AudioEmitterBypassFlags.LocalEffects) != 0;
@@ -115,6 +115,7 @@ namespace FieldDay.Audio {
             switch (config.Mode) {
                 case AudioEmitterMode.Fixed: {
                     source.spatialBlend = 0;
+                    source.spatialize = false;
                     break;
                 }
 
@@ -128,6 +129,7 @@ namespace FieldDay.Audio {
                     source.minDistance = config.MinDistance;
                     source.maxDistance = config.MaxDistance;
                     source.spatialBlend = 1 - config.DespatializeFactor;
+                    source.spatialize = hasSpatializationPlugin && (config.EffectBypasses & AudioEmitterBypassFlags.SpatializationPlugin) == 0;
                     break;
                 }
             }
@@ -143,7 +145,8 @@ namespace FieldDay.Audio {
     public enum AudioEmitterBypassFlags {
         LocalEffects = 0x01,
         ListenerEffects = 0x02,
-        ReverbZones = 0x04
+        ReverbZones = 0x04,
+        SpatializationPlugin = 0x08
     }
 
     /// <summary>

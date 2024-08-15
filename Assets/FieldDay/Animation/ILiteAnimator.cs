@@ -1,6 +1,6 @@
-using System.Numerics;
 using System.Runtime.InteropServices;
 using BeauUtil;
+using UnityEngine;
 
 namespace FieldDay.Animation {
     public interface ILiteAnimator {
@@ -27,5 +27,6 @@ namespace FieldDay.Animation {
         [FieldOffset(0)] public Vector3 Float3;
         [FieldOffset(0)] public Vector4 Float4;
         [FieldOffset(0)] public Quaternion Quaternion;
+        [FieldOffset(0)] public RuntimeObjectHandle Object;
     }
 }

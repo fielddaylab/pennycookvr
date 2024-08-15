@@ -1,6 +1,8 @@
 using System;
+using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.SharedState;
 using UnityEngine;
 
@@ -10,6 +12,7 @@ namespace Pennycook.Tablet {
 
         public float[] ZoomLevels;
         public InvertedLabelDisplay[] ZoomLabels;
+        [AudioEventRef] public StringHash32[] ZoomSfx;
 
         [NonSerialized] public float OriginalFOV;
         [NonSerialized] public int ZoomIndex;
@@ -50,8 +53,8 @@ namespace Pennycook.Tablet {
             zoomState.ZoomCamera.fieldOfView = zoomState.OriginalFOV / zoom;
             zoomState.ZoomMultiplier = zoom;
 
-            if (playFeedback) {
-                // TODO: play sound
+            if (playFeedback && index >= 0) {
+                Sfx.Play(zoomState.ZoomSfx[index], Find.State<TabletControlState>().AudioLocation);
             }
         }
     }

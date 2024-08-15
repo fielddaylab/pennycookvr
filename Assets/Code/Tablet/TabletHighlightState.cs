@@ -24,6 +24,10 @@ namespace Pennycook.Tablet {
         public TMP_Text DetailsHeader;
         public TMP_Text DetailsText;
 
+        [Header("Raycast Configuration")]
+        public float RaycastSize = 0.4f;
+        public float RaycastMinDistance = 1;
+
         [NonSerialized] public Transform CachedLookCameraTransform;
         [NonSerialized] public Vector2 CachedHighlightCornerScale;
 
@@ -46,23 +50,37 @@ namespace Pennycook.Tablet {
     static public partial class TabletUtility {
         static private readonly RaycastHit[] s_RaycastHitBuffer = new RaycastHit[32];
 
-        public const int DefaultSearchMask = LayerMasks.Default_Mask | LayerMasks.Solid_Mask | LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask;
-        public const int TravelSearchMask = LayerMasks.Default_Mask | LayerMasks.Solid_Mask | LayerMasks.Default_Mask | LayerMasks.Warpable_Mask;
+        // iteration count for spherecast
+        private const int IterationCount = 8;
 
-        static public TabletHighlightable FindBestHighlightableAlongRay(Ray ray, LayerMask mask, float maxDistance) {
-            if (Physics.SphereCast(ray, 0.3f, out RaycastHit hit, maxDistance, mask)) {
-                //DebugDraw.AddLine(ray.origin, hit.point, Color.blue, 0.2f, 0.1f);
-                TabletHighlightable highlightable = hit.collider.GetComponent<TabletHighlightable>();
-                Rigidbody body;
-                if (!highlightable && (body = hit.rigidbody)) {
-                    highlightable = body.GetComponent<TabletHighlightable>();
+        // uncomment the default and solid masks to allow for other objects to occlude the target type
+        public const int DefaultSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask;
+        public const int TravelSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Warpable_Mask;
+
+        static public TabletHighlightable FindBestHighlightableAlongRay(Ray ray, LayerMask mask, float raySize, float minDistance, float maxDistance) {
+            // iterative
+            float distanceSeg = maxDistance / IterationCount;
+            for(int i = 0; i < IterationCount; i++) {
+                float size = raySize * (distanceSeg * (i + 0.5f) / minDistance);
+                float distance = distanceSeg + Math.Sign(i) * size;
+                Ray r = new Ray(ray.GetPoint(distanceSeg * i - Math.Sign(i) * size), ray.direction);
+                if (Physics.SphereCast(r, size, out RaycastHit hit, distance, mask)) {
+                    //DebugDraw.AddLine(r.origin, hit.point, Color.red.WithAlpha(0.2f), size * 2f, 0.1f, false);
+                    TabletHighlightable highlightable = hit.collider.GetComponent<TabletHighlightable>();
+                    Rigidbody body;
+                    if (!highlightable && (body = hit.rigidbody)) {
+                        highlightable = body.GetComponent<TabletHighlightable>();
+                    } else {
+                        highlightable = hit.collider.GetComponentInParent<TabletHighlightable>();
+                    }
+                    if (highlightable) {
+                        return highlightable;
+                    }
                 } else {
-                    highlightable = hit.collider.GetComponentInParent<TabletHighlightable>();
+                    //DebugDraw.AddLine(r.origin, r.GetPoint(distanceSeg), Color.blue.WithAlpha(0.2f), size * 2f, 0.1f, false);
                 }
-                return highlightable;
-            } else {
-                return null;
             }
+            return null;
         }
 
         static private TabletHighlightable FindBestHighlightableAlongRay_ScoredMethod(Ray ray, LayerMask mask, float maxDistance) {

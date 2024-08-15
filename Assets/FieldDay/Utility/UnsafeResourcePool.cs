@@ -1,8 +1,8 @@
 using BeauUtil;
 using BeauUtil.Debugger;
 
-namespace FieldDay.Audio {
-    internal unsafe struct UnsafeResourcePool<T> where T : unmanaged {
+namespace FieldDay {
+    public unsafe struct UnsafeResourcePool<T> where T : unmanaged {
         private UnsafeBitSet m_BitMap;
         private UnsafeSpan<T> m_Data;
         private int m_AllocHead;

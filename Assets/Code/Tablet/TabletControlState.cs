@@ -4,10 +4,12 @@ using FieldDay;
 using FieldDay.HID.XR;
 using FieldDay.SharedState;
 using FieldDay.VRHands;
+using UnityEngine;
 
 namespace Pennycook.Tablet {
     public class TabletControlState : SharedStateComponent, IRegistrationCallbacks {
         public Grabbable Grabbable;
+        public Transform AudioLocation;
 
         [NonSerialized] public BitSet32 GrippedHandMask;
 

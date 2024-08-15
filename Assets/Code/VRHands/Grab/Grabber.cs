@@ -49,6 +49,9 @@ namespace FieldDay.VRHands {
             if (!GripCenter) {
                 GripCenter = CachedTransform;
             }
+
+            CachedRB.solverIterations = 16;
+            CachedRB.solverVelocityIterations = 8;
         }
 
         static private readonly GrabberPredicate CanGrabPassThrough = (a, b) => true;

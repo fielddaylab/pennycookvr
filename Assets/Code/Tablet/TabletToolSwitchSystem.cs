@@ -1,4 +1,5 @@
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.HID;
 using FieldDay.HID.XR;
 using FieldDay.Systems;
@@ -14,10 +15,8 @@ namespace Pennycook.Tablet {
 
             int shift = 0;
             if (m_StateB.GrippedHandMask.IsSet((int) XRHandIndex.Left)) {
-                if (m_StateC.LeftHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisUp)) {
+                if (m_StateC.LeftHand.Buttons.ConsumePress(XRHandButtons.Secondary)) {
                     shift = 1;
-                } else if (m_StateC.LeftHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisDown)) {
-                    shift = -1;
                 }
             }
 
@@ -25,6 +24,7 @@ namespace Pennycook.Tablet {
                 int maxTools = m_StateA.Configs.Length;
                 int newIdx = (m_StateA.CurrentToolIndex + maxTools + shift) % maxTools;
                 TabletUtility.SetTool(m_StateA, newIdx, true);
+                Sfx.Play("Tablet.ModeChanged", m_StateB.AudioLocation);
             }
         }
     }

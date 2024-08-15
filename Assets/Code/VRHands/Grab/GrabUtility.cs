@@ -187,6 +187,8 @@ namespace FieldDay.VRHands {
                 grabbable.UsedSnapNodes.Set(snapIndex);
             }
 
+            // TODO: custom joint/configurable joint?
+
             // configure joint
             if (!grabber.Joint) {
                 grabber.Joint = grabber.gameObject.AddComponent<FixedJoint>();
