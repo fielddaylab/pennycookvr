@@ -9,7 +9,7 @@ namespace FieldDay.Physics {
         public float MassScale;
         public float ConnectedMassScale;
 
-        public void Apply(FixedJoint joint) {
+        public void Apply(Joint joint) {
             joint.breakForce = BreakForce;
             joint.breakTorque = BreakTorque;
             joint.massScale = MassScale;

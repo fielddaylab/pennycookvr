@@ -8,6 +8,7 @@ using UnityEngine;
 namespace Pennycook {
     public class PlayerRig : SharedStateComponent {
         public Transform MoveRoot;
+        public Transform ScaleRoot;
         public Transform HeadRoot;
         public Transform HeadLook;
 

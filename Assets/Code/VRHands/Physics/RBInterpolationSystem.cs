@@ -26,7 +26,7 @@ namespace FieldDay.Physics {
                 dRot.ToAngleAxis(out float dAngle, out Vector3 dAxis);
                 if (!float.IsInfinity(dAxis.x)) {
                     if (dAngle > 180f) {
-                        dAngle = 360f - dAngle;
+                        dAngle -= 360f;
                     }
                     component.Target.angularVelocity = dAxis.normalized * (DejitterMultiplier * dAngle * Mathf.Deg2Rad * component.AngularVelocityMultiplier / deltaTime);
                 }

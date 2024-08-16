@@ -27,7 +27,7 @@ namespace FieldDay.VRHands {
         [NonSerialized] public Transform CachedTransform;
         [NonSerialized] public Rigidbody CachedRB;
 
-        [NonSerialized] public FixedJoint Joint;
+        [NonSerialized] public Joint Joint;
         [NonSerialized] public GrabberState State = GrabberState.Empty;
         [NonSerialized] public Grabbable HeldObject;
         [NonSerialized] public int HeldObjectSnapNodeIndex = -1;
@@ -62,6 +62,7 @@ namespace FieldDay.VRHands {
     public enum GrabberState {
         Empty,
         AttemptGrab,
+        HoldingNoJoint,
         Holding,
         AttemptRelease,
         AttemptReleaseSocketOnly

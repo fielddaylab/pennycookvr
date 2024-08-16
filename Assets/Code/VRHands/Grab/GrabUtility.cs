@@ -173,23 +173,29 @@ namespace FieldDay.VRHands {
             grabber.HeldObject = grabbable;
             grabber.HeldObjectSnapNodeIndex = snapIndex;
             grabber.HoldStartTime = Frame.Timestamp();
-            grabber.State = GrabberState.Holding;
 
             grabbable.CurrentGrabbers[grabbable.CurrentGrabberCount++] = grabber;
 
             // snap grabber to snap node
 
             if (snapIndex >= 0) {
-                Pose p = ResolveSnapNodePose(grabbable, snapIndex, grabber);
-                grabber.CachedRB.position = p.position;
-                grabber.CachedRB.rotation = p.rotation;
-                grabber.CachedTransform.SetPositionAndRotation(p.position, p.rotation);
                 grabbable.UsedSnapNodes.Set(snapIndex);
+                grabber.State = GrabberState.HoldingNoJoint;
+            } else {
+                CreateGripJoint(grabber);
             }
 
-            // TODO: custom joint/configurable joint?
+            // TODO: configure animations
 
-            // configure joint
+            grabber.OnGrab.Invoke(grabbable);
+            grabbable.OnGrabbed.Invoke(grabber);
+
+            return true;
+        }
+
+        static public void CreateGripJoint(Grabber grabber) {
+            Grabbable grabbable = grabber.HeldObject;
+            
             if (!grabber.Joint) {
                 grabber.Joint = grabber.gameObject.AddComponent<FixedJoint>();
                 grabber.Joint.enableCollision = false;
@@ -198,7 +204,6 @@ namespace FieldDay.VRHands {
             }
 
             grabber.Joint.connectedBody = grabbable.CachedRB;
-            grabber.Joint.anchor = grabber.GripCenter.localPosition;
 
             SerializedFixedJoint jointConfig = grabber.JointConfig;
             jointConfig.ConnectedMassScale *= Mathf.Clamp(grabbable.CachedRB.mass, grabber.MinGripForce, grabber.MaxGripForce);
@@ -207,12 +212,7 @@ namespace FieldDay.VRHands {
             }
             jointConfig.Apply(grabber.Joint);
 
-            // TODO: configure animations
-
-            grabber.OnGrab.Invoke(grabbable);
-            grabbable.OnGrabbed.Invoke(grabber);
-
-            return true;
+            grabber.State = GrabberState.Holding;
         }
 
         #endregion // Grab

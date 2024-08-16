@@ -46,6 +46,22 @@ namespace Pennycook {
                 }
             }
 
+            if (!m_StateA.LeftHand.Grabber.HeldObject && m_StateB.LeftHand.Buttons.IsDown(XRHandButtons.Primary)) {
+                float scaleChange = 0;
+                if (m_StateB.LeftHand.Buttons.IsDown(XRHandButtons.GripButton)) {
+                    scaleChange = -m_StateB.LeftHand.Axis.Grip;
+                }
+                if (m_StateB.LeftHand.Buttons.IsDown(XRHandButtons.TriggerButton)) {
+                    scaleChange = m_StateB.LeftHand.Axis.Trigger;
+                }
+
+                if (scaleChange != 0) {
+                    float myScale = m_StateA.ScaleRoot.localScale.x;
+                    myScale = Mathf.Clamp(myScale + scaleChange * deltaTime, 0.01f, 15);
+                    m_StateA.ScaleRoot.localScale = new Vector3(myScale, myScale, myScale);
+                }
+            }
+
             if (m_StateB.LeftHand.Buttons.IsDownAll(XRHandButtons.PrimaryAxisClick | XRHandButtons.TriggerButton)
                 && m_StateB.RightHand.Buttons.IsDownAll(XRHandButtons.PrimaryAxisClick | XRHandButtons.TriggerButton)) {
                 Debug.Break();

@@ -1,16 +1,24 @@
 using System;
 using BeauUtil;
 using FieldDay.Debugging;
+using FieldDay.Physics;
 using FieldDay.Sockets;
 using FieldDay.Systems;
 using UnityEngine;
 
 namespace FieldDay.VRHands {
-    [SysUpdate(GameLoopPhase.FixedUpdate, 500)]
+    [SysUpdate(GameLoopPhaseMask.FixedUpdate | GameLoopPhaseMask.LateFixedUpdate, 500)]
     public class GrabSystem : ComponentSystemBehaviour<Grabber> {
         static private readonly Collider[] OverlapWorkArray = new Collider[32];
 
         public override void ProcessWorkForComponent(Grabber component, float deltaTime) {
+            if (GameLoop.IsPhase(GameLoopPhase.LateFixedUpdate)) {
+                if (component.State == GrabberState.HoldingNoJoint) {
+                    UpdateHoldingNoJoint(component);
+                }
+                return;
+            }
+
             switch (component.State) {
                 case GrabberState.AttemptRelease: {
                     Release(component);
@@ -45,7 +53,16 @@ namespace FieldDay.VRHands {
             } else {
                 DebugDraw.AddPoint(grabber.CachedTransform.TransformPoint(grabber.Joint.anchor), 0.05f, Color.yellow);
                 DebugDraw.AddPoint(grabber.Joint.connectedBody.transform.TransformPoint(grabber.Joint.connectedAnchor), 0.05f, Color.green);
+
+                // dampen angular velocity
+                grabber.Joint.connectedBody.angularVelocity *= 0.5f;
             }
+        }
+
+        static private void UpdateHoldingNoJoint(Grabber grabber) {
+            Pose p = GrabUtility.ResolveSnapNodePose(grabber.HeldObject, grabber.HeldObjectSnapNodeIndex, grabber);
+            grabber.CachedTransform.SetPositionAndRotation(p.position, p.rotation);
+            GrabUtility.CreateGripJoint(grabber);
         }
 
         static private void AttemptGrab(Grabber grabber) {

@@ -736,6 +736,11 @@ namespace FieldDay.Scenes {
         }
 
         static private bool IsDoneLoading(AsyncOperation operation, in LoadSceneArgs args, out Scene scene) {
+            if (ScenesUtility.Editor.AreDelayedSceneProcessorsRunning()) {
+                scene = default;
+                return false;
+            }
+
             if (operation != null) {
                 if (operation.isDone) {
                     scene = SafeGetSceneByPath(args.ScenePath);
@@ -1184,6 +1189,10 @@ namespace FieldDay.Scenes {
                     yield break;
                 }
 
+                while(ScenesUtility.Editor.AreDelayedSceneProcessorsRunning()) {
+                    yield return null;
+                }
+
                 RingBuffer<SceneDataExt> linearizedScenes = new RingBuffer<SceneDataExt>(4, RingBufferMode.Expand);
 
                 // unloading
@@ -1191,7 +1200,7 @@ namespace FieldDay.Scenes {
                 if (args.Type == SceneType.Main) {
                     m_MainSceneTransition.Stop();
 
-                    Game.Events.Dispatch(SceneUtility.Events.PreUnload);
+                    Game.Events.Dispatch(ScenesUtility.Events.PreUnload);
                     OnMainSceneUnloading.Invoke();
 
                     if (m_MainTransitionUnload != null) {
@@ -1356,7 +1365,7 @@ namespace FieldDay.Scenes {
                     }
                 }
 
-                Game.Events.Dispatch(SceneUtility.Events.Ready);
+                Game.Events.Dispatch(ScenesUtility.Events.Ready);
             }
         }
 
@@ -1462,7 +1471,7 @@ namespace FieldDay.Scenes {
     /// <summary>
     /// Scene utility methods.
     /// </summary>
-    static public class SceneUtility {
+    static public class ScenesUtility {
         static public class Events {
             static public readonly StringHash32 Ready = "SceneMgr::Ready";
             static public readonly StringHash32 PreUnload = "SceneMgr::PreUnload";
@@ -1506,6 +1515,26 @@ namespace FieldDay.Scenes {
         /// </summary>
         static public bool IsPersistent(Component component) {
             return component.TryGetComponent(out Persist _);
+        }
+
+        static public class Editor {
+#if UNITY_EDITOR
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static public bool AreDelayedSceneProcessorsRunning() {
+                return s_DelayedSceneProcessorsRunning;
+            }
+
+            static private bool s_DelayedSceneProcessorsRunning;
+
+            static internal void SetDelayedSceneProcessorsRunning(bool running) {
+                s_DelayedSceneProcessorsRunning = running;
+            }
+#else
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static public bool AreDelayedSceneProcessorsRunning() {
+                return false;
+            }
+#endif // UNITY_EDITOR
         }
     }
 

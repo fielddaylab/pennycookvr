@@ -21,6 +21,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace FieldDay.Editor {
+    #region Build Pipeline Only
+
     /// <summary>
     /// Strips editor-only data from scene objects.
     /// </summary>
@@ -78,7 +80,7 @@ namespace FieldDay.Editor {
         public int callbackOrder { get { return 10; } }
 
         public void OnProcessScene(Scene scene, BuildReport report) {
-            if (EditorApplication.isPlayingOrWillChangePlaymode || EditorUserBuildSettings.development) {
+            if (!BuildPipeline.isBuildingPlayer || EditorUserBuildSettings.development) {
                 return;
             }
 
@@ -127,6 +129,8 @@ namespace FieldDay.Editor {
         }
     }
 
+    #endregion // Build Pipeline Only
+
     /// <summary>
     /// Executes any custom bake processes for scene objects.
     /// </summary>
@@ -134,7 +138,13 @@ namespace FieldDay.Editor {
         public int callbackOrder { get { return 20; } }
 
         public void OnProcessScene(Scene scene, BuildReport report) {
+            if (PlayModeDelayedSceneProcessor.IsQueued()) {
+                PlayModeDelayedSceneProcessor.Queue(this, scene, report, null);
+                return;
+            }
+
             using(Profiling.Time("baking objects")) {
+                Debug.LogFormat("baking '{0}'", scene.path);
                 Baking.BakeScene(scene, 0);
             }
         }
@@ -147,6 +157,11 @@ namespace FieldDay.Editor {
         public int callbackOrder { get { return 30; } }
 
         public void OnProcessScene(Scene scene, BuildReport report) {
+            if (PlayModeDelayedSceneProcessor.IsQueued()) {
+                PlayModeDelayedSceneProcessor.Queue(this, scene, report, null);
+                return;
+            }
+
             using (Profiling.Time("generating SceneDataExt")) {
 
                 List<SceneDataExt> list = new List<SceneDataExt>();
@@ -194,61 +209,139 @@ namespace FieldDay.Editor {
     /// Merges in any scenes that should be merged into the main scene.
     /// </summary>
     public class ImportMergeScenesSceneProcessor : IProcessSceneWithReport {
+        private HashSet<string> visitedScenes;
+        private List<ImportScene> importBuffer;
+        private RingBuffer<ImportScene> importQueue;
+        private RingBuffer<DelayedImportArgs> delayedImports;
+
         public int callbackOrder { get { return -10; } }
 
         public void OnProcessScene(Scene scene, BuildReport report) {
-            using (Profiling.Time("importing scenes")) {
-                RingBuffer<ImportScene> importQueue = new RingBuffer<ImportScene>();
+            if (PlayModeDelayedSceneProcessor.IsQueued()) {
+                PlayModeDelayedSceneProcessor.Queue(this, scene, report, null);
+                return;
+            }
 
-                HashSet<string> visitedScenes = new HashSet<string>();
+            using (Profiling.Time("importing scenes")) {
+                importQueue = new RingBuffer<ImportScene>();
+                delayedImports = new RingBuffer<DelayedImportArgs>();
+
+                visitedScenes = new HashSet<string>();
                 visitedScenes.Add(scene.path);
 
-                List<ImportScene> importBuffer = new List<ImportScene>();
+                importBuffer = new List<ImportScene>();
                 scene.GetAllComponents(true, importBuffer);
 
                 foreach(var import in importBuffer) {
                     importQueue.PushBack(import);
                 }
 
-                while(importQueue.TryPopFront(out ImportScene import)) {
-                    if (!import.Merge) {
-                        continue;
-                    }
-
-                    if (!visitedScenes.Add(import.Scene.Path)) {
-                        continue;
-                    }
-
-                    SceneImportSettings settings = import.GetImportSettings();
-
-                    if (import.DestroyGameObject && Baking.IsEmptyLeaf(import.transform)) {
-                        Baking.Destroy(import.gameObject);
-                    } else {
-                        Baking.Destroy(import);
-                    }
-
-                    Scene subsceneRef = EditorSceneManager.GetSceneByPath(settings.Path);
-
-                    EditorSceneManager.OpenScene(settings.Path, OpenSceneMode.Additive);
-                    Assert.True(subsceneRef.IsValid(), "Scene '{0}' is not valid", settings.Path);
-                    foreach (var root in subsceneRef.GetRootGameObjects()) {
-                        root.GetComponentsInChildren(true, importBuffer);
-                        foreach(var subImport in importBuffer) {
-                            importQueue.PushBack(subImport);
-                        }
-
-                        SceneManager.MoveGameObjectToScene(root, scene);
-                        ImportScene.TransformRoot(root.transform, settings.RootMatrix);
-                    }
-
-                    if ((settings.Flags & SceneImportFlags.ImportLightingSettings) != 0) {
-                        LightUtility.CopySettingsToScene(subsceneRef, scene, LightingImportFlags.All);
-                    }
-
-                    EditorSceneManager.CloseScene(subsceneRef, true);
-                }
+                EvaluateImportQueue(scene, report);
             }
         }
+
+        #region Merge
+
+        private void AttemptMerge(ImportScene import, Scene scene, BuildReport report) {
+            if (!import.Merge) {
+                return;
+            }
+
+            if (!visitedScenes.Add(import.Scene.Path)) {
+                return;
+            }
+
+            SceneImportSettings settings = import.GetImportSettings();
+
+            if (import.DestroyGameObject && Baking.IsEmptyLeaf(import.transform, 1)) {
+                Baking.Destroy(import.gameObject);
+            } else {
+                Baking.Destroy(import);
+            }
+
+            Scene subsceneRef = EditorSceneManager.GetSceneByPath(settings.Path);
+
+            if (EditorApplication.isPlaying) {
+                subsceneRef = SceneManager.GetSceneByPath(settings.Path);
+                if (!subsceneRef.IsValid()) {
+                    subsceneRef = EditorSceneManager.LoadSceneInPlayMode(settings.Path, new LoadSceneParameters(LoadSceneMode.Additive));
+                } else {
+                    Debug.LogFormat("[ImportMergeScenesSceneProcessor] Scene '{0}' already present", settings.Path);
+                }
+            } else {
+                subsceneRef = EditorSceneManager.OpenScene(settings.Path, OpenSceneMode.Additive);
+            }
+
+            Assert.True(subsceneRef.IsValid(), "Scene '{0}' is not valid", settings.Path);
+
+            if (subsceneRef.isLoaded) {
+                FinishMerge(scene, report, subsceneRef, settings);
+            } else {
+                delayedImports.PushBack(new DelayedImportArgs() {
+                    Scene = subsceneRef,
+                    Settings = settings
+                });
+                PlayModeDelayedSceneProcessor.IgnoreScene(subsceneRef);
+            }
+        }
+
+        private void FinishMerge(Scene scene, BuildReport report, Scene subsceneRef, SceneImportSettings settings) {
+            Assert.True(subsceneRef.isLoaded, "Scene '{0}' is not loaded", settings.Path);
+            foreach (var root in subsceneRef.GetRootGameObjects()) {
+                root.GetComponentsInChildren(true, importBuffer);
+                foreach (var subImport in importBuffer) {
+                    importQueue.PushBack(subImport);
+                }
+
+                SceneManager.MoveGameObjectToScene(root, scene);
+                ImportScene.TransformRoot(root.transform, settings.RootMatrix);
+            }
+
+            if ((settings.Flags & SceneImportFlags.ImportLightingSettings) != 0) {
+                LightUtility.CopySettingsToScene(subsceneRef, scene, LightingImportFlags.All);
+            }
+
+            if (EditorApplication.isPlaying) {
+#pragma warning disable CS0618
+                EditorSceneManager.UnloadScene(subsceneRef);
+#pragma warning restore CS0618
+            } else {
+                EditorSceneManager.CloseScene(subsceneRef, true);
+            }
+        }
+
+        #endregion // Merge
+
+        #region Queues
+
+        private struct DelayedImportArgs {
+            public Scene Scene;
+            public SceneImportSettings Settings;
+        }
+
+        private void DelayedFlushQueues(Scene scene, BuildReport report, object arg) {
+            EvaluateDelayedImportedScenes(scene, report);
+            EvaluateImportQueue(scene, report);
+        }
+
+        private void EvaluateDelayedImportedScenes(Scene scene, BuildReport report) {
+            while(delayedImports.TryPopFront(out DelayedImportArgs args)) {
+                FinishMerge(scene, report, args.Scene, args.Settings);
+                Debug.LogFormat("[ImportMergeScenesSceneProcessor] Finished importing '{0}'", args.Settings.Path);
+            }
+        }
+
+        private void EvaluateImportQueue(Scene scene, BuildReport report) {
+            while(importQueue.TryPopFront(out ImportScene import)) {
+                AttemptMerge(import, scene, report);
+            }
+
+            if (delayedImports.Count > 0) {
+                PlayModeDelayedSceneProcessor.QueueFront(DelayedFlushQueues, scene, report, null);
+            }
+        }
+
+        #endregion // Queues
     }
 
     /// <summary>
@@ -258,6 +351,11 @@ namespace FieldDay.Editor {
         public int callbackOrder { get { return 30; } }
 
         public void OnProcessScene(Scene scene, BuildReport report) {
+            if (PlayModeDelayedSceneProcessor.IsQueued()) {
+                PlayModeDelayedSceneProcessor.Queue(this, scene, report, null);
+                return;
+            }
+
             if (Baking.CleanUpMissingComponents(scene.GetRootGameObjects())) {
                 Debug.LogWarningFormat("[CleanUpMissingComponentsSceneProcessor] Missing component types cleaned up in '{0}'", scene.path);
             }
@@ -271,6 +369,11 @@ namespace FieldDay.Editor {
         public int callbackOrder { get { return 32000; } }
 
         public void OnProcessScene(Scene scene, BuildReport report) {
+            if (PlayModeDelayedSceneProcessor.IsQueued()) {
+                PlayModeDelayedSceneProcessor.Queue(this, scene, report, null);
+                return;
+            }
+
             using (Profiling.Time("generating custom scene data")) {
                 List<SceneDataExt> list = new List<SceneDataExt>();
                 scene.GetAllComponents(true, list);

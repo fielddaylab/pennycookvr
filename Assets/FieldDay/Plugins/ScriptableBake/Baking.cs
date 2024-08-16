@@ -295,16 +295,21 @@ namespace ScriptableBake {
         /// Returns if the given Transform is a leaf node in its transform hierarchy,
         /// and has no non-transform components.
         /// </summary>
-        static public bool IsEmptyLeaf(Transform transform) {
+        static public bool IsEmptyLeaf(Transform transform, int expectedComponentCount = 0) {
             if (transform.childCount > 0) {
                 return false;
             }
 
             List<Component> tempList = s_CachedComponentList ?? (s_CachedComponentList = new List<Component>(4));
             transform.gameObject.GetComponents<Component>(tempList);
-            int count = tempList.Count;
+            int count = 0;
+            foreach(var c in tempList) {
+                if (c) {
+                    count++;
+                }
+            }
             tempList.Clear();
-            return count == 1; // transform is included, so must be more than 1
+            return count <= 1 + expectedComponentCount; // transform is included, so must be more than 1
         }
 
         /// <summary>
@@ -468,7 +473,15 @@ namespace ScriptableBake {
             if (obj is Transform) {
                 obj = ((Transform) obj).gameObject;
             }
-            if (!Application.isPlaying) {
+
+            bool sceneIsLoading = false;
+            if (obj is GameObject) {
+                sceneIsLoading = !((GameObject) obj).scene.isLoaded;
+            } else if (obj is Component) {
+                sceneIsLoading = !((Component) obj).gameObject.scene.isLoaded;
+            }
+
+            if (!Application.isPlaying || sceneIsLoading) {
                 if (obj is GameObject) {
                     GameObject prefabRoot = PrefabUtility.GetOutermostPrefabInstanceRoot(obj);
                     if (prefabRoot != null) {

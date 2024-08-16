@@ -13,6 +13,7 @@ namespace FieldDay.Audio {
         public struct Config {
             public bool Is3D;
             public AudioEmitterProfile DefaultEmitterProfile;
+            public float PreloadWorkerTimeSlice;
         }
 
         #endregion // Types
@@ -25,6 +26,7 @@ namespace FieldDay.Audio {
         private GameObject m_AudioSourceRoot;
         private AudioEmitterConfig m_DefaultEmitterConfig;
         private bool m_HasSpatializationPlugin;
+        private float m_PreloadWorkerTimeSlice;
 
         private Pipe<AudioCommand> m_CommandPipe = new Pipe<AudioCommand>(128, true);
         private UniqueIdAllocator16 m_VoiceIdAllocator = new UniqueIdAllocator16(MaxVoices);
@@ -50,6 +52,7 @@ namespace FieldDay.Audio {
         internal AudioMgr(Config config) {
             m_Arena = Unsafe.CreateArena(1 * Unsafe.MiB, "Audio", Unsafe.AllocatorFlags.ZeroOnAllocate);
             m_TargetablePropertyBlocks.Create(m_Arena, (MaxVoices + MaxBuses) * 2);
+            m_PreloadWorkerTimeSlice = config.PreloadWorkerTimeSlice;
 
             m_PositionSyncTable = new LLTable<PositionSyncData>(MaxVoices);
             m_FloatTweenTable = new LLTable<FloatParamTweenData>(MaxVoices * 2);
@@ -106,7 +109,9 @@ namespace FieldDay.Audio {
             using (Profiling.Sample("AudioMgr::LateUpdate")) {
                 FlushCommandPipe();
 
-                WorkSlicer.TimeSliced(m_PreloadQueue, HandlePreload, 1);
+                if (m_PreloadQueue.Count > 0) {
+                    WorkSlicer.TimeSliced(m_PreloadQueue, HandlePreloadDelegate, m_PreloadWorkerTimeSlice);
+                }
 
                 SyncEmitterLocations();
                 UpdateTweens(deltaTime);
@@ -143,6 +148,8 @@ namespace FieldDay.Audio {
         #endregion // Events
 
         #region Asset Handlers
+
+        static private WorkSlicer.ElementOperation<AudioClip> HandlePreloadDelegate = HandlePreload;
 
         static private void HandlePreload(AudioClip clip) {
             if (clip.loadState == AudioDataLoadState.Unloaded) {

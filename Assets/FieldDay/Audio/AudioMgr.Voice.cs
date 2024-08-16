@@ -158,6 +158,11 @@ namespace FieldDay.Audio {
         #region Voice Update
 
         private unsafe VoiceData AllocateVoice(UniqueId16 handle) {
+            if (m_VoiceDataPool.Count == 0) {
+                FreeUpVoice(Time.realtimeSinceStartupAsDouble);
+                Assert.True(m_VoiceDataPool.Count > 0);
+            }
+
             VoiceData data = m_VoiceDataPool.Alloc();
             data.Handle = handle;
 
@@ -202,14 +207,17 @@ namespace FieldDay.Audio {
             return null;
         }
 
-        private void CullFinishedVoices() {
+        private int CullFinishedVoices() {
+            int culled = 0;
             for (int i = m_ActiveVoices.Count - 1; i >= 0; i--) {
                 VoiceData voice = m_ActiveVoices[i];
                 if (voice.State == VoiceState.Stopped) {
                     KillVoice(voice);
                     m_ActiveVoices.FastRemoveAt(i);
+                    culled++;
                 }
             }
+            return culled;
         }
 
         private void UpdateVoices(float deltaTime, double currentTime) {
@@ -336,6 +344,68 @@ namespace FieldDay.Audio {
         #endregion // Voice Update
 
         #region Cleanup
+
+        private void FreeUpVoice(double currentTime) {
+            Assert.True(m_ActiveVoices.Count > 0);
+            
+            int finishedCull = CullFinishedVoices();
+            if (finishedCull > 0) {
+                return;
+            }
+
+            int greatestIdx = 0;
+            int greatestScore = CalculateKillPriorityScore(m_ActiveVoices[0], currentTime);
+
+            for(int i = 1; i < m_ActiveVoices.Count; i++) {
+                int checkScore = CalculateKillPriorityScore(m_ActiveVoices[i], currentTime);
+                if (checkScore > greatestScore) {
+                    greatestIdx = i;
+                    greatestScore = checkScore;
+                }
+            }
+
+            KillVoice(m_ActiveVoices[greatestIdx]);
+            m_ActiveVoices.FastRemoveAt(greatestIdx);
+        }
+
+        static private unsafe int CalculateKillPriorityScore(VoiceData voice, double currentTime) {
+            int score = (int) (voice.LastKnownProperties.Volume * 100);
+
+            switch (voice.State) {
+                case VoiceState.Playing:
+                case VoiceState.Paused: {
+                    score = (int) (score + (currentTime - voice.PlayStartedTS));
+                    break;
+                }
+                case VoiceState.Stopped: {
+                    score *= 1000;
+                    break;
+                }
+                case VoiceState.PlayRequested: {
+                    score /= 2;
+                    break;
+                }
+            }
+
+            // if not audible, or volume is really low, boost score
+            if (!voice.LastKnownProperties.IsAudible() || voice.LastKnownProperties.Volume < 0.1f) {
+                score *= 5;
+            }
+
+            // manual pauses and mutes should be respected
+            if (voice.VoiceProperties->Pause || voice.VoiceProperties->Mute) {
+                score /= 2;
+            }
+
+            // if looping, or using a provided audio source, killing would be more detrimental to experience
+            if ((voice.Flags & (AudioPlaybackFlags.Loop | AudioPlaybackFlags.UserProvidedSource)) != 0) {
+                score /= 4;
+            }
+
+            score = score * voice.Components.Source.priority / 255;
+
+            return score;
+        }
 
         private unsafe void KillVoice(VoiceData voice) {
             voice.Components.Source.Stop();

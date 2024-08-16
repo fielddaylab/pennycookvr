@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b017bde58fad9b43b71452e4981b6cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InitialCapacity: 2
+  m_InitialCapacity: 4
 --- !u!1 &3014072093385646274
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,6 +226,7 @@ MonoBehaviour:
   m_AudioConfig:
     Is3D: 1
     DefaultEmitterProfile: {fileID: 11400000, guid: 0bdb048b66d7e314cbbd06537d9381e7, type: 2}
+    PreloadWorkerTimeSlice: 2
   m_MemoryConfig:
     MeshCapacity: 16
     MaterialCapacity: 16
