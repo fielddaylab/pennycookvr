@@ -51,8 +51,8 @@ namespace FieldDay.VRHands {
             if (!grabber.HeldObject || !grabber.HeldObject.GrabEnabled || !grabber.HeldObject.isActiveAndEnabled || (grabber.HeldObjectSnapNodeIndex >= 0 && grabber.HeldObject.DisabledSnapNodes[grabber.HeldObjectSnapNodeIndex]) || (grabber.Joint && !grabber.Joint.connectedBody)) {
                 GrabUtility.DropCurrent(grabber, false);
             } else {
-                DebugDraw.AddPoint(grabber.CachedTransform.TransformPoint(grabber.Joint.anchor), 0.05f, Color.yellow);
-                DebugDraw.AddPoint(grabber.Joint.connectedBody.transform.TransformPoint(grabber.Joint.connectedAnchor), 0.05f, Color.green);
+                // DebugDraw.AddPoint(grabber.CachedTransform.TransformPoint(grabber.Joint.anchor), 0.05f, Color.yellow);
+                // DebugDraw.AddPoint(grabber.Joint.connectedBody.transform.TransformPoint(grabber.Joint.connectedAnchor), 0.05f, Color.green);
 
                 // dampen angular velocity
                 grabber.Joint.connectedBody.angularVelocity *= 0.5f;
@@ -68,7 +68,7 @@ namespace FieldDay.VRHands {
         static private void AttemptGrab(Grabber grabber) {
             grabber.GripCenter.GetPositionAndRotation(out Vector3 gripCenter, out Quaternion gripRotation);
 
-            DebugDraw.AddSphere(gripCenter, grabber.GripRadius, Color.red.WithAlpha(0.5f), 1);
+            // DebugDraw.AddSphere(gripCenter, grabber.GripRadius, Color.red.WithAlpha(0.5f), 1);
 
             int overlapCount = UnityEngine.Physics.OverlapSphereNonAlloc(gripCenter, grabber.GripRadius, OverlapWorkArray, grabber.GripMask);
             Grabbable closest = null;

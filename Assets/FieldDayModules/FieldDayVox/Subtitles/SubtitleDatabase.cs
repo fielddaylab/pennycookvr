@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using BeauRoutine;
 using BeauUtil;
-using BeauUtil.Streaming;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
 using UnityEngine;
@@ -37,7 +36,32 @@ namespace FieldDay.Vox {
         #endregion // ISceneLoadDependency
     }
 
-    static public class SubtitleUtility {
+    static public partial class SubtitleUtility {
         [SharedStateReference] static public SubtitleDatabase DB { get; private set; }
+
+        [InvokePreBoot]
+        static private void Initialize() {
+            Game.SharedState.Register(new SubtitleDatabase());
+        }
+
+        /// <summary>
+        /// Finds the subtitle for the given line.
+        /// </summary>
+        static public string FindSubtitle(StringHash32 lineCode, string fallback) {
+            string text;
+            if (!DB.TextMap.TryGetValue(lineCode, out text)) {
+                text = fallback;
+            }
+            return text;
+        }
+
+        #region Parser
+
+        // TODO: Implement subtitle file parsing
+        // probably CSV file
+        // possibly split it into multiple pages/chunks
+        // so we don't have to have all subtitles loaded all the time
+
+        #endregion // Parser
     }
 }

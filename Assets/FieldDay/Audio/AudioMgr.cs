@@ -103,6 +103,10 @@ namespace FieldDay.Audio {
         internal void Update(float deltaTime) {
             using (Profiling.Sample("AudioMgr::Update")) {
                 FlushCommandPipe();
+
+                if (m_PreloadQueue.Count > 0) {
+                    WorkSlicer.TimeSliced(m_PreloadQueue, HandlePreloadDelegate, m_PreloadWorkerTimeSlice / 2);
+                }
             }
         }
 
@@ -111,7 +115,7 @@ namespace FieldDay.Audio {
                 FlushCommandPipe();
 
                 if (m_PreloadQueue.Count > 0) {
-                    WorkSlicer.TimeSliced(m_PreloadQueue, HandlePreloadDelegate, m_PreloadWorkerTimeSlice);
+                    WorkSlicer.TimeSliced(m_PreloadQueue, HandlePreloadDelegate, m_PreloadWorkerTimeSlice / 2);
                 }
 
                 SyncEmitterLocations();
@@ -189,5 +193,27 @@ namespace FieldDay.Audio {
         }
 
         #endregion // Command Pipe
+
+        #region Preload
+
+        /// <summary>
+        /// Queues the given clip to be preloaded.
+        /// </summary>
+        public void QueuePreload(AudioClip clip) {
+            if (clip != null && clip.loadState == AudioDataLoadState.Unloaded) {
+                m_PreloadQueue.PushBack(clip);
+            }
+        }
+
+        /// <summary>
+        /// Queues the given clip to be preloaded immediately.
+        /// </summary>
+        public void PushPreloadImmediate(AudioClip clip) {
+            if (clip != null && clip.loadState == AudioDataLoadState.Unloaded) {
+                m_PreloadQueue.PushFront(clip);
+            }
+        }
+
+        #endregion // Preload
     }
 }

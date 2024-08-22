@@ -1,10 +1,6 @@
-using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Audio;
-using FieldDay.SharedState;
 using FieldDay.Systems;
 
 namespace FieldDay.Vox {
@@ -22,9 +18,7 @@ namespace FieldDay.Vox {
                     case VoxRequestPlaybackState.Queued: {
                         SetupInternalData(ref req);
 
-                        if (req.Type == VoxType.Event) {
-
-                        } else if (!CheckLoaded(ref req)) {
+                        if (!CheckLoaded(ref req)) {
                             VoxUtility.PushImmediateLoad(req.LineCode);
                             req.State = VoxRequestPlaybackState.Loading;
                         }
@@ -33,6 +27,13 @@ namespace FieldDay.Vox {
 
                     case VoxRequestPlaybackState.Loading: {
                         CheckLoaded(ref req);
+                        break;
+                    }
+
+                    case VoxRequestPlaybackState.Loaded: {
+                        if (req.StartPlayback) {
+                            BeginPlaying(ref req);
+                        }
                         break;
                     }
 
@@ -52,17 +53,7 @@ namespace FieldDay.Vox {
         }
 
         static private void SetupInternalData(ref VoxRequest req) {
-            switch (req.Type) {
-                case VoxType.Vox: {
-                    req.ExposedCode = req.LineCode;
-                    break;
-                }
-
-                case VoxType.Event: {
-                    req.ExposedCode = req.AudioEvent;
-                    break;
-                }
-            }
+            req.Subtitle = SubtitleUtility.FindSubtitle(req.LineCode, req.Subtitle);
         }
 
         static private bool CheckLoaded(ref VoxRequest req) {
@@ -71,24 +62,12 @@ namespace FieldDay.Vox {
                     Log.Warn("[VoxRequestSystem] No clip loaded for line '{0}' - skipping voice playback from VoxEmitter '{1}'", req.LineCode, GetDebugName(req.Emitter));
                     req.State = VoxRequestPlaybackState.Complete;
                 } else {
-                    req.State = VoxRequestPlaybackState.Playing;
+                    req.LoadedClip = file.Clip;
 
-                    StringHash32 eventId = req.AudioEvent.IsEmpty ? req.Emitter.DefaultPlaybackEvent : req.AudioEvent;
-                    req.Emitter.AudioHandle = Sfx.PlayFrom(eventId, file.Clip, req.Emitter.Player);
-                    Log.Debug("[VoxRequestSystem] Playing clip '{0}' from VoxEmitter '{1}'", file.Clip.name, GetDebugName(req.Emitter));
-
-                    string subtitle = req.SubtitleFallback; // TODO: use subtitle from file
-
-                    VoxRequest cachedReq = req;
-
-                    if (VoxUtility.Requests.OnAnyVoiceSpeak != null) {
-                        VoxUtility.Requests.OnAnyVoiceSpeak(cachedReq.Emitter, cachedReq.ExposedCode, cachedReq.Type);
-                    }
-
-                    cachedReq.Emitter.OnStartSpeaking.Invoke(cachedReq.ExposedCode, cachedReq.Type);
-
-                    if (cachedReq.OnSpeak != null) {
-                        cachedReq.OnSpeak(cachedReq.Emitter, cachedReq.ExposedCode, cachedReq.Type);
+                    if (req.StartPlayback) {
+                        BeginPlaying(ref req);
+                    } else {
+                        req.State = VoxRequestPlaybackState.Loaded;
                     }
                 }
 
@@ -96,6 +75,36 @@ namespace FieldDay.Vox {
             }
 
             return false;
+        }
+
+        static private void BeginPlaying(ref VoxRequest req) {
+            req.State = VoxRequestPlaybackState.Playing;
+
+            StringHash32 eventId = req.EventOverride.IsEmpty ? req.Emitter.DefaultPlaybackEvent : req.EventOverride;
+            req.Emitter.AudioHandle = Sfx.PlayFrom(eventId, req.LoadedClip, req.Emitter.Player);
+            Log.Debug("[VoxRequestSystem] Playing clip '{0}' from VoxEmitter '{1}'", req.LoadedClip.name, GetDebugName(req.Emitter));
+
+            string subtitle = req.Subtitle; // TODO: use subtitle from file
+
+            VoxRequest cachedReq = req;
+            VoxRequestHandle handle = new VoxRequestHandle(req.Id);
+
+            if (VoxUtility.Requests.OnAnyVoiceSpeak != null) {
+                VoxUtility.Requests.OnAnyVoiceSpeak(handle, cachedReq.Emitter, cachedReq.LineCode);
+            }
+
+            cachedReq.Emitter.OnStartSpeaking.Invoke(handle, cachedReq.LineCode);
+
+            if (cachedReq.OnSpeak != null) {
+                cachedReq.OnSpeak(handle, cachedReq.Emitter, cachedReq.LineCode);
+            }
+
+            SubtitleUtility.OnDisplayRequested.Invoke(new SubtitleDisplayData() {
+                CharacterId = cachedReq.Emitter.CharacterId,
+                Subtitle = cachedReq.Subtitle,
+                Priority = cachedReq.Priority,
+                VoxHandle = handle
+            });
         }
 
         static private string GetDebugName(VoxEmitter emitter) {

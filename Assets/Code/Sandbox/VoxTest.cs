@@ -7,12 +7,11 @@ public class VoxTest : MonoBehaviour {
     public VoxEmitter Vox;
     public SerializedHash32 Line;
     public Grabbable Grabbable;
+    public string Subtitle;
 
-    public void Awake() {
+    public void Start() {
         Grabbable.OnGrabbed.Register((a) => {
-            VoxUtility.QueueLoad(Line);
+            VoxUtility.Speak(Vox, Line, Subtitle);
         });
-
-        VoxUtility.QueueLoad(Line);
     }
 }

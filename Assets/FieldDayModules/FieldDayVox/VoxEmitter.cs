@@ -17,8 +17,8 @@ namespace FieldDay.Vox {
         [NonSerialized] internal AudioHandle AudioHandle;
         [NonSerialized] internal VoxRequestHandle RequestHandle;
 
-        public CastableEvent<StringHash32, VoxType> OnStartSpeaking = new CastableEvent<StringHash32, VoxType>();
-        public CastableEvent<StringHash32, VoxType> OnFinishSpeaking = new CastableEvent<StringHash32, VoxType>();
+        public CastableEvent<VoxRequestHandle, StringHash32> OnStartSpeaking = new CastableEvent<VoxRequestHandle, StringHash32>();
+        public CastableEvent<VoxRequestHandle, StringHash32> OnFinishSpeaking = new CastableEvent<VoxRequestHandle, StringHash32>();
 
         #region IRegistrationCallbacks
 

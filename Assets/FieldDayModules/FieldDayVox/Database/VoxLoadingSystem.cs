@@ -1,3 +1,7 @@
+#if (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif
+
 using System;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -35,6 +39,7 @@ namespace FieldDay.Vox {
                         db.CurrentLoad.Dispose();
                         db.CurrentLoad = null;
                         db.CurrentLoadFileId = default;
+                        return true;
                     }
                     return false;
                 }
@@ -65,12 +70,15 @@ namespace FieldDay.Vox {
 
                     if (db.CurrentLoad.result == UnityWebRequest.Result.Success) {
                         AudioClip clip = ((DownloadHandlerAudioClip) db.CurrentLoad.downloadHandler).audioClip;
+#if DEVELOPMENT
+                        clip.name = db.CurrentLoadLineCode.ToDebugString();
+#endif // DEVELOPMENT
                         db.LoadedFileDataMap.Add(db.CurrentLoadFileId, new VoxFileData() {
                             Clip = clip
                         });
-                        Log.Msg("[VoxLoadingSystem] Loaded clip '{0}'", db.CurrentLoadFileId.ToDebugString());
+                        Log.Msg("[VoxLoadingSystem] Loaded clip '{0}'", clip.name);
                     } else {
-                        Log.Error("[VoxLoadingSystem] Could not load clip '{0}' due to error {1} - '{2}'", db.CurrentLoadFileId.ToDebugString(), db.CurrentLoad.result, db.CurrentLoad.error);
+                        Log.Error("[VoxLoadingSystem] Could not load clip '{0}' due to error {1} - '{2}'", db.CurrentLoad.url, db.CurrentLoad.result, db.CurrentLoad.error);
                         db.LoadedFileDataMap.Add(db.CurrentLoadFileId, new VoxFileData() {
                             Clip = null
                         });
@@ -79,21 +87,26 @@ namespace FieldDay.Vox {
                     db.CurrentLoad.Dispose();
                     db.CurrentLoad = null;
                     db.CurrentLoadFileId = default;
+                    db.CurrentLoadLineCode = default;
 
                     isRunningLoad = false;
                     didWork = true;
                 }
             }
 
-            while(!isRunningLoad && db.LineCodeUnloadQueue.TryPopFront(out StringHash32 lineCode)) {
-                VoxFileEntry entry = VoxUtility.ResolveEntryForLineCode(db, lineCode);
+            while(!isRunningLoad && db.LineCodeLoadQueue.TryPopFront(out StringHash32 lineCode)) {
+                if (!VoxUtility.TryResolveEntryForLineCode(db, lineCode, out VoxFileEntry entry)) {
+                    continue;
+                }
+
                 if (db.LoadedFileDataMap.ContainsKey(entry.PathHash)) {
                     continue;
                 }
 
                 Uri uri = new Uri(Streaming.ResolveAddressToURL(entry.Path));
                 Log.Msg("[VoxLoadingSystem] Beginning load of clip '{0}' at path '{1}'", lineCode.ToDebugString(), uri.ToString());
-                
+
+                db.CurrentLoadLineCode = lineCode;
                 db.CurrentLoadFileId = entry.PathHash;
                 db.CurrentLoad = new UnityWebRequest(uri, UnityWebRequest.kHttpVerbGET, new DownloadHandlerAudioClip(uri, AudioType.UNKNOWN), null);
                 db.CurrentLoad.SendWebRequest();

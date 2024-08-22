@@ -251,9 +251,7 @@ namespace FieldDay.Audio {
                             voice.State = VoiceState.Playing;
                             voice.PlayStartedTS = currentTime;
                             voice.Components.Source.Play();
-                            Log.Msg("[AudioMgr] Playing source '{0}'", voice.Components.name);
-                        } else {
-                            Log.Msg("[AudioMgr] Still waiting on source '{0}'...", voice.Components.name);
+                            Log.Debug("[AudioMgr] Playing source '{0}'", voice.Components.name);
                         }
 
                         break;
@@ -354,11 +352,7 @@ namespace FieldDay.Audio {
         }
 
         internal bool IsVoiceActive(AudioHandle handle) {
-            var voice = FindVoiceForId(handle.m_Id);
-            if (voice != null) {
-                return voice.State != VoiceState.Stopped;
-            }
-            return false;
+            return m_VoiceIdAllocator.IsValid(handle.m_Id);
         }
 
         #endregion // Voice Queries

@@ -1,18 +1,14 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using BeauPools;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUtil.Tags;
 using BeauUtil.Variants;
-using FieldDay.SharedState;
+using FieldDay.Vox;
 using Leaf;
-using Leaf.Defaults;
 using Leaf.Runtime;
 using UnityEngine;
-using static BeauRoutine.Routine;
 
 namespace FieldDay.Scripting {
     public class ScriptPlugin : ILeafPlugin<ScriptNode>, ILeafPlugin, ILeafVariableAccess {
@@ -138,7 +134,7 @@ namespace FieldDay.Scripting {
 
         #endregion // Node Flow
 
-        #region Operation
+        #region Line
 
         public IEnumerator RunLine(LeafThreadState<ScriptNode> inThreadState, LeafLineInfo inLine) {
             ScriptThread thread = (ScriptThread) inThreadState;
@@ -182,16 +178,89 @@ namespace FieldDay.Scripting {
                 yield return null;
             }
 
-            TagString str = thread.TagString;
-            ScriptUtility.ParseTag(ref str, line.Text, thread);
-            m_RuntimeState.OnTaggedLineProcessed.Invoke(thread, str);
+            LeafThreadHandle cachedHandle = thread.GetHandle();
+
+            TagString tagStr = thread.TagString;
+            ScriptUtility.ParseTag(ref tagStr, line.Text, thread);
+            m_RuntimeState.OnTaggedLineProcessed.Invoke(thread, tagStr);
 
             // TODO: handle evaluating if dialog box is required
 
+            StringHash32 charId = ScriptUtility.GetCharacterId(tagStr);
+            ILeafActor actor;
+            VoxEmitter vox;
+            if (!charId.IsEmpty) {
+                actor = ScriptUtility.FindActor(charId);
+                vox = VoxUtility.FindEmitter(charId);
+            } else {
+                actor = null;
+                vox = null;
+            }
 
+            VoxRequestHandle voxHandle;
+            bool hadVox;
+
+            if (vox != null && VoxUtility.HasHumanReadableMapping(line.LineCode)) {
+                VoxRequest req = default;
+                req.CharacterId = charId;
+                req.LineCode = line.LineCode;
+                req.Subtitle = tagStr.RichText;
+                req.UnloadAfterPlayback = (thread.PeekNode().Flags & ScriptNodeFlags.Once) != 0;
+                req.StartPlayback = false;
+                req.Priority = ScriptUtility.ScriptPriorityToVoxPriority(thread.Priority());
+                voxHandle = VoxUtility.Speak(vox, req);
+                thread.AssignVox(voxHandle);
+                hadVox = true;
+            } else {
+                voxHandle = default;
+                thread.AssignVox(default);
+                hadVox = false;
+            }
+
+            // peek ahead for loading
+            StringHash32 nextLineCode = LeafRuntime.PredictLine(thread);
+            if (VoxUtility.HasHumanReadableMapping(nextLineCode)) {
+                VoxUtility.QueueLoad(nextLineCode);
+            }
+
+            if (voxHandle.IsValid) {
+                while(VoxUtility.IsLoading(voxHandle)) {
+                    yield return null;
+                }
+
+                VoxUtility.Play(voxHandle);
+            }
+
+            var tagNodes = tagStr.Nodes;
+            for(int i = 0; i < tagNodes.Length; i++) {
+                TagNodeData node = tagStr.Nodes[i];
+                switch (node.Type) {
+                    case TagNodeType.Event: {
+                        IEnumerator coroutine;
+                        if (m_RuntimeState.TagEventHandler.TryEvaluate(node.Event, thread, out coroutine)) {
+                            if (!cachedHandle.IsRunning()) {
+                                yield break;
+                            }
+
+                            if (coroutine != null) {
+                                yield return coroutine;
+                            }
+                        }
+
+                        break;
+                    }
+
+                    case TagNodeType.Text: {
+                        // TODO: Implement
+                        break;
+                    }
+                }
+            }
+
+            yield return Routine.Command.BreakAndResume;
         }
 
-        #endregion // Operation
+        #endregion // Line
 
         #region Choice
 

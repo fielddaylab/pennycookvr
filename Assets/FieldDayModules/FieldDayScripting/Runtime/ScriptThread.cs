@@ -11,7 +11,7 @@ namespace FieldDay.Scripting {
     /// <summary>
     /// Scripting thread implementation.
     /// </summary>
-    public class ScriptThread : LeafThreadState<ScriptNode> {
+    public sealed class ScriptThread : LeafThreadState<ScriptNode> {
         private readonly IPool<ScriptThread> m_Pool;
         private readonly ScriptPlugin m_CustomPlugin;
 
@@ -21,7 +21,7 @@ namespace FieldDay.Scripting {
         private ScriptThreadFlags m_Flags;
 
         private int m_CutsceneDepth;
-        private AudioHandle m_Voiceover;
+        private VoxRequestHandle m_Voiceover;
 
         public ScriptThread(IPool<ScriptThread> pool, ScriptPlugin inPlugin) : base(inPlugin) {
             m_Pool = pool;
@@ -79,8 +79,26 @@ namespace FieldDay.Scripting {
 
         #endregion // Skipping
 
+        #region Voiceover
+
+        internal void AssignVox(VoxRequestHandle voxHandle) {
+            if (m_Voiceover != voxHandle) {
+                VoxUtility.Stop(m_Voiceover);
+                m_Voiceover = voxHandle;
+            }
+        }
+
+        internal void ReleaseVox() {
+            if (m_Voiceover.IsValid) {
+                m_Voiceover = default;
+            }
+        }
+
+        #endregion // Voiceover
+
         protected override void Reset() {
             m_CustomPlugin.StopTracking(this);
+            VoxUtility.Stop(ref m_Voiceover);
             
             base.Reset();
 

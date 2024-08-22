@@ -20,24 +20,24 @@ using Leaf.Runtime;
 using UnityEngine;
 
 namespace FieldDay.Scripting {
-    [DisallowMultipleComponent]
+    [DisallowMultipleComponent, SharedStateInitOrder(-10)]
     public sealed class ScriptDatabase : ISharedState, ISceneLoadDependency, IRegistrationCallbacks {
         public const int MaxLoadedPackages = 16;
 
         // loaded
-        public HashSet<ScriptNodePackage> RegisteredPackages = new HashSet<ScriptNodePackage>(MaxLoadedPackages);
-        public ScriptNodePackage[] LoadedHandleMap = new ScriptNodePackage[MaxLoadedPackages];
-        public Dictionary<StringHash32, NodeBucket<ScriptNode>> LoadedNodeBuckets = MapUtils.Create<StringHash32, NodeBucket<ScriptNode>>(8);
-        public Dictionary<StringHash32, ScriptNode> LoadedExposedNodes = MapUtils.Create<StringHash32, ScriptNode>(16);
+        internal HashSet<ScriptNodePackage> RegisteredPackages = new HashSet<ScriptNodePackage>(MaxLoadedPackages);
+        internal ScriptNodePackage[] LoadedHandleMap = new ScriptNodePackage[MaxLoadedPackages];
+        internal Dictionary<StringHash32, NodeBucket<ScriptNode>> LoadedNodeBuckets = MapUtils.Create<StringHash32, NodeBucket<ScriptNode>>(8);
+        internal Dictionary<StringHash32, ScriptNode> LoadedExposedNodes = MapUtils.Create<StringHash32, ScriptNode>(16);
 
         // loading
-        public UniqueIdAllocator16 HandleGenerator = new UniqueIdAllocator16(MaxLoadedPackages);
-        public RingBuffer<ScriptDatabaseLoadRequest> LoadQueue = new RingBuffer<ScriptDatabaseLoadRequest>();
-        [NonSerialized] public ScriptDatabaseLoadRequest CurrentLoadRequest;
-        [NonSerialized] public AsyncHandle CurrentLoadHandle;
+        internal UniqueIdAllocator16 HandleGenerator = new UniqueIdAllocator16(MaxLoadedPackages);
+        internal RingBuffer<ScriptDatabaseLoadRequest> LoadQueue = new RingBuffer<ScriptDatabaseLoadRequest>();
+        internal ScriptDatabaseLoadRequest CurrentLoadRequest;
+        internal AsyncHandle CurrentLoadHandle;
 
         // unload
-        public RingBuffer<UniqueId16> UnloadQueue = new RingBuffer<UniqueId16>();
+        internal RingBuffer<UniqueId16> UnloadQueue = new RingBuffer<UniqueId16>();
 
         #region ISceneLoadDepencency
 
@@ -52,12 +52,12 @@ namespace FieldDay.Scripting {
 
         #region IRegistrationCallbacks
 
-        void IRegistrationCallbacks.OnDeregister() {
-            Game.Scenes?.DeregisterLoadDependency(this);
-        }
-
         void IRegistrationCallbacks.OnRegister() {
             Game.Scenes.RegisterLoadDependency(this);
+        }
+
+        void IRegistrationCallbacks.OnDeregister() {
+            Game.Scenes?.DeregisterLoadDependency(this);
         }
 
         #endregion // IRegistrationCallbacks
@@ -127,6 +127,68 @@ namespace FieldDay.Scripting {
 
         #region Package Registration
 
+        static internal void RegisterPackage(ScriptDatabase db, ScriptNodePackage package, ReloadableRef<LeafAsset> sourceAsset) {
+            package.SetActive(true);
+
+            if (!db.RegisteredPackages.Add(package)) {
+                return;
+            }
+
+            foreach(ScriptNode node in package) {
+                if ((node.Flags & ScriptNodeFlags.Exposed) != 0) {
+                    db.LoadedExposedNodes.Add(node.Id(), node);
+                }
+
+                if ((node.Flags & ScriptNodeFlags.Trigger) != 0) {
+                    if (!db.LoadedNodeBuckets.TryGetValue(node.TriggerOrFunctionId, out NodeBucket<ScriptNode> bucket)) {
+                        bucket = NodeBucket<ScriptNode>.Create(32, 32);
+                    }
+
+                    if (NodeBucketUtility.AddSorted(ref bucket, node, node.SortingScore)) {
+                        db.LoadedNodeBuckets[node.TriggerOrFunctionId] = bucket;
+                    }
+                } else if ((node.Flags & ScriptNodeFlags.Function) != 0) {
+                    if (!db.LoadedNodeBuckets.TryGetValue(node.TriggerOrFunctionId, out NodeBucket<ScriptNode> bucket)) {
+                        bucket = NodeBucket<ScriptNode>.Create(32, 32);
+                        db.LoadedNodeBuckets[node.TriggerOrFunctionId] = bucket;
+                    }
+
+                    NodeBucketUtility.AddUnsorted(ref bucket, node);
+                }
+            }
+
+            // TODO: Implement mapping from line code to readable line name
+        }
+
+        static internal void DeregisterPackage(ScriptDatabase db, ScriptNodePackage package) {
+            package.SetActive(false);
+
+            if (!db.RegisteredPackages.Remove(package)) {
+                return;
+            }
+
+            foreach (ScriptNode node in package) {
+                if ((node.Flags & ScriptNodeFlags.Exposed) != 0) {
+                    db.LoadedExposedNodes.Remove(node.Id());
+                }
+
+                if ((node.Flags & ScriptNodeFlags.Trigger) != 0) {
+                    if (db.LoadedNodeBuckets.TryGetValue(node.TriggerOrFunctionId, out NodeBucket<ScriptNode> bucket)) {
+                        if (NodeBucketUtility.RemoveSorted(ref bucket, node)) {
+                            db.LoadedNodeBuckets[node.TriggerOrFunctionId] = bucket;
+                        }
+                    }
+                } else if ((node.Flags & ScriptNodeFlags.Function) != 0) {
+                    if (db.LoadedNodeBuckets.TryGetValue(node.TriggerOrFunctionId, out NodeBucket<ScriptNode> bucket)) {
+                        NodeBucketUtility.RemoveUnsorted(ref bucket, node);
+                    }
+
+                }
+            }
+
+            // TODO: Implement mapping from line code to readable line name
+        }
+
         #endregion // Package Registration
 
         #region Lookups
@@ -158,7 +220,7 @@ namespace FieldDay.Scripting {
 #if ENABLE_IL2CPP
                     int count = NodeBucketUtility.GetHighestScoringSorted(ref bucket, request, &IsValidTrigger, lookupList);
 #else
-                    int count = NodeBucketUtility.GetHighestScoringSorted(ref bucket, request, IsValidTrigger, lookupList);
+                    int count = NodeBucketUtility.GetHighestScoringSorted(ref bucket, request, IsValidTriggerCached, lookupList);
 #endif // ENABLE_IL2CPP
                     if (count == 1) {
                         return lookupList[0];
@@ -200,7 +262,7 @@ namespace FieldDay.Scripting {
 #if ENABLE_IL2CPP
                 return NodeBucketUtility.GetAllUnsorted(ref bucket, request, &IsValidFunction, functions);
 #else
-                return NodeBucketUtility.GetAllUnsorted(ref bucket, request, IsValidFunction, functions);
+                return NodeBucketUtility.GetAllUnsorted(ref bucket, request, IsValidFunctionCached, functions);
 #endif // ENABLE_IL2CPP
             } else {
                 return 0;
@@ -210,6 +272,11 @@ namespace FieldDay.Scripting {
         #endregion // Lookups
 
         #region Checking
+
+#if !ENABLE_IL2CPP
+        static private readonly Predicate<ScriptNode, ScriptNodeLookupArgs> IsValidTriggerCached = IsValidTrigger;
+        static private readonly Predicate<ScriptNode, ScriptNodeLookupArgs> IsValidFunctionCached = IsValidFunction;
+#endif // !ENABLE_IL2CPP
 
         static private bool IsValidTrigger(ScriptNode node, ScriptNodeLookupArgs request) {
             if (DebugFlags.IsFlagSet(ScriptDebugFlags.LogNodeEvaluation)) {
@@ -231,7 +298,7 @@ namespace FieldDay.Scripting {
                 return false;
             }
 
-            if (request.BlockCutscenes) {
+            if (request.CurrentlyInCutsceneOrBlockingState) {
                 // if set to ignore during a cutscene while cutscene is ongoing
                 if ((node.Flags & ScriptNodeFlags.IgnoreDuringCutscene) != 0) {
                     if (DebugFlags.IsFlagSet(ScriptDebugFlags.LogNodeEvaluation)) {
@@ -335,7 +402,7 @@ namespace FieldDay.Scripting {
                 return false;
             }
 
-            if (request.BlockCutscenes) {
+            if (request.CurrentlyInCutsceneOrBlockingState) {
                 // if set to ignore during a cutscene while cutscene is ongoing
                 if ((node.Flags & ScriptNodeFlags.IgnoreDuringCutscene) != 0) {
                     if (DebugFlags.IsFlagSet(ScriptDebugFlags.LogNodeEvaluation)) {
@@ -377,7 +444,7 @@ namespace FieldDay.Scripting {
     public struct ScriptNodeLookupArgs {
         public LeafEvalContext EvalContext;
         public StringHash32 TargetId;
-        public bool BlockCutscenes;
+        public bool CurrentlyInCutsceneOrBlockingState;
         public ScriptThreadMap ThreadMap;
         public ScriptHistoryData History;
         public float CurrentTime;

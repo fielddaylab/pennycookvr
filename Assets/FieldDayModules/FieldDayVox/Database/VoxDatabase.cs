@@ -28,15 +28,21 @@ namespace FieldDay.Vox {
         internal RingBuffer<StringHash32> LineCodeUnloadQueue;
         internal RingBuffer<VoxFileData> FileUnloadQueue;
 
+        internal StringHash32 CurrentLoadLineCode;
         internal StringHash32 CurrentLoadFileId;
         internal UnityWebRequest CurrentLoad;
 
         internal Dictionary<StringHash32, VoxEmitter> EmitterMap;
 
         internal Dictionary<StringHash32, string> LineCodeToReadableFileName;
-        internal AsyncHandle LineCodeRemapReader;
 
         #endregion // State
+
+        #region Callbacks
+
+        public VoxEmitterLookupDelegate EmitterOverride;
+
+        #endregion // Callbacks
 
         void IRegistrationCallbacks.OnDeregister() {
             Game.Scenes?.DeregisterLoadDependency(this);
@@ -60,10 +66,6 @@ namespace FieldDay.Vox {
         #region ISceneLoadDependency
 
         bool ISceneLoadDependency.IsLoaded(SceneLoadPhase loadPhase) {
-            if (LineCodeRemapReader.IsRunning()) {
-                return false;
-            }
-
             switch (loadPhase) {
                 case SceneLoadPhase.BeforeLateEnable: {
                     return FileUnloadQueue.Count == 0 && LineCodeUnloadQueue.Count == 0;
@@ -77,6 +79,8 @@ namespace FieldDay.Vox {
 
         #endregion // ISceneLoadDependency
     }
+
+    public delegate VoxEmitter VoxEmitterLookupDelegate(StringHash32 emitterId);
 
     public struct VoxFileData {
         public AudioClip Clip;
@@ -176,15 +180,17 @@ namespace FieldDay.Vox {
             db.FileEntryMap.Clear();
             db.LoadedFileDataMap.Clear();
 
-            db.LineCodeLoadQueue.Clear();
-            db.LineCodeUnloadQueue.Clear();
-
+            // if a load is currently happening, push it to front of queue
+            // and redo it with the new settings.
             if (db.CurrentLoad != null) {
                 db.CurrentLoad.Abort();
                 db.CurrentLoad.Dispose();
 
+                db.LineCodeLoadQueue.PushFront(db.CurrentLoadLineCode);
+
                 db.CurrentLoad = null;
                 db.CurrentLoadFileId = default;
+                db.CurrentLoadLineCode = default;
             }
         }
 
@@ -195,28 +201,27 @@ namespace FieldDay.Vox {
         /// <summary>
         /// Resolves the path information for the given line code.
         /// </summary>
-        static internal VoxFileEntry ResolveEntryForLineCode(VoxDatabase db, StringHash32 lineCode) {
-            VoxFileEntry entry;
+        static internal bool TryResolveEntryForLineCode(VoxDatabase db, StringHash32 lineCode, out VoxFileEntry entry) {
             if (!db.FileEntryMap.TryGetValue(lineCode, out entry)) {
-                using (var psb = PooledStringBuilder.Create()) {
-                    psb.Builder.Append(db.BasePath).Append('/');
-                    if (!string.IsNullOrEmpty(db.LanguagePath)) {
-                        psb.Builder.Append(db.LanguagePath).Append('/');
-                    }
-                    if (db.LineCodeToReadableFileName.TryGetValue(lineCode, out string readableName)) {
+                if (db.LineCodeToReadableFileName.TryGetValue(lineCode, out string readableName)) {
+                    using (var psb = PooledStringBuilder.Create()) {
+                        psb.Builder.Append(db.BasePath).Append('/');
+                        if (!string.IsNullOrEmpty(db.LanguagePath)) {
+                            psb.Builder.Append(db.LanguagePath).Append('/');
+                        }
                         psb.Builder.Append(readableName);
-                    } else {
-                        psb.Builder.Append(lineCode.ToString());
-                    }
-                    psb.Builder.Append(db.FileExtension);
-                    psb.Builder.Replace("//", "/").Replace('\\', '/');
+                        psb.Builder.Append(db.FileExtension);
+                        psb.Builder.Replace("//", "/").Replace('\\', '/');
 
-                    entry.Path = psb.Builder.Flush();
-                    entry.PathHash = StringHash32.Fast(entry.Path);
-                    db.FileEntryMap.Add(lineCode, entry);
+                        entry.Path = psb.Builder.Flush();
+                        entry.PathHash = StringHash32.Fast(entry.Path);
+                        db.FileEntryMap.Add(lineCode, entry);
+                        return true;
+                    }
                 }
             }
-            return entry;
+
+            return false;
         }
 
         /// <summary>
@@ -238,11 +243,42 @@ namespace FieldDay.Vox {
         /// <summary>
         /// Returns the emitter with the given id.
         /// </summary>
-        static public VoxEmitter GetEmitter(StringHash32 id) {
-            DB.EmitterMap.TryGetValue(id, out VoxEmitter emitter);
+        static public VoxEmitter FindEmitter(StringHash32 id) {
+            VoxEmitter emitter = DB.EmitterOverride?.Invoke(id);
+            if (emitter == null) {
+                DB.EmitterMap.TryGetValue(id, out emitter);
+            }
             return emitter;
         }
 
         #endregion // Emitters
+
+        #region Mapping
+
+        /// <summary>
+        /// Returns if the given line code has an associated human-readable file name.
+        /// </summary>
+        static public bool HasHumanReadableMapping(StringHash32 lineCode) {
+            return DB.LineCodeToReadableFileName.ContainsKey(lineCode);
+        }
+
+        /// <summary>
+        /// Adds a human-readable file name mapping for the given line code.
+        /// </summary>
+        static public void AddHumanReadableMapping(StringHash32 lineCode, string fileName) {
+            Assert.False(DB.LineCodeToReadableFileName.ContainsKey(lineCode), "Duplicate line codes");
+            DB.LineCodeToReadableFileName.Add(lineCode, fileName);
+        }
+
+        /// <summary>
+        /// Removes a human-readable file name mapping from the given line code.
+        /// </summary>
+        static public void RemoveHumanReadableMapping(StringHash32 lineCode, string fileName) {
+            if (DB.LineCodeToReadableFileName.TryGetValue(lineCode, out string existing) && fileName == existing) {
+                DB.LineCodeToReadableFileName.Remove(lineCode);
+            }
+        }
+
+        #endregion // Mapping
     }
 }
