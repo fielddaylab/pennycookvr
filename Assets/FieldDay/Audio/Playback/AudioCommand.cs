@@ -8,10 +8,11 @@ namespace FieldDay.Audio {
     #region Enums
 
     [Flags]
-    public enum AudioPlaybackFlags : ushort {
+    internal enum AudioPlaybackFlags : ushort {
         Loop = 0x01,
-        UserProvidedSource = 0x02,
+        UseProvidedSource = 0x02,
         RandomizePlaybackStart = 0x04,
+        SecondaryClipOverride = 0x08
     }
 
     /// <summary>
@@ -22,6 +23,7 @@ namespace FieldDay.Audio {
         PlayClipFromAssetRef,
         PlayFromHandle,
         StopWithHandle,
+        StopWithAudioSource,
         StopWithTag,
         StopAll,
         SetVoiceFloatParameter,
@@ -41,6 +43,7 @@ namespace FieldDay.Audio {
     internal struct AudioIdRef {
         [FieldOffset(0)] public StringHash32 Id;
         [FieldOffset(0)] public UniqueId16 Handle;
+        [FieldOffset(0)] public int InstanceId;
 
         static public implicit operator AudioIdRef(StringHash32 id) {
             return new AudioIdRef() { Id = id };
@@ -48,6 +51,10 @@ namespace FieldDay.Audio {
 
         static public implicit operator AudioIdRef(UniqueId16 handle) {
             return new AudioIdRef() { Handle = handle };
+        }
+
+        static public implicit operator AudioIdRef(AudioSource source) {
+            return new AudioIdRef() { InstanceId = UnityHelper.Id(source) };
         }
     }
 
@@ -77,6 +84,7 @@ namespace FieldDay.Audio {
     /// </summary>
     internal struct PlayCommandData {
         public AudioAssetRef Asset;
+        public AudioAssetRef SecondaryAsset;
         public float Volume;
         public float Pitch;
         public StringHash32 Tag;

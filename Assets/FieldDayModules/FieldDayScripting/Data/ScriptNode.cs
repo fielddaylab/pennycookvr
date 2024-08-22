@@ -60,9 +60,10 @@ namespace FieldDay.Scripting {
             if ((Flags & (ScriptNodeFlags.Trigger | ScriptNodeFlags.Function)) == 0) {
                 Log.Warn("[ScriptNode] 'who' is not compatible with non-function, non-trigger node '{0}'", FullName);
             } else {
-                TargetId = targetId;
                 if (targetId == AnyTarget) {
                     Flags |= ScriptNodeFlags.AnyTarget;
+                } else {
+                    TargetId = targetId;
                 }
             }
         }

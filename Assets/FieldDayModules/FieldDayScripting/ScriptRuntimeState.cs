@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BeauPools;
 using BeauUtil;
 using BeauUtil.Tags;
@@ -9,28 +10,51 @@ using Leaf.Runtime;
 
 namespace FieldDay.Scripting {
     public class ScriptRuntimeState : ISharedState, IRegistrationCallbacks {
+        #region State
+
         // Thread Tracking
-        public LeafThreadHandle Cutscene;
-        public readonly ScriptThreadMap ActorThreadMap = new ScriptThreadMap(32);
-        public readonly RingBuffer<LeafThreadHandle> ActiveThreads = new RingBuffer<LeafThreadHandle>(16, RingBufferMode.Expand);
+        internal LeafThreadHandle Cutscene;
+        internal readonly ScriptThreadMap ActorThreadMap = new ScriptThreadMap(32);
+        internal readonly RingBuffer<LeafThreadHandle> ActiveThreads = new RingBuffer<LeafThreadHandle>(16, RingBufferMode.Expand);
 
         // Actor Tracking
-        public readonly ScriptActorMap Actors = new ScriptActorMap(16);
+        internal readonly ScriptActorMap Actors = new ScriptActorMap(16);
 
         // Plugin
-        public ILeafPlugin<ScriptNode> Plugin;
+        internal ILeafPlugin<ScriptNode> Plugin;
+        internal IMethodCache MethodCache;
+
+        // Tag String
+        internal CustomTagParserConfig TagParserConfig;
+        internal TagStringEventHandler TagEventHandler;
+        internal HashSet<StringHash32> SkippableTagEvents;
+        internal HashSet<StringHash32> TextOutputTagEvents;
 
         // Pools
-        public IPool<ScriptThread> ThreadPool;
-        public IPool<VariantTable> TablePool;
-        public IPool<TagStringParser> ParserPool;
+        internal IPool<ScriptThread> ThreadPool;
+        internal IPool<VariantTable> TablePool;
+        internal IPool<TagStringParser> ParserPool;
 
         // Variable Resolvers
-        public CustomVariantResolver Resolver;
-        public CustomVariantResolver ResolverOverride;
+        internal CustomVariantResolver Resolver;
+        internal CustomVariantResolver ResolverOverride;
 
         // Randomization
-        public System.Random Random = new Random();
+        internal System.Random Random = new Random();
+
+        // Execution State
+        internal int PauseDepth;
+
+        // current history buffer
+        internal ScriptHistoryData CurrentHistoryBuffer;
+
+        #endregion // State
+
+        #region Callbacks
+
+        public CastableEvent<ScriptThread, TagString> OnTaggedLineProcessed;
+
+        #endregion // Callbacks
 
         #region IRegistrationCallbacks
 
@@ -45,13 +69,47 @@ namespace FieldDay.Scripting {
     }
 
     static public partial class ScriptUtility {
+        public const int RuntimeUpdateMask = 0x7FFFFFFF;
+
         [SharedStateReference] static public ScriptRuntimeState Runtime { get; private set; }
         [SharedStateReference] static public ScriptDatabase DB { get; private set; }
 
         [InvokePreBoot]
-        static public void Initialize() {
+        static private void Initialize() {
             Game.SharedState.Register(new ScriptDatabase());
             Game.SharedState.Register(new ScriptRuntimeState());
+            Game.Systems.Register(new ScriptRuntimeTickSystem());
         }
+
+        #region Tables
+
+        /// <summary>
+        /// Binds a named variable table to the runtime.
+        /// </summary>
+        static public void BindTable(StringHash32 id, VariantTable table) {
+            Runtime.Resolver.SetTable(id, table);
+        }
+
+        /// <summary>
+        /// Removes a named variable table from the runtime.
+        /// </summary>
+        static public void UnbindTable(StringHash32 id) {
+            Runtime.Resolver.ClearTable(id);
+        }
+
+        #endregion // Tables
+
+        #region Tag Parsing
+
+        /// <summary>
+        /// Parses the given string into the given TagString.
+        /// </summary>
+        static public void ParseTag(ref TagString tagString, StringSlice line, object context = null) {
+            TagStringParser parser = Runtime.ParserPool.Alloc();
+            parser.Parse(ref tagString, line, context);
+            Runtime.ParserPool.Free(parser);
+        }
+
+        #endregion // Tag Parsing
     }
 }

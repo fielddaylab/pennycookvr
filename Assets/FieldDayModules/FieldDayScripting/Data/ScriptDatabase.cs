@@ -278,7 +278,7 @@ namespace FieldDay.Scripting {
             // if target is playing a node that this node cannot interrupt
             StringHash32 targetId = request.TargetId.IsEmpty ? ((node.Flags & ScriptNodeFlags.AnyTarget) == 0 ? node.TargetId : default(StringHash32)) : request.TargetId;
             if (!targetId.IsEmpty) {
-                ScriptThread currentThread = request.ThreadMap.GetCurrentThread(targetId);
+                ScriptThread currentThread = request.ThreadMap.GetThread(targetId);
                 if (currentThread != null) {
                     bool canInterrupt;
                     if ((node.Flags & ScriptNodeFlags.InterruptSamePriority) != 0) {

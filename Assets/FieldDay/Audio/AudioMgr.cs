@@ -74,6 +74,7 @@ namespace FieldDay.Audio {
                 a.gameObject.name = "unused audio voice";
 #endif // UNITY_EDITOR
                 a.enabled = false;
+                a.PlayingHandle = default;
                 a.gameObject.SetActive(false);
             });
             m_VoiceComponentPool.Prewarm(MaxVoices);

@@ -310,8 +310,13 @@ namespace FieldDay.Components
 
         internal ComponentIterator(List<IComponentData> source)
         {
-            m_Source = source.GetEnumerator();
-            m_Count = source.Count;
+            if (source != null) {
+                m_Source = source.GetEnumerator();
+                m_Count = source.Count;
+            } else {
+                m_Source = default;
+                m_Count = 0;
+            }
         }
 
         public T Current
@@ -334,7 +339,7 @@ namespace FieldDay.Components
 
         public bool MoveNext()
         {
-            return m_Source.MoveNext();
+            return m_Count == 0 ? false : m_Source.MoveNext();
         }
 
         public ComponentIterator<T> GetEnumerator() {
