@@ -1,4 +1,5 @@
 using FieldDay;
+using FieldDay.Scripting;
 
 namespace Pennycook {
     public class VRGame : Game {
@@ -12,7 +13,9 @@ namespace Pennycook {
 
         [InvokeOnBoot]
         static private void OnBoot() {
-
+            Game.Scenes.OnMainSceneReady.Register(() => {
+                ScriptUtility.Trigger(GameTriggers.SceneReady);
+            });
         }
     }
 }

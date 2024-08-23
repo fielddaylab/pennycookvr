@@ -4,12 +4,16 @@ using System.Runtime.CompilerServices;
 using BeauUtil;
 using BeauUtil.Debugger;
 using Unity.IL2CPP.CompilerServices;
+using System.Collections;
+using BeauUtil.IO;
+using UnityEngine;
+using BeauPools;
 
 using GlobalAssetIndex = BeauUtil.TypeIndex<FieldDay.Assets.IGlobalAsset>;
 using LiteAssetIndex = BeauUtil.TypeIndex<FieldDay.Assets.ILiteAsset>;
 using NamedAssetIndex = BeauUtil.TypeIndex<FieldDay.Assets.INamedAsset>;
 using NamedAssetCollection = FieldDay.Assets.AssetCollection<FieldDay.Assets.INamedAsset>;
-using System.Collections;
+using System.Security.Cryptography;
 
 namespace FieldDay.Assets {
     /// <summary>
@@ -24,6 +28,8 @@ namespace FieldDay.Assets {
 
         private readonly CastableAction<INamedAsset>[] m_NamedAssetPostLoadCallbackTable = new CastableAction<INamedAsset>[NamedAssetIndex.Capacity];
         private readonly CastableAction<INamedAsset>[] m_NamedAssetUnloadCallbackTable = new CastableAction<INamedAsset>[NamedAssetIndex.Capacity];
+
+        private readonly HotReloadBatcher m_ReloadBatcher = new HotReloadBatcher();
 
         #region Events
 
@@ -105,7 +111,7 @@ namespace FieldDay.Assets {
 
             Type assetType = asset.GetType();
             var typeIndices = NamedAssetIndex.GetAll(assetType);
-            foreach(var index in typeIndices) {
+            foreach (var index in typeIndices) {
                 GetNamedCollection(index, true).Register(id, asset);
             }
 
@@ -195,7 +201,7 @@ namespace FieldDay.Assets {
                 throw new ArgumentNullException("keyFunc");
             }
             AssetCollection<T> typedCollection = GetLiteCollection<T>(true);
-            foreach(var asset in data) {
+            foreach (var asset in data) {
                 typedCollection.Register(keyFunc(asset), asset);
             }
         }
@@ -217,7 +223,7 @@ namespace FieldDay.Assets {
             }
             AssetCollection<T> typedCollection = GetLiteCollection<T>(false);
             if (typedCollection != null) {
-                for(int i = 0; i < data.Length; i++) {
+                for (int i = 0; i < data.Length; i++) {
                     typedCollection.Deregister(keyFunc(data[i]));
                 }
             }
@@ -431,7 +437,7 @@ namespace FieldDay.Assets {
 
         static private void InvokeNamedCallbacks(CastableAction<INamedAsset>[] assets, Type assetType, INamedAsset asset) {
             var typeIndices = NamedAssetIndex.GetAll(assetType);
-            foreach(var index in typeIndices) {
+            foreach (var index in typeIndices) {
                 var action = assets[index];
                 if (!action.IsEmpty) {
                     action.Invoke(asset);
@@ -440,6 +446,77 @@ namespace FieldDay.Assets {
         }
 
         #endregion // Callbacks
+
+        #region Hot Reload
+
+        /// <summary>
+        /// Registers a hot-reloadable asset.
+        /// </summary>
+        public void RegisterHotReloadable(IHotReloadable reloadable) {
+            if (m_ReloadBatcher.Add(reloadable)) {
+                Log.Debug("[AssetMgr] Registered hot-reloadable asset '{0}'", reloadable.Id);
+            }
+        }
+
+        /// <summary>
+        /// Registers a hot-reloadable asset.
+        /// </summary>
+        public IHotReloadable RegisterHotReloadCallbacks<T>(T asset, HotReloadAssetDelegate<T> callback) where T : UnityEngine.Object {
+#if UNITY_EDITOR
+            if (asset != null && asset.IsPersistent()) {
+                var reloadable = new HotReloadableAssetProxy<T>(asset, callback);
+                RegisterHotReloadable(reloadable);
+                return reloadable;
+            } else {
+                return null;
+            }
+#else
+            return null;
+#endif // UNITY_EDITOR
+        }
+
+        /// <summary>
+        /// Registers a hot-reloadable asset.
+        /// </summary>
+        public void DeregisterHotReloadable(IHotReloadable reloadable) {
+            if (m_ReloadBatcher.Remove(reloadable)) {
+                Log.Debug("[AssetMgr] Unregistered hot-reloadable asset '{0}'", reloadable.Id);
+            }
+        }
+
+        private void TryHotReloadAll() {
+            using (var res = PooledSet<HotReloadResult>.Create()) {
+                m_ReloadBatcher.TryReloadAll(res, false);
+                LogHotReloadResults(res);
+            }
+        }
+
+        static private void LogHotReloadResults(ICollection<HotReloadResult> res) {
+            if (res.Count > 0) {
+                using (var str = PooledStringBuilder.Create(1024)) {
+                    str.Builder.Append("[AssetMgr] Hot-reloaded ").AppendNoAlloc(res.Count).Append(" assets");
+                    foreach (var result in res) {
+                        str.Builder.Append("\n - ").Append(result.ToDebugString());
+                    }
+                    Log.Msg(str.Builder.Flush());
+                }
+            } else {
+                Log.Trace("[AssetMgr] Hot-reloaded no assets");
+            }
+        }
+
+        #endregion // Hot Reload
+
+#if UNITY_EDITOR
+        private class EditorReloadCallback : UnityEditor.AssetPostprocessor {
+            static private void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) {
+                if (!Application.isPlaying || Game.IsShuttingDown)
+                    return;
+
+                UnityEditor.EditorApplication.delayCall += () => Game.Assets.TryHotReloadAll();
+            }
+        }
+#endif // UNITY_EDITOR
     }
 
     /// <summary>

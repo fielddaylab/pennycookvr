@@ -54,7 +54,7 @@ namespace FieldDay.Scripting {
 
         #region Callbacks
 
-        public CastableEvent<ScriptThread, TagString> OnTaggedLineProcessed;
+        public readonly CastableEvent<ScriptThread, TagString> OnTaggedLineProcessed = new CastableEvent<ScriptThread, TagString>();
 
         #endregion // Callbacks
 
@@ -69,6 +69,9 @@ namespace FieldDay.Scripting {
 
             ResolverOverride = new CustomVariantResolver();
             ResolverOverride.Base = Resolver;
+
+            TagParserConfig = new CustomTagParserConfig();
+            TagEventHandler = new TagStringEventHandler();
 
             ThreadPool = new DynamicPool<ScriptThread>(16, (p) => {
                 return new ScriptThread(p, Plugin);
@@ -88,10 +91,13 @@ namespace FieldDay.Scripting {
             });
             ParserPool.Prewarm();
 
+            CurrentHistoryBuffer = new ScriptHistoryData(64);
+
             Plugin = new ScriptPlugin(this, ScriptUtility.DB);
             ThreadPool.Prewarm();
 
-            CurrentHistoryBuffer = new ScriptHistoryData(64);
+            TagEvents.ConfigureParsers(TagParserConfig, Plugin);
+            TagEvents.ConfigureHandlers(TagEventHandler, Plugin);
         }
 
         #endregion // IRegistrationCallbacks
@@ -107,6 +113,7 @@ namespace FieldDay.Scripting {
         static private void Initialize() {
             Game.SharedState.Register(new ScriptDatabase());
             Game.SharedState.Register(new ScriptRuntimeState());
+            Game.Systems.Register(new ScriptLoadingSystem());
             Game.Systems.Register(new ScriptRuntimeTickSystem());
         }
 
@@ -194,7 +201,7 @@ namespace FieldDay.Scripting {
                 lookup.CurrentlyInCutsceneOrBlockingState = Runtime.Cutscene.IsRunning();
                 lookup.CurrentTime = Time.time;
                 lookup.EvalContext = GetEvalContext(actor, vars);
-                ScriptDatabaseUtility.FindAllFunctions(DB, functionId, lookup, funcNodes);
+                ScriptDBUtility.FindAllFunctions(DB, functionId, lookup, funcNodes);
                 foreach (var node in funcNodes) {
                     Runtime.Plugin.Run(node, targetId, actor, vars, "Function Invokation", true);
                 }
@@ -225,7 +232,7 @@ namespace FieldDay.Scripting {
             lookup.CurrentTime = Time.time;
             lookup.EvalContext = GetEvalContext(actor, vars);
 
-            ScriptNode node = ScriptDatabaseUtility.FindRandomTrigger(DB, triggerId, lookup);
+            ScriptNode node = ScriptDBUtility.FindRandomTrigger(DB, triggerId, lookup);
             if (node != null) {
                 return Runtime.Plugin.Run(node, targetId, actor, vars, "Trigger Invokation", true);
             }

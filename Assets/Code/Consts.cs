@@ -5,4 +5,8 @@ namespace Pennycook {
         static public readonly StringHash32 ObjectHighlighted = "tablet:object-highlighted";
         static public readonly StringHash32 ObjectUnhighlighted = "tablet:object-unhighlighted";
     }
+
+    static public class GameTriggers {
+        static public readonly StringHash32 SceneReady = "SceneReady";
+    }
 }

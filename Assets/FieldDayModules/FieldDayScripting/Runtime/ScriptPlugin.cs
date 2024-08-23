@@ -219,7 +219,7 @@ namespace FieldDay.Scripting {
 
             // peek ahead for loading
             StringHash32 nextLineCode = LeafRuntime.PredictLine(thread);
-            if (VoxUtility.HasHumanReadableMapping(nextLineCode)) {
+            if (!nextLineCode.IsEmpty && VoxUtility.HasHumanReadableMapping(nextLineCode)) {
                 VoxUtility.QueueLoad(nextLineCode);
             }
 
@@ -257,6 +257,22 @@ namespace FieldDay.Scripting {
                 }
             }
 
+            if (hadVox) {
+                float voiceReleaseTime = thread.GetVoxReleaseTime();
+                if (voiceReleaseTime > 0) {
+                    while(VoxUtility.IsPlaying(voxHandle) && VoxUtility.GetPlaybackPosition(voxHandle) < voiceReleaseTime) {
+                        Log.Msg("Waiting for vox to finish (overlap)");
+                        yield return null;
+                    }
+                    thread.ReleaseVox();
+                } else {
+                    while(VoxUtility.IsPlaying(voxHandle)) {
+                        Log.Msg("Waiting for vox to finish");
+                        yield return null;
+                    }
+                }
+            }
+
             yield return Routine.Command.BreakAndResume;
         }
 
@@ -290,7 +306,7 @@ namespace FieldDay.Scripting {
         }
 
         public bool TryLookupNode(StringHash32 inNodeId, ScriptNode inLocalNode, out ScriptNode outLeafNode) {
-            return ScriptDatabaseUtility.TryLookupNode(m_Database, inLocalNode, inNodeId, out outLeafNode);
+            return ScriptDBUtility.TryLookupNode(m_Database, inLocalNode, inNodeId, out outLeafNode);
         }
 
         #endregion // Lookups

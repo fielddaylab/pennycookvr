@@ -22,6 +22,7 @@ namespace FieldDay.Scripting {
 
         private int m_CutsceneDepth;
         private VoxRequestHandle m_Voiceover;
+        private float m_VoiceoverReleaseTime;
 
         public ScriptThread(IPool<ScriptThread> pool, ScriptPlugin inPlugin) : base(inPlugin) {
             m_Pool = pool;
@@ -85,12 +86,28 @@ namespace FieldDay.Scripting {
             if (m_Voiceover != voxHandle) {
                 VoxUtility.Stop(m_Voiceover);
                 m_Voiceover = voxHandle;
+                m_VoiceoverReleaseTime = 0;
+            }
+        }
+
+        internal void SetVoxReleaseTime(float releaseTime) {
+            if (m_Voiceover.IsValid) {
+                m_VoiceoverReleaseTime = releaseTime;
+            }
+        }
+
+        internal float GetVoxReleaseTime() {
+            if (m_VoiceoverReleaseTime >= 0) {
+                return m_VoiceoverReleaseTime;
+            } else {
+                return VoxUtility.GetDuration(m_Voiceover) + m_VoiceoverReleaseTime;
             }
         }
 
         internal void ReleaseVox() {
             if (m_Voiceover.IsValid) {
                 m_Voiceover = default;
+                m_VoiceoverReleaseTime = 0;
             }
         }
 
@@ -99,6 +116,7 @@ namespace FieldDay.Scripting {
         protected override void Reset() {
             m_CustomPlugin.StopTracking(this);
             VoxUtility.Stop(ref m_Voiceover);
+            m_VoiceoverReleaseTime = 0;
             
             base.Reset();
 

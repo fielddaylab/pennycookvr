@@ -13,5 +13,7 @@ public class VoxTest : MonoBehaviour {
         Grabbable.OnGrabbed.Register((a) => {
             VoxUtility.Speak(Vox, Line, Subtitle);
         });
+
+        VoxUtility.AddHumanReadableMapping(Line, Line.Source());
     }
 }

@@ -157,12 +157,14 @@ namespace FieldDay.Audio {
 
         #region Voice Update
 
-        private unsafe VoiceData AllocateVoice(UniqueId16 handle) {
+        private void EnsureFreeVoice() {
             if (m_VoiceDataPool.Count == 0) {
                 FreeUpVoice(Time.realtimeSinceStartupAsDouble);
                 Assert.True(m_VoiceDataPool.Count > 0);
             }
+        }
 
+        private unsafe VoiceData AllocateVoice(UniqueId16 handle) {
             VoiceData data = m_VoiceDataPool.Alloc();
             data.Handle = handle;
 

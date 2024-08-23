@@ -135,9 +135,8 @@ namespace FieldDay.Vox {
             VoxRequest cachedReq = req;
             VoxRequestHandle handle = new VoxRequestHandle(cachedReq.Id);
 
-            Requests.ActiveRequests.FastRemoveAt(index);
             Requests.RequestIdGenerator.Free(req.Id);
-            req = default;
+            Requests.ActiveRequests.FastRemoveAt(index);
 
             if (Requests.OnAnyVoiceFinished != null) {
                 Requests.OnAnyVoiceFinished(handle, cachedReq.Emitter, cachedReq.LineCode);
@@ -243,7 +242,7 @@ namespace FieldDay.Vox {
         /// </summary>
         static public bool IsPlaying(VoxRequestHandle id) {
             VoxRequest req = GetRequestData(id);
-            return req.State == VoxRequestPlaybackState.Playing;
+            return (req.State == VoxRequestPlaybackState.Loaded && req.StartPlayback) || req.State == VoxRequestPlaybackState.Playing;
         }
 
         /// <summary>
@@ -259,7 +258,7 @@ namespace FieldDay.Vox {
         /// </summary>
         static public bool IsLoading(VoxRequestHandle id) {
             VoxRequest req = GetRequestData(id);
-            return !req.LineCode.IsEmpty && req.State == VoxRequestPlaybackState.Loading;
+            return !req.LineCode.IsEmpty && req.State <= VoxRequestPlaybackState.Loading;
         }
 
         /// <summary>

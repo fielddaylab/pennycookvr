@@ -218,6 +218,9 @@ namespace FieldDay.Vox {
                         db.FileEntryMap.Add(lineCode, entry);
                         return true;
                     }
+                } else {
+                    Log.Error("[VoxUtility] No human-readable name found for line code '{0}'", lineCode);
+                    return false;
                 }
             }
 

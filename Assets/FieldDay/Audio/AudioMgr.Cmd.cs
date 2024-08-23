@@ -263,6 +263,8 @@ namespace FieldDay.Audio {
                 cmd.Flags &= ~AudioPlaybackFlags.RandomizePlaybackStart;
             }
 
+            EnsureFreeVoice();
+
             UnityEngine.Object providedObject = Find.FromId(cmd.TransformOrAudioSourceId);
 
             Transform playbackPos = providedObject as Transform;

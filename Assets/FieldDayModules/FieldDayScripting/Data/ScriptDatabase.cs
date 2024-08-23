@@ -8,33 +8,38 @@ using System.Collections.Generic;
 using BeauPools;
 using BeauRoutine;
 using BeauUtil;
+using BeauUtil.Blocks;
 using BeauUtil.Debugger;
 using BeauUtil.IO;
+using BeauUtil.Streaming;
 using BeauUtil.Variants;
 using FieldDay.Data;
 using FieldDay.Debugging;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
+using FieldDay.Vox;
 using Leaf;
+using Leaf.Compiler;
 using Leaf.Runtime;
 using UnityEngine;
 
 namespace FieldDay.Scripting {
     [DisallowMultipleComponent, SharedStateInitOrder(-10)]
     public sealed class ScriptDatabase : ISharedState, ISceneLoadDependency, IRegistrationCallbacks {
-        public const int MaxLoadedPackages = 16;
+        public const int MaxLoadedPackages = 32;
 
         // loaded
         internal HashSet<ScriptNodePackage> RegisteredPackages = new HashSet<ScriptNodePackage>(MaxLoadedPackages);
         internal ScriptNodePackage[] LoadedHandleMap = new ScriptNodePackage[MaxLoadedPackages];
-        internal Dictionary<StringHash32, NodeBucket<ScriptNode>> LoadedNodeBuckets = MapUtils.Create<StringHash32, NodeBucket<ScriptNode>>(8);
+
+        // loaded nodes
+        internal Dictionary<StringHash32, NodeBucket<ScriptNode>> LoadedNodeBuckets = MapUtils.Create<StringHash32, NodeBucket<ScriptNode>>(64);
         internal Dictionary<StringHash32, ScriptNode> LoadedExposedNodes = MapUtils.Create<StringHash32, ScriptNode>(16);
 
         // loading
         internal UniqueIdAllocator16 HandleGenerator = new UniqueIdAllocator16(MaxLoadedPackages);
         internal RingBuffer<ScriptDatabaseLoadRequest> LoadQueue = new RingBuffer<ScriptDatabaseLoadRequest>();
         internal ScriptDatabaseLoadRequest CurrentLoadRequest;
-        internal AsyncHandle CurrentLoadHandle;
 
         // unload
         internal RingBuffer<UniqueId16> UnloadQueue = new RingBuffer<UniqueId16>();
@@ -43,9 +48,9 @@ namespace FieldDay.Scripting {
 
         public bool IsLoaded(SceneLoadPhase loadPhase) {
             if ((loadPhase & SceneLoadPhase.BeforeReady) != 0) {
-                return LoadQueue.Count == 0 && !CurrentLoadHandle.IsRunning();
+                return LoadQueue.Count == 0 && !CurrentLoadRequest.ParseHandle.IsRunning();
             }
-            return !CurrentLoadHandle.IsRunning();
+            return !CurrentLoadRequest.ParseHandle.IsRunning();
         }
 
         #endregion // ISceneLoadDependency
@@ -63,85 +68,116 @@ namespace FieldDay.Scripting {
         #endregion // IRegistrationCallbacks
     }
 
-    public struct ScriptDatabaseLoadRequest {
-        public ReloadableRef<LeafAsset> Asset;
+    internal struct ScriptDatabaseLoadRequest {
+        public LeafAsset Asset;
         public ScriptNodePackage Package;
+        public AsyncHandle ParseHandle;
         public UniqueId16 Handle;
     }
 
-    static public class ScriptDatabaseUtility {
+    static public class ScriptDBUtility {
         #region Loading
 
-        //static public UniqueId16 Load(ScriptDatabase db, LeafAsset asset) {
-            
-        //}
+        static public UniqueId16 Load(LeafAsset asset) {
+            if (!asset) {
+                return UniqueId16.Invalid;
+            }
 
-        //static public UniqueId16 LoadNow(ScriptDatabase db, LeafAsset asset) {
+            var db = ScriptUtility.DB;
+            if (db.CurrentLoadRequest.Asset == asset) {
+                return db.CurrentLoadRequest.Handle;
+            }
 
-        //}
+            foreach(var req in db.LoadQueue) {
+                if (req.Asset == asset) {
+                    return req.Handle;
+                }
+            }
 
-        //static public void Unload(ScriptDatabase db, UniqueId16 id) {
-        //    if (!db.HandleGenerator.IsValid(id)) {
-        //        Log.Trace("[ScriptDatabase] Invalid/expired handle");
-        //        return;
-        //    }
-            
-        //    if (CancelCurrentLoad(db, id)) {
-        //        return;
-        //    }
+            foreach(var package in db.RegisteredPackages) {
+                if (package.WasFromSource(asset)) {
+                    return package.m_LoadId;
+                }
+            }
 
-        //    ScriptNodePackage package = db.LoadedHandleMap[id.Index];
-        //    if (package.SetActive(false)) {
-        //        db.UnloadQueue.PushBack(id);
-        //        Log.Trace("[ScriptDatabase] Queueing script unload '{0}'", package.Name());
-        //    }
-        //}
+            if (db.HandleGenerator.InUse >= ScriptDatabase.MaxLoadedPackages) {
+                Log.Error("[ScriptDBUtility] Already hit maximum number of loaded scripts ({0})", ScriptDatabase.MaxLoadedPackages);
+                return UniqueId16.Invalid;
+            }
 
-        //static private bool CancelCurrentLoad(ScriptDatabase db, LeafAsset asset, out UniqueId16 prevHandle) {
-        //    if (ReferenceEquals(db.CurrentLoadRequest.Asset, asset)) {
-        //        prevHandle = db.CurrentLoadRequest.Handle;
-        //        db.CurrentLoadRequest.Package.Clear();
-        //        db.CurrentLoadHandle.Cancel();
-        //        db.CurrentLoadRequest = default;
-        //        db.HandleGenerator.Free(prevHandle);
-        //        return true;
-        //    } else {
-        //        prevHandle = default;
-        //        return false;
-        //    }
-        //}
+            UniqueId16 id = db.HandleGenerator.Alloc();
+            ScriptDatabaseLoadRequest newReq;
+            newReq.Asset = asset;
+            newReq.Handle = id;
+            newReq.Package = null;
+            newReq.ParseHandle = default;
+            db.LoadQueue.PushBack(newReq);
+            return id;
+        }
 
-        //static private bool CancelCurrentLoad(ScriptDatabase db, UniqueId16 handle) {
-        //    if (db.CurrentLoadRequest.Handle == handle) {
-        //        db.CurrentLoadRequest.Package.Clear();
-        //        db.CurrentLoadHandle.Cancel();
-        //        db.CurrentLoadRequest = default;
-        //        db.HandleGenerator.Free(handle);
-        //        return true;
-        //    } else {
-        //        return false;
-        //    }
-        //}
+        static public void Unload(UniqueId16 id) {
+            if (!ScriptUtility.DB.HandleGenerator.IsValid(id)) {
+                Log.Trace("[ScriptDBUtility] Invalid/expired handle");
+                return;
+            }
+
+            if (CancelCurrentLoad(ScriptUtility.DB, id)) {
+                return;
+            }
+
+            ScriptUtility.DB.UnloadQueue.PushBack(id);
+        }
+
+        static internal bool CancelCurrentLoad(ScriptDatabase db, UniqueId16 loadId) {
+            if (db.CurrentLoadRequest.Handle != loadId) {
+                return false;
+            }
+
+            ref var req = ref db.CurrentLoadRequest;
+            req.ParseHandle.Cancel();
+            req.Package.Clear();
+            db.HandleGenerator.Free(loadId);
+            db.LoadedHandleMap[loadId.Index] = null;
+            req = default;
+            Log.Msg("[ScriptDBUtility] Cancelled in-flight load request");
+            return true;
+        }
 
         #endregion // Loading
 
         #region Package Registration
 
-        static internal void RegisterPackage(ScriptDatabase db, ScriptNodePackage package, ReloadableRef<LeafAsset> sourceAsset) {
+        static internal void RegisterPackage(ScriptDatabase db, ScriptNodePackage package, LeafAsset sourceAsset) {
             package.SetActive(true);
 
             if (!db.RegisteredPackages.Add(package)) {
                 return;
             }
 
-            foreach(ScriptNode node in package) {
+            BindPackage(db, package);
+            package.AssignSource(sourceAsset);
+        }
+
+        static internal void DeregisterPackage(ScriptDatabase db, ScriptNodePackage package) {
+            package.SetActive(false);
+
+            if (!db.RegisteredPackages.Remove(package)) {
+                return;
+            }
+
+            UnbindPackage(db, package);
+            package.Clear();
+        }
+
+        static internal void BindPackage(ScriptDatabase db, ScriptNodePackage package) {
+            foreach (ScriptNode node in package) {
                 if ((node.Flags & ScriptNodeFlags.Exposed) != 0) {
                     db.LoadedExposedNodes.Add(node.Id(), node);
                 }
 
                 if ((node.Flags & ScriptNodeFlags.Trigger) != 0) {
                     if (!db.LoadedNodeBuckets.TryGetValue(node.TriggerOrFunctionId, out NodeBucket<ScriptNode> bucket)) {
-                        bucket = NodeBucket<ScriptNode>.Create(32, 32);
+                        bucket = db.LoadedNodeBuckets[node.TriggerOrFunctionId] = NodeBucket<ScriptNode>.Create(32, 32);
                     }
 
                     if (NodeBucketUtility.AddSorted(ref bucket, node, node.SortingScore)) {
@@ -152,21 +188,21 @@ namespace FieldDay.Scripting {
                         bucket = NodeBucket<ScriptNode>.Create(32, 32);
                         db.LoadedNodeBuckets[node.TriggerOrFunctionId] = bucket;
                     }
-
                     NodeBucketUtility.AddUnsorted(ref bucket, node);
                 }
             }
 
-            // TODO: Implement mapping from line code to readable line name
+            if (VoxUtility.DB != null) {
+                using (PooledList<KeyValuePair<StringHash32, string>> customLineNames = PooledList<KeyValuePair<StringHash32, string>>.Create()) {
+                    package.GatherAllLinesWithCustomNames(customLineNames);
+                    foreach (var kv in customLineNames) {
+                        VoxUtility.AddHumanReadableMapping(kv.Key, kv.Value);
+                    }
+                }
+            }
         }
 
-        static internal void DeregisterPackage(ScriptDatabase db, ScriptNodePackage package) {
-            package.SetActive(false);
-
-            if (!db.RegisteredPackages.Remove(package)) {
-                return;
-            }
-
+        static internal void UnbindPackage(ScriptDatabase db, ScriptNodePackage package) {
             foreach (ScriptNode node in package) {
                 if ((node.Flags & ScriptNodeFlags.Exposed) != 0) {
                     db.LoadedExposedNodes.Remove(node.Id());
@@ -182,11 +218,31 @@ namespace FieldDay.Scripting {
                     if (db.LoadedNodeBuckets.TryGetValue(node.TriggerOrFunctionId, out NodeBucket<ScriptNode> bucket)) {
                         NodeBucketUtility.RemoveUnsorted(ref bucket, node);
                     }
-
                 }
             }
 
-            // TODO: Implement mapping from line code to readable line name
+            if (VoxUtility.DB != null) {
+                using (PooledList<KeyValuePair<StringHash32, string>> customLineNames = PooledList<KeyValuePair<StringHash32, string>>.Create()) {
+                    package.GatherAllLinesWithCustomNames(customLineNames);
+                    foreach (var kv in customLineNames) {
+                        VoxUtility.RemoveHumanReadableMapping(kv.Key, kv.Value);
+                    }
+                }
+            }
+        }
+
+        static internal void HotReload(ScriptDatabase db, ScriptNodePackage package, UniqueId16 loadId, LeafAsset asset, HotReloadAssetRemapArgs<LeafAsset> args, HotReloadOperation operation) {
+            if (operation == HotReloadOperation.Deleted) {
+                DeregisterPackage(db, package);
+                db.HandleGenerator.Free(loadId);
+                db.LoadedHandleMap[loadId.Index] = null;
+                return;
+            }
+
+            UnbindPackage(ScriptUtility.DB, package);
+            package.SoftClear();
+            BlockParser.Parse(ref package, CharStreamParams.FromBytes(asset.Bytes(), asset, package.Name()), BlockParsingRules.Default, ScriptNodePackage.Parser.Instance);
+            BindPackage(ScriptUtility.DB, package);
         }
 
         #endregion // Package Registration
