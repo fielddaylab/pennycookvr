@@ -240,7 +240,6 @@ namespace FieldDay.Scripting {
             }
 
             UnbindPackage(ScriptUtility.DB, package);
-            package.SoftClear();
             BlockParser.Parse(ref package, CharStreamParams.FromBytes(asset.Bytes(), asset, package.Name()), BlockParsingRules.Default, ScriptNodePackage.Parser.Instance);
             BindPackage(ScriptUtility.DB, package);
         }

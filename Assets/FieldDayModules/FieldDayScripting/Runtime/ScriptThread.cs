@@ -43,10 +43,24 @@ namespace FieldDay.Scripting {
             return m_Priority;
         }
 
+        public bool IsFunction() {
+            return (m_Flags & ScriptThreadFlags.IsFunction) != 0;
+        }
+
+        public bool IsTrigger() {
+            return (m_Flags & ScriptThreadFlags.IsTrigger) != 0;
+        }
+
         internal void SetInitialNode(ScriptNode node, StringHash32 target) {
             m_OriginalNodeId = node.Id();
             m_Target = target;
             m_Priority = node.Priority;
+
+            if ((node.Flags & ScriptNodeFlags.Trigger) != 0) {
+                m_Flags |= ScriptThreadFlags.IsTrigger;
+            } else if ((node.Flags & ScriptNodeFlags.Function) != 0) {
+                m_Flags |= ScriptThreadFlags.IsFunction;
+            }
         }
 
         #endregion // Initial State
@@ -138,6 +152,7 @@ namespace FieldDay.Scripting {
 
         Skipping = 0x01,
         Cutscene = 0x02,
-
+        IsFunction = 0x04,
+        IsTrigger = 0x08
     }
 }

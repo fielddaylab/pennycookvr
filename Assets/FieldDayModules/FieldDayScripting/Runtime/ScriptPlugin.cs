@@ -123,6 +123,10 @@ namespace FieldDay.Scripting {
             if (m_RuntimeState.Cutscene != handle) {
                 m_RuntimeState.Cutscene.Kill();
                 m_RuntimeState.Cutscene = handle;
+
+                if (handle.IsRunning()) {
+                    ScriptUtility.KillLowPriorityThreads(ScriptNodePriority.High);
+                }
             }
         }
 
@@ -261,13 +265,13 @@ namespace FieldDay.Scripting {
                 float voiceReleaseTime = thread.GetVoxReleaseTime();
                 if (voiceReleaseTime > 0) {
                     while(VoxUtility.IsPlaying(voxHandle) && VoxUtility.GetPlaybackPosition(voxHandle) < voiceReleaseTime) {
-                        Log.Msg("Waiting for vox to finish (overlap)");
+                        //Log.Msg("Waiting for vox to finish (overlap)");
                         yield return null;
                     }
                     thread.ReleaseVox();
                 } else {
                     while(VoxUtility.IsPlaying(voxHandle)) {
-                        Log.Msg("Waiting for vox to finish");
+                        //Log.Msg("Waiting for vox to finish");
                         yield return null;
                     }
                 }

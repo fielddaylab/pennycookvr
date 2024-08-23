@@ -249,5 +249,41 @@ namespace FieldDay.Scripting {
         }
 
         #endregion // Vox
+
+        #region Stopping
+
+        /// <summary>
+        /// Kills all running threads associated with the given actor.
+        /// </summary>
+        static public int KillThreads(ILeafActor actor) {
+            int killed = 0;
+            var table = Runtime.ActiveThreads;
+            for(int i = table.Count - 1; i >= 0; i--) {
+                var thread = table[i].GetThread();
+                if (thread != null && thread.Actor == actor) {
+                    table[i].Kill();
+                    killed++;
+                }
+            }
+            return killed;
+        }
+
+        /// <summary>
+        /// Kills all running threads with a lower priority than the given priority.
+        /// </summary>
+        static public int KillLowPriorityThreads(ScriptNodePriority threshold = ScriptNodePriority.Cutscene, bool killFunctions = false) {
+            int killed = 0;
+            var table = Runtime.ActiveThreads;
+            for (int i = table.Count - 1; i >= 0; i--) {
+                var thread = table[i].GetThread<ScriptThread>();
+                if (thread != null && (thread.Priority() < threshold) && (killFunctions || !thread.IsFunction())) {
+                    table[i].Kill();
+                    killed++;
+                }
+            }
+            return killed;
+        }
+
+        #endregion // Stopping
     }
 }

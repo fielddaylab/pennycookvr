@@ -2,6 +2,8 @@
 
 :: SceneStartTest
 @trigger    SceneReady
+@cutscene
 @once
-{@Margo}    Nice work, partner! {vox-overlap -1.2} $[VoxTest_01]
+{@Margo}    Nice work, partner! $[VoxTest_01]
+$call Wait(2)
 {@Player}   Yikes. Are they always so... beat up? $[VoxTest_02]

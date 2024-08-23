@@ -12,6 +12,7 @@ namespace FieldDay.Scripting {
         private IHotReloadable m_HotReload;
         private LeafAsset m_Asset;
         internal UniqueId16 m_LoadId;
+        private bool m_Reloading;
 
         public ScriptNodePackage(string name) : base(name) {
         }
@@ -78,11 +79,9 @@ namespace FieldDay.Scripting {
 
         private void HandleHotReload(LeafAsset asset, HotReloadAssetRemapArgs<LeafAsset> remapArgs, HotReloadOperation op) {
             m_Asset = asset;
+            m_Reloading = true;
             ScriptDBUtility.HotReload(ScriptUtility.DB, this, m_LoadId, asset, remapArgs, op);
-        }
-
-        internal void SoftClear() {
-            base.Clear();
+            m_Reloading = false;
         }
 
         #endregion // Hot Reload
@@ -90,12 +89,14 @@ namespace FieldDay.Scripting {
         public override void Clear() {
             base.Clear();
 
-            Game.Assets?.DeregisterHotReloadable(m_HotReload);
-            Ref.TryDispose(ref m_HotReload);
-            m_LoadId = default;
-            m_Asset = default;
-            m_Active = false;
-            m_UseCount = 0;
+            if (!m_Reloading) {
+                Game.Assets?.DeregisterHotReloadable(m_HotReload);
+                Ref.TryDispose(ref m_HotReload);
+                m_LoadId = default;
+                m_Asset = default;
+                m_Active = false;
+                m_UseCount = 0;
+            }
         }
 
         #region Generator
