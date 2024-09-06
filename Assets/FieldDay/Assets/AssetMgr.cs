@@ -13,7 +13,6 @@ using GlobalAssetIndex = BeauUtil.TypeIndex<FieldDay.Assets.IGlobalAsset>;
 using LiteAssetIndex = BeauUtil.TypeIndex<FieldDay.Assets.ILiteAsset>;
 using NamedAssetIndex = BeauUtil.TypeIndex<FieldDay.Assets.INamedAsset>;
 using NamedAssetCollection = FieldDay.Assets.AssetCollection<FieldDay.Assets.INamedAsset>;
-using System.Security.Cryptography;
 
 namespace FieldDay.Assets {
     /// <summary>

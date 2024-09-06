@@ -2,7 +2,7 @@ using System;
 using BeauUtil;
 using BeauUtil.Debugger;
 
-namespace FieldDay {
+namespace FieldDay.Threading {
     /// <summary>
     /// Work counter.
     /// </summary>

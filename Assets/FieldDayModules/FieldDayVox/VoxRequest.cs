@@ -74,29 +74,20 @@ namespace FieldDay.Vox {
             return default;
         }
 
-        static internal ref VoxRequest GetModifiableRequestData(VoxRequestHandle id, out bool retrieved) {
+        static internal ref VoxRequest GetModifiableRequestData(VoxRequestHandle id) {
             if (!Requests.RequestIdGenerator.IsValid(id.m_Id)) {
-                retrieved = false;
-                return ref NullRef<VoxRequest>();
+                return ref Unsafe.NullRef<VoxRequest>();
             }
 
             var requestBuffer = Requests.ActiveRequests;
             for (int i = requestBuffer.Count - 1; i >= 0; i--) {
                 ref VoxRequest req = ref requestBuffer[i];
                 if (req.Id == id.m_Id) {
-                    retrieved = true;
                     return ref req;
                 }
             }
 
-            retrieved = false;
-            return ref NullRef<VoxRequest>();
-        }
-
-        [IntrinsicIL("ldc.i4.0; conv.u; ret")]
-        static private unsafe ref T NullRef<T>() {
-            //return ref *(T*) null;
-            throw new NotImplementedException();
+            return ref Unsafe.NullRef<VoxRequest>();
         }
 
         static internal bool KillVoxRequest(ref VoxRequestHandle id) {
@@ -265,8 +256,8 @@ namespace FieldDay.Vox {
         /// Starts playing the given request, once loaded.
         /// </summary>
         static public void Play(VoxRequestHandle id) {
-            ref VoxRequest req = ref GetModifiableRequestData(id, out bool retrieved);
-            if (retrieved) {
+            ref VoxRequest req = ref GetModifiableRequestData(id);
+            if (!Unsafe.IsNullRef(ref req)) {
                 req.StartPlayback = true;
             }
         }

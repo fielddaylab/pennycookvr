@@ -14,6 +14,7 @@ using FieldDay.Assets;
 using System.Runtime.CompilerServices;
 using EasyAssetStreaming;
 using FieldDay.Debugging;
+using FieldDay.Threading;
 
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;

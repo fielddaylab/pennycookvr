@@ -79,7 +79,7 @@ namespace FieldDay.Data {
                 outValue = s_Params.GetVariant(valueName);
                 return true;
             } else {
-                outValue = null;
+                outValue = Variant.Null;
                 return false;
             }
         }
