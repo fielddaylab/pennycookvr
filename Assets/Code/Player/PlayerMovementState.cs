@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using BeauRoutine;
 using FieldDay;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
 using Pennycook.Tablet;
 using UnityEngine;
@@ -21,13 +22,14 @@ namespace Pennycook {
     }
 
     static public class PlayerMovementUtility {
-        static public void WarpTo(PlayerMovementState state, TabletWarpPoint warpPoint) {
+        static public bool WarpTo(PlayerMovementState state, TabletWarpPoint warpPoint) {
             if (state.WarpRoutine || state.CurrentState == PlayerMovementState.State.Warping) {
-                return;
+                return false;
             }
 
             state.CurrentState = PlayerMovementState.State.Warping;
             state.WarpRoutine.Replace(state, WarpRoutine(state, warpPoint));
+            return true;
         }
 
         static private IEnumerator WarpRoutine(PlayerMovementState state, TabletWarpPoint warpPoint) {
@@ -44,6 +46,10 @@ namespace Pennycook {
                 }
             }
             yield return 0.1f;
+            using (var t = TempVarTable.Alloc()) {
+                t.Set("targetId", ScriptUtility.ActorId(warpPoint));
+                ScriptUtility.Trigger(GameTriggers.AtWarpPoint, t);
+            }
             yield return state.WarpFader.FadeTo(0, 0.4f);
             state.WarpFader.enabled = false;
             state.CurrentState = PlayerMovementState.State.Default;

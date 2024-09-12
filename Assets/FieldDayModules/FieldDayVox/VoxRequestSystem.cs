@@ -99,7 +99,7 @@ namespace FieldDay.Vox {
                 cachedReq.OnSpeak(handle, cachedReq.Emitter, cachedReq.LineCode);
             }
 
-            SubtitleUtility.OnDisplayRequested.Invoke(new SubtitleDisplayData() {
+            SubtitleUtility.RequestDisplay(new SubtitleDisplayData() {
                 CharacterId = cachedReq.Emitter.CharacterId,
                 Subtitle = cachedReq.Subtitle,
                 Priority = cachedReq.Priority,

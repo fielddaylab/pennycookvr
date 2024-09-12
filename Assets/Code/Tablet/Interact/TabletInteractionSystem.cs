@@ -46,13 +46,17 @@ namespace Pennycook.Tablet {
         private void DoInteraction(double timestamp) {
             switch (m_StateC.CurrentTool) {
                 case TabletTool.Scan: {
-                    TabletInteractionUtility.TryInteract(m_StateB.HighlightedObject.CachedInteraction, timestamp);
+                    if (TabletInteractionUtility.TryInteract(m_StateB.HighlightedObject.CachedInteraction, timestamp)) {
+                        TabletUtility.PlayHaptics(0.3f, 0.05f);
+                    }
                     break;
                 }
 
                 case TabletTool.Move: {
                     PlayerMovementState moveState = Find.State<PlayerMovementState>();
-                    PlayerMovementUtility.WarpTo(moveState, m_StateB.HighlightedObject.CachedWarp);
+                    if (PlayerMovementUtility.WarpTo(moveState, m_StateB.HighlightedObject.CachedWarp)) {
+                        TabletUtility.PlayHaptics(0.3f, 0.05f);
+                    }
                     break;
                 }
             }

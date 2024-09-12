@@ -8,5 +8,12 @@ namespace Pennycook {
 
     static public class GameTriggers {
         static public readonly StringHash32 SceneReady = "SceneReady";
+
+        static public readonly StringHash32 AtWarpPoint = "AtWarpPoint";
+
+        static public readonly StringHash32 LiftedTablet = "TabletLifted";
+        static public readonly StringHash32 DroppedTablet = "TabletDropped";
+        static public readonly StringHash32 ChangedTabletTool = "ChangedTabletTool";
+        static public readonly StringHash32 ChangedTabletZoom = "ChangedTabletZoom";
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using BeauUtil;
 using BeauUtil.Debugger;
 
@@ -58,19 +60,7 @@ namespace FieldDay.Threading {
             unsafe {
                 if (Value != null) {
                     Assert.True(*Value > 0);
-                    (*Value)--;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Decrements the counter.
-        /// </summary>
-        public void Decrement(int count) {
-            unsafe {
-                if (Value != null) {
-                    Assert.True(*Value > count - 1);
-                    *Value -= count;
+                    Interlocked.Decrement(ref *Value);
                 }
             }
         }
@@ -81,18 +71,7 @@ namespace FieldDay.Threading {
         public void Increment() {
             unsafe {
                 if (Value != null) {
-                    (*Value)++;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Increments the counter.
-        /// </summary>
-        public void Increment(int count) {
-            unsafe {
-                if (Value != null) {
-                    *Value += count;
+                    Interlocked.Increment(ref *Value);
                 }
             }
         }
@@ -105,6 +84,7 @@ namespace FieldDay.Threading {
 
         #region Pool
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public CounterHandle Alloc() {
             return Alloc(0);
         }

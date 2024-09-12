@@ -2,6 +2,7 @@ using System.Collections;
 using BeauRoutine;
 using BeauUtil;
 using FieldDay;
+using FieldDay.HID.XR;
 using FieldDay.SharedState;
 using FieldDay.Systems;
 using UnityEngine;
@@ -31,7 +32,7 @@ namespace Pennycook.Tablet {
 				
                 m_StateA.CachedLookCameraTransform.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
                 Ray r = new Ray(cameraPos, Geom.Forward(cameraRot));
-                TabletHighlightable scannable = TabletUtility.FindBestHighlightableAlongRay(r, searchMask, m_StateA.RaycastSize, m_StateA.RaycastMinDistance, 20 * zoomState.ZoomMultiplier);
+                TabletHighlightable scannable = TabletUtility.FindBestHighlightableAlongRay(r, searchMask, m_StateA.RaycastSize, m_StateA.RaycastMinDistance, 20 * zoomState.ZoomMultiplier, out float hitDistance);
 
                 if (!scannable) {
                     if (m_StateA.HighlightedObject != null) {
@@ -42,6 +43,9 @@ namespace Pennycook.Tablet {
 
                     if (m_StateA.HighlightedObject != scannable) {
                         SetSelection(m_StateA, scannable, viewportRect);
+
+                        float vibAmp = Mathf.Clamp(1 - hitDistance / 60, 0.4f, 1) * 0.3f;
+                        TabletUtility.PlayHaptics(vibAmp, 0.1f);
                     } else {
                         m_StateA.TargetHighlightCorners = viewportRect;
                     }

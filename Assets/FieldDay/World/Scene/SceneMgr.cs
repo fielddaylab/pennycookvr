@@ -329,6 +329,17 @@ namespace FieldDay.Scenes {
             QueueMainLoadInternal(m_MainScene.Scene.path, true, true);
         }
 
+        /// <summary>
+        /// Returns a reference to the main scene.
+        /// </summary>
+        public SceneBinding MainScene() {
+            if (m_MainScene != null) {
+                return m_MainScene.Scene;
+            } else {
+                return default(SceneBinding);
+            }
+        }
+
         #endregion // Main Load
 
         #region Aux Load

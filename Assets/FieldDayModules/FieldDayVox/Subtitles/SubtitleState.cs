@@ -15,5 +15,13 @@ namespace FieldDay.Vox {
     static public partial class SubtitleUtility {
         static public readonly CastableEvent<SubtitleDisplayData> OnDisplayRequested = new CastableEvent<SubtitleDisplayData>(1);
         static public readonly CastableEvent<SubtitleDisplayData> OnDismissRequested = new CastableEvent<SubtitleDisplayData>(1);
+
+        static public void RequestDisplay(SubtitleDisplayData data) {
+            OnDisplayRequested.Invoke(data);
+        }
+
+        static public void RequestDismiss(SubtitleDisplayData data) {
+            OnDismissRequested.Invoke(data);
+        }
     }
 }

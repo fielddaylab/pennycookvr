@@ -17,9 +17,9 @@ namespace FieldDay.Scripting {
 
         public void ProcessWork(float deltaTime) {
             if (ScriptUtility.Runtime.ActiveThreads.Count > 0) {
-                using (Profiling.Time("Leaf Update", ProfileTimeUnits.Microseconds)) {
+                //using (Profiling.Time("Leaf Update", ProfileTimeUnits.Microseconds)) {
                     Routine.ManualUpdate(deltaTime);
-                }
+                //}
             }
 
             // TODO: process queue?

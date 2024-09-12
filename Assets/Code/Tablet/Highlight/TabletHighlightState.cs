@@ -4,7 +4,9 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Debugging;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using TMPro;
 using UnityEngine;
 
@@ -57,7 +59,7 @@ namespace Pennycook.Tablet {
         public const int DefaultSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask;
         public const int TravelSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Warpable_Mask;
 
-        static public TabletHighlightable FindBestHighlightableAlongRay(Ray ray, LayerMask mask, float raySize, float minDistance, float maxDistance) {
+        static public TabletHighlightable FindBestHighlightableAlongRay(Ray ray, LayerMask mask, float raySize, float minDistance, float maxDistance, out float outDist) {
             // iterative
             float distanceSeg = maxDistance / IterationCount;
             for(int i = 0; i < IterationCount; i++) {
@@ -74,12 +76,14 @@ namespace Pennycook.Tablet {
                         highlightable = hit.collider.GetComponentInParent<TabletHighlightable>();
                     }
                     if (highlightable) {
+                        outDist = distance + hit.distance;
                         return highlightable;
                     }
                 } else {
                     //DebugDraw.AddLine(r.origin, r.GetPoint(distanceSeg), Color.blue.WithAlpha(0.2f), size * 2f, 0.1f, false);
                 }
             }
+            outDist = -1;
             return null;
         }
 
@@ -162,5 +166,19 @@ namespace Pennycook.Tablet {
 			output.y = Mathf.Clamp01(input.y);
 			return output;
 		}
+
+        [LeafMember("IsTabletHighlighted")]
+        static private bool LeafIsHighlighted(ScriptActor actor) {
+            if (actor == null) {
+                return false;
+            }
+
+            if (!actor.TryGetComponent(out TabletHighlightable h)) {
+                Log.Warn("IsTabletHighlighted(): Actor '{0}' is not highlightable", actor);
+                return false;
+            }
+            
+            return Find.State<TabletHighlightState>().HighlightedObject == h;
+        }
     }
 }

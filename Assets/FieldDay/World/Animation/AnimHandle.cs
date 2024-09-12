@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using BeauUtil;
 
@@ -12,7 +13,7 @@ namespace FieldDay.Animation {
 
         [FieldOffset(0)] private readonly UniqueId16 m_Handle;
 
-        // (p) update phase
+        // (u) update phase
         // (t) anim type
         // uuuu uttt tt-- ----
         [FieldOffset(2)] private readonly ushort m_PackedAdditionalData;
@@ -90,6 +91,7 @@ namespace FieldDay.Animation {
 
         #endregion // Operators
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static private ushort Pack(GameLoopPhase phase, AnimationType type) {
             return (ushort) (
                 (((int) phase & UpdatePhaseMask) << UpdatePhaseShift)

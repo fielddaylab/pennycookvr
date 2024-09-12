@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using BeauPools;
+using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Tags;
 using BeauUtil.Variants;
@@ -50,6 +52,9 @@ namespace FieldDay.Scripting {
         // current history buffer
         internal ScriptHistoryData CurrentHistoryBuffer;
 
+        // temporary script table
+        internal VariantTable SceneLocalTable;
+
         #endregion // State
 
         #region Callbacks
@@ -98,9 +103,44 @@ namespace FieldDay.Scripting {
 
             TagEvents.ConfigureParsers(TagParserConfig, Plugin);
             TagEvents.ConfigureHandlers(TagEventHandler, Plugin);
+            DefaultLeaf.ConfigureDefaultVariables(Resolver);
+
+            SceneLocalTable = new VariantTable("temp");
+            SceneLocalTable.Capacity = 64;
+            ScriptUtility.BindTable("temp", SceneLocalTable);
+
+            Game.Scenes.OnMainSceneLateEnable.Register(() => {
+                SceneLocalTable.Clear();
+            });
         }
 
         #endregion // IRegistrationCallbacks
+    }
+
+    internal struct QueuedScriptEvent {
+        public int Order;
+        public int Id;
+
+        public Action OnStart;
+        public Action OnComplete;
+
+        public StringHash32 TriggerId;
+        public TempVarTable Vars;
+        public Future<LeafThreadHandle> Return;
+
+        #region Id
+
+        static private int s_CurrentId = 0;
+
+        static internal int NextId() {
+            return Interlocked.Increment(ref s_CurrentId) - 1;
+        }
+
+        static internal void ResetIds() {
+            Interlocked.Exchange(ref s_CurrentId, 0);
+        }
+
+        #endregion // Id
     }
 
     static public partial class ScriptUtility {
@@ -135,6 +175,24 @@ namespace FieldDay.Scripting {
 
         #endregion // Tables
 
+        #region Variables
+
+        /// <summary>
+        /// Binds a named variable to the runtime.
+        /// </summary>
+        static public void BindVariable(TableKeyPair keyPair, CustomVariantResolver.GetVarDelegate resolver) {
+            Runtime.Resolver.SetVar(keyPair, resolver);
+        }
+
+        /// <summary>
+        /// Removes a named variable from the runtime.
+        /// </summary>
+        static public void UnbindVariable(TableKeyPair keyPair) {
+            Runtime.Resolver.ClearVar(keyPair);
+        }
+
+        #endregion // Variables
+
         #region Tag Parsing
 
         /// <summary>
@@ -164,6 +222,47 @@ namespace FieldDay.Scripting {
         static public ILeafActor FindActor(StringHash32 actorId) {
             Runtime.Actors.TryGet(actorId, out ILeafActor actor);
             return actor;
+        }
+
+        /// <summary>
+        /// Returns the actor for the given GameObject.
+        /// </summary>
+        static public ILeafActor Actor(GameObject go) {
+            if (go.TryGetComponent<ILeafActor>(out var actor)) {
+                return actor;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the actor id for the given GameObject.
+        /// </summary>
+        static public StringHash32 ActorId(GameObject go) {
+            if (go.TryGetComponent<ILeafActor>(out var actor)) {
+                return actor.Id;
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the actor for the given Component.
+        /// </summary>
+        static public ILeafActor Actor(Component comp) {
+            if (comp.TryGetComponent<ILeafActor>(out var actor)) {
+                return actor;
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Returns the actor id for the given Component.
+        /// </summary>
+        static public StringHash32 ActorId(Component comp) {
+            if (comp.TryGetComponent<ILeafActor>(out var actor)) {
+                return actor.Id;
+            }
+            return default;
         }
 
         #endregion // Actors

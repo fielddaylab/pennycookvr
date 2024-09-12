@@ -139,7 +139,7 @@ namespace FieldDay.Vox {
                 cachedReq.OnFinish(handle, cachedReq.Emitter, cachedReq.LineCode);
             }
 
-            SubtitleUtility.OnDismissRequested.Invoke(new SubtitleDisplayData() {
+            SubtitleUtility.RequestDismiss(new SubtitleDisplayData() {
                 CharacterId = cachedReq.Emitter.CharacterId,
                 Subtitle = cachedReq.Subtitle,
                 Priority = cachedReq.Priority,
