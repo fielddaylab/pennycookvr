@@ -1,4 +1,5 @@
 using FieldDay;
+using FieldDay.HID.XR;
 using FieldDay.Scripting;
 
 namespace Pennycook {
@@ -9,6 +10,8 @@ namespace Pennycook {
         static private void PreBoot() {
             Events = new EventDispatcher<EvtArgs>();
             SetEventDispatcher(Events);
+
+            XRUtility.SetRefreshRate(90);
         }
 
         [InvokeOnBoot]
