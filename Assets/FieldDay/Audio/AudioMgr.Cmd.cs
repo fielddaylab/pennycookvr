@@ -18,6 +18,11 @@ namespace FieldDay.Audio {
                         break;
                     }
 
+                    case AudioCommandType.StopWithAudioSource: {
+                        Cmd_StopForAudioSource(UnityHelper.Find<AudioSource>(cmd.Stop.Id.InstanceId), cmd.Stop.FadeOut, cmd.Stop.FadeOutCurve);
+                        break;
+                    }
+
                     case AudioCommandType.StopWithTag: {
                         Cmd_StopWithTag(cmd.Stop.Id.Id, cmd.Stop.FadeOut, cmd.Stop.FadeOutCurve);
                         break;
@@ -87,6 +92,14 @@ namespace FieldDay.Audio {
                     tween.KillOnFinish = true;
 
                     voice.KillTweenIndex = (short) m_FloatTweenTable.PushBack(ref m_FloatTweenList, tween);
+                }
+            }
+        }
+
+        private unsafe void Cmd_StopForAudioSource(AudioSource source, float delay, Curve curve) {
+            if (source != null && source.TryGetComponent<AudioVoiceComponents>(out var voiceComponents)) {
+                if (voiceComponents.PlayingHandle.Id != 0) {
+                    Cmd_StopWithHandle(voiceComponents.PlayingHandle, delay, curve);
                 }
             }
         }
@@ -197,12 +210,18 @@ namespace FieldDay.Audio {
             byte priority = 128;
 
             AudioPropertyBlock evtProperties = AudioPropertyBlock.Default;
+
+            if (clip == null && (cmd.Flags & AudioPlaybackFlags.SecondaryClipOverride) != 0) {
+                clip = Find.FromId(cmd.SecondaryAsset.InstanceId) as AudioClip;
+            }
             
             if (evt != null) {
-                if (evt.SampleSelector == null) {
-                    evt.SampleSelector = new RandomDeck<AudioClip>(evt.Samples);
+                if (clip == null) {
+                    if (evt.SampleSelector == null) {
+                        evt.SampleSelector = new RandomDeck<AudioClip>(evt.Samples);
+                    }
+                    clip = evt.SampleSelector.Next();
                 }
-                clip = evt.SampleSelector.Next();
 
                 evtProperties.Volume = evt.Volume.Generate();
                 evtProperties.Pitch = evt.Pitch.Generate();
@@ -223,6 +242,12 @@ namespace FieldDay.Audio {
                 priority = evt.Priority;
             }
 
+            if (clip == null) {
+                Log.Error("[AudioMgr] Failed to resolve clip");
+                FreeHandle(ref cmd.Handle);
+                return;
+            }
+
             AudioEmitterConfig emitterConfig;
             if (evt != null && !evt.EmitterConfiguration.IsEmpty) {
                 if (evt.CachedEmitterProfile == null) {
@@ -238,14 +263,17 @@ namespace FieldDay.Audio {
                 cmd.Flags &= ~AudioPlaybackFlags.RandomizePlaybackStart;
             }
 
+            EnsureFreeVoice();
+
             UnityEngine.Object providedObject = Find.FromId(cmd.TransformOrAudioSourceId);
 
             Transform playbackPos = providedObject as Transform;
             AudioVoiceComponents voiceComponents;
             AudioSource src;
-            if ((cmd.Flags & AudioPlaybackFlags.UserProvidedSource) != 0) {
+            if ((cmd.Flags & AudioPlaybackFlags.UseProvidedSource) != 0) {
                 src = providedObject as AudioSource;
                 Assert.True(src != null, "UserProvidedSource flag set but AudioSource not sent alongside it");
+                Cmd_StopForAudioSource(src, 0, Curve.Linear); // ensure only one voice is playing
                 voiceComponents = src.EnsureComponent<AudioVoiceComponents>();
                 voiceComponents.Sync();
             } else {
@@ -280,6 +308,7 @@ namespace FieldDay.Audio {
             voice.PlaybackDelay = delay;
             voice.State = VoiceState.PlayRequested;
             voice.Components = voiceComponents;
+            voice.Components.PlayingHandle = cmd.Handle;
 
             *voice.EventProperties = evtProperties;
             voice.VoiceProperties->Volume = cmd.Volume;
@@ -287,7 +316,7 @@ namespace FieldDay.Audio {
 
             voice.EventId = evt ? evt.CachedId : default;
 
-            if ((cmd.Flags & AudioPlaybackFlags.UserProvidedSource) == 0) {
+            if ((cmd.Flags & AudioPlaybackFlags.UseProvidedSource) == 0) {
                 if (playbackPos) {
                     PositionSyncData posSync;
                     posSync.EmitterPosition = voiceComponents.transform;

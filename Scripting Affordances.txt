@@ -1,0 +1,146 @@
+-- GENERAL PURPOSE --
+
+Voiceover from specific characters/points in the world
+Timed expression changes for Margo
+
+-- TRIGGERS --
+
+Look At Object
+- when the player looks at an object
+Stop Looking At Object
+- when the player stops looking at an object
+Pick Up Object
+- when the player picks up an object with a hand
+Drop Object
+- when the player drops an object from all hands
+Throw Object
+- when a player drops an object from all hands in a manner that throws the object
+
+Tablet Highlight Object
+- when the tablet highlights a penguin or other physical object
+Tablet Highlight Warp Point
+- when the tablet highlights a warp point
+Tablet Stop Highlighting Object
+- when the tablet stops highlighting a penguin or other physical object
+Tablet Stop Highlighting Warp Point
+- when the tablet stops highlighting a warp point
+
+Socket Object
+- when an grabbable is socketed
+Unsocket Object
+- when a grabbable is unsocketed
+
+Scan/Interact w/ Object
+- when the player scans/interacts with an object in the world
+Capture Penguin Behavior
+- when the player captures a new penguin behavior
+Count Penguin
+- when the player counts a penguin
+Counted All Penguins
+- when the player has finished counting a penguin population
+
+Warp to Point
+- when the player warps to a warp target
+
+Task Finished
+- when a task is finished
+
+Penguin Behavior Start
+- when a penguin starts playing a behavior
+Penguin Behavior End
+- when a penguin stops playing a behavior
+
+Chapter Start
+- when a chapter/day is finished loading and is ready to begin
+
+Player Enter Region
+- when the player enters a named region/bounding box
+Player Exit Region
+- when the player exits a named region/bounding box
+Object Enter Trigger Volume
+- when a named object enters a named region/bounding box
+Object Exit Trigger Volume
+- when a named object exits a named region/bounding box
+
+Margo Help/Fun Fact Button
+- when the player presses the button to ask margo for help/a fun fact
+
+Switch Tablet Tool
+- when the player switches their tablet tool
+Switch Tablet Zoom
+- when a player switches their tablet zoom
+
+-- ACTIONS --
+
+Activate Object Group
+Deactivate Object Group
+
+Activate Object
+Deactivate Object
+
+Lock Socket
+Unlock Socket
+
+Lock Grabbable
+Unlock Grabbable
+
+Lock Highlightable
+Unlock Highlightable
+
+Warp Player to Point
+
+Force Grabbable to Socket
+Force Grabbable out of Socket
+Force Socket Empty
+
+Set Penguin Schedule
+Set Penguin Behavior Override
+Set Penguin Reaction Type
+
+Play Sfx from Object
+Play Sfx from Object (Untracked)
+
+Highlight Object
+Unhighlight Object
+
+Play Object Animation
+Play Object Particles
+
+Set Background Music
+
+Fade Out
+Fade In
+
+Create Task
+Set Task Progress
+Complete Task
+
+-- QUERIES/VARIABLES --
+
+Current object focus (player view)
+Current tablet focus
+Object held in player's left hand
+Object held in player's right hand
+Is Player Holding Tablet
+Current Tablet Zoom
+Current Tablet Tool
+Current Warp Location
+Is (TaskId) Task Completed
+Is (TaskId) Task Active
+Is (Object) Active
+Is (Object) Held
+Is (Object) In Socket 
+Is Penguin Currently Performing (BehaviorId) Behavior
+Has (BehaviorId) Behavior Been Observed
+Current Chapter/Day #
+Is Penguin (Penguin) Counted
+Current Timestamp
+Minutes Since (Timestamp)
+Seconds Since (Timestamp)
+Is Fading
+Is At (Location) Warp Location
+Is Player In (Region) Region
+Is (Object) Particles Playing
+Is (Object) Animation Playing
+Is Tablet Looking At  (Object)
+Is Player Looking At (Object)

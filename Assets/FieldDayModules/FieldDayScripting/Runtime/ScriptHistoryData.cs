@@ -117,7 +117,7 @@ namespace FieldDay.Scripting {
         /// Records a visited node and stores it in the appropriate scopes.
         /// </summary>
         public void RecordVisit(StringHash32 id, ScriptNodeMemoryScope scope, float timestamp) {
-            RecentlyViewedNodeIds.PushBack(new TimestampedNodeRecord() {
+            RecentlyViewedNodeIds.PushFront(new TimestampedNodeRecord() {
                 Id = id,
                 Timestamp = timestamp
             });

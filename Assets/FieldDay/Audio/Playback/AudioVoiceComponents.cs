@@ -16,6 +16,8 @@ namespace FieldDay.Audio {
         [NonSerialized] public AudioHighPassFilter HighPass;
 #endif // SUPPORTS_AUDIOEFFECTS
 
+        [NonSerialized] public UniqueId16 PlayingHandle;
+
         private void Awake() {
             hideFlags |= HideFlags.NotEditable;
         }
@@ -24,6 +26,8 @@ namespace FieldDay.Audio {
             if (Source) {
                 Source.enabled = false;
             }
+
+            PlayingHandle = default;
 
 #if SUPPORTS_AUDIOEFFECTS
             if (LowPass) {

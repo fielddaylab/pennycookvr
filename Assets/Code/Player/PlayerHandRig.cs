@@ -17,4 +17,10 @@ namespace Pennycook {
         public Grabber Grabber;
         public RBInterpolator Interpolator;
     }
+
+    static public class PlayerHaptics {
+        static public void Play(XRHandIndex hand, float amp, float duration) {
+            XRInputUtility.RequestHaptics(hand, amp, duration);
+        }
+    }
 }
