@@ -1,6 +1,15 @@
+#if (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif
+
+#if DEVELOPMENT
+    #define MEMORY_LEAK_DETECTION
+#endif // DEVELOPMENT
+
 using System;
 using System.Diagnostics;
 using System.Runtime;
+using System.Runtime.CompilerServices;
 using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -23,6 +32,12 @@ namespace FieldDay.Memory {
         private IPool<Mesh> m_MeshPool;
         private IPool<Material> m_MaterialPool;
         private Shader m_DefaultShader;
+
+        private Unsafe.ArenaHandle m_BudgetCategoryAllocator;
+
+#if MEMORY_LEAK_DETECTION
+        private RingBuffer<Unsafe.ArenaHandle> m_ArenaTracker;
+#endif // MEMORY_LEAK_DETECTION
 
         #region Mesh
 
@@ -71,6 +86,39 @@ namespace FieldDay.Memory {
 
         #endregion // GC
 
+        #region Arenas
+
+        /// <summary>
+        /// Creates a new memory arena.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Unsafe.ArenaHandle CreateArena(int length, StringHash32 name, Unsafe.AllocatorFlags flags) {
+            Unsafe.ArenaHandle handle = Unsafe.CreateArena(length, name, flags);
+#if MEMORY_LEAK_DETECTION
+            m_ArenaTracker.PushBack(handle);
+#endif // MEMORY_LEAK_DETECTION
+            return handle;
+        }
+
+        /// <summary>
+        /// Destroys a memory arena.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void DestroyArena(Unsafe.ArenaHandle arena) {
+#if MEMORY_LEAK_DETECTION
+            if (!m_ArenaTracker.FastRemove(arena)) {
+                Assert.Fail("Arena was not created from MemoryMgr");
+            }
+#endif // MEMORY_LEAK_DETECTION
+            Unsafe.DestroyArena(arena);
+        }
+
+        #endregion // Arenas
+
+        #region Budget
+
+        #endregion // Budget
+
         #region Events
 
         internal MemoryMgr() {
@@ -93,12 +141,26 @@ namespace FieldDay.Memory {
             //GCSettings.LatencyMode = GCLatencyMode.LowLatency;
 
             m_DefaultShader = Shader.Find("Hidden/InternalColored");
+
+#if MEMORY_LEAK_DETECTION
+            m_ArenaTracker = new RingBuffer<Unsafe.ArenaHandle>(64, RingBufferMode.Expand);
+#endif // MEMORY_LEAK_DETECTION
         }
 
         internal void Shutdown() {
             m_MeshPool.Dispose();
             m_MaterialPool.Dispose();
             m_DefaultShader = null;
+
+#if MEMORY_LEAK_DETECTION
+            if (m_ArenaTracker.Count > 0) {
+                Log.Error("[MemoryMgr] MEMORY LEAK - {0} arenas", m_ArenaTracker);
+                while (m_ArenaTracker.TryPopBack(out var arena)) {
+                    Log.Error("LEAKED {0}", arena.ToDebugString());
+                    Unsafe.DestroyArena(arena);
+                }
+            }
+#endif // MEMORY_LEAK_DETECTION
 
             Mem.Mgr = null;
         }
@@ -131,5 +193,6 @@ namespace FieldDay.Memory {
     public struct MemoryPoolConfiguration {
         public int MeshCapacity;
         public int MaterialCapacity;
+        public int UnmanagedBudgetMB;
     }
 }

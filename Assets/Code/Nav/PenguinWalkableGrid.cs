@@ -124,7 +124,7 @@ namespace Pennycook {
                 }
             }
 
-            RenderGraph(10);
+            RenderGraph(80);
         }
         
         private void TryAddRaycast(int voxelIdx) {
@@ -150,6 +150,10 @@ namespace Pennycook {
             }
 
             if (Physics.CheckSphere(hit.point, SolidRaycastRadius, SolidRaycastMask, QueryTriggerInteraction.Collide)) {
+                return;
+            }
+
+            if (Physics.CheckSphere(hit.point + Vector3.up, SolidRaycastRadius, SolidRaycastMask, QueryTriggerInteraction.Collide)) {
                 return;
             }
 
@@ -225,29 +229,40 @@ namespace Pennycook {
         /// bewteen the first and second points are walkable.
         /// </summary>
         static public bool IsWalkableRaycast(Vector3 a, Vector3 b) {
-            if (!WalkGrid.TryGetVoxelXZ(a, out int aX, out int aZ) || !WalkGrid.TryGetVoxelXZ(b, out int bX, out int bZ)) {
+            bool onGridA = WalkGrid.TryGetVoxelXZ(a, out int aX, out int aZ);
+            bool onGridB = WalkGrid.TryGetVoxelXZ(b, out int bX, out int bZ);
+            if (onGridA != onGridB) {
                 return false;
+            }
+
+            // if both are off the grid, it's automatically considered walkable.
+            if (!onGridA) {
+                return true;
+            }
+
+            if (aX == bX && aZ == bZ) {
+                return WalkGrid.WalkableGrid.IsSet(aX + aZ * WalkGrid.VoxelCountX);
             }
 
             return BresenhamRaycast(aX, aZ, bX, bZ);
         }
 
-        static private bool BresenhamRaycast(int aX, int aZ, int bX, int bZ) {
+        static private bool BresenhamRaycast(int x0, int z0, int x1, int z1) {
             // bresenham
 
             bool transpose = false;
-            if (Math.Abs(bX - aX) < Math.Abs(bZ - aZ)) {
-                Ref.Swap(ref aX, ref aZ);
-                Ref.Swap(ref bX, ref bZ);
+            if (Math.Abs(x0 - x1) < Math.Abs(z0 - z1)) {
+                Ref.Swap(ref x0, ref z0);
+                Ref.Swap(ref x1, ref z1);
                 transpose = true;
             }
-            if (bX < aX) {
-                Ref.Swap(ref aX, ref bX);
-                Ref.Swap(ref aZ, ref bZ);
+            if (x1 < x0) {
+                Ref.Swap(ref x0, ref x1);
+                Ref.Swap(ref z0, ref z1);
             }
 
-            int dX = bX - aX;
-            int dZ = bZ - aZ;
+            int dX = x1 - x0;
+            int dZ = z1 - z0;
 
             int stepZ = dZ > 0 ? 1 : -1;
 
@@ -257,8 +272,8 @@ namespace Pennycook {
             var walkGrid = WalkGrid.WalkableGrid;
             int stride = WalkGrid.VoxelCountX;
 
-            int z = aZ;
-            for(int x = aX; x <= bX; x++) {
+            int z = z0;
+            for(int x = x0; x <= x1; x++) {
                 int v;
                 if (transpose) {
                     v = z + x * stride;
