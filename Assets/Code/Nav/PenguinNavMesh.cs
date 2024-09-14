@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -9,7 +8,6 @@ using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
-using FieldDay.Systems;
 using FieldDay.Threading;
 using ScriptableBake;
 using UnityEngine;
@@ -24,7 +22,8 @@ namespace Pennycook {
 
         public IEnumerator<WorkSlicer.Result?> Preload() {
             foreach(var post in Posts) {
-
+                post.Id = post.name;
+                yield return null;
             }
 
             var grid = PenguinUtility.WalkGrid;
@@ -56,7 +55,9 @@ namespace Pennycook {
         }
 
         private const int RingPoints = 6;
-        private const float NeighborConnectionDotProductThreshold = 0.75f;
+        private const float NeighborConnectionDotProductThreshold = 0.65f;
+        private const float RingDistanceScale = 0.85f;
+        private const float RingGenerationRadiusThreshold = 1.25f;
 
         private unsafe void GenerateNodesForPost(NavPost post) {
             Vector3 postPos = post.Position;
@@ -67,14 +68,14 @@ namespace Pennycook {
 
             ushort middle;
             if (PenguinUtility.IsWalkable(ref postPos)) {
-                middle = Graph.AddNode(default, 0, postPos);
+                middle = Graph.AddNode(post.Id, 0, postPos);
                 startingNode = middle;
                 nodeCount++;
             } else {
                 middle = NodeGraph.InvalidId;
             }
 
-            if (postRad > 0.2f) {
+            if (postRad > RingGenerationRadiusThreshold) {
 
                 ushort* prevNodeBuffer = stackalloc ushort[RingPoints];
                 ushort prevNode;
@@ -83,17 +84,17 @@ namespace Pennycook {
                     prevNodeBuffer[i] = NodeGraph.InvalidId;
                 }
 
-                float dist = postRad;
+                float dist = postRad * RingDistanceScale;
                 float arcDist = dist * Mathf.PI * 2 / RingPoints;
                 for (int arc = 0; arc < RingPoints; arc++) {
                     Vector3 newPos = postPos + Geom.SwizzleYZ(Geom.Normalized(Mathf.PI * 2 * arc / RingPoints, dist));
                     if (PenguinUtility.IsWalkable(ref newPos)) {
-                        ushort newNode = Graph.AddNode(default, 0, newPos);
+                        ushort newNode = Graph.AddNode(post.Id, 0, newPos);
                         if (startingNode == NodeGraph.InvalidId) {
                             startingNode = newNode;
                         }
                         nodeCount++;
-                        if (middle != NodeGraph.InvalidId) {
+                        if (middle != NodeGraph.InvalidId && PenguinUtility.IsWalkableRaycast(postPos, newPos)) {
                             Graph.AddEdge(middle, newNode, dist);
                             Graph.AddEdge(newNode, middle, dist);
                         }
@@ -127,16 +128,26 @@ namespace Pennycook {
                 for (ushort start = startNodes.Offset; start < startNodes.End; start++) {
                     Vector3 startPos = Graph.Node(start).Position;
 
-                    if (Vector3.SqrMagnitude(startPos - post.Position) > 0.05f
-                        && Vector3.Dot(Vector3.Normalize(startPos - post.Position), towardsNeighbor) < NeighborConnectionDotProductThreshold) {
+                    bool startIsCenter = SqrDistFlat(startPos - post.Position) <= 0.05f;
+
+                    if (startIsCenter && startNodes.Length > 2) {
+                        continue;
+                    }
+
+                    if (!startIsCenter && Vector3.Dot(Vector3.Normalize(startPos - post.Position), towardsNeighbor) < NeighborConnectionDotProductThreshold) {
                         continue;
                     }
 
                     for(ushort end = endNodes.Offset; end < endNodes.End; end++) {
                         Vector3 endPos = Graph.Node(end).Position;
 
-                        if (Vector3.SqrMagnitude(endPos - neighbor.Position) > 0.05f
-                            && Vector3.Dot(Vector3.Normalize(endPos - neighbor.Position), towardsPost) < NeighborConnectionDotProductThreshold) {
+                        bool endIsCenter = SqrDistFlat(endPos - neighbor.Position) <= 0.05f;
+
+                        if (!startIsCenter && endIsCenter && endNodes.Length > 2) {
+                            continue;
+                        }
+
+                        if (!endIsCenter && Vector3.Dot(Vector3.Normalize(endPos - neighbor.Position), towardsPost) < NeighborConnectionDotProductThreshold) {
                             continue;
                         }
 
@@ -146,6 +157,17 @@ namespace Pennycook {
                     }
                 }
             }
+        }
+
+        static private float SqrDistFlat(Vector3 a, Vector3 b) {
+            Vector3 d = b - a;
+            d.y = 0;
+            return Vector3.SqrMagnitude(d);
+        }
+
+        static private float SqrDistFlat(Vector3 d) {
+            d.y = 0;
+            return Vector3.SqrMagnitude(d);
         }
 
         #region Debugging
@@ -162,7 +184,7 @@ namespace Pennycook {
 
                 for(ushort nodeIdx = 0; nodeIdx < Graph.NodeCount(); nodeIdx++) {
                     var node = Graph.Node(nodeIdx);
-                    DebugDraw.AddPoint(node.Position, 0.1f, Color.green);
+                    DebugDraw.AddPoint(node.Position, 0.15f, Color.green);
                 }
 
                 for(ushort edgeIdx = 0; edgeIdx < Graph.EdgeCount(); edgeIdx++) {
@@ -170,7 +192,7 @@ namespace Pennycook {
                     var start = Graph.Node(edge.StartIndex);
                     var end = Graph.Node(edge.EndIndex);
 
-                    DebugDraw.AddLine(start.Position, end.Position, ColorBank.ForestGreen, 0.08f);
+                    DebugDraw.AddLine(start.Position, end.Position, ColorBank.ForestGreen, 0.12f, 0, false);
                 }
 
                 Atomics.ReleaseRead(ref WriteLock);
@@ -214,9 +236,5 @@ namespace Pennycook {
     static public partial class PenguinUtility {
         [SharedStateReference]
         static public PenguinNavMesh NavMesh { get; private set; }
-
-        //static public bool TryFindPath(Vector3 start, Vector3 end, ref NodePath path) {
-        //    return Pathfinder.AStar(NavMesh, ref path, )
-        //}
     }
 }

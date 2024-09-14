@@ -13,6 +13,7 @@ namespace Pennycook {
         public float Radius = 1;
         public NavPost[] Neighbors;
 
+        [NonSerialized] public StringHash32 Id;
         [NonSerialized] public Vector3 Position;
         [NonSerialized] public OffsetLengthU16 Nodes;
 
@@ -41,6 +42,7 @@ namespace Pennycook {
         Funnel = 0x01,
         SpawnPoint = 0x02,
         Nest = 0x04,
-        OutsideRookery = 0x08
+        OutsideRookery = 0x08,
+        InsidePen = 0x10
     }
 }
