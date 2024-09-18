@@ -1,10 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using BeauUtil;
+using BeauRoutine;
 using FieldDay.Components;
+using FieldDay.Sockets;
 using FieldDay.HID.XR;
 using ScriptableBake;
 using UnityEngine;
+
 
 namespace FieldDay.VRHands {
     [DisallowMultipleComponent]
@@ -18,6 +22,7 @@ namespace FieldDay.VRHands {
         [Range(1, 2)] public int MaxGrabbers = 2;
         public bool IsHeavy = false;
         public bool MustGrabAtSnap = false;
+        public bool ReturnOnGroundHit = true;
         public GrabbablePoseAnim GrabberAnim;
 
         [Header("Snap Node Data -- DO NOT EDIT")]
@@ -33,6 +38,9 @@ namespace FieldDay.VRHands {
 
         [NonSerialized] public Transform CachedTransform;
         [NonSerialized] public Rigidbody CachedRB;
+        [NonSerialized] public Vector3 OriginalPosition;
+        [NonSerialized] public Quaternion OriginalRotation;
+        [NonSerialized] public Transform OriginalParent;
         [NonSerialized] public bool DefaultRBKinematic;
 
         [NonSerialized] public Grabber[] CurrentGrabbers;
@@ -40,6 +48,8 @@ namespace FieldDay.VRHands {
 
         [NonSerialized] public BitSet32 DisabledSnapNodes;
         [NonSerialized] public BitSet32 UsedSnapNodes;
+
+        [NonSerialized] public ObjectSocket OriginalSocket;
 
         #region Events
 
@@ -49,13 +59,52 @@ namespace FieldDay.VRHands {
 
         #endregion // Events
 
+        private Routine ReturnProcess;
+        bool reset = false;
+
         private void Awake() {
             this.CacheComponent(ref CachedTransform);
             this.CacheComponent(ref CachedRB);
 
+            OriginalPosition = transform.position;
+            OriginalRotation = transform.rotation;
+			OriginalParent = transform.parent;
+
             DefaultRBKinematic = CachedRB.isKinematic;
             CurrentGrabbers = new Grabber[MaxGrabbers];
         }
+
+        public void OnCollisionEnter(Collision c) {
+            int l = c.GetContact(0).otherCollider.gameObject.layer;
+			if((l == 11 || l == 12) && !gameObject.GetComponent<Rigidbody>().isKinematic) {
+                if (ReturnOnGroundHit && !ReturnProcess.Exists()) {
+                    ReturnProcess = Routine.Start(ReturnToStart());
+				}
+			}
+		}
+
+		private IEnumerator ReturnToStart() {
+			yield return 1;
+			//if(CurrentGrabberCount == 0) {
+				if(OriginalSocket) {
+					if(TryGetComponent(out Socketable s)) {
+						if(OriginalSocket.Current == null) {
+							//Debug.Log("Return 1");
+							SocketUtility.TryAddToSocket(s, OriginalSocket, true);
+						} else {
+							/*if(OriginalParent != null && (OriginalParent.gameObject != OriginalSocket.gameObject))
+							{
+								//Debug.Log("Return 2");
+								GrabUtility.ReturnToOriginalSpawnPoint(this);
+							}*/
+						}
+					}
+				} else {
+                    CachedRB.position = OriginalPosition;
+                    CachedRB.rotation = OriginalRotation;
+				}
+			//}
+		}
 
         void IRegistrationCallbacks.OnRegister() {
             if (MaxGrabbers > 1 && SnapNodes.Length > 1) {
