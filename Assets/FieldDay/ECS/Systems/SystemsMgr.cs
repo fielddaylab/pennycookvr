@@ -292,16 +292,10 @@ namespace FieldDay.Systems {
             if (relevantSystems == null && createIfNotFound) {
                 relevantSystems = new List<IComponentSystem>(Math.Max(m_AllSystems.Count / 4, 2));
 
-                Type checkedType = componentType;
-                while (checkedType != null) {
-                    int checkedIndex = ComponentIndex.Get(checkedType);
+                foreach(var checkedIndex in ComponentIndex.GetAll(index)) {
                     List<IComponentSystem> directList = m_SystemComponentTypeMap[checkedIndex];
                     if (directList != null) {
                         relevantSystems.AddRange(directList);
-                    }
-                    checkedType = checkedType.BaseType;
-                    if (ArrayUtils.Contains(StopTypeTraversal, checkedType)) {
-                        break;
                     }
                 }
 
@@ -310,10 +304,6 @@ namespace FieldDay.Systems {
 
             return relevantSystems;
         }
-
-        static private readonly Type[] StopTypeTraversal = new Type[] {
-            typeof(object), typeof(MonoBehaviour), typeof(Component), typeof(Behaviour), typeof(UnityEngine.Object), typeof(BatchedComponent)
-        };
 
         #endregion // Component Mapping
 

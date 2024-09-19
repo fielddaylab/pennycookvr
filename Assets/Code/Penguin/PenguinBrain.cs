@@ -1,9 +1,12 @@
 using System;
 using BeauUtil;
+using BeauUtil.Debugger;
+using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Components;
 using FieldDay.Processes;
 using FieldDay.Scripting;
+using Leaf.Runtime;
 using UnityEngine;
 
 namespace Pennycook {
@@ -11,6 +14,7 @@ namespace Pennycook {
         public Transform Position;
         public PenguinAnimator Animator;
         public AudioSource Voice;
+        public PenguinPersonality Personality;
 
         private ProcessId m_ActionProcess;
         private ProcessId m_LookProcess;
@@ -38,10 +42,20 @@ namespace Pennycook {
         }
 
         void IScriptActorComponent.OnScriptSceneReady(ScriptActor actor) {
-            
+
         }
 
         #endregion // IScriptActorComponent
+
+        #region Leaf
+
+        [LeafMember("SetPersonalityProfile")]
+        private void LeafSetPersonalityProfile(StringHash32 profileId) {
+            Personality = Find.NamedAsset<PenguinPersonality>(profileId);
+            Log.Msg("[PenguinBrain] Updated '{0}' personality to '{1}'", m_Actor.Id, profileId);
+        }
+
+        #endregion // Leaf
     }
 
     static public partial class PenguinUtility {

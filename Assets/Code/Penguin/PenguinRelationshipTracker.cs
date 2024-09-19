@@ -1,6 +1,7 @@
 using System;
 using BeauUtil;
 using FieldDay.Components;
+using FieldDay.Filters;
 using FieldDay.Scripting;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace Pennycook {
         [NonSerialized] public RingBuffer<PenguinBrain> Children = new RingBuffer<PenguinBrain>(4, RingBufferMode.Expand);
 
         // player
+        [NonSerialized] public AnalogSignal AnnoyanceWithPlayer;
     }
 
     static public partial class PenguinUtility {

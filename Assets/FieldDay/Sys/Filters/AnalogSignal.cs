@@ -16,14 +16,14 @@ namespace FieldDay.Filters {
         static public void Process(ref AnalogSignal signal, bool digitalState, float deltaTime, in SignalLatchWindow window, in SignalEnvelope ad) {
             if (digitalState) {
                 if (signal.Analog < 1) {
-                    signal.Analog = Math.Min(signal.Analog + deltaTime / ad.AttackDuration, 1);
+                    signal.Analog = Math.Min(signal.Analog + deltaTime / ad.Attack, 1);
                     if (signal.Analog >= window.OnThreshold) {
                         signal.Digital = true;
                     }
                 }
             } else {
                 if (signal.Analog > 0) {
-                    signal.Analog = Math.Max(signal.Analog - deltaTime / ad.AttackDuration, 0);
+                    signal.Analog = Math.Max(signal.Analog - deltaTime / ad.Attack, 0);
                     if (signal.Analog <= window.OffThreshold) {
                         signal.Digital = false;
                     }
@@ -55,21 +55,25 @@ namespace FieldDay.Filters {
         /// </summary>
         [Range(0, 1)] public float OffThreshold;
 
+        public SignalLatchWindow(float onThreshold, float offThreshold) {
+            OnThreshold = onThreshold;
+            OffThreshold = offThreshold;
+        }
+
+        public SignalLatchWindow(float threshold) {
+            OnThreshold = threshold;
+            OffThreshold = threshold;
+        }
+
         /// <summary>
         /// Default latching threshold.
         /// </summary>
-        static public readonly SignalLatchWindow Default = new SignalLatchWindow() {
-            OnThreshold = 0.5f,
-            OffThreshold = 0.5f
-        };
+        static public readonly SignalLatchWindow Default = new SignalLatchWindow(0.5f);
 
         /// <summary>
         /// Full latching threshold.
         /// </summary>
-        static public readonly SignalLatchWindow Full = new SignalLatchWindow() {
-            OnThreshold = 1f,
-            OffThreshold = 0f
-        };
+        static public readonly SignalLatchWindow Full = new SignalLatchWindow(1, 0);
     }
 
     /// <summary>
@@ -77,7 +81,12 @@ namespace FieldDay.Filters {
     /// </summary>
     [Serializable]
     public struct SignalEnvelope {
-        public float AttackDuration;
-        public float DecayDuration;
+        public float Attack;
+        public float Decay;
+
+        public SignalEnvelope(float attack, float decay) {
+            Attack = attack;
+            Decay = decay;
+        }
     }
 }
