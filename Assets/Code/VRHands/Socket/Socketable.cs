@@ -83,6 +83,10 @@ namespace FieldDay.Sockets {
                 }
             }
 
+			if(grabbable != null) {
+				grabbable.OriginalSocket = socket;
+			}
+
             socketable.OnAddedToSocket.Invoke(socket);
             socket.OnAdded.Invoke(socketable);
 
