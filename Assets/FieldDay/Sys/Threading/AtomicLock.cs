@@ -2,17 +2,22 @@
 #define SUPPORTS_THREADING
 #endif // !UNITY_WEBGL
 
+#if UNITY_EDITOR
+#define DEADLOCK_DETECTION
+#endif // UNITY_EDITOR
+
 using BeauUtil;
 using BeauUtil.Debugger;
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace FieldDay.Threading {
-    public struct AtomicLock {
+    public struct AtomicRWLock {
         [NonSerialized] internal long m_Value;
         
-        internal const long WriteValue = 0x7FFFFFFF;
+        internal const long WriteValue = unchecked((long) 0xF00D99995555BEEF);
 
         #region Read
 
@@ -61,37 +66,45 @@ namespace FieldDay.Threading {
     static public class Atomics {
         #region Read
 
-        static public void AcquireRead(ref AtomicLock atomic) {
+        static public void AcquireRead(ref AtomicRWLock atomic) {
 #if SUPPORTS_THREADING
-            while (Interlocked.Read(ref atomic.m_Value) == AtomicLock.WriteValue) {
-                Console.WriteLine("read spin");
-            }
 
-            Interlocked.Increment(ref atomic.m_Value);
+#if DEADLOCK_DETECTION
+            long stopAfter = Stopwatch.GetTimestamp() + TimeSpan.TicksPerSecond;
+#endif // DEADLOCK_DETECTION
+
+            long val;
+            while ((val = Interlocked.Read(ref atomic.m_Value)) == AtomicRWLock.WriteValue || Interlocked.CompareExchange(ref atomic.m_Value, val + 1, val) != val) {
+#if DEADLOCK_DETECTION
+                if (Stopwatch.GetTimestamp() > stopAfter) {
+                    throw new DeadlockException("read deadlock");
+                }
+#endif // DEADLOCK_DETECTION
+            }
 #else
             Assert.True(atomic.m_Value != AtomicLock.WriteValue);
-            atomic.m_Value = AtomicLock.WriteValue;
+            atomic.m_Value++;
 #endif // SUPPORTS_THREADING
         }
 
-        static public bool TryAcquireRead(ref AtomicLock atomic) {
+        static public bool TryAcquireRead(ref AtomicRWLock atomic) {
 #if SUPPORTS_THREADING
-            if (Interlocked.Read(ref atomic.m_Value) == AtomicLock.WriteValue)
+            long val;
+            if ((val = Interlocked.Read(ref atomic.m_Value)) == AtomicRWLock.WriteValue || Interlocked.CompareExchange(ref atomic.m_Value, val + 1, val) != val)
                 return false;
 
-            Interlocked.Increment(ref atomic.m_Value);
             return true;
 #else
             if (atomic.m_Value == AtomicLock.WriteValue) {
                 return false;
             }
 
-            atomic.m_Value = AtomicLock.WriteValue;
+            atomic.m_Value++;
             return true;
 #endif // SUPPORTS_THREADING
         }
 
-        static public void ReleaseRead(ref AtomicLock atomic) {
+        static public void ReleaseRead(ref AtomicRWLock atomic) {
 #if SUPPORTS_THREADING
             Assert.True(Interlocked.Read(ref atomic.m_Value) > 0, "Atomics.ReleaseRead unbalanced");
             Interlocked.Decrement(ref atomic.m_Value);
@@ -101,9 +114,9 @@ namespace FieldDay.Threading {
 #endif // SUPPORTS_THREADING
         }
 
-        static public bool CanAcquireRead(ref AtomicLock atomic) {
+        static public bool CanAcquireRead(ref AtomicRWLock atomic) {
 #if SUPPORTS_THREADING
-            return Interlocked.Read(ref atomic.m_Value) != AtomicLock.WriteValue;
+            return Interlocked.Read(ref atomic.m_Value) != AtomicRWLock.WriteValue;
 #else
             return atomic.m_Value != AtomicLock.WriteValue;
 #endif // SUPPORTS_THREADING
@@ -113,10 +126,19 @@ namespace FieldDay.Threading {
 
         #region Write
 
-        static public void AcquireWrite(ref AtomicLock atomic) {
+        static public void AcquireWrite(ref AtomicRWLock atomic) {
 #if SUPPORTS_THREADING
-            while (Interlocked.CompareExchange(ref atomic.m_Value, AtomicLock.WriteValue, 0) != 0) {
-                Console.WriteLine("write spin");
+
+#if DEADLOCK_DETECTION
+            long stopAfter = Stopwatch.GetTimestamp() + TimeSpan.TicksPerSecond;
+#endif // DEADLOCK_DETECTION
+
+            while (Interlocked.CompareExchange(ref atomic.m_Value, AtomicRWLock.WriteValue, 0) != 0) {
+#if DEADLOCK_DETECTION
+                if (Stopwatch.GetTimestamp() > stopAfter) {
+                    throw new DeadlockException("write deadlock");
+                }
+#endif // DEADLOCK_DETECTION
             }
 #else
             Assert.True(atomic.m_Value == 0);
@@ -124,9 +146,9 @@ namespace FieldDay.Threading {
 #endif // SUPPORTS_THREADING
         }
 
-        static public void ReleaseWrite(ref AtomicLock atomic) {
+        static public void ReleaseWrite(ref AtomicRWLock atomic) {
 #if SUPPORTS_THREADING
-            Assert.True(Interlocked.Read(ref atomic.m_Value) == AtomicLock.WriteValue, "Atomics.ReleaseWrite unbalanced");
+            Assert.True(Interlocked.Read(ref atomic.m_Value) == AtomicRWLock.WriteValue, "Atomics.ReleaseWrite unbalanced");
             Interlocked.Exchange(ref atomic.m_Value, 0);
 #else
             Assert.True(atomic.m_Value == AtomicLock.WriteValue, "Atomics.ReleaseWrite unbalanced");
@@ -134,9 +156,7 @@ namespace FieldDay.Threading {
 #endif // SUPPORTS_THREADING
         }
 
-
-
-        static public bool CanAcquireWrite(ref AtomicLock atomic) {
+        static public bool CanAcquireWrite(ref AtomicRWLock atomic) {
 #if SUPPORTS_THREADING
             return Interlocked.Read(ref atomic.m_Value) == 0;
 #else
@@ -145,5 +165,9 @@ namespace FieldDay.Threading {
         }
 
         #endregion // Write
+
+        public sealed class DeadlockException : Exception {
+            public DeadlockException(string message) : base(message) { }
+        }
     }
 }

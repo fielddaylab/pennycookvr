@@ -76,7 +76,8 @@ namespace FieldDay {
         [SerializeField]
         private MemoryPoolConfiguration m_MemoryConfig = new MemoryPoolConfiguration() {
             MaterialCapacity = 16,
-            MeshCapacity = 16
+            MeshCapacity = 16,
+            UnmanagedBudgetMB = 2
         };
 
         [SerializeField]

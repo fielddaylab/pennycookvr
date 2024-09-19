@@ -113,6 +113,19 @@ namespace FieldDay.Memory {
             Unsafe.DestroyArena(arena);
         }
 
+        /// <summary>
+        /// Destroys a memory arena.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void DestroyArena(ref Unsafe.ArenaHandle arena) {
+#if MEMORY_LEAK_DETECTION
+            if (!m_ArenaTracker.FastRemove(arena)) {
+                Assert.Fail("Arena was not created from MemoryMgr");
+            }
+#endif // MEMORY_LEAK_DETECTION
+            Unsafe.TryDestroyArena(ref arena);
+        }
+
         #endregion // Arenas
 
         #region Budget

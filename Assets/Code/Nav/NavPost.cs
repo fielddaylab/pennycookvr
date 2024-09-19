@@ -1,25 +1,17 @@
 using System;
 using BeauUtil;
-using BeauUtil.Graph;
 using FieldDay.Components;
-using FieldDay.SharedState;
-using FieldDay.Systems;
-using UnityEditor;
 using UnityEngine;
 
 namespace Pennycook {
     public sealed class NavPost : BatchedComponent {
         [AutoEnum] public NavPostFlags Flags;
         public float Radius = 1;
-        public NavPost[] Neighbors;
+        [HideInInspector] public NavPost[] Neighbors;
 
         [NonSerialized] public StringHash32 Id;
         [NonSerialized] public Vector3 Position;
         [NonSerialized] public OffsetLengthU16 Nodes;
-
-        private void Awake() {
-            Position = transform.position;
-        }
 
 #if UNITY_EDITOR
         private void OnDrawGizmos() {

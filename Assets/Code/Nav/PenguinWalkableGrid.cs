@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Debugging;
-using FieldDay.Scenes;
 using FieldDay.SharedState;
 using UnityEngine;
 
@@ -26,10 +26,9 @@ namespace Pennycook {
         #endregion // Inspector
 
         [NonSerialized] public UnsafeBitSet WalkableGrid;
-        [NonSerialized] public UnsafeSpan<float> WalkableHeight;
-        [NonSerialized] public int VoxelCountX;
-        [NonSerialized] public int VoxelCountZ;
-        [NonSerialized] public Vector3 MinPos;
+        [NonSerialized] public UnsafeSpan<float> Height;
+        [NonSerialized] public UnsafeSpan<float> Normal;
+        [NonSerialized] public NavRegionGrid GridParams;
         [NonSerialized] public AsyncHandle LoadHandle;
 
 #if UNITY_EDITOR
@@ -39,10 +38,51 @@ namespace Pennycook {
         }
 #endif // UNITY_EDITOR
 
-        private unsafe void OnDestroy() {
-            WalkableGrid.Unpack(out var bits);
-            Unsafe.Free(bits.Ptr);
-            Unsafe.Free(WalkableHeight.Ptr);
+        public void RenderGraph(float duration) {
+            for (int i = 0; i < GridParams.Count; i++) {
+                GridParams.TryGetPosition(i, Height, out Vector3 pos);
+                if (WalkableGrid[i]) {
+                    DebugDraw.AddSphere(pos, 0.02f, Color.yellow, duration);
+                } else {
+                    DebugDraw.AddSphere(pos, 0.02f, Color.red, duration);
+                }
+            }
+        }
+
+        void IRegistrationCallbacks.OnRegister() {
+            LoadHandle = Async.Schedule(PenguinWalkableGridGenerator.GenerateGridJob(this), AsyncFlags.MainThreadOnly | AsyncFlags.HighPriority);
+
+            Game.Scenes.RegisterLoadDependency(LoadHandle);
+        }
+
+        void IRegistrationCallbacks.OnDeregister() {
+
+        }
+    }
+
+    public readonly struct NavRegionGrid {
+        public readonly Vector3 MinPos;
+        public readonly Vector3 Size;
+        public readonly int CountX;
+        public readonly int CountZ;
+        public readonly float Resolution;
+
+        public NavRegionGrid(Vector3 offset, Vector3 size, float resolution) {
+            MinPos = offset - size / 2;
+            Size = size;
+            Resolution = resolution;
+            CountX = Math.Max(1, Mathf.CeilToInt(size.x / resolution));
+            CountZ = Math.Max(1, Mathf.CeilToInt(size.z / resolution));
+        }
+
+        public int Count {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return CountX * CountZ; }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetIndex(int x, int z) {
+            return x + z * CountX;
         }
 
         #region Voxels
@@ -55,12 +95,12 @@ namespace Pennycook {
             int x = (int) (adjusted.x / Resolution);
             int z = (int) (adjusted.z / Resolution);
 
-            if (x < 0 || x >= VoxelCountX || z < 0 || z >= VoxelCountZ) {
+            if (x < 0 || x >= CountX || z < 0 || z >= CountZ) {
                 voxelIndex = -1;
                 return false;
             }
 
-            voxelIndex = x + z * VoxelCountX;
+            voxelIndex = x + z * CountX;
             return true;
         }
 
@@ -72,7 +112,7 @@ namespace Pennycook {
             int x = (int) (adjusted.x / Resolution);
             int z = (int) (adjusted.z / Resolution);
 
-            if (x < 0 || x >= VoxelCountX || z < 0 || z >= VoxelCountZ) {
+            if (x < 0 || x >= CountX || z < 0 || z >= CountZ) {
                 voxelX = voxelZ = -1;
                 return false;
             }
@@ -82,54 +122,75 @@ namespace Pennycook {
             return true;
         }
 
-        public bool TryGetPosition(int voxelIdx, out Vector3 pos) {
-            if (voxelIdx < 0 || voxelIdx >= (VoxelCountX * VoxelCountZ)) {
+        public bool TryGetPosition(int voxelIdx, float height, out Vector3 pos) {
+            if (voxelIdx < 0 || voxelIdx >= (CountX * CountZ)) {
                 pos = default;
                 return false;
             }
 
-            int vX = voxelIdx % VoxelCountX;
-            int vZ = voxelIdx / VoxelCountX;
+            int vX = voxelIdx % CountX;
+            int vZ = voxelIdx / CountX;
             float x = MinPos.x + (Resolution * (vX + 0.5f));
             float z = MinPos.z + (Resolution * (vZ + 0.5f));
 
-            pos = new Vector3(x, WalkableHeight[voxelIdx], z);
+            pos = new Vector3(x, height, z);
+            return true;
+        }
+
+        public bool TryGetPosition(int voxelIdx, UnsafeSpan<float> heights, out Vector3 pos) {
+            if (voxelIdx < 0 || voxelIdx >= (CountX * CountZ)) {
+                pos = default;
+                return false;
+            }
+
+            int vX = voxelIdx % CountX;
+            int vZ = voxelIdx / CountX;
+            float x = MinPos.x + (Resolution * (vX + 0.5f));
+            float z = MinPos.z + (Resolution * (vZ + 0.5f));
+
+            pos = new Vector3(x, heights[voxelIdx], z);
             return true;
         }
 
         #endregion // Voxels
+    
+        public NavRegionGrid Reslice(float newResolution) {
+            return new NavRegionGrid(MinPos + Size / 2, Size, newResolution);
+        }
+    }
 
+    static internal class PenguinWalkableGridGenerator {
         #region Walk Analyzer
 
-        private IEnumerator GenerateGridJob() {
-            VoxelCountX = Math.Max(1, Mathf.CeilToInt(Region.x / Resolution));
-            VoxelCountZ = Math.Max(1, Mathf.CeilToInt(Region.z / Resolution));
+        static internal IEnumerator GenerateGridJob(PenguinWalkableGrid grid) {
+            using (Profiling.Time("generating walkable grid", ProfileTimeUnits.Microseconds)) {
+                grid.GridParams = new NavRegionGrid(grid.transform.position, grid.Region, grid.Resolution);
+                
+                Log.Msg("Voxel Count {0}x{1}={2}", grid.GridParams.CountX, grid.GridParams.CountZ, grid.GridParams.Count);
 
-            Log.Msg("Voxel Count {0}x{1}={2}", VoxelCountX, VoxelCountZ, VoxelCountX * VoxelCountZ);
+                grid.WalkableGrid = NavMemory.CreateBitGrid(grid.GridParams.CountX, grid.GridParams.CountZ);
+                grid.Height = NavMemory.CreateGrid<float>(grid.GridParams.CountX, grid.GridParams.CountZ);
+                grid.Normal = NavMemory.CreateGrid<float>(grid.GridParams.CountX, grid.GridParams.CountZ);
 
-            MinPos = transform.position - (Region / 2);
+                Log.Msg("Voxel Grid Total Size={0}", Unsafe.FormatBytes(grid.WalkableGrid.Capacity / 8 + grid.Height.Length * 4));
 
-            WalkableGrid = new UnsafeBitSet(Unsafe.AllocSpan<uint>(Unsafe.AlignUp32(VoxelCountX * VoxelCountZ) / 32));
-            WalkableHeight = Unsafe.AllocSpan<float>(VoxelCountX * VoxelCountZ);
+                grid.WalkableGrid.Clear();
+                Unsafe.Clear(grid.Height);
 
-            Log.Msg("Voxel Grid Total Size={0}", Unsafe.FormatBytes(WalkableGrid.Capacity / 8 + WalkableHeight.Length * 4));
-
-            WalkableGrid.Clear();
-            Unsafe.Clear(WalkableHeight);
-
-            for(int i = 0; i < VoxelCountX * VoxelCountZ; i++) {
-                TryAddRaycast(i);
-                if ((i + 1) % 16 == 0) {
-                    yield return null;
+                for (int i = 0; i < grid.GridParams.Count; i++) {
+                    TryAddRaycast(grid, i);
+                    if ((i + 1) % 16 == 0) {
+                        yield return null;
+                    }
                 }
             }
 
-            RenderGraph(80);
+            //grid.RenderGraph(60);
         }
-        
-        private void TryAddRaycast(int voxelIdx) {
+
+        static private void TryAddRaycast(PenguinWalkableGrid grid, int voxelIdx) {
             Vector3 pos;
-            if (!TryGetPosition(voxelIdx, out pos)) {
+            if (!grid.GridParams.TryGetPosition(voxelIdx, grid.DefaultHeight, out pos)) {
                 return;
             }
 
@@ -137,54 +198,34 @@ namespace Pennycook {
 
             pos.y += 8;
             Ray ray = new Ray(pos, Vector3.down);
-            if (!Physics.Raycast(ray, out RaycastHit hit, 16, RaycastMask)) {
+            if (!Physics.Raycast(ray, out RaycastHit hit, 16, grid.RaycastMask)) {
                 return;
             }
 
-            WalkableHeight[voxelIdx] = hit.point.y;
+            grid.Height[voxelIdx] = hit.point.y;
+            grid.Normal[voxelIdx] = hit.normal.y;
 
             bool ignoreNormal = hit.collider.GetComponent<AlwaysWalkable>() != null;
 
-            if (!ignoreNormal && hit.normal.y < RaycastNormalYThreshold) {
+            if (!ignoreNormal && hit.normal.y < grid.RaycastNormalYThreshold) {
                 return;
             }
 
-            if (Physics.CheckSphere(hit.point, SolidRaycastRadius, SolidRaycastMask, QueryTriggerInteraction.Collide)) {
+            if (Physics.CheckSphere(hit.point, grid.SolidRaycastRadius, grid.SolidRaycastMask, QueryTriggerInteraction.Collide)) {
                 return;
             }
 
-            if (Physics.CheckSphere(hit.point + Vector3.up, SolidRaycastRadius, SolidRaycastMask, QueryTriggerInteraction.Collide)) {
+            if (Physics.CheckSphere(hit.point + Vector3.up, grid.SolidRaycastRadius, grid.SolidRaycastMask, QueryTriggerInteraction.Collide)) {
                 return;
             }
 
-            WalkableGrid.Set(voxelIdx);
+            grid.WalkableGrid.Set(voxelIdx);
         }
 
         #endregion // Walk Analyzer
-
-        private void RenderGraph(float duration) {
-            for (int i = 0; i < VoxelCountX * VoxelCountZ; i++) {
-                TryGetPosition(i, out Vector3 pos);
-                if (WalkableGrid[i]) {
-                    DebugDraw.AddSphere(pos, 0.02f, Color.yellow, duration);
-                } else {
-                    DebugDraw.AddSphere(pos, 0.02f, Color.red, duration);
-                }
-            }
-        }
-
-        void IRegistrationCallbacks.OnRegister() {
-            LoadHandle = Async.Schedule(GenerateGridJob(), AsyncFlags.MainThreadOnly | AsyncFlags.HighPriority);
-
-            Game.Scenes.RegisterLoadDependency(LoadHandle);
-        }
-
-        void IRegistrationCallbacks.OnDeregister() {
-
-        }
     }
 
-    static public partial class PenguinUtility {
+    static public partial class PenguinNav {
         [SharedStateReference]
         static public PenguinWalkableGrid WalkGrid { get; private set; }
         
@@ -192,15 +233,15 @@ namespace Pennycook {
         /// Returns if the given position is walkable.
         /// </summary>
         static public bool IsWalkable(Vector3 position) {
-            return WalkGrid.TryGetVoxel(position, out int voxelIdx) && WalkGrid.WalkableGrid.IsSet(voxelIdx);
+            return WalkGrid.GridParams.TryGetVoxel(position, out int voxelIdx) && WalkGrid.WalkableGrid.IsSet(voxelIdx);
         }
 
         /// <summary>
         /// Returns if the given position is walkable.
         /// </summary>
         static public bool IsWalkable(ref Vector3 position) {
-            if (WalkGrid.TryGetVoxel(position, out int voxelIdx) && WalkGrid.WalkableGrid.IsSet(voxelIdx)) {
-                position.y = WalkGrid.WalkableHeight[voxelIdx];
+            if (WalkGrid.GridParams.TryGetVoxel(position, out int voxelIdx) && WalkGrid.WalkableGrid.IsSet(voxelIdx)) {
+                position.y = WalkGrid.Height[voxelIdx];
                 return true;
             }
             return false;
@@ -210,18 +251,39 @@ namespace Pennycook {
         /// Returns the approximate height at the given position.
         /// </summary>
         static public float GetApproximateHeightAt(Vector3 position) {
-            if (WalkGrid.TryGetVoxel(position, out int voxelIdx)) {
-                return WalkGrid.WalkableHeight[voxelIdx];
+            if (WalkGrid.GridParams.TryGetVoxel(position, out int voxelIdx)) {
+                return WalkGrid.Height[voxelIdx];
             } else {
                 return WalkGrid.DefaultHeight;
             }
         }
 
         /// <summary>
+        /// Returns the approximate normal y at the given position.
+        /// </summary>
+        static public float GetApproximateNormalAt(Vector3 position) {
+            if (WalkGrid.GridParams.TryGetVoxel(position, out int voxelIdx)) {
+                return WalkGrid.Normal[voxelIdx];
+            } else {
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// Snaps the given position to approximate ground.
+        /// </summary>
+        static public Vector3 SnapPositionToApproximateGround(Vector3 position) {
+            if (WalkGrid.GridParams.TryGetVoxel(position, out int voxelIdx)) {
+                position.y = WalkGrid.Height[voxelIdx];
+            }
+            return position;
+        }
+
+        /// <summary>
         /// Returns if the given position is on the grid.
         /// </summary>
         static public bool IsOnGrid(Vector3 position) {
-            return WalkGrid.TryGetVoxel(position, out var _);
+            return WalkGrid.GridParams.TryGetVoxel(position, out var _);
         }
         
         /// <summary>
@@ -229,8 +291,8 @@ namespace Pennycook {
         /// bewteen the first and second points are walkable.
         /// </summary>
         static public bool IsWalkableRaycast(Vector3 a, Vector3 b) {
-            bool onGridA = WalkGrid.TryGetVoxelXZ(a, out int aX, out int aZ);
-            bool onGridB = WalkGrid.TryGetVoxelXZ(b, out int bX, out int bZ);
+            bool onGridA = WalkGrid.GridParams.TryGetVoxelXZ(a, out int aX, out int aZ);
+            bool onGridB = WalkGrid.GridParams.TryGetVoxelXZ(b, out int bX, out int bZ);
             if (onGridA != onGridB) {
                 return false;
             }
@@ -241,7 +303,7 @@ namespace Pennycook {
             }
 
             if (aX == bX && aZ == bZ) {
-                return WalkGrid.WalkableGrid.IsSet(aX + aZ * WalkGrid.VoxelCountX);
+                return WalkGrid.WalkableGrid.IsSet(aX + aZ * WalkGrid.GridParams.CountX);
             }
 
             return BresenhamRaycast(aX, aZ, bX, bZ);
@@ -270,15 +332,15 @@ namespace Pennycook {
             int errorAccum = 0;
 
             var walkGrid = WalkGrid.WalkableGrid;
-            int stride = WalkGrid.VoxelCountX;
-
+            var gridMath = WalkGrid.GridParams;
+            
             int z = z0;
             for(int x = x0; x <= x1; x++) {
                 int v;
                 if (transpose) {
-                    v = z + x * stride;
+                    v = gridMath.GetIndex(z, x);
                 } else {
-                    v = x + z * stride;
+                    v = gridMath.GetIndex(x, z);
                 }
 
                 if (!walkGrid.IsSet(v)) {
@@ -286,7 +348,7 @@ namespace Pennycook {
                 }
 
                 errorAccum += dError2;
-                if (dError2 > dX) {
+                if (errorAccum > dX) { 
                     z += stepZ;
                     errorAccum -= dX * 2;
                 }

@@ -19,6 +19,9 @@ namespace Pennycook {
             Game.Scenes.OnMainSceneReady.Register(() => {
                 ScriptUtility.Trigger(GameTriggers.SceneReady);
             });
+            Game.Scenes.OnMainSceneLateEnable.Register(() => {
+                ScriptUtility.Invoke(GameTriggers.ScenePrepare);
+            });
         }
     }
 }
