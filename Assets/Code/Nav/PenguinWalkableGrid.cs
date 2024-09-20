@@ -8,6 +8,8 @@ using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.SharedState;
 using UnityEngine;
+using static BeauData.Serializer;
+using static UnityEditor.PlayerSettings;
 
 namespace Pennycook {
     public sealed class PenguinWalkableGrid : SharedStateComponent, IRegistrationCallbacks {
@@ -259,6 +261,23 @@ namespace Pennycook {
         }
 
         /// <summary>
+        /// Returns accurate height information at the given position.
+        /// </summary>
+        static public bool GetAccurateTerrainAt(Vector3 position, out float y, out float normal) {
+            position.y += 8;
+            Ray ray = new Ray(position, Vector3.down);
+            if (!Physics.Raycast(ray, out RaycastHit hit, 16, WalkGrid.RaycastMask)) {
+                y = WalkGrid.DefaultHeight;
+                normal = 1;
+                return false;
+            }
+
+            y = hit.point.y;
+            normal = hit.normal.y;
+            return true;
+        }
+
+        /// <summary>
         /// Returns the approximate normal y at the given position.
         /// </summary>
         static public float GetApproximateNormalAt(Vector3 position) {
@@ -275,6 +294,19 @@ namespace Pennycook {
         static public Vector3 SnapPositionToApproximateGround(Vector3 position) {
             if (WalkGrid.GridParams.TryGetVoxel(position, out int voxelIdx)) {
                 position.y = WalkGrid.Height[voxelIdx];
+            }
+            return position;
+        }
+
+        /// <summary>
+        /// Snaps the given position to accurateground.
+        /// </summary>
+        static public Vector3 SnapPositionToAccurateGround(Vector3 position) {
+            Vector3 rayPoint = position;
+            rayPoint.y += 8;
+            Ray ray = new Ray(rayPoint, Vector3.down);
+            if (Physics.Raycast(ray, out RaycastHit hit, 16, WalkGrid.RaycastMask)) {
+                position.y = hit.point.y;
             }
             return position;
         }

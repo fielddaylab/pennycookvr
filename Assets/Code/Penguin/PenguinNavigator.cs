@@ -20,7 +20,7 @@ namespace Pennycook {
         [NonSerialized] public Transform DynamicPathTarget;
 
         [NonSerialized] public PenguinBrain Brain;
-        [NonSerialized] public float TargetPosTolerance = 0.1f;
+        [NonSerialized] public float TargetPosTolerance = 0.3f;
 
         private void Awake() {
             this.CacheComponent(ref Brain);
