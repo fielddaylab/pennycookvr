@@ -23,16 +23,33 @@ namespace Pennycook {
 		public bool UseLocalSpace = false;
         
 		public AudioSource SoundEffect;
+
+		[Required]
+		public TriggerListener Detector;
+
         #endregion // Inspector
 		
 		[NonSerialized] public bool WasPressed = false;
 
         private bool On = false;
 		
+		private bool IsIn = false;
+
 		public bool IsOn() { return On; }
 
         public readonly CastableEvent<Button> OnPressed = new CastableEvent<Button>();
 		
+		private void Awake() {
+
+			Detector.onTriggerEnter.AddListener(ButtonTrigger);
+			Detector.onTriggerExit.AddListener(ButtonTriggerExit);
+
+            if(Toggleable) {
+                //CachedMeshRenderer = GetComponent<MeshRenderer>();
+                //PriorColor = CachedMeshRenderer.material.color;
+            }
+        }
+
 		public void Untoggle() {
 			On = false;
 			Vector3 vPos = transform.position;
@@ -42,103 +59,113 @@ namespace Pennycook {
 			//CachedMeshRenderer.material.color = PriorColor;
 		}
 		
+		public void ButtonTriggerExit(Collider c) {
+			IsIn = false;
+			Debug.Log("exiting");
+		}
+
 		public void ButtonTrigger(Collider c) {
-			if(!Locked) {
-				if(Toggleable) {					
-				
-					Rigidbody rb = c.gameObject.GetComponent<Rigidbody>();
-					if(rb != null) {
-						rb.detectCollisions = false;
-					}
+
+			if(!IsIn) {
+				if(!Locked) {
+					if(Toggleable) {					
 					
-					if(!WasPressed) {
-						WasPressed = true;
-					}
-					
-					On = !On;
-                    //if(SoundEffect != null && SoundEffect.clip != null) {
-                    //	SoundEffect.Play();
-                    //}
-                    //Sfx.OneShot("button-click", transform.position);
-					
-					if(!On) {
-						Vector3 vPos = transform.position;
-						vPos.y += YShift;
-						vPos.x += XShift;
-						transform.position = vPos;
-						//Debug.Log("PuzzleButtonToggle Off: " + vPos.ToString("F4"));
-						//CachedMeshRenderer.material.color = PriorColor;
+						Rigidbody rb = c.gameObject.GetComponent<Rigidbody>();
+						if(rb != null) {
+							rb.detectCollisions = false;
+						}
+						
+						if(!WasPressed) {
+							WasPressed = true;
+						}
+						
+						On = !On;
+						//if(SoundEffect != null && SoundEffect.clip != null) {
+						//	SoundEffect.Play();
+						//}
+						//Sfx.OneShot("button-click", transform.position);
+						
+						if(!On) {
+							Vector3 vPos = transform.position;
+							vPos.y += YShift;
+							vPos.x += XShift;
+							transform.position = vPos;
+							//Debug.Log("PuzzleButtonToggle Off: " + vPos.ToString("F4"));
+							//CachedMeshRenderer.material.color = PriorColor;
+						} else {
+							Vector3 vPos = transform.position;
+							vPos.y -= YShift;
+							vPos.x -= XShift;
+							transform.position = vPos;
+							//Debug.Log("PuzzleButtonToggle On: " + vPos.ToString("F4"));
+							//CachedMeshRenderer.material.color = ButtonColor;
+						}
+						
+						StartCoroutine(TurnBackOn(c));
+						
 					} else {
-						Vector3 vPos = transform.position;
-						vPos.y -= YShift;
-						vPos.x -= XShift;
-						transform.position = vPos;
-						//Debug.Log("PuzzleButtonToggle On: " + vPos.ToString("F4"));
-						//CachedMeshRenderer.material.color = ButtonColor;
-					}
-					
-					StartCoroutine(TurnBackOn(c));
-					
-				} else {
-					
-					Rigidbody rb = c.gameObject.GetComponent<Rigidbody>();
-					if(rb != null) {
-						rb.detectCollisions = false;
-					}
-					
-					if(!WasPressed) {
-						//this should only happen if we're on the first level...
-						/*if(gameObject.name == "ArgoFaceButton") {
-							SceneLoader sceneInfo = Find.State<SceneLoader>();
-							if(sceneInfo.GetCurrentSceneIndex() == 0) {
-								ScriptPlugin.ForceKill = true;
-								StartCoroutine(ArgoWasPressed(1f));
-							}
-						}*/
+						
+						Rigidbody rb = c.gameObject.GetComponent<Rigidbody>();
+						if(rb != null) {
+							rb.detectCollisions = false;
+						}
+						
+						if(!WasPressed) {
+							//this should only happen if we're on the first level...
+							/*if(gameObject.name == "ArgoFaceButton") {
+								SceneLoader sceneInfo = Find.State<SceneLoader>();
+								if(sceneInfo.GetCurrentSceneIndex() == 0) {
+									ScriptPlugin.ForceKill = true;
+									StartCoroutine(ArgoWasPressed(1f));
+								}
+							}*/
 
-						WasPressed = true;
-					}
+							WasPressed = true;
+						}
 
 
-                    //if(SoundEffect != null && SoundEffect.clip != null) {
-                    //	SoundEffect.Play();
-                    //}
-                    //Sfx.OneShot("button-click", transform.position);
+						//if(SoundEffect != null && SoundEffect.clip != null) {
+						//	SoundEffect.Play();
+						//}
+						//Sfx.OneShot("button-click", transform.position);
 
-                    if (UseLocalSpace)
-					{
-						Vector3 vPos = transform.localPosition;
-						vPos.y += YShift;
-						vPos.x += XShift;
-						transform.localPosition = vPos;
-					}
-					else
-					{
-						Vector3 vPos = transform.position;
-						vPos.y -= YShift;
-						vPos.x -= XShift;
-						transform.position = vPos;
+						if (UseLocalSpace)
+						{
+							Vector3 vPos = transform.localPosition;
+							vPos.y += YShift;
+							vPos.x += XShift;
+							transform.localPosition = vPos;
+						}
+						else
+						{
+							Vector3 vPos = transform.position;
+							vPos.y -= YShift;
+							vPos.x -= XShift;
+							transform.position = vPos;
+						}
+						
+
+						StartCoroutine(ShiftBack(c));
 					}
 					
+					//haptics...
+					//todo - optimize
+					/*VRInputState data = Find.State<VRInputState>();
+					if(c.gameObject.name.StartsWith("Left")) {
+						data.LeftHand.HapticImpulse = 0.25f;
+					} else if(c.gameObject.name.StartsWith("Right")) {
+						data.RightHand.HapticImpulse = 0.25f;
+					}*/
 
-					StartCoroutine(ShiftBack(c));
+					OnPressed.Invoke(this);
+
+					IsIn = true;
 				}
-				
-				//haptics...
-				//todo - optimize
-				/*VRInputState data = Find.State<VRInputState>();
-				if(c.gameObject.name.StartsWith("Left")) {
-					data.LeftHand.HapticImpulse = 0.25f;
-				} else if(c.gameObject.name.StartsWith("Right")) {
-					data.RightHand.HapticImpulse = 0.25f;
-				}*/
-
-				OnPressed.Invoke(this);
 			}
 		}
 		
 		IEnumerator ShiftBack(Collider c) {
-			yield return new WaitForSeconds(0.3f);
+			yield return new WaitForSeconds(0.2f);
 			if(UseLocalSpace)
 			{
 				Vector3 vPos = transform.localPosition;
@@ -163,28 +190,12 @@ namespace Pennycook {
 		}
 		
 		IEnumerator TurnBackOn(Collider c) {
-			yield return new WaitForSeconds(0.3f);
+			yield return new WaitForSeconds(0.2f);
 			Rigidbody rb = c.gameObject.GetComponent<Rigidbody>();
 			if(rb != null) {
 				rb.detectCollisions = true;
 			}
 			
-		}
-		
-        private void Awake() {
-            if(Toggleable) {
-                //CachedMeshRenderer = GetComponent<MeshRenderer>();
-                //PriorColor = CachedMeshRenderer.material.color;
-            }
-        }
-		
-		IEnumerator ArgoWasPressed(float waitTime) {
-			yield return new WaitForSeconds(waitTime);
-			//while(ScriptPlugin.ForceKill) {
-			//	yield return null;
-			//}
-			//Debug.Log("TRIGGERING NEXT SCRIPT");
-			//ScriptUtility.Trigger("ArgoPressed");
 		}
     }
 }
