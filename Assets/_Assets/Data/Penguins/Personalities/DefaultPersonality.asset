@@ -12,14 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e638361d2b0c70f45889209f2b1c9448, type: 3}
   m_Name: DefaultPersonality
   m_EditorClassIdentifier: 
-  PlayerDistanceBubble: 8
-  PlayerCloseDistanceBubble: 0.5
-  PlayerAnnoyanceLatching:
-    OnThreshold: 1
-    OffThreshold: 0
-  PlayerAnnoyanceEnvelope:
-    Attack: 10
-    Decay: 8
-  PlayerCloseAnnoyanceEnvelope:
-    Attack: 6
-    Decay: 16
+  Player:
+    DistanceBubble: 8
+    BubbleAttack: 30
+    CloseDistanceBubble: 1
+    CloseBubbleAttack: 2
+    DefaultDecay: 8
+    AnxietyLatching:
+      OnThreshold: 1
+      OffThreshold: 0
+  Social:
+    PreferredStandingDistance: 3
+    PreferredStandingDistanceRange: 8
+    TooCloseAnxiety: 0
+    TooFarAnxiety: 0
+    LookBubble: 2
+    GreetBubble: 1
+    DefaultDecay: 3
+    AnxietyLatching:
+      OnThreshold: 1
+      OffThreshold: 0
+  Wander:
+    IdleWaitDuration: 4
+    IdleWaitDurationRandom: 11
+    WanderDistance: 4
+    WanderDistanceRandom: 16

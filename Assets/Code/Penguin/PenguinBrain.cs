@@ -11,15 +11,34 @@ using UnityEngine;
 
 namespace Pennycook {
     public sealed class PenguinBrain : ProcessBehaviour, IScriptActorComponent {
+        [Header("Components")]
         public Transform Position;
         public PenguinAnimator Animator;
+        public PenguinRelationshipTracker Relationships;
+        public PenguinNavigator Navigator;
         public AudioSource Voice;
+
+        [Header("Configuration")]
         public PenguinPersonality Personality;
+        public PenguinType Type;
+        public NavPost Nest;
 
         private ProcessId m_ActionProcess;
         private ProcessId m_LookProcess;
 
         [NonSerialized] private ScriptActor m_Actor;
+
+        #region Action State
+
+        public void ChangeActionState(ProcessStateDefinition state) {
+            m_ActionProcess.TransitionTo(state);
+        }
+
+        public void ChangeActionState<TArg>(ProcessStateDefinition state, in TArg arg) where TArg : unmanaged {
+            m_ActionProcess.TransitionTo(state, arg);
+        }
+
+        #endregion // Action State
 
         #region Signal
 
@@ -42,7 +61,8 @@ namespace Pennycook {
         }
 
         void IScriptActorComponent.OnScriptSceneReady(ScriptActor actor) {
-
+            StartMainProcess(PenguinSchedules.Wander);
+            m_ActionProcess = StartProcess(PenguinStates.Idle);
         }
 
         #endregion // IScriptActorComponent
@@ -55,7 +75,25 @@ namespace Pennycook {
             Log.Msg("[PenguinBrain] Updated '{0}' personality to '{1}'", m_Actor.Id, profileId);
         }
 
+        [LeafMember("SetNest")]
+        private void LeafSetNest(StringHash32 postId) {
+            if (!PenguinNav.TryFindNamedNavPost(postId, out NavPost post)) {
+                Log.Error("[PenguinBrain] No post '{0}' found - unable to set new nest for '{1}'", postId, m_Actor.Id);
+                return;
+            }
+
+            Nest = post;
+            Log.Msg("[PenguinBrain] Update '{0}' nest to '{1}'", m_Actor.Id, postId);
+        }
+
         #endregion // Leaf
+    }
+
+    public enum PenguinType {
+        Adult,
+        Subadult,
+        Chick,
+        Banded
     }
 
     static public partial class PenguinUtility {

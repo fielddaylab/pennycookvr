@@ -8,12 +8,12 @@ namespace Pennycook {
 
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
             Assert.True(layerIndex == 0);
-            animator.GetComponent<PenguinAnimator>().Flags = Flags;
+            animator.GetComponent<PenguinAnimator>().Flags |= Flags;
         }
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
             Assert.True(layerIndex == 0);
-            animator.GetComponent<PenguinAnimator>().Flags = default;
+            animator.GetComponent<PenguinAnimator>().Flags &= ~Flags;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Pennycook {
     [SharedStateInitOrder(10)]
     public sealed class PenguinPathRequestState : SharedStateComponent, IRegistrationCallbacks {
         [NonSerialized] public RingBuffer<PenguinPathRequest> RequestBuffer;
-        [NonSerialized] public AtomicRWLock BufferLock;
+        [NonSerialized] public AtomicRWLock RequestLock;
 
         [NonSerialized] public RingBuffer<PenguinPathQueuedResponse> ResponseBuffer;
         [NonSerialized] public AtomicRWLock ResponseLock;
@@ -100,9 +100,9 @@ namespace Pennycook {
             request.Id = Requests.RequestIdGenerator.Alloc();
             Requests.RequestIdLock.ReleaseWrite();
 
-            Requests.BufferLock.AcquireWrite();
+            Requests.RequestLock.AcquireWrite();
             Requests.RequestBuffer.PushBack(request);
-            Requests.BufferLock.ReleaseWrite();
+            Requests.RequestLock.ReleaseWrite();
 
             return request.Id;
         }

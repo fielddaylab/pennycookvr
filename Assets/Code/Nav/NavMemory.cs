@@ -8,7 +8,7 @@ namespace Pennycook {
 
         [InvokePreBoot]
         static private void Initialize() {
-            s_Arena = Game.Memory.CreateArena(3 * Unsafe.MiB, "Navigation", Unsafe.AllocatorFlags.Default);
+            s_Arena = Game.Memory.CreateArena(3 * Unsafe.MiB, "Navigation", Unsafe.AllocatorFlags.ZeroOnAllocate);
 
             Game.Scenes.OnSceneUnload.Register((s) => {
                 if (s.LoadType == SceneType.Persistent && s.Scene.name == "Exterior_Nav") {

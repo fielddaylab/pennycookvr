@@ -18,9 +18,11 @@ namespace Pennycook {
         [NonSerialized] public NavPath CurrentPath;
         [NonSerialized] public UniqueId16 CurrentPathRequest;
         [NonSerialized] public Transform DynamicPathTarget;
+        [NonSerialized] public float PanicCounter;
 
         [NonSerialized] public PenguinBrain Brain;
-        [NonSerialized] public float TargetPosTolerance = 0.3f;
+        [NonSerialized] public float TargetPosTolerance = 0.1f;
+        [NonSerialized] public float MidpointPosTolerance = 0.3f;
 
         private void Awake() {
             this.CacheComponent(ref Brain);
@@ -36,6 +38,12 @@ namespace Pennycook {
     }
 
     static public partial class PenguinUtility {
+        static public partial class Signals {
+            static public readonly StringHash32 PathFound = "path-found";
+            static public readonly StringHash32 PathNotFound = "path-not-found";
+            static public readonly StringHash32 PathCompleted = "path-completed";
+        }
+
         /// <summary>
         /// Attempts to path a navigator towards a point.
         /// </summary>
@@ -59,13 +67,28 @@ namespace Pennycook {
 
         static private void OnPathFindResponse(NavPath path, object context) {
             PenguinNavigator nav = (PenguinNavigator) context;
+            PenguinBrain brain = nav.Brain;
 
             nav.CurrentPathRequest = default;
             if (path != null) {
                 nav.CurrentPath = path;
                 nav.State = PenguinNavState.Found;
+                brain.Signal(Signals.PathFound);
             } else {
                 nav.State = PenguinNavState.NotFound;
+                brain.Signal(Signals.PathNotFound);
+            }
+        }
+
+        static public bool IsNavigating(PenguinNavigator navigator) {
+            switch (navigator.State) {
+                case PenguinNavState.Searching:
+                case PenguinNavState.Found:
+                case PenguinNavState.Moving:
+                    return true;
+
+                default:
+                    return false;
             }
         }
     }

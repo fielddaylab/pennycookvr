@@ -8,8 +8,6 @@ using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.SharedState;
 using UnityEngine;
-using static BeauData.Serializer;
-using static UnityEditor.PlayerSettings;
 
 namespace Pennycook {
     public sealed class PenguinWalkableGrid : SharedStateComponent, IRegistrationCallbacks {
@@ -17,6 +15,7 @@ namespace Pennycook {
 
         public Vector3 Region;
         public float DefaultHeight;
+        public Collider WithinRookeryCollider;
 
         [Header("Construction Parameters")]
         public float Resolution = 0.1f;
@@ -28,6 +27,7 @@ namespace Pennycook {
         #endregion // Inspector
 
         [NonSerialized] public UnsafeBitSet WalkableGrid;
+        [NonSerialized] public UnsafeBitSet InsideRookeryGrid;
         [NonSerialized] public UnsafeSpan<float> Height;
         [NonSerialized] public UnsafeSpan<float> Normal;
         [NonSerialized] public NavRegionGrid GridParams;
@@ -43,10 +43,20 @@ namespace Pennycook {
         public void RenderGraph(float duration) {
             for (int i = 0; i < GridParams.Count; i++) {
                 GridParams.TryGetPosition(i, Height, out Vector3 pos);
-                if (WalkableGrid[i]) {
-                    DebugDraw.AddSphere(pos, 0.02f, Color.yellow, duration);
+                bool walkable = WalkableGrid[i];
+                bool insideRookery = InsideRookeryGrid[i];
+                if (walkable) {
+                    if (insideRookery) {
+                        DebugDraw.AddSphere(pos, 0.02f, Color.yellow, duration);
+                    } else {
+                        DebugDraw.AddSphere(pos, 0.02f, ColorBank.DarkOrange, duration);
+                    }
                 } else {
-                    DebugDraw.AddSphere(pos, 0.02f, Color.red, duration);
+                    if (insideRookery) {
+                        DebugDraw.AddSphere(pos, 0.02f, Color.red, duration);
+                    } else {
+                        DebugDraw.AddSphere(pos, 0.02f, Color.black, duration);
+                    }
                 }
             }
         }
@@ -171,21 +181,22 @@ namespace Pennycook {
                 Log.Msg("Voxel Count {0}x{1}={2}", grid.GridParams.CountX, grid.GridParams.CountZ, grid.GridParams.Count);
 
                 grid.WalkableGrid = NavMemory.CreateBitGrid(grid.GridParams.CountX, grid.GridParams.CountZ);
+                grid.InsideRookeryGrid = NavMemory.CreateBitGrid(grid.GridParams.CountX, grid.GridParams.CountZ);
                 grid.Height = NavMemory.CreateGrid<float>(grid.GridParams.CountX, grid.GridParams.CountZ);
                 grid.Normal = NavMemory.CreateGrid<float>(grid.GridParams.CountX, grid.GridParams.CountZ);
 
-                Log.Msg("Voxel Grid Total Size={0}", Unsafe.FormatBytes(grid.WalkableGrid.Capacity / 8 + grid.Height.Length * 4));
+                Log.Msg("Voxel Grid Total Size={0}", Unsafe.FormatBytes(grid.WalkableGrid.Capacity / 8 + grid.InsideRookeryGrid.Capacity / 8 + grid.Height.Length * 4 + grid.Normal.Length * 4));
 
                 grid.WalkableGrid.Clear();
                 Unsafe.Clear(grid.Height);
 
                 for (int i = 0; i < grid.GridParams.Count; i++) {
                     TryAddRaycast(grid, i);
-                    if ((i + 1) % 16 == 0) {
-                        yield return null;
-                    }
+                    yield return null; 
                 }
             }
+
+            UnityHelper.SafeDestroyGO(ref grid.WithinRookeryCollider);
 
             //grid.RenderGraph(60);
         }
@@ -207,17 +218,17 @@ namespace Pennycook {
             grid.Height[voxelIdx] = hit.point.y;
             grid.Normal[voxelIdx] = hit.normal.y;
 
+            if (grid.WithinRookeryCollider.Raycast(ray, out var tempHit, 16)) {
+                grid.InsideRookeryGrid.Set(voxelIdx);
+            }
+
             bool ignoreNormal = hit.collider.GetComponent<AlwaysWalkable>() != null;
 
             if (!ignoreNormal && hit.normal.y < grid.RaycastNormalYThreshold) {
                 return;
             }
 
-            if (Physics.CheckSphere(hit.point, grid.SolidRaycastRadius, grid.SolidRaycastMask, QueryTriggerInteraction.Collide)) {
-                return;
-            }
-
-            if (Physics.CheckSphere(hit.point + Vector3.up, grid.SolidRaycastRadius, grid.SolidRaycastMask, QueryTriggerInteraction.Collide)) {
+            if (Physics.CheckCapsule(hit.point, hit.point + Vector3.up, grid.SolidRaycastRadius, grid.SolidRaycastMask, QueryTriggerInteraction.Collide)) {
                 return;
             }
 
@@ -247,6 +258,20 @@ namespace Pennycook {
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Returns if the given position is within the rookery.
+        /// </summary>
+        static public bool IsWithinRookery(Vector3 position) {
+            return WalkGrid.GridParams.TryGetVoxel(position, out int voxelIdx) && WalkGrid.InsideRookeryGrid.IsSet(voxelIdx);
+        }
+
+        /// <summary>
+        /// Returns if the given position is walkable and within the rookery.
+        /// </summary>
+        static public bool IsWalkableWithinRookery(Vector3 position) {
+            return WalkGrid.GridParams.TryGetVoxel(position, out int voxelIdx) && WalkGrid.WalkableGrid.IsSet(voxelIdx) && WalkGrid.InsideRookeryGrid.IsSet(voxelIdx);
         }
 
         /// <summary>

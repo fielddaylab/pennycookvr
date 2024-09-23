@@ -16,7 +16,8 @@ namespace Pennycook {
         CannotInterrupt = 0x01,
         OnGround = 0x02,
         IsReaction = 0x04,
-        IsRandomIdle = 0x08
+        IsRandomIdle = 0x08,
+        AllowMove = 0x10,
     }
 
     static public partial class PenguinUtility {
@@ -33,6 +34,10 @@ namespace Pennycook {
             } else {
                 animator.Animator.CrossFadeInFixedTime(state, fadeDuration, layer);
             }
+        }
+
+        static public bool CanInterruptCurrentAnimState(PenguinAnimator animator) {
+            return (animator.Flags & PenguinAnimFlags.CannotInterrupt) == 0;
         }
     }
 }

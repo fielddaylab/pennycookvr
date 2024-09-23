@@ -227,8 +227,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Position: {fileID: 6641921480938123477}
   Animator: {fileID: 1275982319698605989}
+  Relationships: {fileID: 8377525598834550971}
+  Navigator: {fileID: 4337793079207229409}
   Voice: {fileID: 1785037183739768585}
   Personality: {fileID: 11400000, guid: d2ce177bb395332499bb5b2bfc63c5b8, type: 2}
+  Type: 0
+  Nest: {fileID: 0}
 --- !u!114 &1275982319698605989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,9 +260,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveRoot: {fileID: 6641921480938123477}
   RotationRoot: {fileID: 6641921480938123477}
-  MovementSpeed: 2
-  TurningSpeed: 30
-  MaxAngleDeltaToMove: 60
+  MovementSpeed: 1.8
+  TurningSpeed: 32
+  MaxAngleDeltaToMove: 45
 --- !u!114 &8377525598834550971
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21,14 +21,18 @@ namespace Pennycook {
         public float BucketResolution = 2;
 
         [NonSerialized] public NodeGraph Graph;
+        [NonSerialized] public Dictionary<StringHash32, NavPost> NamedPosts;
         [NonSerialized] public NavRegionGrid HashParams;
         [NonSerialized] public UnsafeSpan<NavMeshNodeBucket> NodeSpatialHash;
         [NonSerialized] public AtomicRWLock GraphLock;
 
         public IEnumerator<WorkSlicer.Result?> Preload() {
-            foreach(var post in Posts) {
+            NamedPosts = MapUtils.Create<StringHash32, NavPost>(Posts.Length);
+
+            foreach (var post in Posts) {
                 post.Id = post.name;
                 post.Position = post.transform.position;
+                NamedPosts.Add(post.Id, post);
                 yield return null;
             }
 
@@ -278,6 +282,10 @@ namespace Pennycook {
 
             nodeId = NodeGraph.InvalidId;
             return false;
+        }
+
+        static public bool TryFindNamedNavPost(StringHash32 postId, out NavPost post) {
+            return Mesh.NamedPosts.TryGetValue(postId, out post);
         }
 
         #region Math

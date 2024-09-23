@@ -11,6 +11,9 @@ namespace Pennycook {
     public sealed class PenguinNavigatorSystem : ComponentSystemBehaviour<PenguinNavigator> {
         public override void ProcessWorkForComponent(PenguinNavigator component, float deltaTime) {
             if (component.CurrentPath != null) {
+                if ((component.Brain.Animator.Flags & PenguinAnimFlags.AllowMove) == 0) {
+                    return;
+                }
                 HandleNavigateToNextPath(component, deltaTime);
             }
         }
@@ -22,6 +25,7 @@ namespace Pennycook {
             }
 
             if (nav.State == PenguinNavState.Found) {
+                nav.PanicCounter = 0;
                 nav.State = PenguinNavState.Moving;
             }
 
@@ -55,18 +59,32 @@ namespace Pennycook {
 
                 Vector3 newPos = currentPos + newFlatForward * moveDistance;
                 if (PenguinNav.IsWalkable(newPos)) {
+                    nav.PanicCounter = 0;
                     newPos = PenguinNav.SnapPositionToAccurateGround(newPos);
 
                     nav.MoveRoot.position = newPos;
 
-                    if (Vector2.Distance(Geom.SwizzleYZ(newPos), Geom.SwizzleYZ(nextTarget)) <= nav.TargetPosTolerance) {
+                    float posTolerance;
+                    if (nav.CurrentPath.Positions.Count > 1) {
+                        posTolerance = nav.MidpointPosTolerance;
+                    } else {
+                        posTolerance = nav.TargetPosTolerance;
+                    }
+
+                    if (Vector2.Distance(Geom.SwizzleYZ(newPos), Geom.SwizzleYZ(nextTarget)) <= posTolerance) {
                         nav.CurrentPath.Positions.PopFront();
                         if (nav.CurrentPath.Positions.Count == 0) {
                             HandleOutOfNodes(nav);
                         }
                     }
                 } else {
+                    DebugDraw.AddSphere(newPos, 0.3f, Color.red);
+                    nav.PanicCounter += deltaTime;
                     Log.Warn("[PenguinNavigatorSystem] Unable to move forward");
+                    if (nav.PanicCounter > 1f) {
+                        DebugDraw.AddSphere(newPos, 1, Color.red, 3f);
+                        HandlePanic(nav);
+                    }
                 }
             }
         }
@@ -74,8 +92,17 @@ namespace Pennycook {
         static private void HandleOutOfNodes(PenguinNavigator nav) {
             PenguinNav.FreeNavPath(ref nav.CurrentPath);
             if (nav.State != PenguinNavState.Searching) {
-                nav.Brain.Signal("reached-path-target");
+                nav.Brain.Signal(PenguinUtility.Signals.PathCompleted);
                 VRGame.Events.Dispatch(GameEvents.PenguinReachedPathTarget, EvtArgs.Ref(nav));
+                nav.State = PenguinNavState.NotPathing;
+            }
+        }
+
+        static private void HandlePanic(PenguinNavigator nav) {
+            PenguinNav.FreeNavPath(ref nav.CurrentPath);
+            if (nav.State != PenguinNavState.Searching) {
+                nav.Brain.Signal(PenguinUtility.Signals.PathNotFound);
+                VRGame.Events.Dispatch(GameEvents.PenguinPathingInterrupted, EvtArgs.Ref(nav));
                 nav.State = PenguinNavState.NotPathing;
             }
         }

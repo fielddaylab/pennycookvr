@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace FieldDay.Filters {
@@ -13,30 +14,52 @@ namespace FieldDay.Filters {
         /// <summary>
         /// Processes a frame of digital input.
         /// </summary>
-        static public void Process(ref AnalogSignal signal, bool digitalState, float deltaTime, in SignalLatchWindow window, in SignalEnvelope ad) {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool Process(ref AnalogSignal signal, bool digitalState, float deltaTime, in SignalLatchWindow window, in SignalEnvelope ad) {
             if (digitalState) {
-                if (signal.Analog < 1) {
-                    signal.Analog = Math.Min(signal.Analog + deltaTime / ad.Attack, 1);
-                    if (signal.Analog >= window.OnThreshold) {
-                        signal.Digital = true;
-                    }
-                }
+                return Activate(ref signal, deltaTime, window, ad.Attack);
             } else {
-                if (signal.Analog > 0) {
-                    signal.Analog = Math.Max(signal.Analog - deltaTime / ad.Attack, 0);
-                    if (signal.Analog <= window.OffThreshold) {
-                        signal.Digital = false;
-                    }
+                return Deactivate(ref signal, deltaTime, window, ad.Decay);
+            }
+        }
+
+        /// <summary>
+        /// Processes a frame of positive input.
+        /// </summary>
+        static public bool Activate(ref AnalogSignal signal, float deltaTime, in SignalLatchWindow window, float attack) {
+            if (signal.Analog < 1) {
+                signal.Analog = Math.Min(signal.Analog + deltaTime / attack, 1);
+                if (!signal.Digital && signal.Analog >= window.OnThreshold) {
+                    signal.Digital = true;
+                    return true;
                 }
             }
+            return false;
+        }
+
+        /// <summary>
+        /// Processes a frame of negative input.
+        /// </summary>
+        static public bool Deactivate(ref AnalogSignal signal, float deltaTime, in SignalLatchWindow window, float decay) {
+            if (signal.Analog > 0) {
+                signal.Analog = Math.Max(signal.Analog - deltaTime / decay, 0);
+                if (signal.Digital && signal.Analog <= window.OffThreshold) {
+                    signal.Digital = false;
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
         /// Forces the signal to a single digital state.
         /// </summary>
-        static public void Reset(ref AnalogSignal signal, bool digitalState) {
-            signal.Digital = digitalState;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool Reset(ref AnalogSignal signal, bool digitalState) {
             signal.Analog = digitalState ? 1 : 0;
+            bool prevDigital = signal.Digital;
+            signal.Digital = digitalState;
+            return prevDigital != digitalState;
         }
     }
 

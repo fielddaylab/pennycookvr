@@ -28,9 +28,9 @@ namespace Pennycook {
                 return;
             }
 
-            m_State.BufferLock.AcquireRead();
+            m_State.RequestLock.AcquireRead();
             bool hasElements = m_State.RequestBuffer.Count > 0;
-            m_State.BufferLock.ReleaseRead();
+            m_State.RequestLock.ReleaseRead();
 
             if (hasElements) {
                 m_State.RequestHandler = Async.Schedule(ProcessRequestsThreaded_Delegate, AsyncFlags.Default);
@@ -41,9 +41,9 @@ namespace Pennycook {
             var state = PenguinNav.Requests;
 
             while (true) {
-                state.BufferLock.AcquireWrite();
+                state.RequestLock.AcquireWrite();
                 bool poppedRequest = state.RequestBuffer.TryPopFront(out var request);
-                state.BufferLock.ReleaseWrite();
+                state.RequestLock.ReleaseWrite();
 
                 if (!poppedRequest) {
                     return;
