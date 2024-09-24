@@ -1,13 +1,19 @@
 using System;
 using BeauUtil;
 using BeauUtil.Debugger;
+using BeauUtil.Variants;
 using FieldDay;
 using FieldDay.Audio;
+using FieldDay.HID.XR;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
 using UnityEngine;
 
 namespace Pennycook.Tablet {
     public class TabletZoomState : SharedStateComponent, IRegistrationCallbacks {
+        static public readonly TableKeyPair Var_CurrentZoomLevel = TableKeyPair.Parse("tablet:zoomLevel");
+        static public readonly TableKeyPair Var_CurrentZoomMultiplier = TableKeyPair.Parse("tablet:zoomMultiplier");
+
         public Camera ZoomCamera;
 
         public float[] ZoomLevels;
@@ -19,6 +25,8 @@ namespace Pennycook.Tablet {
         [NonSerialized] public float ZoomMultiplier;
 
         void IRegistrationCallbacks.OnDeregister() {
+            ScriptUtility.UnbindVariable(Var_CurrentZoomLevel);
+            ScriptUtility.UnbindVariable(Var_CurrentZoomMultiplier);
         }
 
         void IRegistrationCallbacks.OnRegister() {
@@ -27,6 +35,9 @@ namespace Pennycook.Tablet {
 
             ZoomLabels[0].SetState(true);
             ZoomMultiplier = 1;
+
+            ScriptUtility.BindVariable(Var_CurrentZoomLevel, () => ZoomIndex);
+            ScriptUtility.BindVariable(Var_CurrentZoomMultiplier, () => ZoomMultiplier);
         }
     }
 
@@ -55,6 +66,13 @@ namespace Pennycook.Tablet {
 
             if (playFeedback && index >= 0) {
                 Sfx.Play(zoomState.ZoomSfx[index], Find.State<TabletControlState>().AudioLocation);
+                using(var t = TempVarTable.Alloc()) {
+                    t.Set("zoomLevel", index);
+                    t.Set("zoomMultiplier", zoom);
+                    ScriptUtility.Trigger(GameTriggers.ChangedTabletZoom, t);
+                }
+
+                PlayerHaptics.Play(XRHandIndex.Right, 0.1f, 0.03f);
             }
         }
     }

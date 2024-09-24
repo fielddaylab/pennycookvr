@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BeauRoutine;
 using BeauUtil;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.Components;
 using FieldDay.Scripting;
 using UnityEngine;
@@ -26,6 +28,7 @@ namespace Pennycook {
         #endregion // Inspector
 		
 		[NonSerialized] public bool WasPressed = false;
+        [NonSerialized] public Routine DownRoutine;
 
         private bool On = false;
 		
@@ -119,19 +122,22 @@ namespace Pennycook {
 						vPos.x -= XShift;
 						transform.position = vPos;
 					}
-					
 
+
+                    DownRoutine.Replace(this, ShiftBack(c));
 					StartCoroutine(ShiftBack(c));
 				}
-				
-				//haptics...
-				//todo - optimize
-				/*VRInputState data = Find.State<VRInputState>();
+
+                //haptics...
+                //todo - optimize
+                /*VRInputState data = Find.State<VRInputState>();
 				if(c.gameObject.name.StartsWith("Left")) {
 					data.LeftHand.HapticImpulse = 0.25f;
 				} else if(c.gameObject.name.StartsWith("Right")) {
 					data.RightHand.HapticImpulse = 0.25f;
 				}*/
+
+                Sfx.PlayFrom("World.ButtonPressed", SoundEffect);
 
 				OnPressed.Invoke(this);
 			}
@@ -163,7 +169,7 @@ namespace Pennycook {
 		}
 		
 		IEnumerator TurnBackOn(Collider c) {
-			yield return new WaitForSeconds(0.3f);
+			yield return 0.3f;
 			Rigidbody rb = c.gameObject.GetComponent<Rigidbody>();
 			if(rb != null) {
 				rb.detectCollisions = true;

@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace FieldDay {
@@ -587,7 +588,7 @@ namespace FieldDay {
 
         static private unsafe class BoxedConverter<T> {
             static BoxedConverter() {
-                Assert.True(RuntimeHelpers.IsReferenceOrContainsReferences<T>(), "Unmanaged type '{0}' passed into 'EvtArgs.Box'", typeof(T).FullName);
+                Assert.True(RuntimeHelpers.IsReferenceOrContainsReferences<T>() || Marshal.SizeOf<T>() > sizeof(UnmanagedData), "Unmanaged type '{0}' passed into 'EvtArgs.Box'", typeof(T).FullName);
                 Log.Msg("[EvtArgs] Registering managed converter from '{0}' to '{1}'", typeof(EvtArgs).FullName, typeof(T).FullName);
 #if SUPPORTS_FUNCTION_POINTERS
                 CastableArgument.RegisterConverter<EvtArgs, T>(&Cast);

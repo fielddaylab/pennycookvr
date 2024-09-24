@@ -43,6 +43,7 @@ using FieldDay.Debugging;
 using FieldDay.Perf;
 using FieldDay.SharedState;
 using FieldDay.Systems;
+using FieldDay.Threading;
 
 #if USE_SRP
 #endif // USE_SRP
@@ -75,7 +76,8 @@ namespace FieldDay {
         [SerializeField]
         private MemoryPoolConfiguration m_MemoryConfig = new MemoryPoolConfiguration() {
             MaterialCapacity = 16,
-            MeshCapacity = 16
+            MeshCapacity = 16,
+            UnmanagedBudgetMB = 2
         };
 
         [SerializeField]

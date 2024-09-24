@@ -78,7 +78,7 @@ namespace FieldDay.VRHands {
             int l = c.GetContact(0).otherCollider.gameObject.layer;
 			if((l == 11 || l == 12) && !gameObject.GetComponent<Rigidbody>().isKinematic) {
                 if (ReturnOnGroundHit && !ReturnProcess.Exists()) {
-                    ReturnProcess = Routine.Start(ReturnToStart());
+                    ReturnProcess = Routine.Start(this, ReturnToStart());
 				}
 			}
 		}
