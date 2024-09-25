@@ -45,6 +45,10 @@ namespace FieldDay.Sockets {
                 Location = transform;
             }
 
+            if (Current) {
+                Current.OriginalSocket = this;
+            }
+
             Detector.onTriggerEnter.AddListener(OnDetectorEntered);
             Detector.onTriggerExit.AddListener(OnDetectorExited);
         }

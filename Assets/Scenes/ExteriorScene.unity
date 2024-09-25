@@ -442,7 +442,6 @@ MonoBehaviour:
   MaxGrabbers: 1
   IsHeavy: 0
   MustGrabAtSnap: 1
-  ReturnOnGroundHit: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -1612,8 +1611,6 @@ MonoBehaviour:
   Toggleable: 0
   UseLocalSpace: 1
   ButtonShift: {x: 0, y: -0.05, z: 0}
-  YShift: -0.05
-  XShift: 0
 --- !u!65 &196249795
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8630,13 +8627,34 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3782295254627960457, guid: 5ea042e3b4ca1d44a9fc01c98b17dfdc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1845830248}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7972728035806028115, guid: 5ea042e3b4ca1d44a9fc01c98b17dfdc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 549106589}
   m_SourcePrefab: {fileID: 100100000, guid: 5ea042e3b4ca1d44a9fc01c98b17dfdc, type: 3}
 --- !u!4 &549106587 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7345090912520010729, guid: 5ea042e3b4ca1d44a9fc01c98b17dfdc, type: 3}
   m_PrefabInstance: {fileID: 549106586}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &549106588 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7972728035806028115, guid: 5ea042e3b4ca1d44a9fc01c98b17dfdc, type: 3}
+  m_PrefabInstance: {fileID: 549106586}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &549106589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549106588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efd1cb0c6f0d34b5ea338d0d42f04c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MargoSocket: {fileID: 1845830249}
 --- !u!1001 &552253504
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18404,6 +18422,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8050116661606373778, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
   m_PrefabInstance: {fileID: 1845830247}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1845830249 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+  m_PrefabInstance: {fileID: 1845830247}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b187147f87e24641ae8337f4e1d87d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1860439113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20913,6 +20942,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boot
       objectReference: {fileID: 0}
+    - target: {fileID: 3974021757272931039, guid: 13eba7bb2f1b9e940be17cd41fcb534d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6628158212470272552, guid: 13eba7bb2f1b9e940be17cd41fcb534d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -22396,6 +22429,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.316
       objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: Current
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.x
       value: 1.3179914
@@ -22817,7 +22854,6 @@ MonoBehaviour:
   MaxGrabbers: 2
   IsHeavy: 0
   MustGrabAtSnap: 1
-  ReturnOnGroundHit: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -24155,6 +24191,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: XRRig
       objectReference: {fileID: 0}
+    - target: {fileID: 7112237354622681849, guid: 89a903cf63456d04cb53e076d1d65a44, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8996190189847150090, guid: 89a903cf63456d04cb53e076d1d65a44, type: 3}
       propertyPath: m_Drag
       value: 4
@@ -24396,7 +24436,6 @@ MonoBehaviour:
   MaxGrabbers: 2
   IsHeavy: 0
   MustGrabAtSnap: 1
-  ReturnOnGroundHit: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -24899,7 +24938,6 @@ MonoBehaviour:
   MaxGrabbers: 2
   IsHeavy: 0
   MustGrabAtSnap: 1
-  ReturnOnGroundHit: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -25269,7 +25307,6 @@ MonoBehaviour:
   MaxGrabbers: 2
   IsHeavy: 0
   MustGrabAtSnap: 1
-  ReturnOnGroundHit: 1
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -25862,7 +25899,6 @@ MonoBehaviour:
   MaxGrabbers: 2
   IsHeavy: 0
   MustGrabAtSnap: 1
-  ReturnOnGroundHit: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -26781,7 +26817,6 @@ MonoBehaviour:
   MaxGrabbers: 2
   IsHeavy: 0
   MustGrabAtSnap: 1
-  ReturnOnGroundHit: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -27041,7 +27076,6 @@ MonoBehaviour:
   MaxGrabbers: 2
   IsHeavy: 0
   MustGrabAtSnap: 0
-  ReturnOnGroundHit: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -27230,7 +27264,6 @@ MonoBehaviour:
   MaxGrabbers: 1
   IsHeavy: 0
   MustGrabAtSnap: 1
-  ReturnOnGroundHit: 1
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -27560,7 +27593,6 @@ MonoBehaviour:
   MaxGrabbers: 2
   IsHeavy: 0
   MustGrabAtSnap: 0
-  ReturnOnGroundHit: 1
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0

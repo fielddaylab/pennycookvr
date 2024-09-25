@@ -17,6 +17,8 @@ namespace FieldDay.Sockets {
         [NonSerialized] public ObjectSocket CurrentSocket;
         [NonSerialized] public ObjectSocket LastSocket;
 
+        [NonSerialized] public ObjectSocket OriginalSocket;
+
         [NonSerialized] public HashSet<ObjectSocket> PotentialSockets = new HashSet<ObjectSocket>();
         [NonSerialized] public ObjectSocket HighlightedSocket;
 
@@ -82,10 +84,6 @@ namespace FieldDay.Sockets {
                     break;
                 }
             }
-
-			if(grabbable != null) {
-				grabbable.OriginalSocket = socket;
-			}
 
             socketable.OnAddedToSocket.Invoke(socket);
             socket.OnAdded.Invoke(socketable);
