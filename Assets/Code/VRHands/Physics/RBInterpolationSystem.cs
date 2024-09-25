@@ -1,3 +1,4 @@
+using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Systems;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 namespace FieldDay.Physics {
     [SysUpdate(GameLoopPhase.FixedUpdate, -100)]
     public class RBInterpolationSystem : ComponentSystemBehaviour<RBInterpolator> {
-        private const float DejitterMultiplier = 0.94f;
+        private const float DejitterMultiplier = 0.97f;
 
         public override void ProcessWorkForComponent(RBInterpolator component, float deltaTime) {
             if (component.Target) {
@@ -30,6 +31,8 @@ namespace FieldDay.Physics {
                     }
                     component.Target.angularVelocity = dAxis.normalized * (DejitterMultiplier * dAngle * Mathf.Deg2Rad * component.AngularVelocityMultiplier / deltaTime);
                 }
+
+                Log.Msg("[RBInterpolationSystem] Interpolation for '{0}' is {1} & {2}", component.name, component.Target.velocity, component.Target.angularVelocity);
             }
         }
 

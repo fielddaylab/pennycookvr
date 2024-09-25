@@ -55,7 +55,7 @@ namespace FieldDay.VRHands {
                 // DebugDraw.AddPoint(grabber.Joint.connectedBody.transform.TransformPoint(grabber.Joint.connectedAnchor), 0.05f, Color.green);
 
                 // dampen angular velocity
-                grabber.Joint.connectedBody.angularVelocity *= 0.5f;
+                //grabber.Joint.connectedBody.angularVelocity *= 0.5f;
             }
         }
 

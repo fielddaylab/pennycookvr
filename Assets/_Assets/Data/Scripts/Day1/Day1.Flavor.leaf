@@ -1,0 +1,46 @@
+#basePath	Day1.Flavor
+
+:: LookAtStove.1
+@trigger    PlayerLookAt
+@who        Player
+@when       objectType == "CampStove"
+@boostScore 50
+@once
+
+{@Player}   Maybe I should've learned to cook before I came out here.
+{@Player}   But how hard can it be?
+
+:: LookAtStove.2
+@trigger    PlayerLookAt
+@who        Player
+@when       objectType == "CampStove"
+@boostScore 48
+@once
+
+{@Player}   I wish my abuela was here.
+{@Player}   I bet she'd make a great Antarctic cod stew.
+
+:: LookAtHand
+@trigger    PlayerLookAt
+@who        Player
+@when       objectType == "PlayerHand"
+@once
+
+{@Player}   No frostbite yet... I guess that's a good sign.
+
+:: LookAtPenguinToy
+@trigger    PlayerLookAt
+@who        Player
+@when       objectType == "PenguinToy"
+@once
+
+{@Player}   Hola, Mr. Flippers. We're not in Kansas anymore, huh?
+
+:: LookAtTentMap
+@trigger    PlayerLookAt
+@who        Player
+@when       objectType == "TentMap"
+@once
+
+{@Player}   Hmmm, let's see...
+{@Player}   Ice, ice, and more ice.

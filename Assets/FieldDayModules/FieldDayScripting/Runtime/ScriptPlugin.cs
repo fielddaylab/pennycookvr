@@ -203,6 +203,7 @@ namespace FieldDay.Scripting {
 
             VoxRequestHandle voxHandle;
             bool hadVox;
+            SubtitleDisplayData fakeSubtitleData;
 
             if (vox != null && VoxUtility.HasHumanReadableMapping(line.LineCode)) {
                 VoxRequest req = default;
@@ -235,6 +236,17 @@ namespace FieldDay.Scripting {
                 VoxUtility.Play(voxHandle);
             }
 
+            if (!hadVox) {
+                fakeSubtitleData = new SubtitleDisplayData() {
+                    CharacterId = charId,
+                    Priority = ScriptUtility.ScriptPriorityToVoxPriority(thread.Priority()),
+                    Subtitle = tagStr.RichText,
+                    VoxHandle = VoxRequestHandle.Dummy
+                };
+            } else {
+                fakeSubtitleData = default;
+            }
+
             var tagNodes = tagStr.Nodes;
             for(int i = 0; i < tagNodes.Length; i++) {
                 TagNodeData node = tagStr.Nodes[i];
@@ -255,6 +267,9 @@ namespace FieldDay.Scripting {
                     }
 
                     case TagNodeType.Text: {
+                        if (!hadVox) {
+                            SubtitleUtility.RequestDisplay(fakeSubtitleData);
+                        }
                         // TODO: Implement
                         break;
                     }
@@ -275,6 +290,13 @@ namespace FieldDay.Scripting {
                         yield return null;
                     }
                 }
+            } else {
+                float duration = fakeSubtitleData.Subtitle.Length * 0.05f;
+                while((duration -= Routine.DeltaTime) > 0 && !thread.PopSkipSingle()) {
+                    yield return null;
+                }
+
+                SubtitleUtility.RequestDismiss(fakeSubtitleData);
             }
 
             yield return Routine.Command.BreakAndResume;

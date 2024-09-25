@@ -265,6 +265,20 @@ namespace FieldDay.Scripting {
             return default;
         }
 
+        /// <summary>
+        /// Returns the actor id for the given actor component.
+        /// </summary>
+        static public StringHash32 ActorId(ScriptActorComponent comp) {
+            return comp.Actor.Id;
+        }
+
+        /// <summary>
+        /// Returns the actor id for the given actor.
+        /// </summary>
+        static public StringHash32 ActorId(ScriptActor actor) {
+            return actor.Id;
+        }
+
         #endregion // Actors
 
         #region Context
@@ -384,5 +398,58 @@ namespace FieldDay.Scripting {
         }
 
         #endregion // Stopping
+
+        #region Active Threads
+
+        /// <summary>
+        /// Handle for the currently playing cutscene.
+        /// </summary>
+        static public LeafThreadHandle CurrentCutscene {
+            get { return Runtime.Cutscene; }
+        }
+
+        /// <summary>
+        /// Handle for the currently playing cutscene.
+        /// </summary>
+        static public RingBuffer<LeafThreadHandle>.Enumerator CurrentThreads {
+            get { return Runtime.ActiveThreads.GetEnumerator(); }
+        }
+
+        /// <summary>
+        /// Performs an action on each thread handle.
+        /// </summary>
+        static public int ForEachThreadHandle(Action<LeafThreadHandle> action) {
+            using(PooledList<LeafThreadHandle> threads = PooledList<LeafThreadHandle>.Create()) {
+                threads.AddRange(Runtime.ActiveThreads);
+                int count = 0;
+                foreach(var handle in threads) {
+                    if (handle.IsRunning()) {
+                        action(handle);
+                        count++;
+                    }
+                }
+                return count;
+            }
+        }
+
+        /// <summary>
+        /// Performs an action on each thread.
+        /// </summary>
+        static public int ForEachThread(Action<ScriptThread> action) {
+            using (PooledList<LeafThreadHandle> threads = PooledList<LeafThreadHandle>.Create()) {
+                threads.AddRange(Runtime.ActiveThreads);
+                int count = 0;
+                foreach (var handle in threads) {
+                    ScriptThread thread = handle.GetThread<ScriptThread>();
+                    if (thread != null) {
+                        action(thread);
+                        count++;
+                    }
+                }
+                return count;
+            }
+        }
+
+        #endregion // Active Threads
     }
 }

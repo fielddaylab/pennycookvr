@@ -5,7 +5,7 @@ using System;
 
 namespace FieldDay.Vox {
     [StructLayout(LayoutKind.Explicit)]
-    public struct VoxRequestHandle : IEquatable<VoxRequestHandle> {
+    public readonly struct VoxRequestHandle : IEquatable<VoxRequestHandle> {
         [FieldOffset(0)] internal readonly UniqueId16 m_Id;
 
         internal VoxRequestHandle(UniqueId16 id) {
@@ -44,5 +44,7 @@ namespace FieldDay.Vox {
         }
 
         #endregion // Overrides
+
+        static public readonly VoxRequestHandle Dummy = new VoxRequestHandle(new UniqueId16(ushort.MaxValue));
     }
 }

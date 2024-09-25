@@ -514,6 +514,8 @@ GameObject:
   - component: {fileID: 4293925879804897042}
   - component: {fileID: 5633654691540329238}
   - component: {fileID: 8187953425917751532}
+  - component: {fileID: 7312851117858526401}
+  - component: {fileID: 2529526713095034247}
   m_Layer: 0
   m_Name: XRRig
   m_TagString: Untagged
@@ -619,6 +621,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WarpFader: {fileID: 6648740576734625824}
+--- !u!114 &7312851117858526401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7112237354622681849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9187541add99c3469f259798d55078a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LookRoot: {fileID: 2137271047055412891}
+  RaycastSize: 0.18
+  MinRaycastDistance: 2
+  LookLatch:
+    OnThreshold: 1
+    OffThreshold: 0
+  LookEnvelope:
+    Attack: 2.5
+    Decay: 3
+  HeldObjectLookMultiplier: 2
+--- !u!114 &2529526713095034247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7112237354622681849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e5e3e1071ee3d4dad91222c973a66f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4273779476689860011
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -630,6 +666,10 @@ PrefabInstance:
     - target: {fileID: 5254184207711154866, guid: dad10f55a0426e841bbfc7a0ea574e98, type: 3}
       propertyPath: m_Name
       value: HandRig_Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 5741114437675669725, guid: dad10f55a0426e841bbfc7a0ea574e98, type: 3}
+      propertyPath: m_Name
+      value: RawLeft
       objectReference: {fileID: 0}
     - target: {fileID: 6183207343898581800, guid: dad10f55a0426e841bbfc7a0ea574e98, type: 3}
       propertyPath: m_LocalPosition.x
@@ -825,6 +865,10 @@ PrefabInstance:
     - target: {fileID: 5392937068793538770, guid: 38f57db1c8887214b8f9b933490a4572, type: 3}
       propertyPath: m_Name
       value: HandRig_Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 5589418125455573693, guid: 38f57db1c8887214b8f9b933490a4572, type: 3}
+      propertyPath: m_Name
+      value: RawRight
       objectReference: {fileID: 0}
     - target: {fileID: 6151015270961756207, guid: 38f57db1c8887214b8f9b933490a4572, type: 3}
       propertyPath: PositionScale.y

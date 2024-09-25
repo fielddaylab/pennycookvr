@@ -122,6 +122,12 @@ namespace FieldDay.Scripting {
             public override void OnEnd(IBlockParserUtil inUtil, ScriptNodePackage inPackage, bool inbError) {
                 base.OnEnd(inUtil, inPackage, inbError);
 
+                if (ScriptNode.PatchFunction != null) {
+                    foreach (var node in inPackage.m_Nodes.Values) {
+                        ScriptNode.PatchFunction(node);
+                    }
+                }
+
                 if (inbError) {
                     Log.Error("[ScriptNodePackage] Package '{0}' failed to compile", inPackage.Name());
                 }

@@ -75,12 +75,14 @@ namespace FieldDay.VRHands {
         }
 
         public void OnCollisionEnter(Collision c) {
-            int l = c.GetContact(0).otherCollider.gameObject.layer;
-			if((l == 11 || l == 12) && !gameObject.GetComponent<Rigidbody>().isKinematic) {
-                if (ReturnOnGroundHit && !ReturnProcess.Exists()) {
-                    ReturnProcess = Routine.Start(this, ReturnToStart());
-				}
-			}
+            if (CurrentGrabberCount == 0) {
+                int l = c.GetContact(0).otherCollider.gameObject.layer;
+                if ((l == 11 || l == 12) && !gameObject.GetComponent<Rigidbody>().isKinematic) {
+                    if (ReturnOnGroundHit && !ReturnProcess.Exists()) {
+                        ReturnProcess = Routine.Start(this, ReturnToStart());
+                    }
+                }
+            }
 		}
 
 		private IEnumerator ReturnToStart() {

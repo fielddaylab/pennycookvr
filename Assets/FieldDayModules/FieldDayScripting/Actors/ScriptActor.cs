@@ -12,6 +12,7 @@ namespace FieldDay.Scripting {
         #region Inspector
 
         [SerializeField] private SerializedHash32 m_Id = string.Empty;
+        [SerializeField] private SerializedHash32 m_ClassName = string.Empty;
 
         #endregion // Inspector
 
@@ -25,6 +26,8 @@ namespace FieldDay.Scripting {
         public VariantTable Locals { get { return m_Locals ?? (m_Locals = new VariantTable()); } }
 
         #endregion // ILeafActor
+
+        public StringHash32 ClassName { get { return m_ClassName.Hash(); } }
 
         #region Pool Callbacks
 
@@ -120,6 +123,7 @@ namespace FieldDay.Scripting {
 #if UNITY_EDITOR
         void IEditorOnlyData.ClearEditorData(bool isDevelopmentBuild) {
             EditorOnlyData.Strip(ref m_Id);
+            EditorOnlyData.Strip(ref m_ClassName);
         }
 #endif // UNITY_EDITOR
     }

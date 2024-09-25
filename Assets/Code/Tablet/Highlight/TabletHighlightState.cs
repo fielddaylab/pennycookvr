@@ -64,8 +64,8 @@ namespace Pennycook.Tablet {
             float distanceSeg = maxDistance / IterationCount;
             for(int i = 0; i < IterationCount; i++) {
                 float size = raySize * (distanceSeg * (i + 0.5f) / minDistance);
-                float distance = distanceSeg + Math.Sign(i) * size;
-                Ray r = new Ray(ray.GetPoint(distanceSeg * i - Math.Sign(i) * size), ray.direction);
+                float distance = distanceSeg + i * size;
+                Ray r = new Ray(ray.GetPoint(distanceSeg * i - i * size), ray.direction);
                 if (Physics.SphereCast(r, size, out RaycastHit hit, distance, mask)) {
                     //DebugDraw.AddLine(r.origin, hit.point, Color.red.WithAlpha(0.2f), size * 2f, 0.1f, false);
                     TabletHighlightable highlightable = hit.collider.GetComponent<TabletHighlightable>();

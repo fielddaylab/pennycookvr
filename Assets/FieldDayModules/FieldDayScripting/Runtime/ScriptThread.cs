@@ -92,9 +92,31 @@ namespace FieldDay.Scripting {
             // TODO: Implement
         }
 
+        public bool PopSkipSingle() {
+            if ((m_Flags & ScriptThreadFlags.SkipSingle) != 0) {
+                m_Flags &= ~ScriptThreadFlags.SkipSingle;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void SkipSingle() {
+            m_Flags |= ScriptThreadFlags.SkipSingle;
+            SkipCurrentVox();
+        }
+
         #endregion // Skipping
 
         #region Voiceover
+
+        public void SkipCurrentVox() {
+            if (m_Voiceover.IsValid) {
+                VoxUtility.Stop(m_Voiceover);
+                m_Voiceover = default;
+                m_VoiceoverReleaseTime = 0;
+            }
+        }
 
         internal void AssignVox(VoxRequestHandle voxHandle) {
             if (m_Voiceover != voxHandle) {
@@ -153,6 +175,7 @@ namespace FieldDay.Scripting {
         Skipping = 0x01,
         Cutscene = 0x02,
         IsFunction = 0x04,
-        IsTrigger = 0x08
+        IsTrigger = 0x08,
+        SkipSingle = 0x10
     }
 }

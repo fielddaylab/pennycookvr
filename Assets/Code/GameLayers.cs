@@ -36,9 +36,24 @@ static public class LayerMasks {
     // Layer 10: SeeThroughSolid
     public const int SeeThroughSolid_Index = 10;
     public const int SeeThroughSolid_Mask = 1024;
-    // Layer 31: OffscreenTabletInterface
-    public const int OffscreenTabletInterface_Index = 31;
-    public const int OffscreenTabletInterface_Mask = -2147483648;
+    // Layer 11: ExcludeDLight
+    public const int ExcludeDLight_Index = 11;
+    public const int ExcludeDLight_Mask = 2048;
+    // Layer 12: Terrain
+    public const int Terrain_Index = 12;
+    public const int Terrain_Mask = 4096;
+    // Layer 13: PlayerFinger
+    public const int PlayerFinger_Index = 13;
+    public const int PlayerFinger_Mask = 8192;
+    // Layer 14: Button
+    public const int Button_Index = 14;
+    public const int Button_Mask = 16384;
+    // Layer 15: LookTag
+    public const int LookTag_Index = 15;
+    public const int LookTag_Mask = 32768;
+    // Layer 31: SceneMarkup
+    public const int SceneMarkup_Index = 31;
+    public const int SceneMarkup_Mask = -2147483648;
 }
 static public class SortingLayers {
     

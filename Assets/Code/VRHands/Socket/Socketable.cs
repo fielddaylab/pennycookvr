@@ -89,6 +89,7 @@ namespace FieldDay.Sockets {
 
             socketable.OnAddedToSocket.Invoke(socket);
             socket.OnAdded.Invoke(socketable);
+            OnObjectAddedToSocket.Invoke(socketable, socket);
 
             return true;
         }
@@ -170,8 +171,16 @@ namespace FieldDay.Sockets {
 
             cachedCurrent.OnRemovedFromSocket.Invoke(socket);
             socket.OnRemoved.Invoke(cachedCurrent);
+            OnObjectRemovedFromSocket.Invoke(cachedCurrent, socket);
         }
 
         #endregion // Release
+
+        #region Events
+
+        static public readonly CastableEvent<Socketable, ObjectSocket> OnObjectAddedToSocket = new CastableEvent<Socketable, ObjectSocket>();
+        static public readonly CastableEvent<Socketable, ObjectSocket> OnObjectRemovedFromSocket = new CastableEvent<Socketable, ObjectSocket>();
+
+        #endregion // Events
     }
 }

@@ -180,7 +180,9 @@ namespace FieldDay.VRHands {
 
             if (snapIndex >= 0) {
                 grabbable.UsedSnapNodes.Set(snapIndex);
-                grabber.State = GrabberState.HoldingNoJoint;
+                Pose p = GrabUtility.ResolveSnapNodePose(grabber.HeldObject, grabber.HeldObjectSnapNodeIndex, grabber);
+                grabber.CachedTransform.SetPositionAndRotation(p.position, p.rotation);
+                CreateGripJoint(grabber);
             } else {
                 CreateGripJoint(grabber);
             }
@@ -189,6 +191,7 @@ namespace FieldDay.VRHands {
 
             grabber.OnGrab.Invoke(grabbable);
             grabbable.OnGrabbed.Invoke(grabber);
+            OnObjectGrabbed.Invoke(grabbable, grabber);
 
             return true;
         }
@@ -273,6 +276,7 @@ namespace FieldDay.VRHands {
             if (!ReferenceEquals(releasedObj, null)) {
                 grabber.OnRelease.Invoke(releasedObj);
                 releasedObj.OnReleased.Invoke(grabber);
+                OnObjectReleased.Invoke(releasedObj, grabber);
             }
 
             return detachedAnything;
@@ -359,6 +363,13 @@ namespace FieldDay.VRHands {
         }
 
         #endregion // Checks
+
+        #region Events
+
+        static public readonly CastableEvent<Grabbable, Grabber> OnObjectGrabbed = new CastableEvent<Grabbable, Grabber>();
+        static public readonly CastableEvent<Grabbable, Grabber> OnObjectReleased = new CastableEvent<Grabbable, Grabber>();
+
+        #endregion // Events
     }
 
     static public class GrabConfig {

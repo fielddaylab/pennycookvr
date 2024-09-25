@@ -216,6 +216,8 @@ namespace FieldDay.Scripting {
         }
 
         #endregion // Internal
+
+        static public ScriptNodePatchDelegate PatchFunction;
     }
 
     /// <summary>
@@ -306,4 +308,9 @@ namespace FieldDay.Scripting {
         Chapter,
         Persistent,
     }
+
+    /// <summary>
+    /// Patching delegate.
+    /// </summary>
+    public delegate void ScriptNodePatchDelegate(ScriptNode node);
 }
