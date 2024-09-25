@@ -19,7 +19,7 @@ namespace FieldDay.Scripting {
         /// <summary>
         /// Returns the current thread for the given actor id.
         /// </summary>
-        public ScriptThread GetCurrentThread(StringHash32 targetId) {
+        public ScriptThread GetThread(StringHash32 targetId) {
             if (Threads.TryGetValue(targetId, out LeafThreadHandle handle)) {
                 return handle.GetThread<ScriptThread>();
             }

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e638361d2b0c70f45889209f2b1c9448, type: 3}
+  m_Name: DefaultPersonality
+  m_EditorClassIdentifier: 
+  Player:
+    DistanceBubble: 8
+    BubbleAttack: 30
+    CloseDistanceBubble: 1
+    CloseBubbleAttack: 2
+    DefaultDecay: 8
+    AnxietyLatching:
+      OnThreshold: 1
+      OffThreshold: 0
+  Social:
+    PreferredStandingDistance: 3
+    PreferredStandingDistanceRange: 8
+    TooCloseAnxiety: 0
+    TooFarAnxiety: 0
+    LookBubble: 2
+    GreetBubble: 1
+    DefaultDecay: 3
+    AnxietyLatching:
+      OnThreshold: 1
+      OffThreshold: 0
+  Wander:
+    IdleWaitDuration: 4
+    IdleWaitDurationRandom: 11
+    WanderDistance: 4
+    WanderDistanceRandom: 16

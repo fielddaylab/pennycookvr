@@ -157,12 +157,14 @@ namespace FieldDay.Audio {
 
         #region Voice Update
 
-        private unsafe VoiceData AllocateVoice(UniqueId16 handle) {
+        private void EnsureFreeVoice() {
             if (m_VoiceDataPool.Count == 0) {
                 FreeUpVoice(Time.realtimeSinceStartupAsDouble);
                 Assert.True(m_VoiceDataPool.Count > 0);
             }
+        }
 
+        private unsafe VoiceData AllocateVoice(UniqueId16 handle) {
             VoiceData data = m_VoiceDataPool.Alloc();
             data.Handle = handle;
 
@@ -251,9 +253,7 @@ namespace FieldDay.Audio {
                             voice.State = VoiceState.Playing;
                             voice.PlayStartedTS = currentTime;
                             voice.Components.Source.Play();
-                            Log.Msg("[AudioMgr] Playing source '{0}'", voice.Components.name);
-                        } else {
-                            Log.Msg("[AudioMgr] Still waiting on source '{0}'...", voice.Components.name);
+                            Log.Debug("[AudioMgr] Playing source '{0}'", voice.Components.name);
                         }
 
                         break;
@@ -273,7 +273,7 @@ namespace FieldDay.Audio {
                         } else {
                             if (voice.FrameEnded == Frame.InvalidIndex) {
                                 voice.FrameEnded = Frame.Index;
-                            } else if (Frame.Age(voice.FrameEnded) >= 5) {
+                            } else if (Frame.Age(voice.FrameEnded) >= 3) {
                                 voice.Components.Source.Stop();
                                 voice.State = VoiceState.Stopped;
                             }
@@ -343,6 +343,22 @@ namespace FieldDay.Audio {
 
         #endregion // Voice Update
 
+        #region Voice Queries
+
+        internal bool WasVoiceAudible(AudioHandle handle) {
+            var voice = FindVoiceForId(handle.m_Id);
+            if (voice != null) {
+                return voice.State == VoiceState.Playing && voice.LastKnownProperties.IsAudible();
+            }
+            return false;
+        }
+
+        internal bool IsVoiceActive(AudioHandle handle) {
+            return m_VoiceIdAllocator.IsValid(handle.m_Id);
+        }
+
+        #endregion // Voice Queries
+
         #region Cleanup
 
         private void FreeUpVoice(double currentTime) {
@@ -398,7 +414,7 @@ namespace FieldDay.Audio {
             }
 
             // if looping, or using a provided audio source, killing would be more detrimental to experience
-            if ((voice.Flags & (AudioPlaybackFlags.Loop | AudioPlaybackFlags.UserProvidedSource)) != 0) {
+            if ((voice.Flags & (AudioPlaybackFlags.Loop | AudioPlaybackFlags.UseProvidedSource)) != 0) {
                 score /= 4;
             }
 
@@ -409,6 +425,7 @@ namespace FieldDay.Audio {
 
         private unsafe void KillVoice(VoiceData voice) {
             voice.Components.Source.Stop();
+            voice.Components.PlayingHandle = default;
 
             FreeHandle(ref voice.Handle);
             FreePositionSync(ref voice.PositionSyncIndex);
@@ -418,7 +435,7 @@ namespace FieldDay.Audio {
             }
 
             // if this is not emitting from a custom source, free it
-            if ((voice.Flags & AudioPlaybackFlags.UserProvidedSource) == 0) {
+            if ((voice.Flags & AudioPlaybackFlags.UseProvidedSource) == 0) {
                 m_VoiceComponentPool.Free(voice.Components);
             }
 
@@ -434,9 +451,7 @@ namespace FieldDay.Audio {
         }
 
         private void FreeHandle(ref UniqueId16 handle) {
-            if (handle != UniqueId16.Invalid) {
-                m_VoiceIdAllocator.Free(handle);
-            }
+            m_VoiceIdAllocator.Free(handle);
             handle = default;
         }
 

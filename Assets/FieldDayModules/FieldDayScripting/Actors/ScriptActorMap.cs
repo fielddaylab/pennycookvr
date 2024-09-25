@@ -60,5 +60,12 @@ namespace FieldDay.Scripting {
             }
             return true;
         }
+
+        /// <summary>
+        /// Attempts to retrieve the actor with the given id.
+        /// </summary>
+        public bool TryGet(StringHash32 id, out ILeafActor actor) {
+            return NamedActors.TryGetValue(id, out actor);
+        }
     }
 }

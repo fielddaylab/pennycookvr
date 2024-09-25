@@ -60,9 +60,10 @@ namespace FieldDay.Scripting {
             if ((Flags & (ScriptNodeFlags.Trigger | ScriptNodeFlags.Function)) == 0) {
                 Log.Warn("[ScriptNode] 'who' is not compatible with non-function, non-trigger node '{0}'", FullName);
             } else {
-                TargetId = targetId;
                 if (targetId == AnyTarget) {
                     Flags |= ScriptNodeFlags.AnyTarget;
+                } else {
+                    TargetId = targetId;
                 }
             }
         }
@@ -215,6 +216,8 @@ namespace FieldDay.Scripting {
         }
 
         #endregion // Internal
+
+        static public ScriptNodePatchDelegate PatchFunction;
     }
 
     /// <summary>
@@ -305,4 +308,9 @@ namespace FieldDay.Scripting {
         Chapter,
         Persistent,
     }
+
+    /// <summary>
+    /// Patching delegate.
+    /// </summary>
+    public delegate void ScriptNodePatchDelegate(ScriptNode node);
 }

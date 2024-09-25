@@ -24,7 +24,7 @@ namespace Pennycook.Tablet {
                 int maxTools = m_StateA.Configs.Length;
                 int newIdx = (m_StateA.CurrentToolIndex + maxTools + shift) % maxTools;
                 TabletUtility.SetTool(m_StateA, newIdx, true);
-                Sfx.Play("Tablet.ModeChanged", m_StateB.AudioLocation);
+                PlayerHaptics.Play(XRHandIndex.Left, 0.1f, 0.03f);
             }
         }
     }

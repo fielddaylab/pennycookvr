@@ -93,7 +93,8 @@ namespace FieldDay.XR {
                 ReadHandController(ref inputState.RightHand, rightHand, inputState.TrackedButtonMask, inputState.TrackedAxisMask, inputState.TrackedAxisDeadzones);
             }
 
-            // TODO: Update haptics
+            DispatchHaptics(ref m_State.LeftHaptics, leftHand);
+            DispatchHaptics(ref m_State.RightHaptics, rightHand);
 
             m_NodeStateWorkList.Clear();
             if (inputState.AvailableSources != sourcesAvailable) {
@@ -107,6 +108,13 @@ namespace FieldDay.XR {
             XRHandControllerFrame frame = XRUtility.ReadControllerState(device, buttonMask, axisMask, deadzones);
             state.Buttons.Update(frame.Buttons);
             state.Axis = frame.Axes;
+        }
+
+        static private void DispatchHaptics(ref XRHapticsRequest req, InputDevice device) {
+            if (req.Duration > 0) {
+                device.SendHapticImpulse(0, req.Amplitude, req.Duration);
+                req = default;
+            }
         }
     }
 }

@@ -29,7 +29,8 @@ namespace FieldDay.XR {
         [NonSerialized] public XRHandState LeftHand;
         [NonSerialized] public XRHandState RightHand;
 
-        // todo: haptics
+        [NonSerialized] public XRHapticsRequest LeftHaptics;
+        [NonSerialized] public XRHapticsRequest RightHaptics;
 
         public bool IsAvailable(XRNode node) {
             return (AvailableSources & (XRSourceMask) (1 << (int) node)) != 0;
@@ -55,8 +56,20 @@ namespace FieldDay.XR {
         public XRHandAxisFrame Axis;
     }
 
+    public struct XRHapticsRequest {
+        public float Amplitude;
+        public float Duration;
+    }
+
     static public class XRInputUtility {
         static public readonly CastableEvent<bool> OnUserPresenceUpdated = new CastableEvent<bool>(4);
         static public readonly CastableEvent<XRSourceMask> OnAvailableNodesUpdated = new CastableEvent<XRSourceMask>(4);
+
+        static public void RequestHaptics(XRHandIndex hand, float amp, float duration) {
+            Find.State<XRInputState>().LeftHaptics = new XRHapticsRequest() {
+                Amplitude = amp,
+                Duration = duration
+            };
+        }
     }
 }

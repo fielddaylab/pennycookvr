@@ -187,7 +187,13 @@ namespace FieldDay.Rendering {
             }
 
             Resolution resolution = ScreenUtility.GetResolution();
-            if (resolution.width != m_LastKnownResolution.width || resolution.height != m_LastKnownResolution.height || resolution.refreshRate != m_LastKnownResolution.refreshRate) {
+            if (resolution.width != m_LastKnownResolution.width || resolution.height != m_LastKnownResolution.height
+#if UNITY_2022_2_OR_NEWER
+                || !resolution.refreshRateRatio.Equals(m_LastKnownResolution.refreshRateRatio)
+#else
+                || resolution.refreshRate != m_LastKnownResolution.refreshRate
+#endif // UNITY_2022_2_OR_NEWER
+                ) {
                 m_LastKnownResolution = resolution;
                 OnResolutionChanged.Invoke(resolution);
             }

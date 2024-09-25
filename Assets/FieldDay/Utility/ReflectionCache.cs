@@ -199,7 +199,7 @@ namespace FieldDay {
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string Get(T value) {
-            return Strings[Enums.ToInt(value)] ?? value.ToString();
+            return Strings[Enums.ToInt(value)] ?? (Strings[Enums.ToInt(value)] = value.ToString());
         }
     }
 }

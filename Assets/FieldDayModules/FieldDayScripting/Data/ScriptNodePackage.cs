@@ -10,6 +10,9 @@ namespace FieldDay.Scripting {
         private bool m_Active;
         private int m_UseCount = 0;
         private IHotReloadable m_HotReload;
+        private LeafAsset m_Asset;
+        internal UniqueId16 m_LoadId;
+        private bool m_Reloading;
 
         public ScriptNodePackage(string name) : base(name) {
         }
@@ -60,9 +63,41 @@ namespace FieldDay.Scripting {
 
         #region Hot Reload
 
-        // TODO: Implement
+        internal void AssignSource(LeafAsset asset) {
+            m_Asset = asset;
+            if (m_HotReload != null) {
+                Game.Assets.DeregisterHotReloadable(m_HotReload);
+                Ref.TryDispose(ref m_HotReload);
+            }
+
+            m_HotReload = Game.Assets.RegisterHotReloadCallbacks(asset, HandleHotReload);
+        }
+
+        internal bool WasFromSource(LeafAsset asset) {
+            return m_Active == asset;
+        }
+
+        private void HandleHotReload(LeafAsset asset, HotReloadAssetRemapArgs<LeafAsset> remapArgs, HotReloadOperation op) {
+            m_Asset = asset;
+            m_Reloading = true;
+            ScriptDBUtility.HotReload(ScriptUtility.DB, this, m_LoadId, asset, remapArgs, op);
+            m_Reloading = false;
+        }
 
         #endregion // Hot Reload
+
+        public override void Clear() {
+            base.Clear();
+
+            if (!m_Reloading) {
+                Game.Assets?.DeregisterHotReloadable(m_HotReload);
+                Ref.TryDispose(ref m_HotReload);
+                m_LoadId = default;
+                m_Asset = default;
+                m_Active = false;
+                m_UseCount = 0;
+            }
+        }
 
         #region Generator
 
@@ -71,6 +106,10 @@ namespace FieldDay.Scripting {
         /// </summary>
         public sealed class Parser : LeafParser<ScriptNode, ScriptNodePackage> {
             static public readonly Parser Instance = new Parser();
+
+            public override LeafCompilerFlags CompilerFlags {
+                get { return base.CompilerFlags | LeafCompilerFlags.Preserve_CustomLineNameStrings; }
+            }
 
             public override ScriptNodePackage CreatePackage(string inFileName) {
                 return new ScriptNodePackage(inFileName);
@@ -82,6 +121,12 @@ namespace FieldDay.Scripting {
 
             public override void OnEnd(IBlockParserUtil inUtil, ScriptNodePackage inPackage, bool inbError) {
                 base.OnEnd(inUtil, inPackage, inbError);
+
+                if (ScriptNode.PatchFunction != null) {
+                    foreach (var node in inPackage.m_Nodes.Values) {
+                        ScriptNode.PatchFunction(node);
+                    }
+                }
 
                 if (inbError) {
                     Log.Error("[ScriptNodePackage] Package '{0}' failed to compile", inPackage.Name());
