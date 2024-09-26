@@ -272,6 +272,52 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -186935574801360393, guid: fd7115d33d92c064d9352cabac1f09e3, type: 3}
+--- !u!1 &32082097
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 32082098}
+  - component: {fileID: 32082099}
+  m_Layer: 7
+  m_Name: HandleL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &32082098
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32082097}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: -0.7071068, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: -0.05, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 963652120304128514}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 90}
+--- !u!114 &32082099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32082097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cffb45087716d3c42b90f874a93c8b9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ValidHandType: 0
+  IsDynamic: 1
 --- !u!1 &61069546 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 590508d7bbab8174eb57528d6457a44b, type: 3}
@@ -9184,7 +9230,6 @@ GameObject:
   - component: {fileID: 578896386}
   - component: {fileID: 578896385}
   - component: {fileID: 578896384}
-  - component: {fileID: 578896383}
   m_Layer: 0
   m_Name: DistantNest_test
   m_TagString: Untagged
@@ -9192,28 +9237,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!64 &578896383
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 578896382}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &578896384
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10932,6 +10955,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6641921480938123477, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
   m_PrefabInstance: {fileID: 1064973353}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &815770771 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 20bc8e3506f38924a8936bc46aa1a665, type: 3}
+  m_PrefabInstance: {fileID: 1221157720}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &817328341
 GameObject:
   m_ObjectHideFlags: 0
@@ -11101,7 +11129,6 @@ GameObject:
   - component: {fileID: 827017253}
   - component: {fileID: 827017252}
   - component: {fileID: 827017251}
-  - component: {fileID: 827017250}
   m_Layer: 0
   m_Name: DistantNest_test (2)
   m_TagString: Untagged
@@ -11109,28 +11136,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!64 &827017250
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 827017249}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &827017251
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11589,7 +11594,6 @@ GameObject:
   - component: {fileID: 885724492}
   - component: {fileID: 885724491}
   - component: {fileID: 885724490}
-  - component: {fileID: 885724489}
   m_Layer: 0
   m_Name: DistantNest_test (1)
   m_TagString: Untagged
@@ -11597,28 +11601,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!64 &885724489
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 885724488}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &885724490
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12155,7 +12137,7 @@ GameObject:
   - component: {fileID: 961518864}
   - component: {fileID: 961518865}
   m_Layer: 7
-  m_Name: Handle
+  m_Name: HandleR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12169,13 +12151,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961518863}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 963652120304128514}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!114 &961518865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12188,7 +12170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cffb45087716d3c42b90f874a93c8b9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ValidHandType: 2
+  ValidHandType: 1
   IsDynamic: 1
 --- !u!1 &969683216
 GameObject:
@@ -13312,6 +13294,11 @@ GameObject:
 Transform:
   m_CorrespondingSourceObject: {fileID: 2634337146786843516, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
   m_PrefabInstance: {fileID: 502680696}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1091193920 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3e7f9f4d0f1f2ad4a9fd3de788b45b18, type: 3}
+  m_PrefabInstance: {fileID: 1464905116}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1142991656
 PrefabInstance:
@@ -14525,13 +14512,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 20bc8e3506f38924a8936bc46aa1a665, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1221157724}
   m_SourcePrefab: {fileID: 100100000, guid: 20bc8e3506f38924a8936bc46aa1a665, type: 3}
 --- !u!4 &1221157721 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 20bc8e3506f38924a8936bc46aa1a665, type: 3}
   m_PrefabInstance: {fileID: 1221157720}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1221157724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815770771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93bebe02eb2e63947b870156ec518c3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1222338669 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5068428990202231474, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
@@ -16494,7 +16496,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3e7f9f4d0f1f2ad4a9fd3de788b45b18, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1471514408}
   m_SourcePrefab: {fileID: 100100000, guid: 3e7f9f4d0f1f2ad4a9fd3de788b45b18, type: 3}
 --- !u!1001 &1468398082
 PrefabInstance:
@@ -16612,6 +16617,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3e7f9f4d0f1f2ad4a9fd3de788b45b18, type: 3}
   m_PrefabInstance: {fileID: 1464905116}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1471514408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091193920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93bebe02eb2e63947b870156ec518c3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1493504863
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18586,7 +18603,6 @@ GameObject:
   - component: {fileID: 1786648055}
   - component: {fileID: 1786648054}
   - component: {fileID: 1786648053}
-  - component: {fileID: 1786648052}
   m_Layer: 0
   m_Name: DistantNest_test (3)
   m_TagString: Untagged
@@ -18594,28 +18610,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!64 &1786648052
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1786648051}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1786648053
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -21170,7 +21164,6 @@ GameObject:
   - component: {fileID: 2062390837}
   - component: {fileID: 2062390836}
   - component: {fileID: 2062390835}
-  - component: {fileID: 2062390834}
   m_Layer: 0
   m_Name: DistantNest_test (4)
   m_TagString: Untagged
@@ -21178,28 +21171,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!64 &2062390834
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2062390833}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &2062390835
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -22033,6 +22004,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 961518864}
+  - {fileID: 32082098}
   - {fileID: 621000296}
   - {fileID: 174560631}
   m_Father: {fileID: 5392662934305652033}

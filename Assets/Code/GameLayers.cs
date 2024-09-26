@@ -51,6 +51,12 @@ static public class LayerMasks {
     // Layer 15: LookTag
     public const int LookTag_Index = 15;
     public const int LookTag_Mask = 32768;
+    // Layer 16: PenguinBody
+    public const int PenguinBody_Index = 16;
+    public const int PenguinBody_Mask = 65536;
+    // Layer 17: PlayerBody
+    public const int PlayerBody_Index = 17;
+    public const int PlayerBody_Mask = 131072;
     // Layer 31: OffscreenRendering
     public const int OffscreenRendering_Index = 31;
     public const int OffscreenRendering_Mask = -2147483648;

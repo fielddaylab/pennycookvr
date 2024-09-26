@@ -105,7 +105,7 @@ namespace FieldDay.VRHands {
         /// <summary>
         /// Resolves the pose for a snapping node.
         /// </summary>
-        static public Pose ResolveSnapNodePose(Grabbable grabbable, int nodeIndex, Grabber grabberReference) {
+        static public Pose ResolveSnapNodePose(Grabbable grabbable, int nodeIndex, Grabber grabberReference, float offsetScale = 1) {
             Assert.True(nodeIndex >= 0 && nodeIndex < grabbable.SnapNodes.Length);
             Pose p;
             var node = grabbable.SnapNodes[nodeIndex];
@@ -118,7 +118,7 @@ namespace FieldDay.VRHands {
 
             if (!ReferenceEquals(grabberReference.CachedTransform, grabberReference.GripCenter)) {
                 grabberReference.GripCenter.GetLocalPositionAndRotation(out Vector3 localGripPos, out Quaternion localGripRot);
-                p.position -= grabberReference.CachedTransform.TransformVector(localGripPos);
+                p.position -= grabberReference.CachedTransform.TransformVector(localGripPos * offsetScale);
                 p.rotation = p.rotation * Quaternion.Inverse(localGripRot);
             }
 
@@ -181,6 +181,8 @@ namespace FieldDay.VRHands {
             if (snapIndex >= 0) {
                 grabbable.UsedSnapNodes.Set(snapIndex);
                 Pose p = GrabUtility.ResolveSnapNodePose(grabber.HeldObject, grabber.HeldObjectSnapNodeIndex, grabber);
+                grabber.CachedRB.position = p.position;
+                grabber.CachedRB.rotation = p.rotation;
                 grabber.CachedTransform.SetPositionAndRotation(p.position, p.rotation);
                 CreateGripJoint(grabber);
             } else {

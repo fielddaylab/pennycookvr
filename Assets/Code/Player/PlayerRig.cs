@@ -12,6 +12,7 @@ namespace Pennycook {
         public Transform ScaleRoot;
         public Transform HeadRoot;
         public Transform HeadLook;
+        public CapsuleCollider BodyCollider;
 
         public PlayerHandRig LeftHand;
         public PlayerHandRig RightHand;
