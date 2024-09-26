@@ -1,5 +1,7 @@
 using BeauUtil;
 using FieldDay.Systems;
+using FieldDay.HID.XR;
+using FieldDay.XR;
 using UnityEngine;
 
 namespace FieldDay.VRHands {
@@ -21,7 +23,14 @@ namespace FieldDay.VRHands {
             }
 
             if (component.Animator) {
-                // TODO: animation
+
+                XRInputState input = Find.State<XRInputState>();
+
+                if(component.Grabber.Chirality == XRHandIndex.Left) {
+                    component.AnimateGrip(input.LeftHand.Axis.Grip);
+                } else if(component.Grabber.Chirality == XRHandIndex.Right) {
+                    component.AnimateGrip(input.RightHand.Axis.Grip);
+                }
             }
         }
     }
