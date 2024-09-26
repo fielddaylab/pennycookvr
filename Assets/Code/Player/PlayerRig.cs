@@ -1,5 +1,6 @@
 using System;
 using BeauUtil;
+using BeauUtil.Debugger;
 using FieldDay.Physics;
 using FieldDay.SharedState;
 using FieldDay.VRHands;
@@ -14,6 +15,10 @@ namespace Pennycook {
 
         public PlayerHandRig LeftHand;
         public PlayerHandRig RightHand;
+
+        private void Awake() {
+            Log.Msg("[PlayerRig] Initial position is {0}", MoveRoot.position);
+        }
     }
 
     static public class PlayerRigUtils {

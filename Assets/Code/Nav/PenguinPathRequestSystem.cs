@@ -5,6 +5,7 @@ using BeauUtil.Debugger;
 using BeauUtil.Graph;
 using FieldDay;
 using FieldDay.Systems;
+using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
 
 namespace Pennycook {
@@ -53,6 +54,8 @@ namespace Pennycook {
             }
         }
 
+        [Il2CppSetOption(Option.NullChecks, false)]
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
         static private void ProcessRequest(PenguinPathRequestState state, PenguinPathRequest request) {
             state.RequestIdLock.AcquireRead();
             bool requestIsValid = state.RequestIdGenerator.IsValid(request.Id);

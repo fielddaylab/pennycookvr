@@ -217,6 +217,7 @@ namespace FieldDay {
             DontDestroyOnLoad(gameObject);
             s_Instance = this;
             Log.Msg("[GameLoop] Starting...");
+            Log.Msg("[GameLoop] Word Size = {0} ({1})", Unsafe.PointerSize, Unsafe.IsPointerSizeCompileTimeConstant ? "compile-time" : "runtime");
 
             using (Profiling.Time("GameLoop.Awake")) {
                 Frame.MarkTimestampOffset();
@@ -621,6 +622,7 @@ namespace FieldDay {
             s_ReadyForRender = true;
         }
 
+#if !SKIP_ONGUI
         private void OnGUI() {
             EventType type = Event.current.type;
             OnGuiEvent.Invoke(Event.current);
@@ -631,6 +633,7 @@ namespace FieldDay {
             }
 #endif // UNITY_EDITOR
         }
+#endif // !SKIP_ONGUI
 
         void ICameraPreCullCallback.OnCameraPreCull(Camera camera, CameraCallbackSource source) {
             if (!s_ReadyForRender) {

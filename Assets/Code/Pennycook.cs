@@ -10,12 +10,12 @@ namespace Pennycook {
         static private void PreBoot() {
             Events = new EventDispatcher<EvtArgs>();
             SetEventDispatcher(Events);
-
-            XRUtility.SetRefreshRate(90);
         }
 
         [InvokeOnBoot]
         static private void OnBoot() {
+            XRUtility.SetRefreshRate(90);
+
             Game.Scenes.OnMainSceneReady.Register(() => {
                 ScriptUtility.Trigger(GameTriggers.SceneReady);
             });

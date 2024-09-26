@@ -6,7 +6,7 @@ using FieldDay.XR;
 using UnityEngine;
 
 namespace Pennycook {
-    [SysUpdate(GameLoopPhase.FixedUpdate, 10)]
+    [SysUpdate(GameLoopPhase.Update, 10)]
     public class PlayerMovementSystem : SharedStateSystemBehaviour<PlayerRig, XRInputState> {
         public override void ProcessWork(float deltaTime) {
             var eitherHandButtons = m_StateB.LeftHand.Buttons | m_StateB.RightHand.Buttons;
@@ -21,7 +21,7 @@ namespace Pennycook {
                 }
             }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEVELOPMENT
 
             Vector3 flattenedLook = m_StateA.HeadLook.forward;
             flattenedLook.y = 0;
@@ -35,30 +35,16 @@ namespace Pennycook {
                 notGrippedHands |= m_StateB.RightHand.Buttons;
             }
 
-            if (notGrippedHands.ConsumePress(XRHandButtons.PrimaryAxisUp)) {
-                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
-                    move.Translate(flattenedLook * 0.3f);
+            if (notGrippedHands.IsDown(XRHandButtons.TriggerButton)) {
+                if (notGrippedHands.ConsumePress(XRHandButtons.PrimaryAxisUp)) {
+                    using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
+                        move.Translate(flattenedLook * 0.3f);
+                    }
                 }
-            }
-            if (notGrippedHands.ConsumePress(XRHandButtons.PrimaryAxisDown)) {
-                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
-                    move.Translate(flattenedLook * -0.3f);
-                }
-            }
-
-            if (!m_StateA.LeftHand.Grabber.HeldObject && m_StateB.LeftHand.Buttons.IsDown(XRHandButtons.Primary)) {
-                float scaleChange = 0;
-                if (m_StateB.LeftHand.Buttons.IsDown(XRHandButtons.GripButton)) {
-                    scaleChange = -m_StateB.LeftHand.Axis.Grip;
-                }
-                if (m_StateB.LeftHand.Buttons.IsDown(XRHandButtons.TriggerButton)) {
-                    scaleChange = m_StateB.LeftHand.Axis.Trigger;
-                }
-
-                if (scaleChange != 0) {
-                    float myScale = m_StateA.ScaleRoot.localScale.x;
-                    myScale = Mathf.Clamp(myScale + scaleChange * deltaTime, 0.01f, 15);
-                    m_StateA.ScaleRoot.localScale = new Vector3(myScale, myScale, myScale);
+                if (notGrippedHands.ConsumePress(XRHandButtons.PrimaryAxisDown)) {
+                    using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
+                        move.Translate(flattenedLook * -0.3f);
+                    }
                 }
             }
 
@@ -67,7 +53,7 @@ namespace Pennycook {
                 Debug.Break();
             }
 
-#endif // UNITY_EDITOR
+#endif // UNITY_EDITOR || DEVELOPMENT
         }
     }
 }

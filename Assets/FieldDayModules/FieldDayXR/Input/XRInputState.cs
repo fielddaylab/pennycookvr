@@ -66,10 +66,19 @@ namespace FieldDay.XR {
         static public readonly CastableEvent<XRSourceMask> OnAvailableNodesUpdated = new CastableEvent<XRSourceMask>(4);
 
         static public void RequestHaptics(XRHandIndex hand, float amp, float duration) {
-            Find.State<XRInputState>().LeftHaptics = new XRHapticsRequest() {
+            var request = new XRHapticsRequest() {
                 Amplitude = amp,
                 Duration = duration
             };
+
+            var state = Find.State<XRInputState>();
+
+            if (hand == XRHandIndex.Left) {
+                state.LeftHaptics = request;
+            }
+            if (hand == XRHandIndex.Right) {
+                state.RightHaptics = request;
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Pennycook.Tablet {
     [SysUpdate(GameLoopPhase.LateUpdate)]
     public class TabletCameraCullingSystem : SharedStateSystemBehaviour<TabletRenderState, PlayerRig> {
         public override void ProcessWork(float deltaTime) {
-            if (!Frame.Interval(3)) {
+            if (!Frame.Interval(3) || Game.Scenes.IsMainLoading()) {
                 return;
             }
 

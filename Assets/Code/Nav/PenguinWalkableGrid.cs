@@ -7,6 +7,7 @@ using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.SharedState;
+using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
 
 namespace Pennycook {
@@ -366,6 +367,8 @@ namespace Pennycook {
             return BresenhamRaycast(aX, aZ, bX, bZ);
         }
 
+        [Il2CppSetOption(Option.NullChecks, false)]
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
         static private bool BresenhamRaycast(int x0, int z0, int x1, int z1) {
             // bresenham
 

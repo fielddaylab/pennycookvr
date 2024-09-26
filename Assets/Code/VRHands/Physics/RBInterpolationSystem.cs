@@ -32,7 +32,7 @@ namespace FieldDay.Physics {
                     component.Target.angularVelocity = dAxis.normalized * (DejitterMultiplier * dAngle * Mathf.Deg2Rad * component.AngularVelocityMultiplier / deltaTime);
                 }
 
-                Log.Msg("[RBInterpolationSystem] Interpolation for '{0}' is {1} & {2}", component.name, component.Target.velocity, component.Target.angularVelocity);
+                // Log.Msg("[RBInterpolationSystem] Interpolation for '{0}' is {1} & {2}", component.name, component.Target.velocity, component.Target.angularVelocity);
             }
         }
 

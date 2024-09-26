@@ -502,15 +502,24 @@ namespace FieldDay.Rendering {
         }
 
         private void AttemptRenderLetterboxing() {
+
             if (m_LastLetterboxFrameRendered != Frame.Index) {
                 m_LastLetterboxFrameRendered = Frame.Index;
 
-                Graphics.SetRenderTarget(null);
+                RenderTexture prevRenderTarget = null;
+                bool switchedRenderTargets = false;
 
                 if (m_UsingFallback && !m_FallbackCamera) {
                     if (DebugFlags.IsFlagSet(DebuggingFlags.TraceExecution)) {
                         Log.Trace("[RenderMgr] Clearing backbuffer as fallback");
                     }
+
+                    if (!switchedRenderTargets) {
+                        switchedRenderTargets = true;
+                        prevRenderTarget = RenderTexture.active;
+                        Graphics.SetRenderTarget(null);
+                    }
+
                     GL.PushMatrix();
                     GL.LoadOrtho();
                     GL.Clear(true, true, Color.black, 1);
@@ -518,6 +527,12 @@ namespace FieldDay.Rendering {
                 }
 
                 if (m_HasLetterboxing && m_ClampedViewportCameras.Count > 0) {
+                    if (!switchedRenderTargets) {
+                        switchedRenderTargets = true;
+                        prevRenderTarget = RenderTexture.active;
+                        Graphics.SetRenderTarget(null);
+                    }
+
                     GL.Viewport(new Rect(0, 0, m_LastKnownResolution.width, m_LastKnownResolution.height));
                     if (DebugFlags.IsFlagSet(DebuggingFlags.TraceExecution)) {
                         Log.Trace("[RenderMgr] Rendering letterboxing for viewport {0}", m_VirtualViewport.ToString());
@@ -526,6 +541,12 @@ namespace FieldDay.Rendering {
                 }
 
                 if (DebugFlags.IsFlagSet(DebuggingFlags.VisualizeEntireScreen)) {
+                    if (!switchedRenderTargets) {
+                        switchedRenderTargets = true;
+                        prevRenderTarget = RenderTexture.active;
+                        Graphics.SetRenderTarget(null);
+                    }
+
                     GL.PushMatrix();
                     GL.LoadOrtho();
                     GL.Viewport(new Rect(0, 0, m_LastKnownResolution.width, m_LastKnownResolution.height));
@@ -535,6 +556,10 @@ namespace FieldDay.Rendering {
                     string debugText = string.Format("Screen Dimensions: {0} ({1})", m_LastKnownResolution, m_LastKnownFullscreen ? "FULLSCREEN" : "NOT FULLSCREEN");
 
                     DebugDraw.AddViewportText(new Vector2(0.5f, 1), new Vector2(0, -8), debugText, Color.white, 0, TextAnchor.UpperCenter, DebugTextStyle.BackgroundDarkOpaque);
+                }
+
+                if (switchedRenderTargets) {
+                    Graphics.SetRenderTarget(prevRenderTarget);
                 }
             }
         }

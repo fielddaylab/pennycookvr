@@ -51,9 +51,9 @@ static public class LayerMasks {
     // Layer 15: LookTag
     public const int LookTag_Index = 15;
     public const int LookTag_Mask = 32768;
-    // Layer 31: SceneMarkup
-    public const int SceneMarkup_Index = 31;
-    public const int SceneMarkup_Mask = -2147483648;
+    // Layer 31: OffscreenRendering
+    public const int OffscreenRendering_Index = 31;
+    public const int OffscreenRendering_Mask = -2147483648;
 }
 static public class SortingLayers {
     
