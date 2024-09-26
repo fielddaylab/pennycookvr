@@ -263,7 +263,7 @@ Camera:
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
+  m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
 --- !u!114 &5090422631392378258
@@ -279,8 +279,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
-  m_RequiresOpaqueTextureOption: 2
+  m_RequiresDepthTextureOption: 0
+  m_RequiresOpaqueTextureOption: 0
   m_CameraType: 0
   m_Cameras: []
   m_RendererIndex: -1
@@ -289,8 +289,8 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
-  m_Antialiasing: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
   m_AntialiasingQuality: 1
   m_StopNaN: 0
   m_Dithering: 0
@@ -368,6 +368,7 @@ GameObject:
   - component: {fileID: 4481710584249155763}
   - component: {fileID: 7973962532870855022}
   - component: {fileID: 1748443713196043398}
+  - component: {fileID: 9144715119067452394}
   m_Layer: 7
   m_Name: TabletRig
   m_TagString: Untagged
@@ -441,7 +442,6 @@ MonoBehaviour:
   MaxGrabbers: 2
   IsHeavy: 0
   MustGrabAtSnap: 1
-  ReturnOnGroundHit: 1
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -478,6 +478,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grabbable: {fileID: 7973962532870855022}
   AudioLocation: {fileID: 3812756884283786157}
+--- !u!114 &9144715119067452394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6471475439971284886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dafab9db04b59c4bb36e52c1514ad6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SocketEnabled: 1
 --- !u!1 &7385909178958478154
 GameObject:
   m_ObjectHideFlags: 0

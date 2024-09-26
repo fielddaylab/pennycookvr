@@ -99,7 +99,7 @@ MonoBehaviour:
   m_RenderShadows: 0
   m_RequiresDepthTextureOption: 0
   m_RequiresOpaqueTextureOption: 0
-  m_CameraType: 0
+  m_CameraType: 1
   m_Cameras: []
   m_RendererIndex: -1
   m_VolumeLayerMask:
@@ -1602,12 +1602,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5090422631392378258, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
       propertyPath: m_Cameras.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5090422631392378258, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
       propertyPath: m_Cameras.Array.data[0]
       value: 
       objectReference: {fileID: 7611658757600314112}
+    - target: {fileID: 5090422631392378258, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
+      propertyPath: m_VolumeFrameworkUpdateModeOption
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6471475439971284886, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
       propertyPath: m_Name
       value: TabletRig
@@ -1615,6 +1619,18 @@ PrefabInstance:
     - target: {fileID: 8365674112203292623, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8970989550740803460, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0.25082898
+      objectReference: {fileID: 0}
+    - target: {fileID: 8970989550740803460, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0.19215688
+      objectReference: {fileID: 0}
+    - target: {fileID: 8970989550740803460, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0.4745098
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3687259198540141303, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
