@@ -1,1 +1,49 @@
 #basePath	Day1
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
+
+$call Wait(2)
+
+{@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
+{@Player}   Brr. Lola was right... should've packed an extra sweater.   $[Day1/Tent/Player_2]
+{@Player}   Okay, time to get focused. Those penguins aren’t gonna research themselves. $[Day1/Tent/Player_3]
+{@Player}   Step one: Find research tent. Check.    $[Day1/Tent/Player_4]
+{@Player}   Step two: Report to Margo, penguin expert and senior researcher.    $[Day1/Tent/Player_5]
+{@Player}   Hmmm. Where is she?     $[Day1/Tent/Player_6]
+
+:: PickedUpMargo
+@trigger    LiftedTablet
+@who        Player
+@once
+
+$call Wait(1)
+
+{@Margo}    Oh, hiya! Welcome to the South Pole, kid!   $[Day1/Tent/Margo_1]
+{@Player}   Oh, uh… I’m not a kid. I’m the new junior researcher here.  $[Day1/Tent/Player_7]
+{@Margo}    Yah, like I said!   $[Day1/Tent/Margo_2]
+{@Margo}    And just in time, too.   $[Day1/Tent/Margo_3]
+{@Margo}    Spring is in the air… lotsa penguins out there lookin’ for love.   $[Day1/Tent/Margo_4]
+{@Margo}    It’ll be great to have ya on the team.   $[Day1/Tent/Margo_5]
+{@Player}   Your team?  $[Day1/Tent/Player_8]
+{@Margo}    Yep! I’m Margo, senior researcher.  $[Day1/Tent/Margo_6]
+{@Margo}    Nice to meet ya!    $[Day1/Tent/Margo_7]
+{@Player}   You're Margo?  $[Day1/Tent/Player_9]
+{@Margo}    Well, yah, last I checked.  $[Day1/Tent/Margo_8]
+{@Margo}    What’s wrong? Do I got cookies stuck in my teeth or somethin’?  $[Day1/Tent/Margo_9]
+{@Margo}    Aw, relax, kiddo, I’m jokin’. Just a little data humor for ya.  $[Day1/Tent/Margo_10]
+{@Player}   My professors told me all about you. They said you’re one of the leading penguin researchers in the world! I had no idea you were a computer.   $[Day1/Tent/Player_10]
+{@Margo}    Aww, that’s sweet. Remind me to send them a hotdish sometime.   $[Day1/Tent/Margo_11]
+{@Margo}    But for now, we better get to work. $[Day1/Tent/Margo_12]
+{@Margo}    The penguins are just gettin’ back for the mating season.   $[Day1/Tent/Margo_13]
+{@Margo}    Your job is to get out there on the ice and collect some data to see how they’re doin’. $[Day1/Tent/Margo_14]
+{@Margo}    And don’t worry if you’re nervous. The South Pole can be pretty intimidating at first.  $[Day1/Tent/Margo_15]
+{@Player}   Oh, no te preocupes. I’ve been training for this day my whole life. $[Day1/Tent/Player_11]
+{@Player}   Who knows? Maybe next year, I’ll be leading my own team!    $[Day1/Tent/Player_12]
+{@Margo}    Well, okey dokey then, hot shot. Let’s get started.     $[Day1/Tent/Margo_16]
+{@Margo}    You’ll have to carry me outside, since I don’t have any snow boots. $[Day1/Tent/Margo_17]
+{@Margo}    Or, ya know… legs.  $[Day1/Tent/Margo_18]
+{@Margo}    Hold me up in front of the door.    $[Day1/Tent/Margo_19]
+{@Margo}    Then press the yellow button, and we’ll head outside!   $[Day1/Tent/Margo_20]
