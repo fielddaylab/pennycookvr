@@ -6,6 +6,7 @@ using FieldDay.Systems;
 using Leaf;
 
 namespace FieldDay.Scripting {
+    [SysUpdate(GameLoopPhaseMask.PreUpdate | GameLoopPhaseMask.LateUpdate, AllowExecutionDuringLoad = true)]
     internal class ScriptLoadingSystem : ISystem {
         public void Initialize() { }
         public void Shutdown() { }

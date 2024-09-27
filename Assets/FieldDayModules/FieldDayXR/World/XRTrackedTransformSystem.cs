@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.XR;
 
 namespace FieldDay.XR {
-    [SysUpdate(GameLoopPhaseMask.FixedUpdate | GameLoopPhaseMask.Update | GameLoopPhaseMask.ApplicationPreRender, -7000)]
+    [SysUpdate(GameLoopPhaseMask.DebugUpdate | GameLoopPhaseMask.FixedUpdate | GameLoopPhaseMask.Update | GameLoopPhaseMask.ApplicationPreRender, -7000, AllowExecutionDuringLoad = true)]
     public class XRTrackedTransformSystem : ComponentSystemBehaviour<XRTrackedTransform> {
         public float WorldScale;
 

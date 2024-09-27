@@ -42,17 +42,20 @@ namespace FieldDay.Systems {
             public ISystem System;
             public int UpdateOrder;
             public int CategoryMask;
+            public bool AllowDuringLoad;
 
             public UpdateRecord(ISystem system) {
                 System = system;
                 UpdateOrder = 0;
                 CategoryMask = 0;
+                AllowDuringLoad = false;
             }
 
             public UpdateRecord(ISystem system, SysUpdateAttribute info) {
                 System = system;
                 UpdateOrder = info.Order;
                 CategoryMask = info.CategoryMask;
+                AllowDuringLoad = info.AllowExecutionDuringLoad;
             }
 
             public bool Equals(UpdateRecord other) {
@@ -310,48 +313,48 @@ namespace FieldDay.Systems {
         #region Events
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void DebugUpdate(float deltaTime, int categoryMask) {
-            ProcessUpdates(m_Updates[GameLoopPhase.DebugUpdate], m_Updates.PopBucketDirty(GameLoopPhase.DebugUpdate), deltaTime, categoryMask);
+        internal void DebugUpdate(float deltaTime, int categoryMask, bool isLoading) {
+            ProcessUpdates(m_Updates[GameLoopPhase.DebugUpdate], m_Updates.PopBucketDirty(GameLoopPhase.DebugUpdate), deltaTime, categoryMask, isLoading);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void PreUpdate(float deltaTime, int categoryMask) {
-            ProcessUpdates(m_Updates[GameLoopPhase.PreUpdate], m_Updates.PopBucketDirty(GameLoopPhase.PreUpdate), deltaTime, categoryMask);
+        internal void PreUpdate(float deltaTime, int categoryMask, bool isLoading) {
+            ProcessUpdates(m_Updates[GameLoopPhase.PreUpdate], m_Updates.PopBucketDirty(GameLoopPhase.PreUpdate), deltaTime, categoryMask, isLoading);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void FixedUpdate(float deltaTime, int categoryMask) {
-            ProcessUpdates(m_Updates[GameLoopPhase.FixedUpdate], m_Updates.PopBucketDirty(GameLoopPhase.FixedUpdate), deltaTime, categoryMask);
+        internal void FixedUpdate(float deltaTime, int categoryMask, bool isLoading) {
+            ProcessUpdates(m_Updates[GameLoopPhase.FixedUpdate], m_Updates.PopBucketDirty(GameLoopPhase.FixedUpdate), deltaTime, categoryMask, isLoading);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void LateFixedUpdate(float deltaTime, int categoryMask) {
-            ProcessUpdates(m_Updates[GameLoopPhase.LateFixedUpdate], m_Updates.PopBucketDirty(GameLoopPhase.LateFixedUpdate), deltaTime, categoryMask);
+        internal void LateFixedUpdate(float deltaTime, int categoryMask, bool isLoading) {
+            ProcessUpdates(m_Updates[GameLoopPhase.LateFixedUpdate], m_Updates.PopBucketDirty(GameLoopPhase.LateFixedUpdate), deltaTime, categoryMask, isLoading);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Update(float deltaTime, int categoryMask) {
-            ProcessUpdates(m_Updates[GameLoopPhase.Update], m_Updates.PopBucketDirty(GameLoopPhase.Update), deltaTime, categoryMask);
+        internal void Update(float deltaTime, int categoryMask, bool isLoading) {
+            ProcessUpdates(m_Updates[GameLoopPhase.Update], m_Updates.PopBucketDirty(GameLoopPhase.Update), deltaTime, categoryMask, isLoading);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void UnscaledUpdate(float deltaTime, int categoryMask) {
-            ProcessUpdates(m_Updates[GameLoopPhase.UnscaledUpdate], m_Updates.PopBucketDirty(GameLoopPhase.UnscaledUpdate), deltaTime, categoryMask);
+        internal void UnscaledUpdate(float deltaTime, int categoryMask, bool isLoading) {
+            ProcessUpdates(m_Updates[GameLoopPhase.UnscaledUpdate], m_Updates.PopBucketDirty(GameLoopPhase.UnscaledUpdate), deltaTime, categoryMask, isLoading);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void LateUpdate(float deltaTime, int categoryMask) {
-            ProcessUpdates(m_Updates[GameLoopPhase.LateUpdate], m_Updates.PopBucketDirty(GameLoopPhase.LateUpdate), deltaTime, categoryMask);
+        internal void LateUpdate(float deltaTime, int categoryMask, bool isLoading) {
+            ProcessUpdates(m_Updates[GameLoopPhase.LateUpdate], m_Updates.PopBucketDirty(GameLoopPhase.LateUpdate), deltaTime, categoryMask, isLoading);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void UnscaledLateUpdate(float deltaTime, int categoryMask) {
-            ProcessUpdates(m_Updates[GameLoopPhase.UnscaledLateUpdate], m_Updates.PopBucketDirty(GameLoopPhase.UnscaledLateUpdate), deltaTime, categoryMask);
+        internal void UnscaledLateUpdate(float deltaTime, int categoryMask, bool isLoading) {
+            ProcessUpdates(m_Updates[GameLoopPhase.UnscaledLateUpdate], m_Updates.PopBucketDirty(GameLoopPhase.UnscaledLateUpdate), deltaTime, categoryMask, isLoading);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void ApplicationPreRender(float deltaTime, int categoryMask) {
-            ProcessUpdates(m_Updates[GameLoopPhase.ApplicationPreRender], m_Updates.PopBucketDirty(GameLoopPhase.ApplicationPreRender), deltaTime, categoryMask);
+        internal void ApplicationPreRender(float deltaTime, int categoryMask, bool isLoading) {
+            ProcessUpdates(m_Updates[GameLoopPhase.ApplicationPreRender], m_Updates.PopBucketDirty(GameLoopPhase.ApplicationPreRender), deltaTime, categoryMask, isLoading);
         }
 
         internal void Shutdown() {
@@ -374,7 +377,7 @@ namespace FieldDay.Systems {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static private void ProcessUpdates(RingBuffer<UpdateRecord> systems, bool needsSort, float deltaTime, int categoryMask) {
+        static private void ProcessUpdates(RingBuffer<UpdateRecord> systems, bool needsSort, float deltaTime, int categoryMask, bool isLoading) {
             if (needsSort) {
                 systems.Sort((a, b) => a.UpdateOrder - b.UpdateOrder);
             }
@@ -382,7 +385,7 @@ namespace FieldDay.Systems {
             foreach(var sys in systems) {
 #if DEVELOPMENT
                 try {
-                    if ((categoryMask & sys.CategoryMask) != 0 && sys.System.HasWork()) {
+                    if ((sys.AllowDuringLoad || !isLoading) && (categoryMask & sys.CategoryMask) != 0 && sys.System.HasWork()) {
                         sys.System.ProcessWork(deltaTime);
                     }
                 } catch(Exception e) {
@@ -390,7 +393,7 @@ namespace FieldDay.Systems {
                     Debug.LogException(e);
                 }
 #else
-                if ((categoryMask & sys.CategoryMask) != 0 && sys.System.HasWork()) {
+                if ((sys.AllowDuringLoad || !isLoading) && (categoryMask & sys.CategoryMask) != 0 && sys.System.HasWork()) {
                     sys.System.ProcessWork(deltaTime);
                 }
 #endif // DEVELOPMENT
