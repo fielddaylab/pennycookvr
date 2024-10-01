@@ -209,10 +209,13 @@ namespace FieldDay.Editor {
     /// Merges in any scenes that should be merged into the main scene.
     /// </summary>
     public class ImportMergeScenesSceneProcessor : IProcessSceneWithReport {
+        static private readonly FieldInfo PersistIdField = typeof(Persist).GetField("m_UniqueID", BindingFlags.NonPublic | BindingFlags.Instance);
+
         private HashSet<string> visitedScenes;
         private List<ImportScene> importBuffer;
         private RingBuffer<ImportScene> importQueue;
         private RingBuffer<DelayedImportArgs> delayedImports;
+        private HashSet<string> persists;
 
         public int callbackOrder { get { return -10; } }
 
@@ -228,6 +231,11 @@ namespace FieldDay.Editor {
 
                 visitedScenes = new HashSet<string>();
                 visitedScenes.Add(scene.path);
+
+                if (!EditorApplication.isPlaying) {
+                    persists = new HashSet<string>();
+                    HandlePersists(scene);
+                }
 
                 importBuffer = new List<ImportScene>();
                 scene.GetAllComponents(true, importBuffer);
@@ -287,6 +295,11 @@ namespace FieldDay.Editor {
 
         private void FinishMerge(Scene scene, BuildReport report, Scene subsceneRef, SceneImportSettings settings) {
             Assert.True(subsceneRef.isLoaded, "Scene '{0}' is not loaded", settings.Path);
+
+            if (!EditorApplication.isPlaying) {
+                HandlePersists(subsceneRef);
+            }
+
             foreach (var root in subsceneRef.GetRootGameObjects()) {
                 root.GetComponentsInChildren(true, importBuffer);
                 foreach (var subImport in importBuffer) {
@@ -307,6 +320,27 @@ namespace FieldDay.Editor {
 #pragma warning restore CS0618
             } else {
                 EditorSceneManager.CloseScene(subsceneRef, true);
+            }
+        }
+
+        private void HandlePersists(Scene scene) {
+            List<Persist> persistsInScene = new List<Persist>(8);
+            scene.GetAllComponents(true, persistsInScene);
+
+            foreach (var persist in persistsInScene) {
+                if (!persist) {
+                    continue;
+                }
+
+                string id = (string) PersistIdField.GetValue(persist);
+                if (string.IsNullOrEmpty(id)) {
+                    continue;
+                }
+
+                if (!persists.Add(id)) {
+                    Debug.LogFormat("[ImportMergeScenesSceneProcessor] Removing duplicate persist object '{0}' ('{1}') from scene '{2}'", persist.name, id, scene.path);
+                    Baking.Destroy(persist.gameObject);
+                }
             }
         }
 
@@ -379,7 +413,7 @@ namespace FieldDay.Editor {
                 scene.GetAllComponents(true, list);
                 SceneDataExt ext = list.Count > 0 ? list[0] : null;
                 if (ext == null) {
-                    Debug.LogErrorFormat("[GatherCustomSceneDataSceneProcessor] No SceneDataExt has gone missing");
+                    Debug.LogErrorFormat("[GatherCustomSceneDataSceneProcessor] No SceneDataExt able to be found");
                     return;
                 }
 
