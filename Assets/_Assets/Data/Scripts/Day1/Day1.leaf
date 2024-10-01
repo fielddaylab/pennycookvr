@@ -87,16 +87,17 @@ $call SetWarpActive(WarpBluffBack, false)
 
 {@Margo} Let's get back in the tent and upload that data!   $[Day1/Bluff/Margo_3]
 
-$call SetWarpActive(WarpDesk, true)
+$call SetWarpActive(WarpTent, true)
 
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Desk"
+@when       targetObject == "WarpTarget-TentDoor"
 @once
 
 $call Wait(1)
-$call SetWarpActive(WarpDesk, false)
+$call SetWarpActive(WarpTent, false)
+$call SetWarpActive(WarpDesk, true)
 
 {@Margo}    You can connect me to the uplink at the desk over yonder.  $[Day1/Tent/Margo_14]
 {@Player}   Alright, now to place Margo in the dock.    $[Day1/Tent/Player_11]
