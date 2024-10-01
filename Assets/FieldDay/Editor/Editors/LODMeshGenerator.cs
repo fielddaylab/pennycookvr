@@ -243,13 +243,17 @@ namespace FieldDay.Editor {
                 } else {
                     simplifier.SimplifyMesh(quality);
                 }
-                lod = simplifier.ToMesh();
-
                 if ((clearFlags & MeshDataClearFlags.BlendShapes) != 0) {
-                    lod.ClearBlendShapes();
+                    simplifier.ClearBlendShapes();
                 }
                 if ((clearFlags & MeshDataClearFlags.SkinningWeights) != 0) {
-                    lod.boneWeights = Array.Empty<BoneWeight>();
+                    simplifier.BoneWeights = Array.Empty<BoneWeight>();
+                }
+
+                lod = simplifier.ToMesh();
+
+                if ((clearFlags & MeshDataClearFlags.SkinningWeights) != 0) {
+                    lod.bindposes = Array.Empty<Matrix4x4>();
                 }
             }
         }

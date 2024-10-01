@@ -86,6 +86,7 @@ namespace FieldDay.Animation {
 
             m_Animators = null;
             m_ParticleSystems = null;
+            m_SkinnedMeshes = null;
         }
     }
 }
