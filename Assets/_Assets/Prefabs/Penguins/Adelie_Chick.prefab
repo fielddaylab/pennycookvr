@@ -143,7 +143,55 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6bf676f29957f574ca81f6dcda9ad7bb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4095956106331354199}
+    - targetCorrespondingSourceObject: {fileID: -828162202059761756, guid: 6bf676f29957f574ca81f6dcda9ad7bb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1291441193473454203}
   m_SourcePrefab: {fileID: 100100000, guid: 6bf676f29957f574ca81f6dcda9ad7bb, type: 3}
+--- !u!137 &19617543002345187 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -4496380095258979398, guid: 6bf676f29957f574ca81f6dcda9ad7bb, type: 3}
+  m_PrefabInstance: {fileID: 4745690292541644121}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3845461585432955645 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -828162202059761756, guid: 6bf676f29957f574ca81f6dcda9ad7bb, type: 3}
+  m_PrefabInstance: {fileID: 4745690292541644121}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1291441193473454203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3845461585432955645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37b41727217c1b143af077e09566a9a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 4095956106331354199}
+  SkinnedMesh: {fileID: 19617543002345187}
+  MeshRenderer: {fileID: 0}
+  MeshFilter: {fileID: 0}
+  WorldSize: 0
+  Close:
+    ScreenProportion: 0.4
+    Skinning: 4
+    Mesh: {fileID: 923879937962158323, guid: 6bf676f29957f574ca81f6dcda9ad7bb, type: 3}
+    Material: {fileID: 0}
+    Cull: 0
+  Mid:
+    ScreenProportion: 0.2
+    Skinning: 2
+    Mesh: {fileID: 4300000, guid: 99bf20f2555ef93479e74d4f0679ff10, type: 2}
+    Material: {fileID: 0}
+    Cull: 0
+  Far:
+    ScreenProportion: 0
+    Skinning: 1
+    Mesh: {fileID: 4300000, guid: 857da3cddb6228d49b80c97abcb6f953, type: 2}
+    Material: {fileID: 0}
+    Cull: 0
 --- !u!1 &5556736038694281224 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6bf676f29957f574ca81f6dcda9ad7bb, type: 3}
