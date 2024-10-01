@@ -48,6 +48,7 @@ namespace Pennycook {
             yield return 0.1f;
             using (var t = TempVarTable.Alloc()) {
                 t.Set("targetId", ScriptUtility.ActorId(warpPoint));
+                t.Set("targetObject", warpPoint.name);
                 ScriptUtility.Trigger(GameTriggers.AtWarpPoint, t);
             }
             yield return state.WarpFader.FadeTo(0, 0.4f);
