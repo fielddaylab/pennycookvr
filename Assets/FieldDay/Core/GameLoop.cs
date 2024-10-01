@@ -183,6 +183,7 @@ namespace FieldDay {
         static private ushort s_PrevUpdateFrameIndex = Frame.InvalidIndex;
         static private bool s_ReadyForRender;
         static private bool s_Initialized;
+        static private bool s_WasLoadingSceneAtFrameStart;
 
         // update masks
         static private int s_UpdateMask = Bits.All32;
@@ -352,6 +353,8 @@ namespace FieldDay {
                 if (Game.Events == null) {
                     Game.SetEventDispatcher(new EventDispatcher<EvtArgs>());
                 }
+
+                s_WasLoadingSceneAtFrameStart = Game.Scenes.IsMainLoading();
             }
         }
 
@@ -532,7 +535,7 @@ namespace FieldDay {
             SetCurrentPhase(GameLoopPhase.FixedUpdate);
             if (!IsPaused()) {
                 Game.Components.Lock();
-                Game.Systems.FixedUpdate(Frame.DeltaTime, s_UpdateMask);
+                Game.Systems.FixedUpdate(Frame.DeltaTime, s_UpdateMask, s_WasLoadingSceneAtFrameStart);
                 Game.Processes.FixedUpdate(Frame.DeltaTime, s_UpdateMask);
                 Game.Animation.FixedUpdateLite(Frame.DeltaTime);
                 Game.Components.Unlock();
@@ -544,7 +547,7 @@ namespace FieldDay {
             SetCurrentPhase(GameLoopPhase.LateFixedUpdate);
             if (!IsPaused()) {
                 Game.Components.Lock();
-                Game.Systems.LateFixedUpdate(Frame.DeltaTime, s_UpdateMask);
+                Game.Systems.LateFixedUpdate(Frame.DeltaTime, s_UpdateMask, s_WasLoadingSceneAtFrameStart);
                 Game.Processes.LateFixedUpdate(Frame.DeltaTime, s_UpdateMask);
                 Game.Components.Unlock();
                 OnLateFixedUpdate.Invoke(Frame.DeltaTime);
@@ -562,7 +565,7 @@ namespace FieldDay {
             SetCurrentPhase(GameLoopPhase.Update);
             if (!IsPaused()) {
                 Game.Components.Lock();
-                Game.Systems.Update(Frame.DeltaTime, s_UpdateMask);
+                Game.Systems.Update(Frame.DeltaTime, s_UpdateMask, s_WasLoadingSceneAtFrameStart);
                 Game.Processes.Update(Frame.DeltaTime, s_UpdateMask);
                 Game.Animation.UpdateLite(Frame.DeltaTime);
                 Game.Components.Unlock();
@@ -573,7 +576,7 @@ namespace FieldDay {
             SetCurrentPhase(GameLoopPhase.UnscaledUpdate);
             if (!IsPaused()) {
                 Game.Components.Lock();
-                Game.Systems.UnscaledUpdate(Frame.UnscaledDeltaTime, s_UpdateMask);
+                Game.Systems.UnscaledUpdate(Frame.UnscaledDeltaTime, s_UpdateMask, s_WasLoadingSceneAtFrameStart);
                 Game.Processes.UnscaledUpdate(Frame.UnscaledDeltaTime, s_UpdateMask);
                 Game.Animation.UnscaledUpdateLite(Frame.UnscaledDeltaTime);
                 Game.Components.Unlock();
@@ -592,7 +595,7 @@ namespace FieldDay {
             SetCurrentPhase(GameLoopPhase.LateUpdate);
             if (!IsPaused()) {
                 Game.Components.Lock();
-                Game.Systems.LateUpdate(Frame.DeltaTime, s_UpdateMask);
+                Game.Systems.LateUpdate(Frame.DeltaTime, s_UpdateMask, s_WasLoadingSceneAtFrameStart);
                 Game.Processes.LateUpdate(Frame.DeltaTime, s_UpdateMask);
                 Game.Components.Unlock();
                 OnLateUpdate.Invoke(Frame.DeltaTime);
@@ -602,7 +605,7 @@ namespace FieldDay {
             SetCurrentPhase(GameLoopPhase.UnscaledLateUpdate);
             if (!IsPaused()) {
                 Game.Components.Lock();
-                Game.Systems.UnscaledLateUpdate(Frame.UnscaledDeltaTime, s_UpdateMask);
+                Game.Systems.UnscaledLateUpdate(Frame.UnscaledDeltaTime, s_UpdateMask, s_WasLoadingSceneAtFrameStart);
                 Game.Processes.UnscaledLateUpdate(Frame.UnscaledDeltaTime, s_UpdateMask);
                 Game.Components.Unlock();
                 OnUnscaledLateUpdate.Invoke(Frame.UnscaledDeltaTime);
@@ -669,7 +672,7 @@ namespace FieldDay {
             OnApplicationPreRender.Invoke();
             if (!IsPaused()) {
                 Game.Components.Lock();
-                Game.Systems.ApplicationPreRender(Frame.DeltaTime, s_UpdateMask);
+                Game.Systems.ApplicationPreRender(Frame.DeltaTime, s_UpdateMask, s_WasLoadingSceneAtFrameStart);
                 Game.Components.Unlock();
             }
         }
@@ -718,6 +721,7 @@ namespace FieldDay {
                 DebugInput.Update();
                 s_PrevUpdateFrameIndex = Frame.Index;
                 Frame.UnscaledDeltaTime = Time.unscaledDeltaTime;
+                s_WasLoadingSceneAtFrameStart = Game.Scenes.IsMainLoading();
                 DequeueNextValues();
                 FlushQueue(s_FrameStartQueue);
 
@@ -729,7 +733,7 @@ namespace FieldDay {
 
                 // DEBUG UPDATE
                 Game.Components.Lock();
-                Game.Systems.DebugUpdate(Frame.UnscaledDeltaTime, s_UpdateMask);
+                Game.Systems.DebugUpdate(Frame.UnscaledDeltaTime, s_UpdateMask, s_WasLoadingSceneAtFrameStart);
                 Game.Processes.DebugUpdate(Frame.UnscaledDeltaTime, s_UpdateMask);
                 Game.Components.Unlock();
 
@@ -744,7 +748,7 @@ namespace FieldDay {
 
                 if (!IsPaused()) {
                     Game.Components.Lock();
-                    Game.Systems.PreUpdate(Frame.UnscaledDeltaTime, s_UpdateMask);
+                    Game.Systems.PreUpdate(Frame.UnscaledDeltaTime, s_UpdateMask, s_WasLoadingSceneAtFrameStart);
                     Game.Processes.PreUpdate(Frame.UnscaledDeltaTime, s_UpdateMask);
                     Game.Components.Unlock();
 

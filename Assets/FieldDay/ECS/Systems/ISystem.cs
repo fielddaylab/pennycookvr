@@ -50,6 +50,7 @@ namespace FieldDay.Systems {
         public readonly GameLoopPhaseMask PhaseMask;
         public readonly int Order;
         public readonly int CategoryMask;
+        public bool AllowExecutionDuringLoad;
 
         public SysUpdateAttribute(GameLoopPhase phase, int order = 0, int updateMask = Bits.All32) {
             PhaseMask = (GameLoopPhaseMask) (1 << (int) phase);

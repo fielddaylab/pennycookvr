@@ -16,6 +16,7 @@ namespace FieldDay.Animation {
     public sealed class DelayExpensiveAnimationPlayback : SceneCustomData {
         [SerializeField] private ParticleSystem[] m_ParticleSystems;
         [SerializeField] private Animator[] m_Animators;
+        [SerializeField] private SkinnedMeshRenderer[] m_SkinnedMeshes;
 
 #if UNITY_EDITOR
         public override bool Build(Scene scene) {
@@ -45,7 +46,18 @@ namespace FieldDay.Animation {
                 Baking.SetDirty(particle);
             }
 
-            return m_ParticleSystems.Length > 0 || m_Animators.Length > 0;
+            List<SkinnedMeshRenderer> skinnedMeshes = new List<SkinnedMeshRenderer>(64);
+            scene.GetAllComponents<SkinnedMeshRenderer>(skinnedMeshes);
+            skinnedMeshes.RemoveAll((s) => !s.enabled);
+
+            m_SkinnedMeshes = skinnedMeshes.ToArray();
+
+            foreach (var skinned in skinnedMeshes) {
+                skinned.enabled = false;
+                Baking.SetDirty(skinned);
+            }
+
+            return m_ParticleSystems.Length > 0 || m_Animators.Length > 0 || m_SkinnedMeshes.Length > 0;
         }
 #endif // UNITY_EDITOR
 
@@ -56,7 +68,13 @@ namespace FieldDay.Animation {
                 }
             }
 
-            foreach(var part in m_ParticleSystems) {
+            foreach (var skinnedMesh in m_SkinnedMeshes) {
+                if (skinnedMesh) {
+                    skinnedMesh.enabled = true;
+                }
+            }
+
+            foreach (var part in m_ParticleSystems) {
                 if (part) {
                     var emission = part.emission;
                     emission.enabled = true;

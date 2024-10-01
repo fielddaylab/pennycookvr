@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 870362727056215749}
   - component: {fileID: 3220640563713708072}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: MainCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,7 +171,36 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -4656186195409834118, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1785037183739768585}
+    - targetCorrespondingSourceObject: {fileID: 8155018614974114322, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 841382286569631053}
   m_SourcePrefab: {fileID: 100100000, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+--- !u!1 &3065283532556205356 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8155018614974114322, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+  m_PrefabInstance: {fileID: 6604072663585855294}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &841382286569631053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3065283532556205356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37b41727217c1b143af077e09566a9a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 6218035414955184287}
+  SkinnedMesh: {fileID: 6240824283067790500}
+  MeshRenderer: {fileID: 0}
+  MeshFilter: {fileID: 0}
+--- !u!137 &6240824283067790500 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 954127080336139162, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+  m_PrefabInstance: {fileID: 6604072663585855294}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6298012263750707823 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
@@ -211,6 +240,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Id:
+    m_Source: 
+    m_HashValue: 0
+  m_ClassName:
     m_Source: 
     m_HashValue: 0
 --- !u!114 &8588681338419978210

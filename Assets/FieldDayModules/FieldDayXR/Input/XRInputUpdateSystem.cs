@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.XR;
 
 namespace FieldDay.XR {
-    [SysUpdate(GameLoopPhaseMask.FixedUpdate | GameLoopPhaseMask.Update | GameLoopPhaseMask.ApplicationPreRender, -8000)]
+    [SysUpdate(GameLoopPhaseMask.DebugUpdate | GameLoopPhaseMask.FixedUpdate | GameLoopPhaseMask.Update | GameLoopPhaseMask.ApplicationPreRender, -8000, AllowExecutionDuringLoad = true)]
     public class XRInputUpdateSystem : SharedStateSystemBehaviour<XRInputState> {
         private readonly List<XRNodeState> m_NodeStateWorkList = new List<XRNodeState>(8);
 

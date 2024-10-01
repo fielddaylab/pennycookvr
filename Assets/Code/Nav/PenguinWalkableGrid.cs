@@ -95,16 +95,17 @@ namespace Pennycook {
 #endif // UNITY_EDITOR
     }
 
+    [StructLayout(LayoutKind.Explicit)]
     public readonly struct NavRegionGrid {
-        private readonly ulong _Alignment;
-        public readonly Vector3 MinPos;
-        public readonly Vector3 Size;
-        public readonly int CountX;
-        public readonly int CountZ;
-        public readonly float Resolution;
+        [FieldOffset(0)] private readonly ulong _Align;
+        [FieldOffset(0)] public readonly Vector3 MinPos;
+        [FieldOffset(12)] public readonly Vector3 Size;
+        [FieldOffset(24)] public readonly int CountX;
+        [FieldOffset(28)] public readonly int CountZ;
+        [FieldOffset(32)] public readonly float Resolution;
 
         public NavRegionGrid(Vector3 offset, Vector3 size, float resolution) {
-            _Alignment = 0;
+            _Align = 0;
             MinPos = offset - size / 2;
             Size = size;
             Resolution = resolution;

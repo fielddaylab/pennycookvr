@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace FieldDay.Vox {
-    [SysUpdate(GameLoopPhaseMask.PreUpdate | GameLoopPhaseMask.UnscaledUpdate | GameLoopPhaseMask.UnscaledLateUpdate, 1000)]
+    [SysUpdate(GameLoopPhaseMask.PreUpdate | GameLoopPhaseMask.UnscaledUpdate | GameLoopPhaseMask.UnscaledLateUpdate, 1000, AllowExecutionDuringLoad = true)]
     internal class VoxLoadingSystem : ISystem {
         public bool HasWork() {
             return VoxUtility.DB != null;
