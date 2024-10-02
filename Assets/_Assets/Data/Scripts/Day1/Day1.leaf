@@ -38,7 +38,7 @@ $set	chapter:hasTalkedToMargo = true
 {@Margo}    Well, yah, last I checked.  $[Day1/Tent/Margo_8]
 {@Margo}    What’s wrong? Do I got cookies stuck in my teeth or somethin’?  $[Day1/Tent/Margo_9]
 {@Margo}    Aw, relax, kiddo, I’m jokin’. Just a little data humor for ya.  $[Day1/Tent/Margo_10]
-{@Player}   I've heard about you. They said you’re one of the leading penguin researchers in the world! I had no idea you were a computer.   $[Day1/Tent/Player_10]
+{@Player}   I've heard about you. You’re one of the leading penguin researchers in the world! I had no idea you were a tablet.   $[Day1/Tent/Player_10]
 {@Margo}    Feel free to have yerself a look around! This'll be our den for the season.   $[Day1/Tent/Margo_11]
 {@Margo}    Couldja peek out the front door with me? I can't wait to see who's here! $[Day1/Tent/Margo_12]
 {@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
@@ -76,7 +76,7 @@ $call Wait(1)
 $call SetWarpActive(WarpRookery, false)
 $call SetWarpActive(WarpBluffBack, true)
 
-{@Player}   Hah! I've never been so close to penguins before! $[Day1/Rookery/Player_1]
+{@Player}   Hah! I've never been so close to a penguin before! $[Day1/Rookery/Player_1]
 {@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day/Rookery/Partner_1]
 
 {@Partner}  Great! You can head back to the overlook now.   $[Day1/Rookery/Partner_2]
@@ -116,7 +116,7 @@ $while NotIsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
 $endwhile
 
-{@Player}   Now the big ole button! $[Day1/Tent/Player_12]
+{@Player}   And now the big ole button! $[Day1/Tent/Player_12]
 
 $while ButtonNotPressed(BigButton)
 $call Wait(0.5)
