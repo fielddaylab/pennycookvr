@@ -61,6 +61,8 @@ namespace Pennycook {
 
 				if(RepairDesk != null) {
 					Vector3 vTrans = Vector3.up * dir * Vector3.Distance(LastPos, currPos);
+					Debug.Log("Pos: " + RepairDesk.transform.position.y);
+					Debug.Log(vTrans.y);
 					if(RepairDesk.transform.position.y + vTrans.y < MaxMove && RepairDesk.transform.position.y + vTrans.y > MinMove)
 					{
 						RepairDesk.transform.Translate(vTrans, Space.World);
