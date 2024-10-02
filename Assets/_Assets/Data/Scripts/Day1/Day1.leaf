@@ -5,14 +5,15 @@
 @who        Player
 @once
 
+$call ExteriorLighting->Deactivate()
 $call Wait(2)
 
 {@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
-{@Player}   Brr. Lola was right... should've packed an extra sweater.   $[Day1/Tent/Player_2]
-{@Player}   Okay, time to get focused. Those penguins aren’t gonna research themselves. $[Day1/Tent/Player_3]
+{@Player}   Brr. Lola was right though... I should've packed an extra sweater.   $[Day1/Tent/Player_2]
+{@Player}   Alright, time to get focused. Those penguins aren’t gonna research themselves. $[Day1/Tent/Player_3]
 {@Player}   Step one: Find research tent. Check.    $[Day1/Tent/Player_4]
 {@Player}   Step two: Report to Margo, penguin expert and senior researcher.    $[Day1/Tent/Player_5]
-{@Player}   Hmmm. Where is she?     $[Day1/Tent/Player_6]
+{@Player}   Hmmm. But where is she?     $[Day1/Tent/Player_6]
 
 $call SetWarpActive(WarpBluff, true)
 
