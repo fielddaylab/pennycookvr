@@ -49,6 +49,9 @@ $call SetWarpActive(WarpBluff, true)
 @when       targetObject == "WarpTarget-Bluff"
 @once
 
+$call InteriorLighting->Deactivate()
+$call ExteriorLighting->Activate()
+
 $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
@@ -96,6 +99,9 @@ $call SetWarpActive(WarpTent, true)
 @who        Player
 @when       targetObject == "WarpTarget-TentDoor"
 @once
+
+$call InteriorLighting->Activate()
+$call ExteriorLighting->Deactivate()
 
 $call Wait(1)
 $call SetWarpActive(WarpTent, false)
