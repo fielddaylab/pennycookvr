@@ -120,6 +120,23 @@ namespace FieldDay.Scripting {
 
         #endregion // Registration
 
+#region Leaf
+       [LeafMember("Activate")]
+        public void Activate() {
+            gameObject.SetActive(true);
+        }
+
+        [LeafMember("Deactivate")]
+        public void Deactivate() {
+            gameObject.SetActive(false);
+        }
+
+        [LeafMember("ToggleActive")]
+        public void ToggleActive() {
+            gameObject.SetActive(!gameObject.activeSelf);
+        }
+#endregion
+
 #if UNITY_EDITOR
         void IEditorOnlyData.ClearEditorData(bool isDevelopmentBuild) {
             EditorOnlyData.Strip(ref m_Id);

@@ -5,17 +5,20 @@
 @who        Player
 @once
 
+$call ExteriorLighting->Deactivate()
 $call Wait(2)
 
 {@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
-{@Player}   Brr. Lola was right... should've packed an extra sweater.   $[Day1/Tent/Player_2]
-{@Player}   Okay, time to get focused. Those penguins aren’t gonna research themselves. $[Day1/Tent/Player_3]
+{@Player}   Brr. Lola was right though... I should've packed an extra sweater.   $[Day1/Tent/Player_2]
+{@Player}   Alright, time to get focused. Those penguins aren’t gonna research themselves. $[Day1/Tent/Player_3]
 {@Player}   Step one: Find research tent. Check.    $[Day1/Tent/Player_4]
 {@Player}   Step two: Report to Margo, penguin expert and senior researcher.    $[Day1/Tent/Player_5]
-{@Player}   Hmmm. Where is she?     $[Day1/Tent/Player_6]
+{@Player}   Hmmm. But where is she?     $[Day1/Tent/Player_6]
+
+$call SetWarpActive(WarpBluff, true)
 
 :: PickedUpMargo
-@trigger    LiftedTablet
+@trigger    TabletLifted
 @who        Player
 @once
 
@@ -47,16 +50,19 @@ $call SetWarpActive(WarpBluff, true)
 @when       targetObject == "WarpTarget-Bluff"
 @once
 
+$call InteriorLighting->Deactivate()
+$call ExteriorLighting->Activate()
+
 $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
+$call SetWarpActive(WarpRookery, true)
 
 {@Margo}    I can count 'em up for us! Just put me in "Scan" mode and give me a good gander at 'em. $[Day1/Bluff/Margo_1]
 
 {@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny.   $[Day1/Bluff/Partner_1]
 {@Margo}    Let's get on down there and say hello! Find a waypoint in the rookery.  $[Day1/Bluff/Margo_2]
 
-$call SetWarpActive(WarpRookery, true)
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
@@ -67,13 +73,13 @@ $call SetWarpActive(WarpRookery, true)
 $call Wait(1)
 
 $call SetWarpActive(WarpRookery, false)
+$call SetWarpActive(WarpBluffBack, true)
 
 {@Player}   Hah! I've never been so close to penguins before! $[Day1/Rookery/Player_1]
 {@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day/Rookery/Partner_1]
 
 {@Partner}  Great! You can head back to the overlook now.   $[Day1/Rookery/Partner_2]
 
-$call SetWarpActive(WarpBluffBack, true)
 
 :: WarpedBackToTent
 @trigger    AtWarpPoint
@@ -84,16 +90,19 @@ $call SetWarpActive(WarpBluffBack, true)
 $call Wait(1)
 
 $call SetWarpActive(WarpBluffBack, false)
+$call SetWarpActive(WarpTent, true)
 
 {@Margo} Let's get back in the tent and upload that data!   $[Day1/Bluff/Margo_3]
 
-$call SetWarpActive(WarpTent, true)
 
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-TentDoor"
 @once
+
+$call InteriorLighting->Activate()
+$call ExteriorLighting->Deactivate()
 
 $call Wait(1)
 $call SetWarpActive(WarpTent, false)

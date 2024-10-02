@@ -14,7 +14,7 @@ using UnityEngine.XR;
 namespace Pennycook {
 	public class RepairDeskControl : BatchedComponent
 	{
-		/*[SerializeField] GameObject RepairDesk;
+		[SerializeField] GameObject RepairDesk;
 		
 		[SerializeField] float MaxMove = 0.8975f;
 		[SerializeField] float MinMove = 0.615f;
@@ -37,19 +37,9 @@ namespace Pennycook {
 			}
         }
 		
-		void Start() {
-
-		}
-		
-		
-		public void MoveDesk()
-		{ 
-		
-		}
-		
 		void Update() {
 
-			PlayerHandRig handRig = Find.State<PlayerHandRig>();
+			PlayerRig handRig = Find.State<PlayerRig>();
 
 			Vector3 currPos = Vector3.zero;
 
@@ -58,9 +48,9 @@ namespace Pennycook {
 				WasGrabbed = true;
 				
 				if(LeftGrabbed) {
-					currPos = handRig.LeftHand.Visual.position;
+					currPos = handRig.LeftHand.Raw.transform.position;
 				} else {
-					currPos = handRig.RightHand.Visual.position;
+					currPos = handRig.RightHand.Raw.transform.position;
 				}
 				
 
@@ -83,45 +73,29 @@ namespace Pennycook {
 		
 		private void OnGrabPanel(Grabber grabber) {
 			
-			PlayerHandRig handRig = Find.State<PlayerHandRig>();
+			PlayerRig playerRig = Find.State<PlayerRig>();
 			
-			if(grabber == handRig.RightHand.Physics) {
+			if(grabber == playerRig.RightHand.Grabber) {
 				RightGrabbed = true;
-				LastPos = handRig.RightHand.Visual.position;
-				WSAnalytics w = Find.State<WSAnalytics>();
-				if(w != null) {
-                	w.LogGrabWorkBenchHandle(false, RepairDesk.transform.position.y);
-				}
+				LastPos = playerRig.RightHand.Raw.transform.position;
 			}
 			
-			if(grabber == handRig.LeftHand.Physics) {
+			if(grabber == playerRig.LeftHand.Grabber) {
 				LeftGrabbed = true;
-				LastPos = handRig.LeftHand.Visual.position;
-				WSAnalytics w = Find.State<WSAnalytics>();
-				if(w != null) {
-                	w.LogGrabWorkBenchHandle(true, RepairDesk.transform.position.y);
-				}
+				LastPos = playerRig.LeftHand.Raw.transform.position;
 			}	
 		}
 		
 		private void OnReleasePanel(Grabber grabber) {
-			PlayerHandRig handRig = Find.State<PlayerHandRig>();
+			PlayerRig playerRig = Find.State<PlayerRig>();
 			
-			if(grabber == handRig.RightHand.Physics) {
+			if(grabber == playerRig.RightHand.Grabber) {
 				RightGrabbed = false;
-				WSAnalytics w = Find.State<WSAnalytics>();
-				if(w != null) {
-                	w.LogReleaseWorkBenchHandle(false, RepairDesk.transform.position.y);
-				}
 			}
 			
-			if(grabber == handRig.LeftHand.Physics) {
+			if(grabber == playerRig.LeftHand.Grabber) {
 				LeftGrabbed = false;
-				WSAnalytics w = Find.State<WSAnalytics>();
-				if(w != null) {
-                	w.LogReleaseWorkBenchHandle(true, RepairDesk.transform.position.y);
-				}
 			}
-		}*/
+		}
 	}
 }

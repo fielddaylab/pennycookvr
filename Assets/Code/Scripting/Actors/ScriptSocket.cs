@@ -42,7 +42,7 @@ namespace Pennycook {
             ScriptSocket ss = actor.GetComponent<ScriptSocket>();
             Socketable s = socket.GetComponent<Socketable>();
             if(ss != null && s != null) {
-                return !ss.IsSocketedBy(s);
+                return ss.IsSocketedBy(s);
             }
 			return false;
 		}
@@ -52,7 +52,7 @@ namespace Pennycook {
             ScriptSocket ss = actor.GetComponent<ScriptSocket>();
             Socketable s = socket.GetComponent<Socketable>();
             if(ss != null && s != null) {
-                return ss.IsSocketedBy(s);
+                return !ss.IsSocketedBy(s);
             }
 			return false;
 		}
