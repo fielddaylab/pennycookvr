@@ -23,6 +23,7 @@ $call SetWarpActive(WarpBluff, true)
 @once
 
 $call Wait(1)
+$set	chapter:hasTalkedToMargo = true
 
 {@Margo}    Oh, hiya! Welcome to the South Pole, kid!   $[Day1/Tent/Margo_1]
 {@Player}   Oh, uh… I’m not a kid. I’m the new junior researcher here.  $[Day1/Tent/Player_7]

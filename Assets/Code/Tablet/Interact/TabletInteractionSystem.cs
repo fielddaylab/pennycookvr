@@ -46,7 +46,7 @@ namespace Pennycook.Tablet {
         private void DoInteraction(double timestamp) {
             switch (m_StateC.CurrentTool) {
                 case TabletTool.Scan: {
-                    if (TabletInteractionUtility.TryInteract(m_StateB.HighlightedObject.CachedInteraction, timestamp)) {
+                    if (TabletInteractionUtility.TryInteract(m_StateB.HighlightedObject, m_StateB.HighlightedObject.CachedInteraction, timestamp)) {
                         TabletUtility.PlayHaptics(0.3f, 0.05f);
                     }
                     break;
@@ -70,7 +70,7 @@ namespace Pennycook.Tablet {
 
             switch (m_StateC.CurrentTool) {
                 case TabletTool.Scan: {
-                    if (m_StateD.GrippedHandMask.IsEmpty || !m_StateB.HighlightedObject || !m_StateB.HighlightedObject.CachedInteraction || !TabletInteractionUtility.HasInteractions(m_StateB.HighlightedObject.CachedInteraction)) {
+                    if (m_StateD.GrippedHandMask.IsEmpty || !m_StateB.HighlightedObject || !m_StateB.HighlightedObject.CachedInteraction || !TabletInteractionUtility.HasInteractions(m_StateB.HighlightedObject, m_StateB.HighlightedObject.CachedInteraction)) {
                         return TabletInteractionState.State.Unavailable;
                     }
 

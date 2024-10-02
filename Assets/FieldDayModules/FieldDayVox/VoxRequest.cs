@@ -10,7 +10,7 @@ using UnityEngine;
 namespace FieldDay.Vox {
     public struct VoxRequest {
         public StringHash32 LineCode;
-        public string Subtitle;
+        public SubtitleEntry Subtitle;
         public StringHash32 CharacterId;
         
         public VoxPriority Priority;
@@ -161,7 +161,7 @@ namespace FieldDay.Vox {
             return Speak(emitter, new VoxRequest() {
                 LineCode = lineCode,
                 Priority = priority,
-                Subtitle = subtitleFallback,
+                Subtitle = new SubtitleEntry(subtitleFallback),
                 StartPlayback = true,
                 CharacterId = emitter.CharacterId,
             });
@@ -182,7 +182,7 @@ namespace FieldDay.Vox {
             return Speak(emitter, new VoxRequest() {
                 LineCode = lineCode,
                 Priority = priority,
-                Subtitle = subtitleFallback,
+                Subtitle = new SubtitleEntry(subtitleFallback),
                 StartPlayback = true,
                 CharacterId = emitterId
             });
@@ -322,6 +322,14 @@ namespace FieldDay.Vox {
         /// Retrieves the subtitle for the given request.
         /// </summary>
         static public string GetSubtitle(VoxRequestHandle id) {
+            VoxRequest req = GetRequestData(id);
+            return req.Subtitle.Data;
+        }
+
+        /// <summary>
+        /// Retrieves the subtitle for the given request.
+        /// </summary>
+        static public SubtitleEntry GetSubtitleEntry(VoxRequestHandle id) {
             VoxRequest req = GetRequestData(id);
             return req.Subtitle;
         }

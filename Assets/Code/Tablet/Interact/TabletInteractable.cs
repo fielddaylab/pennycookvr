@@ -1,7 +1,9 @@
 using System;
 using BeauRoutine;
 using BeauUtil;
+using FieldDay;
 using FieldDay.Components;
+using FieldDay.Scripting;
 using UnityEngine;
 
 namespace Pennycook.Tablet {
@@ -9,11 +11,19 @@ namespace Pennycook.Tablet {
     public class TabletInteractable : BatchedComponent {
         public bool CanInteract = true;
         public float InteractionCooldown;
+        public TabletInteractableVerb Verb = TabletInteractableVerb.Scan;
 
         [NonSerialized] public double CooldownTimestamp;
 
         public readonly CastableEvent<TabletInteractionArgs> OnInteract = new CastableEvent<TabletInteractionArgs>(1);
         public readonly RingBuffer<Routine> BlockingTasks = new RingBuffer<Routine>(4, RingBufferMode.Expand);
+    }
+
+    public enum TabletInteractableVerb {
+        None,
+        Scan,
+        Identify,
+        Interact
     }
 
     public struct TabletInteractionArgs {
@@ -43,16 +53,39 @@ namespace Pennycook.Tablet {
             return false;
         }
 
-        static public bool HasInteractions(TabletInteractable interactable) {
-            return interactable.OnInteract.Count > 0;
+        static public bool HasInteractions(TabletHighlightable highlightable, TabletInteractable interactable) {
+            if (interactable.OnInteract.Count > 0) {
+                return true;
+            }
+            if (interactable.Verb == TabletInteractableVerb.Identify) {
+                return !highlightable.Identified;
+            }
+            return interactable.Verb != TabletInteractableVerb.None;
         }
 
-        static public bool TryInteract(TabletInteractable interactable, double currentTime) {
+        static public bool TryInteract(TabletHighlightable highlightable, TabletInteractable interactable, double currentTime) {
             if (CanInteract(interactable, currentTime)) {
                 interactable.CooldownTimestamp = currentTime + interactable.InteractionCooldown;
                 interactable.OnInteract.Invoke(new TabletInteractionArgs() {
                     Interactable = interactable
                 });
+
+                bool identified = Ref.Replace(ref highlightable.Identified, true);
+                if (identified) {
+                    TabletUtility.UpdateHighlightLabels(Find.State<TabletHighlightState>(), TabletUtility.GetLabelsForHighlightable(highlightable));
+                }
+
+                var actor = ScriptUtility.Actor(interactable);
+                if (actor != null) {
+                    using (var table = TempVarTable.Alloc()) {
+                        table.ActorInfo(actor);
+                        ScriptUtility.Trigger(TabletTriggers.TabletInteracted, table);
+
+                        if (identified) {
+                            ScriptUtility.Trigger(TabletTriggers.TabletIdentified, table);
+                        }
+                    }
+                }
                 return true;
             }
 

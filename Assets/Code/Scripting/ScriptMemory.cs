@@ -1,6 +1,7 @@
 using BeauUtil.Variants;
 using FieldDay;
 using FieldDay.Scripting;
+using Pennycook.Tablet;
 
 namespace Pennycook {
     static public class ScriptMemory {

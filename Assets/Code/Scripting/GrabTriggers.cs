@@ -22,7 +22,7 @@ namespace Pennycook {
 
         static private void OnGrabbed(Grabbable grabbable, Grabber grabber) {
             using(var table = TempVarTable.Alloc()) {
-                table.Set("objectId", ScriptUtility.ActorId(grabbable));
+                table.ActorInfo(ScriptUtility.Actor(grabbable));
                 table.Set("hand", ChiralityToSymbol[(int) grabber.Chirality]);
                 table.Set("bothHands", grabbable.CurrentGrabberCount >= 2);
                 ScriptUtility.Trigger(ObjectGrabbed, table);
@@ -32,7 +32,7 @@ namespace Pennycook {
         static private void OnDropped(Grabbable grabbable, Grabber grabber) {
             if (grabbable.CurrentGrabberCount == 0) {
                 using (var table = TempVarTable.Alloc()) {
-                    table.Set("objectId", ScriptUtility.ActorId(grabbable));
+                    table.ActorInfo(ScriptUtility.Actor(grabbable));
                     ScriptUtility.Trigger(ObjectDropped, table);
                 }
             }
@@ -40,16 +40,16 @@ namespace Pennycook {
 
         static private void OnSocketed(Socketable socketable, ObjectSocket socket) {
             using(var table = TempVarTable.Alloc()) {
-                table.Set("objectId", ScriptUtility.ActorId(socketable));
-                table.Set("socketId", ScriptUtility.ActorId(socket));
+                table.ActorInfo(ScriptUtility.Actor(socketable));
+                table.ActorInfo(ScriptUtility.Actor(socket), "socketId", "socketType");
                 ScriptUtility.Trigger(ObjectSocketed, table);
             }
         }
 
         static private void OnUnsocketed(Socketable socketable, ObjectSocket socket) {
             using (var table = TempVarTable.Alloc()) {
-                table.Set("objectId", ScriptUtility.ActorId(socketable));
-                table.Set("socketId", ScriptUtility.ActorId(socket));
+                table.ActorInfo(ScriptUtility.Actor(socketable));
+                table.ActorInfo(ScriptUtility.Actor(socket), "socketId", "socketType");
                 ScriptUtility.Trigger(ObjectUnsocketed, table);
             }
         }

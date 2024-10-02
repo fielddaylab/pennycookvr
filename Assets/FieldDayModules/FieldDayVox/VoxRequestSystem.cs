@@ -84,8 +84,6 @@ namespace FieldDay.Vox {
             req.Emitter.AudioHandle = Sfx.PlayFrom(eventId, req.LoadedClip, req.Emitter.Player);
             Log.Debug("[VoxRequestSystem] Playing clip '{0}' from VoxEmitter '{1}'", req.LoadedClip.name, GetDebugName(req.Emitter));
 
-            string subtitle = req.Subtitle; // TODO: use subtitle from file
-
             VoxRequest cachedReq = req;
             VoxRequestHandle handle = new VoxRequestHandle(req.Id);
 

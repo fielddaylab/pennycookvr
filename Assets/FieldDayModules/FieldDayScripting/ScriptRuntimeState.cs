@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using BeauPools;
 using BeauRoutine;
@@ -22,7 +23,7 @@ namespace FieldDay.Scripting {
         internal readonly RingBuffer<LeafThreadHandle> ActiveThreads = new RingBuffer<LeafThreadHandle>(16, RingBufferMode.Expand);
 
         // Actor Tracking
-        internal readonly ScriptActorMap Actors = new ScriptActorMap(16);
+        internal readonly ScriptActorMap<ScriptActor> Actors = new ScriptActorMap<ScriptActor>(16);
 
         // Plugin
         internal ScriptPlugin Plugin;
@@ -191,6 +192,25 @@ namespace FieldDay.Scripting {
             Runtime.Resolver.ClearVar(keyPair);
         }
 
+        /// <summary>
+        /// Reads the variable at the given location.
+        /// </summary>
+        static public Variant ReadVariable(TableKeyPair keyPair, Variant defaultVal = default) {
+            Variant result;
+            if (!Runtime.Resolver.TryResolve(null, keyPair, out result)) {
+                result = defaultVal;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Writes a variable to the given location.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public void WriteVariable(TableKeyPair keyPair, Variant value) {
+            Runtime.Resolver.TryModify(null, keyPair, VariantModifyOperator.Set, value);
+        }
+
         #endregion // Variables
 
         #region Tag Parsing
@@ -219,16 +239,16 @@ namespace FieldDay.Scripting {
         /// <summary>
         /// Locates the actor for the given id.
         /// </summary>
-        static public ILeafActor FindActor(StringHash32 actorId) {
-            Runtime.Actors.TryGet(actorId, out ILeafActor actor);
+        static public ScriptActor FindActor(StringHash32 actorId) {
+            Runtime.Actors.TryGet(actorId, out ScriptActor actor);
             return actor;
         }
 
         /// <summary>
         /// Returns the actor for the given GameObject.
         /// </summary>
-        static public ILeafActor Actor(GameObject go) {
-            if (go.TryGetComponent<ILeafActor>(out var actor)) {
+        static public ScriptActor Actor(GameObject go) {
+            if (go && go.TryGetComponent<ScriptActor>(out var actor)) {
                 return actor;
             }
             return null;
@@ -238,7 +258,7 @@ namespace FieldDay.Scripting {
         /// Returns the actor id for the given GameObject.
         /// </summary>
         static public StringHash32 ActorId(GameObject go) {
-            if (go.TryGetComponent<ILeafActor>(out var actor)) {
+            if (go && go.TryGetComponent<ScriptActor>(out var actor)) {
                 return actor.Id;
             }
             return default;
@@ -247,8 +267,8 @@ namespace FieldDay.Scripting {
         /// <summary>
         /// Returns the actor for the given Component.
         /// </summary>
-        static public ILeafActor Actor(Component comp) {
-            if (comp.TryGetComponent<ILeafActor>(out var actor)) {
+        static public ScriptActor Actor(Component comp) {
+            if (comp && comp.TryGetComponent<ScriptActor>(out var actor)) {
                 return actor;
             }
             return null;
@@ -259,7 +279,7 @@ namespace FieldDay.Scripting {
         /// Returns the actor id for the given Component.
         /// </summary>
         static public StringHash32 ActorId(Component comp) {
-            if (comp.TryGetComponent<ILeafActor>(out var actor)) {
+            if (comp && comp.TryGetComponent<ScriptActor>(out var actor)) {
                 return actor.Id;
             }
             return default;
@@ -277,6 +297,50 @@ namespace FieldDay.Scripting {
         /// </summary>
         static public StringHash32 ActorId(ScriptActor actor) {
             return actor.Id;
+        }
+
+        /// <summary>
+        /// Returns the actor type for the given Component.
+        /// </summary>
+        static public StringHash32 ActorType(Component comp) {
+            if (comp && comp.TryGetComponent<ScriptActor>(out var actor)) {
+                return actor.ClassName;
+            }
+            return default;
+        }
+
+        /// <summary>
+        /// Returns the actor type for the given actor component.
+        /// </summary>
+        static public StringHash32 ActorType(ScriptActorComponent comp) {
+            return comp.Actor.ClassName;
+        }
+
+        /// <summary>
+        /// Returns the actor type for the given actor.
+        /// </summary>
+        static public StringHash32 ActorType(ScriptActor actor) {
+            return actor.ClassName;
+        }
+
+        /// <summary>
+        /// Writes actor parameters to the given temporary variable table.
+        /// </summary>
+        static public void ActorInfo(this TempVarTable table, ScriptActor actor) {
+            table.Set("objectId", actor?.Id ?? StringHash32.Null);
+            table.Set("objectType", actor?.ClassName ?? StringHash32.Null);
+        }
+
+        /// <summary>
+        /// Writes actor parameters to the given temporary variable table.
+        /// </summary>
+        static public void ActorInfo(this TempVarTable table, ScriptActor actor, string idField, string typeField) {
+            if (!string.IsNullOrEmpty(idField)) {
+                table.Set(idField, actor?.Id ?? StringHash32.Null);
+            }
+            if (!string.IsNullOrEmpty(typeField)) {
+                table.Set(typeField, actor?.ClassName ?? StringHash32.Null);
+            }
         }
 
         #endregion // Actors

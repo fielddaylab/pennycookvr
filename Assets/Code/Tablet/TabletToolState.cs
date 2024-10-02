@@ -81,7 +81,7 @@ namespace Pennycook.Tablet {
                 Sfx.Play("Tablet.ModeChanged", Find.State<TabletControlState>().AudioLocation);
                 using (var t = TempVarTable.Alloc()) {
                     t.Set("toolId", TabletToolToStringHash[(int) tool]);
-                    ScriptUtility.Trigger(GameTriggers.ChangedTabletTool, t);
+                    ScriptUtility.Trigger(TabletTriggers.ChangedTabletTool, t);
                 }
             }
         }

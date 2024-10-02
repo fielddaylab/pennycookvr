@@ -17,7 +17,7 @@ namespace Pennycook {
     public sealed class PlayerLookTrackingSystem : SharedStateSystemBehaviour<PlayerLookTracker, PlayerRig, XRInputState> {
         public const int LookMask = LayerMasks.Solid_Mask | LayerMasks.Grabbable_Mask | LayerMasks.Default_Mask
             | LayerMasks.Highlightable_Mask | LayerMasks.Water_Mask | LayerMasks.PlayerHand_Mask
-            | LayerMasks.LookTag_Mask;
+            | LayerMasks.LookTag_Mask | LayerMasks.PenguinBody_Mask;
 
         public override void ProcessWork(float deltaTime) {
             m_StateA.LookRoot.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
@@ -69,8 +69,7 @@ namespace Pennycook {
                 }
                 if (AnalogSignal.Activate(ref currentLookRecord.Signal, deltaTime, m_StateA.LookLatch, attack)) {
                     using(var table = TempVarTable.Alloc()) {
-                        table.Set("objectId", currentFocus.Actor.Id);
-                        table.Set("objectType", currentFocus.Actor.ClassName);
+                        table.ActorInfo(currentFocus.Actor);
                         table.Set("isHeld", isHolding);
                         ScriptUtility.Trigger(GameTriggers.PlayerLookAtObject, table);
                     }

@@ -8,6 +8,7 @@ using BeauUtil.Variants;
 using FieldDay.Vox;
 using Leaf;
 using Leaf.Runtime;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 namespace FieldDay.Scripting {
@@ -70,16 +71,20 @@ namespace FieldDay.Scripting {
                 existingActorThread.Kill();
             }
 
+            StringHash32 who = targetId.IsEmpty ? ((node.Flags & ScriptNodeFlags.AnyTarget) == 0 ? node.TargetId : default(StringHash32)) : targetId;
+
             ScriptThread threadState = m_RuntimeState.ThreadPool.Alloc();
             LeafThreadHandle threadHandle = threadState.Setup(name, actor, localVars);
-            threadState.SetInitialNode(node, targetId);
+            threadState.SetInitialNode(node, who);
             threadState.AttachRoutine(Routine.Start(GameLoop.Host, LeafRuntime.Execute(threadState, node)).SetPhase(RoutinePhase.Manual));
 
-            if (!targetId.IsEmpty) {
-                m_RuntimeState.ActorThreadMap.Threads[targetId] = threadHandle;
+            if (!who.IsEmpty) {
+                m_RuntimeState.ActorThreadMap.Threads[who] = threadHandle;
             }
 
             m_RuntimeState.ActiveThreads.PushBack(threadHandle);
+
+            Log.Msg("[ScriptPlugin] Thread '{0}' spawned", node.FullName);
 
             if (tickImmediately) {
                 threadState.ForceTick();
@@ -209,7 +214,7 @@ namespace FieldDay.Scripting {
                 VoxRequest req = default;
                 req.CharacterId = charId;
                 req.LineCode = line.LineCode;
-                req.Subtitle = tagStr.RichText;
+                req.Subtitle = new SubtitleEntry(tagStr.RichText);
                 req.UnloadAfterPlayback = (thread.PeekNode().Flags & ScriptNodeFlags.Once) != 0;
                 req.StartPlayback = false;
                 req.Priority = ScriptUtility.ScriptPriorityToVoxPriority(thread.Priority());
@@ -240,7 +245,7 @@ namespace FieldDay.Scripting {
                 fakeSubtitleData = new SubtitleDisplayData() {
                     CharacterId = charId,
                     Priority = ScriptUtility.ScriptPriorityToVoxPriority(thread.Priority()),
-                    Subtitle = tagStr.RichText,
+                    Subtitle = new SubtitleEntry(tagStr.RichText),
                     VoxHandle = VoxRequestHandle.Dummy
                 };
             } else {
@@ -291,7 +296,7 @@ namespace FieldDay.Scripting {
                     }
                 }
             } else {
-                float duration = fakeSubtitleData.Subtitle.Length * 0.05f;
+                float duration = fakeSubtitleData.Subtitle.Data.Length * 0.08f;
                 while((duration -= Routine.DeltaTime) > 0 && !thread.PopSkipSingle()) {
                     yield return null;
                 }
@@ -320,7 +325,7 @@ namespace FieldDay.Scripting {
         #region Lookups
 
         public bool TryLookupObject(StringHash32 inObjectId, LeafThreadState inThreadState, out object outObject) {
-            bool result = m_RuntimeState.Actors.TryGet(inObjectId, out ILeafActor actor);
+            bool result = m_RuntimeState.Actors.TryGet(inObjectId, out ScriptActor actor);
             outObject = actor;
             return result;
         }

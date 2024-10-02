@@ -2,16 +2,21 @@ using System;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
+using BeauUtil.Variants;
 using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
+using FieldDay.UI;
 using Leaf.Runtime;
 using TMPro;
 using UnityEngine;
 
 namespace Pennycook.Tablet {
     public class TabletHighlightState : SharedStateComponent, IRegistrationCallbacks {
+        static public readonly TableKeyPair Var_CurrentHighlightId = TableKeyPair.Parse("tablet:highlightedId");
+        static public readonly TableKeyPair Var_CurrentHighlightType = TableKeyPair.Parse("tablet:highlightedType");
+
         public Camera LookCamera;
 
         [Header("Selection Box")]
@@ -39,11 +44,16 @@ namespace Pennycook.Tablet {
         [NonSerialized] public bool IsBoxVisible;
 
         void IRegistrationCallbacks.OnDeregister() {
+            ScriptUtility.UnbindVariable(Var_CurrentHighlightId);
+            ScriptUtility.UnbindVariable(Var_CurrentHighlightType);
         }
 
         void IRegistrationCallbacks.OnRegister() {
             LookCamera.CacheComponent(ref CachedLookCameraTransform);
             CachedHighlightCornerScale = ((RectTransform) HighlightBox.parent).rect.size;
+
+            ScriptUtility.BindVariable(Var_CurrentHighlightId, () => ScriptUtility.ActorId(HighlightedObject));
+            ScriptUtility.BindVariable(Var_CurrentHighlightType, () => ScriptUtility.ActorType(HighlightedObject));
 
             Log.Msg("[TabletHighlightState] Parent size is {0}", CachedHighlightCornerScale);
         }
@@ -179,6 +189,19 @@ namespace Pennycook.Tablet {
             }
             
             return Find.State<TabletHighlightState>().HighlightedObject == h;
+        }
+
+        static public void UpdateHighlightLabels(TabletHighlightState highlight, in TabletHighlightContents contents) {
+            TMPUtility.SetTextAndActive(highlight.HighlightShortLabel, contents.ShortLabel, highlight.HighlightShortLabelGroup);
+            TMPUtility.SetTextAndActive(highlight.DetailsHeader, contents.DetailedHeader);
+            TMPUtility.SetTextAndActive(highlight.DetailsText, contents.DetailedText);
+        }
+
+        static public TabletHighlightContents GetLabelsForHighlightable(TabletHighlightable highlightable) {
+            if (!highlightable.Identified) {
+                return highlightable.UnidentifiedContents;
+            }
+            return highlightable.Contents;
         }
     }
 }

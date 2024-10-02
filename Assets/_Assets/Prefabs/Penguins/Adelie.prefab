@@ -1,5 +1,58 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &746302588214901003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7240909774495699177}
+  - component: {fileID: 4522644986616174549}
+  m_Layer: 18
+  m_Name: HighlightCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7240909774495699177
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746302588214901003}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: -0.107}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6641921480938123477}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4522644986616174549
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746302588214901003}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.6, y: 1.884116, z: 0.6}
+  m_Center: {x: 0, y: 0.9434965, z: 0}
 --- !u!1 &1484344186234813330
 GameObject:
   m_ObjectHideFlags: 0
@@ -149,6 +202,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 870362727056215749}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7240909774495699177}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
       insertIndex: -1
@@ -168,6 +224,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8377525598834550971}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9041391901810414397}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6771242981163294920}
     - targetCorrespondingSourceObject: {fileID: -4656186195409834118, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1785037183739768585}
@@ -194,23 +256,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Animator: {fileID: 6218035414955184287}
   SkinnedMesh: {fileID: 6240824283067790500}
+  SkinnedMeshHasOptimizedBones: 0
   MeshRenderer: {fileID: 0}
   MeshFilter: {fileID: 0}
   WorldSize: 0
   Close:
-    ScreenProportion: 0.4
+    ScreenProportion: 0.25
     Skinning: 4
     Mesh: {fileID: 17011341773282802, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+    Material: {fileID: 0}
     Cull: 0
   Mid:
-    ScreenProportion: 0.2
+    ScreenProportion: 0.1
     Skinning: 2
     Mesh: {fileID: 4300000, guid: c2fbc20d4096800478d9b23873954408, type: 2}
+    Material: {fileID: 0}
     Cull: 0
   Far:
     ScreenProportion: 0
     Skinning: 1
     Mesh: {fileID: 4300000, guid: e12da6d10c8e6834dbdd4b2a6880aa6a, type: 2}
+    Material: {fileID: 0}
     Cull: 0
 --- !u!137 &6240824283067790500 stripped
 SkinnedMeshRenderer:
@@ -259,8 +325,8 @@ MonoBehaviour:
     m_Source: 
     m_HashValue: 0
   m_ClassName:
-    m_Source: 
-    m_HashValue: 0
+    m_Source: Penguin
+    m_HashValue: 3789299231
 --- !u!114 &8588681338419978210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,6 +387,40 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1ce2f9fddd6be348808ccc2ed8de98f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9041391901810414397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6298012263750707823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d633f514aea8a641984b011cf84b2ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HighlightCollider: {fileID: 4522644986616174549}
+  Contents:
+    ShortLabel: Penguin
+    DetailedHeader: Adelie Penguin
+    DetailedText: Penguin species native to Antarctica.
+  UnidentifiedContents:
+    ShortLabel: Penguin
+    DetailedHeader: Adelie Penguin
+    DetailedText: Penguin species native to Antarctica.
+  Identified: 1
+--- !u!114 &6771242981163294920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6298012263750707823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 535012c8e8824a34b83750dc3e12ffad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &6641921480938123477 stripped

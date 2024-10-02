@@ -42,7 +42,7 @@ namespace Pennycook.Tablet {
             }
 
             if (GrippedHandMask.Count == 1) {
-                ScriptUtility.Trigger(GameTriggers.LiftedTablet);
+                ScriptUtility.Trigger(TabletTriggers.LiftedTablet);
             }
         }
 
@@ -51,7 +51,7 @@ namespace Pennycook.Tablet {
                 GrippedHandMask.Unset((int) grabber.Chirality);
 
                 if (GrippedHandMask.IsEmpty) {
-                    ScriptUtility.Trigger(GameTriggers.DroppedTablet);
+                    ScriptUtility.Trigger(TabletTriggers.DroppedTablet);
                 }
             }
         }

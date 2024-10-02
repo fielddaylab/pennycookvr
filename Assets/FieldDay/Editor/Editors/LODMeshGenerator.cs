@@ -118,7 +118,7 @@ namespace FieldDay.Editor {
 
         #region Editor
 
-        [MenuItem("Window/LOD Generator")]
+        [MenuItem("Window/Field Day/LOD Generator")]
         static private void Create() {
             var window = EditorWindow.GetWindow<LODMeshGenerator>();
             window.Show();
@@ -255,6 +255,13 @@ namespace FieldDay.Editor {
                 if ((clearFlags & MeshDataClearFlags.SkinningWeights) != 0) {
                     lod.bindposes = Array.Empty<Matrix4x4>();
                 }
+
+                if (clearFlags == 0) {
+                    // attempt to preserve same vertex format
+                    lod.bindposes = source.bindposes;
+                }
+
+                lod.UploadMeshData(true);
             }
         }
 

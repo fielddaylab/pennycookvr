@@ -65,16 +65,25 @@ namespace Pennycook {
                 LODLevelConfig levelConfig = GetConfigForLevel(element, level);
 
                 Renderer r = element.Renderer;
-                r.enabled = level == LODLevel.Close || (bestLook > -0.2f && !levelConfig.Cull);
+                bool displayRenderer = level == LODLevel.Close || (bestLook > -0.2f && !levelConfig.Cull);
+                r.enabled = displayRenderer;
 
                 if (level != element.LastAppliedLevel) {
                     element.LastAppliedLevel = level;
 
                     if (element.SkinnedMesh) {
                         element.SkinnedMesh.quality = levelConfig.Skinning;
-                        element.SkinnedMesh.sharedMesh = levelConfig.Mesh;
                         element.SkinnedMesh.receiveShadows = level == LODLevel.Close;
                         element.SkinnedMesh.sharedMaterial = levelConfig.Material;
+
+                        if (element.SkinnedMeshHasOptimizedBones) {
+                            element.SkinnedMesh.enabled = false;
+                            element.SkinnedMesh.sharedMesh = null;
+                            element.SkinnedMesh.sharedMesh = levelConfig.Mesh;
+                            element.SkinnedMesh.enabled = displayRenderer;
+                        } else {
+                            element.SkinnedMesh.sharedMesh = levelConfig.Mesh;
+                        }
                     } else if (element.MeshFilter) {
                         element.MeshFilter.sharedMesh = levelConfig.Mesh;
                         element.MeshRenderer.receiveShadows = level == LODLevel.Close;

@@ -6,6 +6,8 @@ using FieldDay.Scripting;
 using FieldDay.SharedState;
 using Pennycook.Tablet;
 using UnityEngine;
+using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace Pennycook {
     public class PlayerMovementState : SharedStateComponent {

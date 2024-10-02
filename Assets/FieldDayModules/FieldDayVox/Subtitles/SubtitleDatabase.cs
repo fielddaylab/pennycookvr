@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace FieldDay.Vox {
     public class SubtitleDatabase : ISharedState, IRegistrationCallbacks, ISceneLoadDependency {
-        internal Dictionary<StringHash32, string> TextMap = new Dictionary<StringHash32, string>();
+        internal Dictionary<StringHash32, SubtitleEntry> TextMap = new Dictionary<StringHash32, SubtitleEntry>();
         internal AsyncHandle FileLoader;
 
         #region IRegistrationCallbacks
@@ -36,6 +36,36 @@ namespace FieldDay.Vox {
         #endregion // ISceneLoadDependency
     }
 
+    public struct SubtitleEntry {
+        public string Data;
+        public SubtitleTimeCodePair[] TimeCodes;
+        public bool IsFallback;
+
+        public SubtitleEntry(string data) {
+            Data = data;
+            TimeCodes = null;
+            IsFallback = true;
+        }
+
+        public SubtitleEntry(string data, SubtitleTimeCodePair[] timing) {
+            Data = data;
+            TimeCodes = timing;
+            IsFallback = false;
+        }
+
+        public SubtitleEntry(string data, SubtitleTimeCodePair[] timing, bool isFallback) {
+            Data = data;
+            TimeCodes = timing;
+            IsFallback = isFallback;
+        }
+    }
+
+    public struct SubtitleTimeCodePair {
+        public float Offset;
+        public float Duration;
+        public OffsetLengthU16 Range;
+    }
+
     static public partial class SubtitleUtility {
         [SharedStateReference] static public SubtitleDatabase DB { get; private set; }
 
@@ -47,12 +77,24 @@ namespace FieldDay.Vox {
         /// <summary>
         /// Finds the subtitle for the given line.
         /// </summary>
-        static public string FindSubtitle(StringHash32 lineCode, string fallback) {
-            string text;
-            if (!DB.TextMap.TryGetValue(lineCode, out text)) {
-                text = fallback;
+        static public SubtitleEntry FindSubtitle(StringHash32 lineCode, string fallback) {
+            SubtitleEntry entry;
+            if (!DB.TextMap.TryGetValue(lineCode, out entry)) {
+                entry.Data = fallback;
+                entry.TimeCodes = null;
             }
-            return text;
+            return entry;
+        }
+
+        /// <summary>
+        /// Finds the subtitle for the given line.
+        /// </summary>
+        static public SubtitleEntry FindSubtitle(StringHash32 lineCode, SubtitleEntry fallback) {
+            SubtitleEntry entry;
+            if (!DB.TextMap.TryGetValue(lineCode, out entry)) {
+                entry = fallback;
+            }
+            return entry;
         }
 
         #region Parser

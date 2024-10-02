@@ -92,14 +92,7 @@ namespace Pennycook.Tablet {
                 highlight.BoxTransitionRoutine.Replace(highlight, FadeBoxIn(highlight));
             }
 
-            highlight.HighlightShortLabelGroup.gameObject.SetActive(true);
-            highlight.HighlightShortLabel.SetText(scannable.ShortLabel);
-
-            highlight.DetailsHeader.gameObject.SetActive(true);
-            highlight.DetailsHeader.SetText(scannable.DetailedHeader);
-
-            highlight.DetailsText.gameObject.SetActive(true);
-            highlight.DetailsText.SetText(scannable.DetailedText);
+            TabletUtility.UpdateHighlightLabels(highlight, TabletUtility.GetLabelsForHighlightable(scannable));
         }
 
         static private void ClearSelection(TabletHighlightState highlight) {

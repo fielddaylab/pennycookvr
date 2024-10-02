@@ -36,7 +36,7 @@ namespace Pennycook {
         #region Handlers
 
         private void HandleDisplayRequest(SubtitleDisplayData data) {
-            if (data.Priority < m_CurrentDisplayData.Priority || string.IsNullOrEmpty(data.Subtitle)) {
+            if (data.Priority < m_CurrentDisplayData.Priority || string.IsNullOrEmpty(data.Subtitle.Data)) {
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace Pennycook {
         #endregion // Handlers
 
         private void SyncDisplayedData(SubtitleDisplayData data) {
-            m_Text.SetText(data.Subtitle);
+            m_Text.SetText(data.Subtitle.Data);
         }
 
         #region Animation
