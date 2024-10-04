@@ -113,6 +113,9 @@ namespace FieldDay.Scripting {
             Game.Scenes.OnMainSceneLateEnable.Register(() => {
                 SceneLocalTable.Clear();
             });
+
+            MethodCache.Load(typeof(ScriptActor));
+            Game.Scenes.RegisterLoadDependency(Async.Schedule(MethodCache.LoadStaticAsync(), AsyncFlags.LowPriority));
         }
 
         #endregion // IRegistrationCallbacks
@@ -462,6 +465,17 @@ namespace FieldDay.Scripting {
         }
 
         #endregion // Stopping
+
+        #region Who
+
+        /// <summary>
+        /// Resolves the target id for a specific thread.
+        /// </summary>
+        static public StringHash32 ResolveThreadTarget(StringHash32 targetId, ScriptNode node) {
+            return targetId.IsEmpty ? ((node.Flags & ScriptNodeFlags.AnyTarget) == 0 ? node.TargetId : default(StringHash32)) : targetId;
+        }
+
+        #endregion // Who
 
         #region Active Threads
 

@@ -47,11 +47,15 @@ namespace Pennycook {
                 }
             }
             //PenguinNav.IsWalkable()
-            
+
+#if UNITY_EDITOR
+
             if (m_StateB.LeftHand.Buttons.IsDownAll(XRHandButtons.PrimaryAxisClick | XRHandButtons.TriggerButton)
                 && m_StateB.RightHand.Buttons.IsDownAll(XRHandButtons.PrimaryAxisClick | XRHandButtons.TriggerButton)) {
                 Debug.Break();
             }
+
+#endif // UNITY_EDITOR
         }
     }
 }

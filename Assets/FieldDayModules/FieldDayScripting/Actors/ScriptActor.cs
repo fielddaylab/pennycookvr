@@ -8,6 +8,7 @@ using Leaf.Runtime;
 using UnityEngine;
 
 namespace FieldDay.Scripting {
+    [DisallowMultipleComponent]
     public sealed class ScriptActor : BatchedComponent, IPoolAllocHandler, IPoolConstructHandler, ILeafActor, IRegistrationCallbacks, IEditorOnlyData {
         #region Inspector
 

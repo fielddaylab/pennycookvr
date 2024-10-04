@@ -8,13 +8,13 @@ using UnityEngine;
 namespace Pennycook.Tablet {
     public class TabletHighlightable : BatchedComponent, IRegistrationCallbacks {
         [Header("Components")]
-        public Collider HighlightCollider;
+        [Required] public Collider HighlightCollider;
 
         [Inline(InlineAttribute.DisplayType.HeaderLabel)]
-        public TabletHighlightContents Contents;
+        public TabletDetailsContent Contents;
 
         [Inline(InlineAttribute.DisplayType.HeaderLabel)]
-        public TabletHighlightContents UnidentifiedContents;
+        public TabletDetailsContent UnidentifiedContents;
 
         [Header("State")]
         public bool Identified;
@@ -23,14 +23,12 @@ namespace Pennycook.Tablet {
         [NonSerialized] public TabletInteractable CachedInteraction;
         [NonSerialized] public TabletCapturable CachedCapture;
         [NonSerialized] public TabletWarpPoint CachedWarp;
-        [NonSerialized] public TabletCountable CachedCountable;
 
         void IRegistrationCallbacks.OnRegister() {
             this.CacheComponent(ref CachedActor);
             this.CacheComponent(ref CachedInteraction);
             this.CacheComponent(ref CachedCapture);
             this.CacheComponent(ref CachedWarp);
-            this.CacheComponent(ref CachedCountable);
         }
 
         void IRegistrationCallbacks.OnDeregister() {
@@ -39,8 +37,7 @@ namespace Pennycook.Tablet {
     }
 
     [Serializable]
-    public struct TabletHighlightContents {
-        public string ShortLabel;
+    public struct TabletDetailsContent {
         public string DetailedHeader;
         [Multiline] public string DetailedText;
     }

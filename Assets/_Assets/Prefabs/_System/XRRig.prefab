@@ -528,7 +528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63397b854741b3d42839b6af23a690fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 3180281700532617652}
+  RefreshRate: {fileID: 0}
 --- !u!1 &5443235157326714308
 GameObject:
   m_ObjectHideFlags: 0
@@ -734,14 +734,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LookRoot: {fileID: 2137271047055412891}
-  RaycastSize: 0.18
-  MinRaycastDistance: 2
+  RaycastSize: 4.8
+  RaycastDistance: 16
+  HitsPerRay: 1
+  RaycastResolution: 10
   LookLatch:
     OnThreshold: 1
-    OffThreshold: 0
+    OffThreshold: 0.4
   LookEnvelope:
-    Attack: 2.5
-    Decay: 3
+    Attack: 2
+    Decay: 1
   HeldObjectLookMultiplier: 2
 --- !u!114 &2529526713095034247
 MonoBehaviour:

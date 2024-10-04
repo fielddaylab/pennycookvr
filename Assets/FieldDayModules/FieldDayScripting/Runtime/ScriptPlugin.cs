@@ -8,7 +8,6 @@ using BeauUtil.Variants;
 using FieldDay.Vox;
 using Leaf;
 using Leaf.Runtime;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 namespace FieldDay.Scripting {
@@ -67,19 +66,25 @@ namespace FieldDay.Scripting {
                 m_RuntimeState.Cutscene.Kill();
             }
 
-            if (!targetId.IsEmpty && m_RuntimeState.ActorThreadMap.Threads.TryGetValue(targetId, out LeafThreadHandle existingActorThread)) {
-                existingActorThread.Kill();
-            }
+            bool isFunction = (node.Flags & ScriptNodeFlags.Function) != 0;
 
-            StringHash32 who = targetId.IsEmpty ? ((node.Flags & ScriptNodeFlags.AnyTarget) == 0 ? node.TargetId : default(StringHash32)) : targetId;
+            StringHash32 who = ScriptUtility.ResolveThreadTarget(targetId, node);
+
+            if (!isFunction) {
+                if (!who.IsEmpty && m_RuntimeState.ActorThreadMap.Threads.TryGetValue(who, out LeafThreadHandle existingActorThread)) {
+                    existingActorThread.Kill();
+                }
+            }
 
             ScriptThread threadState = m_RuntimeState.ThreadPool.Alloc();
             LeafThreadHandle threadHandle = threadState.Setup(name, actor, localVars);
             threadState.SetInitialNode(node, who);
             threadState.AttachRoutine(Routine.Start(GameLoop.Host, LeafRuntime.Execute(threadState, node)).SetPhase(RoutinePhase.Manual));
 
-            if (!who.IsEmpty) {
-                m_RuntimeState.ActorThreadMap.Threads[who] = threadHandle;
+            if (!isFunction) {
+                if (!who.IsEmpty) {
+                    m_RuntimeState.ActorThreadMap.Threads[who] = threadHandle;
+                }
             }
 
             m_RuntimeState.ActiveThreads.PushBack(threadHandle);

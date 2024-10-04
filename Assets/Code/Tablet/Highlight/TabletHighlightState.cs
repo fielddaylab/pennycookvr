@@ -10,6 +10,7 @@ using FieldDay.SharedState;
 using FieldDay.UI;
 using Leaf.Runtime;
 using TMPro;
+using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
 
 namespace Pennycook.Tablet {
@@ -23,10 +24,6 @@ namespace Pennycook.Tablet {
         public RectTransform HighlightBox;
         public CanvasGroup HighlightBoxGroup;
 
-        [Header("Selection Label")]
-        public CanvasGroup HighlightShortLabelGroup;
-        public TMP_Text HighlightShortLabel;
-
         [Header("Details")]
         public TMP_Text DetailsHeader;
         public TMP_Text DetailsText;
@@ -38,6 +35,7 @@ namespace Pennycook.Tablet {
         [NonSerialized] public Transform CachedLookCameraTransform;
         [NonSerialized] public Vector2 CachedHighlightCornerScale;
 
+        [NonSerialized] public RaycastJob RaycastJob;
         [NonSerialized] public TabletHighlightable HighlightedObject;
         [NonSerialized] public Rect TargetHighlightCorners;
         [NonSerialized] public Routine BoxTransitionRoutine;
@@ -69,80 +67,8 @@ namespace Pennycook.Tablet {
         public const int DefaultSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask;
         public const int TravelSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Warpable_Mask;
 
-        static public TabletHighlightable FindBestHighlightableAlongRay(Ray ray, LayerMask mask, float raySize, float minDistance, float maxDistance, out float outDist) {
-            // iterative
-            float distanceSeg = maxDistance / IterationCount;
-            for(int i = 0; i < IterationCount; i++) {
-                float size = raySize * (distanceSeg * (i + 0.5f) / minDistance);
-                float distance = distanceSeg + i * size;
-                Ray r = new Ray(ray.GetPoint(distanceSeg * i - i * size), ray.direction);
-                if (Physics.SphereCast(r, size, out RaycastHit hit, distance, mask)) {
-                    //DebugDraw.AddLine(r.origin, hit.point, Color.red.WithAlpha(0.2f), size * 2f, 0.1f, false);
-                    TabletHighlightable highlightable = hit.collider.GetComponent<TabletHighlightable>();
-                    Rigidbody body;
-                    if (!highlightable && (body = hit.rigidbody)) {
-                        highlightable = body.GetComponent<TabletHighlightable>();
-                    } else {
-                        highlightable = hit.collider.GetComponentInParent<TabletHighlightable>();
-                    }
-                    if (highlightable) {
-                        outDist = distance + hit.distance;
-                        return highlightable;
-                    }
-                } else {
-                    //DebugDraw.AddLine(r.origin, r.GetPoint(distanceSeg), Color.blue.WithAlpha(0.2f), size * 2f, 0.1f, false);
-                }
-            }
-            outDist = -1;
-            return null;
-        }
-
-        static private TabletHighlightable FindBestHighlightableAlongRay_ScoredMethod(Ray ray, LayerMask mask, float maxDistance) {
-            int allCasted = Physics.SphereCastNonAlloc(ray, 1.25f, s_RaycastHitBuffer, maxDistance, mask);
-            if (allCasted == 0) {
-                return null;
-            }
-
-            RaycastHit hit = default;
-            float hitAlignment = 0;
-            for (int i = 0; i < allCasted; i++) {
-                RaycastHit potential = s_RaycastHitBuffer[i];
-                Vector3 potentialPos;
-                Rigidbody body;
-                if ((body = potential.rigidbody)) {
-                    potentialPos = body.position;
-                } else {
-                    potentialPos = potential.collider.bounds.center;
-                }
-
-                float alignment = Vector3.Dot(ray.direction, potentialPos - ray.origin);
-                if (alignment < 0.7f) {
-                    continue;
-                }
-
-                if (alignment > hitAlignment) {
-                    hit = potential;
-                    hitAlignment = alignment;
-                }
-            }
-
-            Array.Clear(s_RaycastHitBuffer, 0, allCasted);
-
-            if (hit.colliderInstanceID != 0) {
-                //DebugDraw.AddLine(ray.origin, hit.point, Color.blue, 0.2f, 0.1f);
-                TabletHighlightable highlightable = hit.collider.GetComponent<TabletHighlightable>();
-                Rigidbody body;
-                if (!highlightable && (body = hit.rigidbody)) {
-                    highlightable = body.GetComponent<TabletHighlightable>();
-                } else {
-                    highlightable = hit.collider.GetComponentInParent<TabletHighlightable>();
-                }
-                return highlightable;
-            } else {
-                return null;
-            }
-        }
-
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+        [Il2CppSetOption(Option.NullChecks, false)]
         static public unsafe Rect CalculateViewportAlignedBoundingBox(Bounds bounds, Camera referenceCamera, Vector2 scale) {
             Vector3* corners = stackalloc Vector3[8];
             Vector3 min = bounds.min, max = bounds.max;
@@ -191,13 +117,12 @@ namespace Pennycook.Tablet {
             return Find.State<TabletHighlightState>().HighlightedObject == h;
         }
 
-        static public void UpdateHighlightLabels(TabletHighlightState highlight, in TabletHighlightContents contents) {
-            TMPUtility.SetTextAndActive(highlight.HighlightShortLabel, contents.ShortLabel, highlight.HighlightShortLabelGroup);
+        static public void UpdateHighlightLabels(TabletHighlightState highlight, in TabletDetailsContent contents) {
             TMPUtility.SetTextAndActive(highlight.DetailsHeader, contents.DetailedHeader);
             TMPUtility.SetTextAndActive(highlight.DetailsText, contents.DetailedText);
         }
 
-        static public TabletHighlightContents GetLabelsForHighlightable(TabletHighlightable highlightable) {
+        static public TabletDetailsContent GetLabelsForHighlightable(TabletHighlightable highlightable) {
             if (!highlightable.Identified) {
                 return highlightable.UnidentifiedContents;
             }

@@ -5,6 +5,7 @@
 @who        Player
 @when       objectType == "CampStove"
 @boostScore 50
+@priority	Low
 @once
 
 {@Player}   I probably should've learned how to cook before I came out here. Least I brought hot sauce! It'll make anything taste good.  $[Day1/LookAt/Stove_Player_1]
@@ -12,8 +13,9 @@
 :: LookAtMargo.1
 @trigger    PlayerLookAt
 @who        Player
-@when       objectType == "Tablet", !chapter:hasTalkedToMargo
+@when       objectType == "Margo", !chapter:hasTalkedToMargo
 @boostScore	8
+@priority	Low
 @once
 
 {@Player}	Hmm. What's this thing for? $[Day1/LookAt/Margo_Player_1]
@@ -21,7 +23,8 @@
 :: LookAtMargo.2
 @trigger    PlayerLookAt
 @who        Player
-@when       objectType == "Tablet", chapter:hasTalkedToMargo
+@when       objectType == "Margo", chapter:hasTalkedToMargo
+@priority	Low
 @once
 
 {@Player}	I wish Margo had games loaded on her operating system. $[Day1/LookAt/Margo_Player_2]
@@ -30,6 +33,7 @@
 @trigger    PlayerLookAt
 @who        Player
 @when       objectType == "PlayerHand"
+@priority	Low
 @once
 
 {@Player}   No frostbite yet... I guess that's a good sign. $[Day1/LookAt/Hands_Player_1]
@@ -38,6 +42,7 @@
 @trigger    PlayerLookAt
 @who        Player
 @when       objectType == "PenguinToy"
+@priority	Low
 @once
 
 {@Player}   Hola, Señor Flippers. We're not in Kansas anymore, huh? $[Day1/LookAt/PenguinToy_Player_1]
@@ -46,6 +51,7 @@
 @trigger    PlayerLookAt
 @who        Player
 @when       objectType == "TentMap"
+@priority	Low
 @once
 
 {@Player}   Hmmm, let's see...
@@ -55,6 +61,7 @@
 @trigger    PlayerLookAt
 @who        Player
 @when       objectType == "FoodShelves"
+@priority	Low
 @once
 
 {@Player}   Ugh, I'm hungry all the time. Staying warm here takes so many calories. I eat twice as much as I ever did at home. $[Day1/LookAt/FoodShelf_Player_1]
@@ -63,6 +70,7 @@
 @trigger    ObjectGrabbed
 @who        Player
 @when       objectType == "CandyBar"
+@priority	Low
 @once
 
 {@Player}   I never ate so many candy bars at home, but I have to to keep my calories up here. $[Day1/Grab/CandyBar_Player_1]
@@ -71,6 +79,7 @@
 @trigger	PlayerLookAt
 @who		Player
 @when		objectType == "BandedPenguin"
+@priority	Low
 @once
 
 {@Player}	This penguin is banded! Must be one of the Fantastic Five. $[Day1/LookAt/BandedPenguin_Player_1]
@@ -79,6 +88,7 @@
 @trigger	PlayerLookAt
 @who		Player
 @when		objectId == "SubadultAdelie"
+@priority	Low
 @once
 
 {@Player}	Looks like this guy's grown up! I wonder if he'll find a mate this summer... Well at least one of us should get to hang out with their girlfriend all summer $[Day1/LookAt/PenguinSubAdult_Player_1]

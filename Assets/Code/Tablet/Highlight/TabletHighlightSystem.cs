@@ -2,13 +2,11 @@ using System.Collections;
 using BeauRoutine;
 using BeauUtil;
 using FieldDay;
-using FieldDay.HID.XR;
-using FieldDay.SharedState;
 using FieldDay.Systems;
 using UnityEngine;
 
 namespace Pennycook.Tablet {
-    [SysUpdate(GameLoopPhase.Update, 10)]
+    [SysUpdate(GameLoopPhaseMask.LateFixedUpdate | GameLoopPhaseMask.LateUpdate, 10)]
     public class TabletHighlightSystem : SharedStateSystemBehaviour<TabletHighlightState, TabletToolState, TabletControlState> {
         public override void ProcessWork(float deltaTime) {
 			bool isGripping = !m_StateC.GrippedHandMask.IsEmpty;
@@ -20,19 +18,30 @@ namespace Pennycook.Tablet {
                 }
             }
 
-            if (Frame.Interval(3) && isGripping && m_StateB.CurrentTool != TabletTool.None) {
-				TabletZoomState zoomState = Find.State<TabletZoomState>();
+            if (GameLoop.IsPhase(GameLoopPhase.LateFixedUpdate)) {
+                if (Frame.Interval(3) && isGripping && m_StateB.CurrentTool != TabletTool.None && !m_StateA.RaycastJob.IsValid()) {
+                    TabletZoomState zoomState = Find.State<TabletZoomState>();
 
-                LayerMask searchMask;
-                if (m_StateB.CurrentTool == TabletTool.Move) {
-                    searchMask = TabletUtility.TravelSearchMask;
-                } else {
-                    searchMask = TabletUtility.DefaultSearchMask;
+                    LayerMask searchMask;
+                    if (m_StateB.CurrentTool == TabletTool.Move) {
+                        searchMask = TabletUtility.TravelSearchMask;
+                    } else {
+                        searchMask = TabletUtility.DefaultSearchMask;
+                    }
+
+                    float coneRadius = zoomState.ZoomMultiplier;
+                    float coneDistance = 20 * zoomState.ZoomMultiplier;
+
+                    m_StateA.CachedLookCameraTransform.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
+                    m_StateA.RaycastJob = RaycastJobs.SmoothConeCast(cameraPos, Geom.Forward(cameraRot), coneRadius, coneDistance, 5, searchMask);
+                    RaycastJobs.Kick(ref m_StateA.RaycastJob);
                 }
-				
-                m_StateA.CachedLookCameraTransform.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
-                Ray r = new Ray(cameraPos, Geom.Forward(cameraRot));
-                TabletHighlightable scannable = TabletUtility.FindBestHighlightableAlongRay(r, searchMask, m_StateA.RaycastSize, m_StateA.RaycastMinDistance, 20 * zoomState.ZoomMultiplier, out float hitDistance);
+                return;
+            }
+
+            if (m_StateA.RaycastJob.IsValid()) {
+                TabletHighlightable scannable = RaycastJobs.Analyze<TabletHighlightable>(ref m_StateA.RaycastJob, out var hit);
+                m_StateA.RaycastJob.Clear();
 
                 if (!scannable) {
                     if (m_StateA.HighlightedObject != null) {
@@ -44,8 +53,8 @@ namespace Pennycook.Tablet {
                     if (m_StateA.HighlightedObject != scannable) {
                         SetSelection(m_StateA, scannable, viewportRect);
 
-                        float vibAmp = Mathf.Clamp(1 - hitDistance / 60, 0.4f, 1) * 0.3f;
-                        TabletUtility.PlayHaptics(vibAmp, 0.1f);
+                        float vibAmp = Mathf.Clamp(1 - hit.distance / 60, 0.4f, 1) * 0.3f;
+                        TabletUtility.PlayHaptics(vibAmp, 0.02f);
                     } else {
                         m_StateA.TargetHighlightCorners = viewportRect;
                     }
@@ -108,8 +117,6 @@ namespace Pennycook.Tablet {
         static private void ClearObjectDetails(TabletHighlightState highlight) {
             highlight.DetailsText.gameObject.SetActive(false);
             highlight.DetailsHeader.gameObject.SetActive(false);
-
-            highlight.HighlightShortLabelGroup.gameObject.SetActive(false);
         }
 
         static private IEnumerator ScaleBoxDown(TabletHighlightState highlight) {

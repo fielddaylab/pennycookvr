@@ -72,7 +72,7 @@ namespace Pennycook.Tablet {
                     ScriptUtility.Trigger(TabletTriggers.ChangedTabletZoom, t);
                 }
 
-                PlayerHaptics.Play(XRHandIndex.Right, 0.1f, 0.03f);
+                PlayerHaptics.Play(XRHandIndex.Right, 0.1f, 0.01f);
             }
         }
     }

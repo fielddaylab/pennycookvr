@@ -8,6 +8,7 @@ using FieldDay.Data;
 using UnityEngine;
 
 namespace FieldDay.Vox {
+    [DisallowMultipleComponent]
     public class VoxEmitter : BatchedComponent, IEditorOnlyData, IRegistrationCallbacks {
         public SerializedHash32 CharacterId;
         [AudioEventRef] public StringHash32 DefaultPlaybackEvent;
