@@ -10,7 +10,6 @@ $call SetAllWarpsActive(false)
 @who        Player
 @once
 
-$call ExteriorLighting->Deactivate()
 $call Wait(2)
 
 {@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
@@ -58,9 +57,6 @@ $call SetWarpActive(WarpBluff, true)
 @when       targetObject == "WarpTarget-Bluff"
 @once
 
-$call InteriorLighting->Deactivate()
-$call ExteriorLighting->Activate()
-
 $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
@@ -68,6 +64,13 @@ $call SetWarpActive(WarpTent, false)
 $call SetWarpActive(WarpRookery, true)
 
 {@Margo}    I can count 'em up for us! Just put me in "Scan" mode and give me a good gander at 'em. $[Day1/Bluff/Margo_1]
+
+
+:: ScannedFromBluff
+@trigger	TabletInteracted
+@who		Player
+@interrupt
+@once
 
 {@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny.   $[Day1/Bluff/Partner_1]
 {@Margo}    Let's get on down there and say hello! Find a waypoint in the rookery.  $[Day1/Bluff/Margo_2]
@@ -83,11 +86,26 @@ $call Wait(1)
 
 $call SetWarpActive(WarpRookery, false)
 $call SetWarpActive(WarpBluffBack, true)
+$call SetWarpActive(WarpRookerySide, true)
+$call SetWarpActive(WarpRookeryCorral, true)
+$call SetWarpActive(WarpRookeryMiddle, true)
+$call SetWarpActive(WarpRookeryFar, true)
+$call SetWarpActive(WarpRookeryBack, true)
 
 {@Player}   Hah! I've never been so close to a penguin before! $[Day1/Rookery/Player_1]
 {@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day/Rookery/Partner_1]
 
+$set	chapter:allIdentified = false
+
+$while chapter:allIdentified == false
+$if IsIdentified(BlueAdelie), IsIdentified(PurpleAdelie), IsIdentified(RedAdelie), IsIdentified(GreenAdelie), IsIdentified(YellowAdelie)
+$set	chapter:allIdentified = true
+$endif
+$call Wait(0.3)
+$endwhile
+
 {@Partner}  Great! You can head back to the overlook now.   $[Day1/Rookery/Partner_2]
+
 $set	chapter:finishedObservations = true
 
 :: WarpedBackToTent
@@ -99,6 +117,13 @@ $set	chapter:finishedObservations = true
 $call Wait(1)
 
 $call SetWarpActive(WarpBluffBack, false)
+$call SetWarpActive(WarpRookery, false)
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpActive(WarpRookerySide, false)
+$call SetWarpActive(WarpRookeryCorral, false)
+$call SetWarpActive(WarpRookeryMiddle, false)
+$call SetWarpActive(WarpRookeryFar, false)
+$call SetWarpActive(WarpRookeryBack, false)
 $call SetWarpActive(WarpTent, true)
 
 {@Margo} Let's get back in the tent and upload that data!   $[Day1/Bluff/Margo_3]
@@ -109,9 +134,6 @@ $call SetWarpActive(WarpTent, true)
 @who        Player
 @when       chapter:finishedObservations, targetObject == "WarpTarget-TentDoor"
 @once
-
-$call InteriorLighting->Activate()
-$call ExteriorLighting->Deactivate()
 
 $call Wait(1)
 $call SetWarpActive(WarpTent, false)
