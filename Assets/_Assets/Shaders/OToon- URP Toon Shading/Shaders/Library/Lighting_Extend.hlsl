@@ -473,19 +473,28 @@ half4 UniversalFragmentPBR_Extend(InputData inputData, SurfaceData surfaceData, 
         #endif
     #endif
 
+    
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, half4(0, 0, 0, 0));
+    
     half3 color = GlobalIllumination(brdfData, inputData.bakedGI, surfaceData.occlusion, inputData.normalWS, inputData.viewDirectionWS);
     
-    color += LightingPhysicallyBased_Extend(brdfData, brdfDataClearCoat,
-    mainLight,
-    inputData.normalWS, inputData.viewDirectionWS,
-    0, specularHighlightsOff, inputData.positionWS, uv, screenUV, otoonSurface);
+        #ifdef _LIGHT_LAYERS
+    uint meshRenderingLayers = GetMeshRenderingLayer();
+
+    if (IsMatchingLightLayer(mainLight.layerMask, meshRenderingLayers))
+        #endif
+    {
+        color += LightingPhysicallyBased_Extend(brdfData, brdfDataClearCoat,
+        mainLight,
+        inputData.normalWS, inputData.viewDirectionWS,
+        0, specularHighlightsOff, inputData.positionWS, uv, screenUV, otoonSurface);
+    }
 
 #if defined(_ADDITIONAL_LIGHTS)
     uint pixelLightCount = GetAdditionalLightsCount();
 
     #if USE_FORWARD_PLUS
-    uint meshRenderingLayers = GetMeshRenderingLayer();
+    
     for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++)
     {
         FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
@@ -570,14 +579,20 @@ half4 UniversalFragmentToon_Extend(InputData inputData, half3 diffuse, half4 spe
 
     InitializeBRDFData(albedo, 1.0 - 1.0 / kDieletricSpec.a, 0, 0, alpha, brdfData);
     half3 color = GlobalIllumination(brdfData, inputData.bakedGI, 1.0, inputData.normalWS, inputData.viewDirectionWS);
-
-    color += LightingToon_Extend(mainLight, albedo, specularGloss, inputData.normalWS, inputData.viewDirectionWS, inputData.positionWS, uv, screenUV, otoonSurface);
+    
+    #ifdef _LIGHT_LAYERS
+    uint meshRenderingLayers = GetMeshRenderingLayer();
+    if (IsMatchingLightLayer(mainLight.layerMask, meshRenderingLayers))
+    #endif
+    {
+        color += LightingToon_Extend(mainLight, albedo, specularGloss, inputData.normalWS, inputData.viewDirectionWS, inputData.positionWS, uv, screenUV, otoonSurface);
+    }
 
     #if defined(_ADDITIONAL_LIGHTS)
         uint pixelLightCount = GetAdditionalLightsCount();
 
         #if USE_FORWARD_PLUS
-        uint meshRenderingLayers = GetMeshRenderingLayer();
+        
         for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++)
         {
             FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
