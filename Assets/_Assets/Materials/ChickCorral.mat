@@ -12,8 +12,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _HALFTONESHAPE_DOT
-  - _OUTLINE
+  - _HALFTONESHAPE_CUSTOM
   - _SPECULAR_COLOR
   m_InvalidKeywords:
   - _SPECULARHIGHLIGHTS_OFF
@@ -73,11 +72,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HalfToneNoiseMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d4881001f1210af43a369c2b10ae20d7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HalfTonePatternMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d4881001f1210af43a369c2b10ae20d7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HatchingNoiseMap:
@@ -166,9 +165,9 @@ Material:
     - _HairSpecularSize: 0.8
     - _HairSpecularSmoothness: 0.1
     - _HalfToneDiffuseStep: 0
-    - _HalfToneEnabled: 0
+    - _HalfToneEnabled: 1
     - _HalfToneIncludeReceivedShadow: 0
-    - _HalfToneShape: 0
+    - _HalfToneShape: 3
     - _HalfToneUvMode: 0
     - _HalftoneFadeDistance: 10
     - _HalftoneFadeToColor: 0
@@ -184,7 +183,7 @@ Material:
     - _NoiseScale: 1
     - _NoiseStrength: 0.1
     - _OcclusionStrength: 1
-    - _OutlineEnabled: 1
+    - _OutlineEnabled: 0
     - _OutlineMode: 0
     - _OutlineWidth: 3.31
     - _OverrideShadowColor: 0
@@ -206,9 +205,9 @@ Material:
     - _SpecShadowStrength: 1
     - _SpecSource: 0
     - _SpecularClipStrength: 0
-    - _SpecularFalloff: 0.548
+    - _SpecularFalloff: 0.586
     - _SpecularHighlights: 0
-    - _SpecularSize: 0.518
+    - _SpecularSize: 0.511
     - _SpherizeNormalEnabled: 0
     - _SrcBlend: 1
     - _StencilComp: 0
@@ -234,7 +233,7 @@ Material:
     - _OutlineDistancFade: {r: -25, g: 50, b: 0, a: 0}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SelectColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ShadowColor: {r: 0, g: 0, b: 0, a: 0.347}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 0.538}
     - _SpecColor: {r: 0.27794588, g: 0.33657888, b: 0.4245283, a: 0.37}
     - _SpherizeNormalOrigin: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
