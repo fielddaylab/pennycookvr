@@ -12,9 +12,10 @@ namespace Pennycook {
 
         [Header("Components")]
         public Animator Animator;
-        public SkinnedMeshRenderer SkinnedMesh;
-        public MeshRenderer MeshRenderer;
-        public MeshFilter MeshFilter;
+        [HideIfField("MeshFilter")] public SkinnedMeshRenderer SkinnedMesh;
+        [ShowIfField("SkinnedMesh")] public bool SkinnedMeshHasOptimizedBones;
+        [HideIfField("SkinnedMesh")] public MeshRenderer MeshRenderer;
+        [HideIfField("SkinnedMesh")] public MeshFilter MeshFilter;
         [HideInInspector] public float WorldSize;
 
         [Header("Configurations")]

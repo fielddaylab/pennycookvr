@@ -334,7 +334,7 @@ namespace FieldDay.Scenes {
         /// </summary>
         public SceneBinding MainScene() {
             if (m_MainScene != null) {
-                return m_MainScene.Scene;
+                return m_MainScene.SceneBinding;
             } else {
                 return default(SceneBinding);
             }

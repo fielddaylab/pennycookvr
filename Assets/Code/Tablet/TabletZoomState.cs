@@ -69,10 +69,10 @@ namespace Pennycook.Tablet {
                 using(var t = TempVarTable.Alloc()) {
                     t.Set("zoomLevel", index);
                     t.Set("zoomMultiplier", zoom);
-                    ScriptUtility.Trigger(GameTriggers.ChangedTabletZoom, t);
+                    ScriptUtility.Trigger(TabletTriggers.ChangedTabletZoom, t);
                 }
 
-                PlayerHaptics.Play(XRHandIndex.Right, 0.1f, 0.03f);
+                PlayerHaptics.Play(XRHandIndex.Right, 0.1f, 0.01f);
             }
         }
     }

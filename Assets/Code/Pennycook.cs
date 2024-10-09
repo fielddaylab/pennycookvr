@@ -15,12 +15,17 @@ namespace Pennycook {
         [InvokeOnBoot]
         static private void OnBoot() {
             XRUtility.SetRefreshRate(90);
+            RaycastJobs.Initialize();
 
             Game.Scenes.OnMainSceneReady.Register(() => {
                 ScriptUtility.Trigger(GameTriggers.SceneReady);
             });
             Game.Scenes.OnMainSceneLateEnable.Register(() => {
                 ScriptUtility.Invoke(GameTriggers.ScenePrepare);
+            });
+
+            GameLoop.OnShutdown.Register(() => {
+                RaycastJobs.Shutdown();
             });
         }
     }

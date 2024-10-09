@@ -8,7 +8,7 @@ namespace FieldDay.Vox {
     public struct SubtitleDisplayData {
         public VoxRequestHandle VoxHandle;
         public StringHash32 CharacterId;
-        public string Subtitle;
+        public SubtitleEntry Subtitle;
         public VoxPriority Priority;
     }
 

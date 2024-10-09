@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 746302588214901003, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6298012263750707823, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: m_Name
       value: Adelie_green Variant
@@ -52,9 +56,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8350485731795820935, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: m_Id.m_Source
+      value: GreenAdelie
+      objectReference: {fileID: 0}
+    - target: {fileID: 8350485731795820935, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: m_Id.m_HashValue
+      value: 1955789634
+      objectReference: {fileID: 0}
+    - target: {fileID: 8350485731795820935, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: m_ClassName.m_Source
+      value: BandedPenguin
+      objectReference: {fileID: 0}
+    - target: {fileID: 8350485731795820935, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: m_ClassName.m_HashValue
+      value: 2679306969
+      objectReference: {fileID: 0}
     - target: {fileID: 8588681338419978210, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: Type
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: Identified
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: DetailedHeader
+      value: Adelie Penguin (Banded)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: Contents.DetailedText
+      value: This penguin is banded with a green band.
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: Contents.DetailedHeader
+      value: Adelie Penguin (Banded)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -62,8 +98,31 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4583261328076242068, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6533108565210216030}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6298012263750707823, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4990994586830944368}
   m_SourcePrefab: {fileID: 100100000, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+--- !u!1 &853218977606860600 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6298012263750707823, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+  m_PrefabInstance: {fileID: 6678898628725757271}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-4990994586830944368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853218977606860600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c0bc643dcce1824198e9d5f264a45a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CanInteract: 1
+  InteractionCooldown: 1
+  Verb: 2
 --- !u!4 &7145863575193397699 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4583261328076242068, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}

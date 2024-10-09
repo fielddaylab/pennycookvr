@@ -8,27 +8,27 @@ namespace FieldDay.Scripting {
     /// <summary>
     /// Set of all registered actors and a map of all named registered actors.
     /// </summary>
-    public class ScriptActorMap {
+    public class ScriptActorMap<TActor> where TActor : class, ILeafActor {
         public readonly HashSet<ILeafActor> AllActors;
-        public readonly Dictionary<StringHash32, ILeafActor> NamedActors;
+        public readonly Dictionary<StringHash32, TActor> NamedActors;
 
         public ScriptActorMap(int capacity) {
             AllActors = new HashSet<ILeafActor>(capacity);
-            NamedActors = MapUtils.Create<StringHash32, ILeafActor>(capacity);
+            NamedActors = MapUtils.Create<StringHash32, TActor>(capacity);
         }
 
         /// <summary>
         /// Registers an actor.
         /// Returns if the actor was successfully registered.
         /// </summary>
-        public bool Register(ILeafActor actor) {
+        public bool Register(TActor actor) {
             if (!AllActors.Add(actor)) {
                 return false;
             }
 
             StringHash32 id = actor.Id;
             if (!id.IsEmpty) {
-                if (NamedActors.TryGetValue(id, out ILeafActor existing)) {
+                if (NamedActors.TryGetValue(id, out TActor existing)) {
                     Log.Error("[ScriptActorMap] Duplicate actor ids - another actor with id '{0}' registered", id.ToDebugString());
                 } else {
                     NamedActors.Add(id, actor);
@@ -44,14 +44,14 @@ namespace FieldDay.Scripting {
         /// Deregisters an actor.
         /// Returns if the actor was successfully removed.
         /// </summary>
-        public bool Deregister(ILeafActor actor) {
+        public bool Deregister(TActor actor) {
             if (!AllActors.Remove(actor)) {
                 return false;
             }
 
             StringHash32 id = actor.Id;
             if (!id.IsEmpty) {
-                if (NamedActors.TryGetValue(id, out ILeafActor existing) && existing == actor) {
+                if (NamedActors.TryGetValue(id, out TActor existing) && existing == actor) {
                     NamedActors.Remove(id);
                     Log.Debug("[ScriptActorMap] Deregistered actor with id '{0}'", id.ToDebugString());
                 }
@@ -64,7 +64,7 @@ namespace FieldDay.Scripting {
         /// <summary>
         /// Attempts to retrieve the actor with the given id.
         /// </summary>
-        public bool TryGet(StringHash32 id, out ILeafActor actor) {
+        public bool TryGet(StringHash32 id, out TActor actor) {
             return NamedActors.TryGetValue(id, out actor);
         }
     }

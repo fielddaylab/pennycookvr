@@ -78,6 +78,11 @@ namespace FieldDay.Scenes {
         /// </summary>
         public Scene Scene { get { return gameObject.scene; } }
 
+        /// <summary>
+        /// Reference to the current scene.
+        /// </summary>
+        public SceneBinding SceneBinding { get; private set; }
+
         #endregion // Temp State
 
         /// <summary>
@@ -134,6 +139,7 @@ namespace FieldDay.Scenes {
             s_Loaded.Add(this);
 
             Scene key = gameObject.scene;
+            SceneBinding = key;
             if (!s_LoadedMap.ContainsKey(key)) {
                 s_LoadedMap.Add(key, this);
                 s_LoadedMapByPath.Add(key.path, this);
@@ -155,6 +161,7 @@ namespace FieldDay.Scenes {
             SubScenes = null;
             DynamicSubscenes = null;
             LateEnable = null;
+            CustomData = null;
             Children.Clear();
             SceneTag = default;
             m_VisitState = VisitFlags.Unloaded;

@@ -8,6 +8,7 @@ using Leaf.Runtime;
 using UnityEngine;
 
 namespace FieldDay.Scripting {
+    [DisallowMultipleComponent]
     public sealed class ScriptActor : BatchedComponent, IPoolAllocHandler, IPoolConstructHandler, ILeafActor, IRegistrationCallbacks, IEditorOnlyData {
         #region Inspector
 
@@ -120,8 +121,9 @@ namespace FieldDay.Scripting {
 
         #endregion // Registration
 
-#region Leaf
-       [LeafMember("Activate")]
+        #region Leaf
+
+        [LeafMember("Activate")]
         public void Activate() {
             gameObject.SetActive(true);
         }
@@ -135,7 +137,8 @@ namespace FieldDay.Scripting {
         public void ToggleActive() {
             gameObject.SetActive(!gameObject.activeSelf);
         }
-#endregion
+
+        #endregion
 
 #if UNITY_EDITOR
         void IEditorOnlyData.ClearEditorData(bool isDevelopmentBuild) {

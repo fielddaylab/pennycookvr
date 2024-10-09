@@ -201,7 +201,7 @@ namespace Pennycook {
         #region Walk Analyzer
 
         static internal IEnumerator GenerateGridJob(PenguinWalkableGrid grid) {
-            using (Profiling.Time("generating walkable grid", ProfileTimeUnits.Microseconds)) {
+            using (Profiling.Time("generating walkable grid", ProfileTimeUnits.Milliseconds)) {
                 grid.GridParams = new NavRegionGrid(grid.transform.position, grid.Region, grid.Resolution);
                 
                 Log.Msg("Voxel Count {0}x{1}={2}", grid.GridParams.CountX, grid.GridParams.CountZ, grid.GridParams.Count);
@@ -253,9 +253,12 @@ namespace Pennycook {
                     grid.WalkableGrid.Clear();
                     Unsafe.Clear(grid.Height);
 
+                    int execStride = grid.GridParams.CountX * 5;
                     for (int i = 0; i < grid.GridParams.Count; i++) {
                         TryAddRaycast(grid, i);
-                        yield return null;
+                        if ((i + 1) % execStride == 0) {
+                            yield return null;
+                        }
                     }
                 }
 
