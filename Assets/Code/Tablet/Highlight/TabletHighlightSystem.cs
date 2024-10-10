@@ -10,9 +10,10 @@ namespace Pennycook.Tablet {
     public class TabletHighlightSystem : SharedStateSystemBehaviour<TabletHighlightState, TabletToolState, TabletControlState> {
         public override void ProcessWork(float deltaTime) {
 			bool isGripping = !m_StateC.GrippedHandMask.IsEmpty;
-			
+            LayerMask searchMask = m_StateB.CurrentToolDef.RaycastMask;
+
             if (!ReferenceEquals(m_StateA.HighlightedObject, null)) {
-                if (!m_StateA.HighlightedObject || !m_StateA.HighlightedObject.isActiveAndEnabled || !isGripping || m_StateB.CurrentTool == TabletTool.None) {
+                if (!m_StateA.HighlightedObject || !m_StateA.HighlightedObject.isActiveAndEnabled || !isGripping || m_StateB.CurrentTool == TabletTool.None || searchMask == 0) {
                     ClearSelection(m_StateA);
                     return;
                 }
@@ -20,7 +21,6 @@ namespace Pennycook.Tablet {
 
             if (GameLoop.IsPhase(GameLoopPhase.LateFixedUpdate)) {
                 if (Frame.Interval(3) && isGripping && m_StateB.CurrentTool != TabletTool.None && !m_StateA.RaycastJob.IsValid()) {
-                    LayerMask searchMask = m_StateB.CurrentToolDef.RaycastMask;
                     if (searchMask != 0) {
                         TabletZoomState zoomState = Find.State<TabletZoomState>();
                         float coneRadius = zoomState.ZoomMultiplier;
