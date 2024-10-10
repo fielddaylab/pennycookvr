@@ -133,7 +133,6 @@ $call SetWarpActive(WarpTent, true)
 @trigger    AtWarpPoint
 @who        Player
 @when       chapter:finishedObservations, targetObject == "WarpTarget-TentDoor"
-@once
 
 $call Wait(1)
 $call SetWarpActive(WarpTent, false)
