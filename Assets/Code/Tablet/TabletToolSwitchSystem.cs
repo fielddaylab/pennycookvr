@@ -14,7 +14,7 @@ namespace Pennycook.Tablet {
             }
 
             int shift = 0;
-            if (TabletUtility.ConsumeButtonPress(XRHandButtons.TriggerButton)) {
+            if (TabletUtility.ConsumeButtonPress(XRHandButtons.Primary)) {
                 shift = 1;
             }
 

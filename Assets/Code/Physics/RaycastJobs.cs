@@ -222,11 +222,11 @@ namespace Pennycook {
             jobHandle.Complete();
             
             foreach (var scored in scoring) {
-                if (scored.Index < 0) {
+                if (scored.Index < 0 || scored.Index >= hits.Length) {
                     break;
                 }
 
-                RaycastHit hit = hits[scored.Index];
+                RaycastHit hit = hits.SafeGet(scored.Index);
                 TComponent component = RetrieveFromRaycast<TComponent>(hit);
 
                 if (component) {
@@ -247,11 +247,11 @@ namespace Pennycook {
             jobHandle.Complete();
 
             foreach (var scored in scoring) {
-                if (scored.Index < 0) {
+                if (scored.Index < 0 || scored.Index >= hits.Length) {
                     break;
                 }
 
-                RaycastHit hit = hits[scored.Index];
+                RaycastHit hit = hits.SafeGet(scored.Index);
                 TComponent component = RetrieveFromRaycast<TComponent>(hit);
 
                 if (component && predicate(component, predicateArg)) {
@@ -272,11 +272,11 @@ namespace Pennycook {
             jobHandle.Complete();
 
             foreach (var scored in scoring) {
-                if (scored.Index < 0) {
+                if (scored.Index < 0 || scored.Index >= hits.Length) {
                     break;
                 }
 
-                RaycastHit hit = hits[scored.Index];
+                RaycastHit hit = hits.SafeGet(scored.Index);
                 TComponent component = RetrieveFromRaycast<TComponent>(hit);
 
                 if (component && predicate(component)) {

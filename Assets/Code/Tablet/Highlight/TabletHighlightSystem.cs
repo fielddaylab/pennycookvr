@@ -115,6 +115,8 @@ namespace Pennycook.Tablet {
         static private void ClearObjectDetails(TabletHighlightState highlight) {
             highlight.DetailsText.gameObject.SetActive(false);
             highlight.DetailsHeader.gameObject.SetActive(false);
+            highlight.DetailsGroup.SetActive(false);
+            highlight.GoalsGroup.SetActive(true);
         }
 
         static private IEnumerator ScaleBoxDown(TabletHighlightState highlight) {

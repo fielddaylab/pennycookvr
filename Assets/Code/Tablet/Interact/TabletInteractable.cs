@@ -73,6 +73,8 @@ namespace Pennycook.Tablet {
                 bool identified = Ref.Replace(ref highlightable.Identified, true);
                 if (identified) {
                     TabletUtility.UpdateHighlightLabels(Find.State<TabletHighlightState>(), TabletUtility.GetLabelsForHighlightable(highlightable));
+                    TabletUtility.PlayHaptics(0.3f, 0.08f);
+                    TabletUtility.PlaySfx("Tablet.Identified");
                 }
 
                 var actor = ScriptUtility.Actor(interactable);

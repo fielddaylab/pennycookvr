@@ -17,7 +17,7 @@ namespace Pennycook {
                 return;
             }
 
-            int collided = Physics.OverlapSphereNonAlloc(m_StateA.BodyCollider.transform.position, 1, s_ColliderWorkList, LayerMasks.Warpable_Mask, QueryTriggerInteraction.Collide);
+            int collided = Physics.OverlapSphereNonAlloc(m_StateA.BodyCollider.transform.position, 1.2f, s_ColliderWorkList, LayerMasks.Warpable_Mask, QueryTriggerInteraction.Collide);
             if (collided > 0) {
                 TabletWarpPoint warpPoint = s_ColliderWorkList[0].GetComponentInParent<TabletWarpPoint>();
                 if (warpPoint) {

@@ -22,10 +22,10 @@ namespace Pennycook.Tablet {
                 bool isPressing = false;
                 switch (m_StateC.CurrentToolDef.InteractMode) {
                     case TabletToolInteractionMode.Press:
-                        isPressing = TabletUtility.ConsumeButtonPress(XRHandButtons.Primary);
+                        isPressing = TabletUtility.ConsumeButtonPress(XRHandButtons.TriggerButton);
                         break;
                     case TabletToolInteractionMode.Hold:
-                        isPressing = TabletUtility.IsButtonHeld(XRHandButtons.Primary);
+                        isPressing = TabletUtility.IsButtonHeld(XRHandButtons.TriggerButton);
                         break;
                 }
 

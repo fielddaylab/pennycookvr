@@ -7,6 +7,7 @@ using FieldDay.Audio;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Pennycook.Tablet {
     public class TabletToolState : SharedStateComponent, IRegistrationCallbacks {
@@ -22,6 +23,7 @@ namespace Pennycook.Tablet {
         [Header("Config")]
         public ToolConfig[] Configs;
         public ShapeGraphic Outline;
+        public Graphic[] ToolColorTinted;
 
         [Header("State")]
         public TabletTool CurrentTool;
@@ -72,6 +74,11 @@ namespace Pennycook.Tablet {
                 tool = config.Tool;
                 toolState.Outline.color = config.ThemeColor;
                 toolState.Outline.enabled = true;
+
+                foreach(var graphic in toolState.ToolColorTinted) {
+                    graphic.color = config.ThemeColor;
+                }
+
             } else {
                 toolState.Outline.enabled = false;
             }

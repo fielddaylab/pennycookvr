@@ -25,6 +25,8 @@ namespace Pennycook.Tablet {
         public CanvasGroup HighlightBoxGroup;
 
         [Header("Details")]
+        public GameObject DetailsGroup;
+        public GameObject GoalsGroup;
         public TMP_Text DetailsHeader;
         public TMP_Text DetailsText;
 
@@ -120,6 +122,8 @@ namespace Pennycook.Tablet {
         static public void UpdateHighlightLabels(TabletHighlightState highlight, in TabletDetailsContent contents) {
             TMPUtility.SetTextAndActive(highlight.DetailsHeader, contents.DetailedHeader);
             TMPUtility.SetTextAndActive(highlight.DetailsText, contents.DetailedText);
+            highlight.DetailsGroup.SetActive(true);
+            highlight.GoalsGroup.SetActive(false);
         }
 
         static public TabletDetailsContent GetLabelsForHighlightable(TabletHighlightable highlightable) {
