@@ -108,6 +108,7 @@ namespace Pennycook {
                     affectedPoints.Add(current);
                 }
 
+                Log.Msg("[PlayerMovementUtility] Warp changing from '{0}' to '{1}'", state.CurrentWarp, warpPoint);
                 state.CurrentWarp = warpPoint;
 
                 if (warpPoint != null) {
