@@ -21,13 +21,14 @@ namespace Pennycook.Tablet {
 
         [Header("Config")]
         public ToolConfig[] Configs;
-        public RectGraphic Outline;
+        public ShapeGraphic Outline;
 
         [Header("State")]
         public TabletTool CurrentTool;
         public bool AllowToolSwitch = true;
 
         [NonSerialized] public int CurrentToolIndex = -1;
+        [NonSerialized] public TabletToolDefinition CurrentToolDef = TabletToolDefinitions.None;
 
         void IRegistrationCallbacks.OnDeregister() {
             ScriptUtility.UnbindVariable(Var_CurrentTool);
@@ -76,9 +77,11 @@ namespace Pennycook.Tablet {
             }
 
             toolState.CurrentTool = tool;
+            toolState.CurrentToolDef = TabletToolDefinitions.Get(tool);
 
             if (playFeedback) {
-                Sfx.Play("Tablet.ModeChanged", Find.State<TabletControlState>().AudioLocation);
+                TabletUtility.PlaySfx("Tablet.ModeChanged");
+                TabletUtility.PlayHaptics(0.1f, 0.01f);
                 using (var t = TempVarTable.Alloc()) {
                     t.Set("toolId", TabletToolToStringHash[(int) tool]);
                     ScriptUtility.Trigger(TabletTriggers.ChangedTabletTool, t);

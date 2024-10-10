@@ -25,9 +25,4 @@ namespace Pennycook.Tablet {
         void IRegistrationCallbacks.OnRegister() {
         }
     }
-
-    public struct TabletInteractionDisplayParameters {
-        public TabletDetailsContent Contents;
-        public string Verb;
-    }
 }

@@ -27,7 +27,8 @@ namespace Pennycook {
 
         [NonSerialized] public Transform CachedTransform;
         [NonSerialized] public LODLevel LastAppliedLevel;
-        [NonSerialized] public AnimatorStateSnapshot CachedAnimatorState;
+
+        public readonly CastableEvent<LODLevel> OnLevelChanged = new CastableEvent<LODLevel>();
 
         public Renderer Renderer {
             get { return SkinnedMesh ? SkinnedMesh : MeshRenderer; }
@@ -66,7 +67,7 @@ namespace Pennycook {
             }
 
             if (Animator) {
-                CachedAnimatorState = new AnimatorStateSnapshot(Animator);
+                Animator.keepAnimatorStateOnDisable = true;
             }
 
             return null;

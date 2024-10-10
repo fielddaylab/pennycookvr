@@ -1,10 +1,12 @@
 using System;
 using BeauUtil;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.HID.XR;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using FieldDay.VRHands;
+using FieldDay.XR;
 using UnityEngine;
 
 namespace Pennycook.Tablet {
@@ -66,6 +68,42 @@ namespace Pennycook.Tablet {
             if (ctrl.GrippedHandMask.IsSet((int) XRHandIndex.Right)) {
                 PlayerHaptics.Play(XRHandIndex.Right, amp, duration);
             }
+        }
+
+        static public bool ConsumeButtonPress(XRHandButtons buttons) {
+            TabletControlState ctrl = Find.State<TabletControlState>();
+            XRInputState input = Find.State<XRInputState>();
+            if (ctrl.GrippedHandMask.IsSet((int) XRHandIndex.Left)) {
+                if (input.LeftHand.Buttons.ConsumePress(buttons)) {
+                    return true;
+                }
+            }
+            if (ctrl.GrippedHandMask.IsSet((int) XRHandIndex.Right)) {
+                if (input.RightHand.Buttons.ConsumePress(buttons)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        static public bool IsButtonHeld(XRHandButtons buttons) {
+            TabletControlState ctrl = Find.State<TabletControlState>();
+            XRInputState input = Find.State<XRInputState>();
+            if (ctrl.GrippedHandMask.IsSet((int) XRHandIndex.Left)) {
+                if (input.LeftHand.Buttons.IsDown(buttons)) {
+                    return true;
+                }
+            }
+            if (ctrl.GrippedHandMask.IsSet((int) XRHandIndex.Right)) {
+                if (input.RightHand.Buttons.IsDown(buttons)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        static public void PlaySfx(StringHash32 sfxId) {
+            Sfx.Play(sfxId, Find.State<TabletControlState>().AudioLocation);
         }
     }
 }

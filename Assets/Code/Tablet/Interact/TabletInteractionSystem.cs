@@ -10,6 +10,39 @@ namespace Pennycook.Tablet {
         public override void ProcessWork(float deltaTime) {
             double ts = Time.timeAsDouble;
 
+            TabletInteractionState.State desiredState = UpdateState(ts);
+
+            var updateFunc = m_StateC.CurrentToolDef.Update;
+            if (updateFunc != null && desiredState != TabletInteractionState.State.Disabled) {
+                updateFunc(m_StateB.HighlightedObject, m_StateD, desiredState);
+                desiredState = UpdateState(ts);
+            }
+
+            if (desiredState == TabletInteractionState.State.Available) {
+                bool isPressing = false;
+                switch (m_StateC.CurrentToolDef.InteractMode) {
+                    case TabletToolInteractionMode.Press:
+                        isPressing = TabletUtility.ConsumeButtonPress(XRHandButtons.Primary);
+                        break;
+                    case TabletToolInteractionMode.Hold:
+                        isPressing = TabletUtility.IsButtonHeld(XRHandButtons.Primary);
+                        break;
+                }
+
+                if (isPressing) {
+                    DoInteraction(ts);
+                }
+            }
+        }
+
+        private void DoInteraction(double timestamp) {
+            var func = m_StateC.CurrentToolDef.Interact;
+            if (func != null) {
+                func(m_StateB.HighlightedObject, m_StateD, timestamp);
+            }
+        }
+
+        private TabletInteractionState.State UpdateState(double ts) {
             TabletInteractionState.State desiredState = GetDesiredState(ts);
             if (m_StateA.CurrentState != desiredState) {
                 m_StateA.CurrentState = desiredState;
@@ -22,76 +55,39 @@ namespace Pennycook.Tablet {
                     }
 
                     case TabletInteractionState.State.Waiting: {
+                        string verb = m_StateC.CurrentToolDef.GetVerb?.Invoke(m_StateB.HighlightedObject, desiredState) ?? m_StateC.CurrentToolDef.DefaultVerb;
                         m_StateA.InteractionGroup.gameObject.SetActive(true);
                         m_StateA.InteractionGroup.alpha = 0.5f;
+
+                        m_StateA.InteractionLabel.SetText(verb);
                         break;
                     }
 
                     case TabletInteractionState.State.Available: {
+                        string verb = m_StateC.CurrentToolDef.GetVerb?.Invoke(m_StateB.HighlightedObject, desiredState) ?? m_StateC.CurrentToolDef.DefaultVerb;
                         m_StateA.InteractionGroup.gameObject.SetActive(true);
                         m_StateA.InteractionGroup.alpha = 1;
+
+                        m_StateA.InteractionLabel.SetText(verb);
                         break;
                     }
                 }
             }
-
-            if (desiredState == TabletInteractionState.State.Available && m_StateD.GrippedHandMask.IsSet((int) XRHandIndex.Right)) {
-                XRInputState input = Find.State<XRInputState>();
-                if (input.RightHand.Buttons.ConsumePress(XRHandButtons.Primary)) {
-                    DoInteraction(ts);
-                }
-            }
-        }
-
-        private void DoInteraction(double timestamp) {
-            switch (m_StateC.CurrentTool) {
-                case TabletTool.Scan: {
-                    if (TabletInteractionUtility.TryInteract(m_StateB.HighlightedObject, m_StateB.HighlightedObject.CachedInteraction, timestamp)) {
-                        TabletUtility.PlayHaptics(0.3f, 0.05f);
-                    }
-                    break;
-                }
-
-                case TabletTool.Move: {
-                    PlayerMovementState moveState = Find.State<PlayerMovementState>();
-                    if (PlayerMovementUtility.WarpTo(moveState, m_StateB.HighlightedObject.CachedWarp)) {
-                        TabletUtility.PlayHaptics(0.3f, 0.05f);
-                    }
-                    break;
-                }
-            }
+            return desiredState;
         }
 
         private TabletInteractionState.State GetDesiredState(double timestamp) {
-            PlayerMovementState moveState = Find.State<PlayerMovementState>();
-            if (moveState.CurrentState == PlayerMovementState.State.Warping) {
+            var func = m_StateC.CurrentToolDef.GetState;
+            if (m_StateD.GrippedHandMask.IsEmpty || !m_StateB.HighlightedObject || func == null) {
                 return TabletInteractionState.State.Disabled;
             }
 
-            switch (m_StateC.CurrentTool) {
-                case TabletTool.Scan: {
-                    if (m_StateD.GrippedHandMask.IsEmpty || !m_StateB.HighlightedObject || !m_StateB.HighlightedObject.CachedInteraction || !TabletInteractionUtility.HasInteractions(m_StateB.HighlightedObject, m_StateB.HighlightedObject.CachedInteraction)) {
-                        return TabletInteractionState.State.Unavailable;
-                    }
-
-                    if (!TabletInteractionUtility.CanInteract(m_StateB.HighlightedObject.CachedInteraction, timestamp)) {
-                        return TabletInteractionState.State.Disabled;
-                    }
-
-                    return TabletInteractionState.State.Available;
-                }
-
-                case TabletTool.Move: {
-                    if (m_StateD.GrippedHandMask.IsEmpty || !m_StateB.HighlightedObject || !m_StateB.HighlightedObject.CachedWarp || !m_StateB.HighlightedObject.CachedWarp.CanWarp) {
-                        return TabletInteractionState.State.Unavailable;
-                    }
-
-                    return TabletInteractionState.State.Available;
-                }
-
-                default:
-                    return TabletInteractionState.State.Unavailable;
+            PlayerMovementState moveState = Find.State<PlayerMovementState>();
+            if (moveState.CurrentState == PlayerMovementState.State.Warping || m_StateC.CurrentTool == TabletTool.None) {
+                return TabletInteractionState.State.Disabled;
             }
+
+            return func(m_StateB.HighlightedObject, m_StateD, timestamp); 
         }
     }
 }

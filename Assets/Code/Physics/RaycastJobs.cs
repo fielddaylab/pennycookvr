@@ -210,6 +210,10 @@ namespace Pennycook {
             return Analyze<TComponent, TArg>(job.JobHandle, job.ResultScores, job.Results, predicate, predicateArg, out raycast);
         }
 
+        static public TComponent Analyze<TComponent>(ref RaycastJob job, Predicate<TComponent> predicate, out RaycastHit raycast) where TComponent : Component {
+            return Analyze<TComponent>(job.JobHandle, job.ResultScores, job.Results, predicate, out raycast);
+        }
+
         #endregion // RaycastJob
 
         #region Analysis
@@ -251,6 +255,31 @@ namespace Pennycook {
                 TComponent component = RetrieveFromRaycast<TComponent>(hit);
 
                 if (component && predicate(component, predicateArg)) {
+                    raycast = hit;
+                    return component;
+                }
+            }
+
+            raycast = default;
+            return null;
+        }
+
+        static private TComponent Analyze<TComponent>(JobHandle jobHandle, UnsafeSpan<ScoredIndex> scoring, UnsafeSpan<RaycastHit> hits, Predicate<TComponent> predicate, out RaycastHit raycast) where TComponent : Component {
+            if (predicate == null) {
+                return Analyze<TComponent>(jobHandle, scoring, hits, out raycast);
+            }
+
+            jobHandle.Complete();
+
+            foreach (var scored in scoring) {
+                if (scored.Index < 0) {
+                    break;
+                }
+
+                RaycastHit hit = hits[scored.Index];
+                TComponent component = RetrieveFromRaycast<TComponent>(hit);
+
+                if (component && predicate(component)) {
                     raycast = hit;
                     return component;
                 }

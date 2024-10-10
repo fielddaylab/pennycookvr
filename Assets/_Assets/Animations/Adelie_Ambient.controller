@@ -540,6 +540,7 @@ AnimatorState:
   - {fileID: 1417535512089795592}
   m_StateMachineBehaviours:
   - {fileID: -7127827980638290389}
+  - {fileID: -4800608958766338744}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -688,6 +689,45 @@ MonoBehaviour:
   - FrameBegin: 91
     FrameEnd: 93
   BothFrameRanges: []
+--- !u!114 &-4800608958766338744
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0c9a71d3a86c58479f1af18dd9b5c37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ReferenceClip: {fileID: -8323996540726986320, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+  m_FrameCount: 101
+  m_StepType: 0
+  m_AltFootstepType: 0
+  m_AltFootstepRange: []
+  m_LeftSteps:
+  - Offset: 0
+    Length: 4
+  - Offset: 20
+    Length: 4
+  - Offset: 40
+    Length: 4
+  - Offset: 60
+    Length: 4
+  - Offset: 80
+    Length: 4
+  m_RightSteps:
+  - Offset: 10
+    Length: 4
+  - Offset: 30
+    Length: 4
+  - Offset: 50
+    Length: 4
+  - Offset: 70
+    Length: 4
+  - Offset: 90
+    Length: 4
 --- !u!1107 &-4785076514993114654
 AnimatorStateMachine:
   serializedVersion: 6
@@ -1244,7 +1284,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 1.4244969
+  m_TransitionDuration: 0.5463121
   m_TransitionOffset: 0
   m_ExitTime: 0.49999988
   m_HasExitTime: 0
@@ -1586,6 +1626,25 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &1527768201814659795
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0c9a71d3a86c58479f1af18dd9b5c37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ReferenceClip: {fileID: -8323996540726986320, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+  m_FrameCount: 101
+  m_StepType: 0
+  m_AltFootstepType: 0
+  m_AltFootstepRange: []
+  m_LeftSteps: []
+  m_RightSteps: []
 --- !u!1109 &1743091047721735155
 AnimatorTransition:
   m_ObjectHideFlags: 1

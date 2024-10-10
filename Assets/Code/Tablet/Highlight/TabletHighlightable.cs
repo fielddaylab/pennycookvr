@@ -23,12 +23,14 @@ namespace Pennycook.Tablet {
         [NonSerialized] public TabletInteractable CachedInteraction;
         [NonSerialized] public TabletCapturable CachedCapture;
         [NonSerialized] public TabletWarpPoint CachedWarp;
+        [NonSerialized] public TabletCountable CachedCountable;
 
         void IRegistrationCallbacks.OnRegister() {
             this.CacheComponent(ref CachedActor);
             this.CacheComponent(ref CachedInteraction);
             this.CacheComponent(ref CachedCapture);
             this.CacheComponent(ref CachedWarp);
+            this.CacheComponent(ref CachedCountable);
         }
 
         void IRegistrationCallbacks.OnDeregister() {

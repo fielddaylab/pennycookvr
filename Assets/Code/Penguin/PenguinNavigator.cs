@@ -2,11 +2,12 @@ using System;
 using BeauUtil;
 using FieldDay.Components;
 using FieldDay.Scripting;
+using ScriptableBake;
 using UnityEngine;
 
 namespace Pennycook {
     [RequireComponent(typeof(PenguinBrain))]
-    public sealed class PenguinNavigator : ScriptActorComponent {
+    public sealed class PenguinNavigator : ScriptActorComponent, IBaked {
         public Transform MoveRoot;
         public Transform RotationRoot;
 
@@ -24,9 +25,21 @@ namespace Pennycook {
         [NonSerialized] public float TargetPosTolerance = 0.1f;
         [NonSerialized] public float MidpointPosTolerance = 0.3f;
 
+
         private void Awake() {
             this.CacheComponent(ref Brain);
         }
+
+#if UNITY_EDITOR
+
+        int IBaked.Order { get { return 1000; } }
+
+        bool IBaked.Bake(BakeFlags flags, BakeContext context) {
+            MoveRoot.position = PenguinNav.SnapPositionToAccurateGround(MoveRoot.position, LayerMasks.Terrain_Mask);
+            return true;
+        }
+
+#endif // UNITY_EDITOR
     }
 
     public enum PenguinNavState {

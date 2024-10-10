@@ -839,17 +839,17 @@ MonoBehaviour:
   Configs:
   - Tool: 1
     Label: {fileID: 3597596379368783425}
-    ThemeColor: {r: 1, g: 1, b: 1, a: 1}
-  - Tool: 2
-    Label: {fileID: 2746038367818868648}
-    ThemeColor: {r: 0.5235849, g: 0.78327787, b: 1, a: 1}
-  - Tool: 3
-    Label: {fileID: 4534087335177723987}
-    ThemeColor: {r: 1, g: 0.62920827, b: 0.5518868, a: 1}
+    ThemeColor: {r: 0.08627451, g: 0.7019608, b: 0.627451, a: 1}
   - Tool: 4
     Label: {fileID: 1388785839023419498}
-    ThemeColor: {r: 0.6862745, g: 0.41960785, b: 1, a: 1}
-  Outline: {fileID: 6029387165707558975}
+    ThemeColor: {r: 0.3137255, g: 0.15686275, b: 0.64705884, a: 1}
+  - Tool: 2
+    Label: {fileID: 2746038367818868648}
+    ThemeColor: {r: 0.8431373, g: 0.7176471, b: 0.050980397, a: 1}
+  - Tool: 3
+    Label: {fileID: 4534087335177723987}
+    ThemeColor: {r: 0.086274505, g: 0.7019608, b: 0.16836607, a: 1}
+  Outline: {fileID: 3863518199249817412}
   CurrentTool: 1
   AllowToolSwitch: 1
 --- !u!114 &7961530038549450983
@@ -1159,7 +1159,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4742319713672935714, guid: c033f4dc742ef424f974964b23b2acac, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 218
+      value: 254
       objectReference: {fileID: 0}
     - target: {fileID: 4742319713672935714, guid: c033f4dc742ef424f974964b23b2acac, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1271,7 +1271,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6424289860889935577, guid: c033f4dc742ef424f974964b23b2acac, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 182
+      value: 218
       objectReference: {fileID: 0}
     - target: {fileID: 6424289860889935577, guid: c033f4dc742ef424f974964b23b2acac, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1339,7 +1339,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7816489267248916763, guid: c033f4dc742ef424f974964b23b2acac, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 254
+      value: 182
       objectReference: {fileID: 0}
     - target: {fileID: 7816489267248916763, guid: c033f4dc742ef424f974964b23b2acac, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1484,6 +1484,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db19409391511048aff1560161f1be8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3863518199249817412 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3150464156238121660, guid: c033f4dc742ef424f974964b23b2acac, type: 3}
+  m_PrefabInstance: {fileID: 2172224997557683704}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3cce1025f282c247b38ed00ee6ddc0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!223 &4303638793548892138 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 2710273682822185490, guid: c033f4dc742ef424f974964b23b2acac, type: 3}
@@ -1533,17 +1544,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db19409391511048aff1560161f1be8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6029387165707558975 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5587248115408840135, guid: c033f4dc742ef424f974964b23b2acac, type: 3}
-  m_PrefabInstance: {fileID: 2172224997557683704}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a3ee03a5fada3942b82c53c377b7113, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6971913313836419983 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9143570685697658487, guid: c033f4dc742ef424f974964b23b2acac, type: 3}
@@ -1574,10 +1574,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7856060652681733249}
     m_Modifications:
-    - target: {fileID: 502740287419268331, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: fa18bd8cd5803434eb408f79e20f568e, type: 2}
     - target: {fileID: 572561772316167985, guid: e2b7d64d2fd74ff4c9b22ad1d42288ce, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.1

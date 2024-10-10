@@ -223,6 +223,7 @@ namespace FieldDay.Scripting {
                 req.UnloadAfterPlayback = (thread.PeekNode().Flags & ScriptNodeFlags.Once) != 0;
                 req.StartPlayback = false;
                 req.Priority = ScriptUtility.ScriptPriorityToVoxPriority(thread.Priority());
+                VoxUtility.PushImmediateLoad(line.LineCode);
                 voxHandle = VoxUtility.Speak(vox, req);
                 thread.AssignVox(voxHandle);
                 hadVox = true;

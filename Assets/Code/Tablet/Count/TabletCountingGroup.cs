@@ -4,6 +4,7 @@ using FieldDay.Scripting;
 
 namespace Pennycook.Tablet {
     public sealed class TabletCountingGroup : ScriptActorComponent {
+        [NonSerialized] public TabletCountingGroupState State = TabletCountingGroupState.Inactive;
         [NonSerialized] public int TotalInGroup;
         [NonSerialized] public HashSet<TabletCountable> CurrentlyCounted;
 
@@ -12,5 +13,12 @@ namespace Pennycook.Tablet {
 
             CurrentlyCounted = new HashSet<TabletCountable>(64);
         }
+    }
+
+    public enum TabletCountingGroupState {
+        Inactive,
+        Available,
+        InProgress,
+        Completed
     }
 }

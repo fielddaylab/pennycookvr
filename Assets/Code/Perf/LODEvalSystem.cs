@@ -95,17 +95,13 @@ namespace Pennycook {
                     if (element.Animator) {
                         bool animating = element.Animator.enabled;
                         if (animating != !levelConfig.Cull) {
-                            if (animating) {
-                                element.CachedAnimatorState.Read(element.Animator);
-                                element.Animator.enabled = false;
-                            } else {
-                                element.Animator.enabled = true;
-                                element.CachedAnimatorState.Write(element.Animator);
-                            }
+                            element.Animator.enabled = !animating;
                         }
                     }
 
                     Log.Msg("[LODEvalSystem] Element '{0}' transitioned to lod{1}", element.gameObject.name, (int) level);
+
+                    element.OnLevelChanged.Invoke(level);
                 }
             }
         }

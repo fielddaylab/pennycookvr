@@ -68,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: This is some text. Why it is text? Truly a question worth pondering.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5f27627862d0cc64daa3828f63c4d678, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 8db68ebc9cdc6704d9ad00e41a389059, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 38022efaae954124cbd93c7242f82080, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 7d7a9bc765b300f45b289b4e7919056f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -218,10 +218,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Left: 4
+    m_Right: 4
+    m_Top: 4
+    m_Bottom: 4
   m_ChildAlignment: 7
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
@@ -348,8 +348,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8214931871141249178}
   - component: {fileID: 7729310805253517090}
-  - component: {fileID: 7719744258805212128}
   - component: {fileID: 2278369232822259408}
+  - component: {fileID: 3694813790563782999}
   m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
@@ -384,28 +384,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9159747116456512326}
   m_CullTransparentMesh: 1
---- !u!114 &7719744258805212128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9159747116456512326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a3ee03a5fada3942b82c53c377b7113, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 2345eea6881a0d24ba74b1bf9f89805c, type: 2}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7490196}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 0
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Outline: 0
-  m_Thickness: 1
 --- !u!114 &2278369232822259408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,3 +404,27 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &3694813790563782999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9159747116456512326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3cce1025f282c247b38ed00ee6ddc0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 2100000, guid: 2345eea6881a0d24ba74b1bf9f89805c, type: 2}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.7490196}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_CornerRadius: 12
+  m_Resolution: 4
+  m_Outline: 0
+  m_Thickness: 1

@@ -25,7 +25,7 @@ namespace Pennycook {
                     m_StateA.RaycastJob = RaycastJobs.SmoothConeCast(cameraPos, Geom.Forward(cameraRot), m_StateA.RaycastSize, m_StateA.RaycastDistance, m_StateA.RaycastResolution, LookMask, m_StateA.HitsPerRay, QueryTriggerInteraction.Collide);
                     RaycastJobs.Kick(ref m_StateA.RaycastJob);
                 } else {
-                    m_StateA.RaycastJob = default;
+                    m_StateA.RaycastJob.Clear();
                 }
                 return;
             }

@@ -65,7 +65,7 @@ namespace Pennycook.Tablet {
             zoomState.ZoomMultiplier = zoom;
 
             if (playFeedback && index >= 0) {
-                Sfx.Play(zoomState.ZoomSfx[index], Find.State<TabletControlState>().AudioLocation);
+                TabletUtility.PlaySfx(zoomState.ZoomSfx[index]);
                 using(var t = TempVarTable.Alloc()) {
                     t.Set("zoomLevel", index);
                     t.Set("zoomMultiplier", zoom);

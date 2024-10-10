@@ -108,6 +108,68 @@ CapsuleCollider:
   m_Height: 1.8841157
   m_Direction: 1
   m_Center: {x: 0, y: 0.94349647, z: 0}
+--- !u!1 &2254975769069779583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5780785808713267076}
+  m_Layer: 0
+  m_Name: FootLocatorL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5780785808713267076
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2254975769069779583}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.098675646, y: 0.06888067, z: 0.084408194, w: 0.98913795}
+  m_LocalPosition: {x: 0.025, y: 0.046, z: 0.073}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2532250303765814037}
+  m_LocalEulerAnglesHint: {x: -11.937, y: 7.022, z: 9.02}
+--- !u!1 &4866318124934435731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8788517440574948314}
+  m_Layer: 0
+  m_Name: FootLocatorR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8788517440574948314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4866318124934435731}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.083091475, y: 0.068009324, z: 0.11548964, w: -0.98748815}
+  m_LocalPosition: {x: -0.03, y: 0.057, z: 0.064}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2172382287516833453}
+  m_LocalEulerAnglesHint: {x: -10.359, y: -6.721, z: -12.731}
 --- !u!1001 &6604072663585855294
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -205,6 +267,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7240909774495699177}
+    - targetCorrespondingSourceObject: {fileID: -539801776716444629, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5780785808713267076}
+    - targetCorrespondingSourceObject: {fileID: -4214318982528925293, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8788517440574948314}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
       insertIndex: -1
@@ -230,6 +298,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6771242981163294920}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1663726319701013114}
     - targetCorrespondingSourceObject: {fileID: -4656186195409834118, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1785037183739768585}
@@ -237,6 +308,16 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 841382286569631053}
   m_SourcePrefab: {fileID: 100100000, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+--- !u!4 &2172382287516833453 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4214318982528925293, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+  m_PrefabInstance: {fileID: 6604072663585855294}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2532250303765814037 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -539801776716444629, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+  m_PrefabInstance: {fileID: 6604072663585855294}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3065283532556205356 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8155018614974114322, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
@@ -374,7 +455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveRoot: {fileID: 6641921480938123477}
   RotationRoot: {fileID: 6641921480938123477}
-  MovementSpeed: 1.8
+  MovementSpeed: 1.4
   TurningSpeed: 32
   MaxAngleDeltaToMove: 45
 --- !u!114 &8377525598834550971
@@ -403,11 +484,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightCollider: {fileID: 4522644986616174549}
   Contents:
-    ShortLabel: Penguin
     DetailedHeader: Adelie Penguin
     DetailedText: Penguin species native to Antarctica.
   UnidentifiedContents:
-    ShortLabel: Penguin
     DetailedHeader: Adelie Penguin
     DetailedText: Penguin species native to Antarctica.
   Identified: 1
@@ -423,6 +502,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 535012c8e8824a34b83750dc3e12ffad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1663726319701013114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6298012263750707823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5826fa51feb01d149bd41882e64706eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LeftFoot: {fileID: 5780785808713267076}
+  RightFoot: {fileID: 8788517440574948314}
+  DefaultStep:
+    m_HashValue: 1842619086
+  SoftStep:
+    m_HashValue: 1842619086
+  LiftStep:
+    m_HashValue: 1842619086
 --- !u!4 &6641921480938123477 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}

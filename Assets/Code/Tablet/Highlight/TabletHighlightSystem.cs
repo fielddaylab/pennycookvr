@@ -20,27 +20,25 @@ namespace Pennycook.Tablet {
 
             if (GameLoop.IsPhase(GameLoopPhase.LateFixedUpdate)) {
                 if (Frame.Interval(3) && isGripping && m_StateB.CurrentTool != TabletTool.None && !m_StateA.RaycastJob.IsValid()) {
-                    TabletZoomState zoomState = Find.State<TabletZoomState>();
+                    LayerMask searchMask = m_StateB.CurrentToolDef.RaycastMask;
+                    if (searchMask != 0) {
+                        TabletZoomState zoomState = Find.State<TabletZoomState>();
+                        float coneRadius = zoomState.ZoomMultiplier;
+                        float coneDistance = 20 * zoomState.ZoomMultiplier;
 
-                    LayerMask searchMask;
-                    if (m_StateB.CurrentTool == TabletTool.Move) {
-                        searchMask = TabletUtility.TravelSearchMask;
-                    } else {
-                        searchMask = TabletUtility.DefaultSearchMask;
+                        m_StateA.CachedLookCameraTransform.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
+                        m_StateA.RaycastJob = RaycastJobs.SmoothConeCast(cameraPos, Geom.Forward(cameraRot), coneRadius, coneDistance, 5, searchMask);
+                        RaycastJobs.Kick(ref m_StateA.RaycastJob);
                     }
-
-                    float coneRadius = zoomState.ZoomMultiplier;
-                    float coneDistance = 20 * zoomState.ZoomMultiplier;
-
-                    m_StateA.CachedLookCameraTransform.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
-                    m_StateA.RaycastJob = RaycastJobs.SmoothConeCast(cameraPos, Geom.Forward(cameraRot), coneRadius, coneDistance, 5, searchMask);
-                    RaycastJobs.Kick(ref m_StateA.RaycastJob);
                 }
                 return;
             }
 
             if (m_StateA.RaycastJob.IsValid()) {
-                TabletHighlightable scannable = RaycastJobs.Analyze<TabletHighlightable>(ref m_StateA.RaycastJob, out var hit);
+                TabletHighlightable scannable;
+                RaycastHit hit;
+                scannable = RaycastJobs.Analyze(ref m_StateA.RaycastJob, m_StateB.CurrentToolDef.HighlightPredicate, m_StateA, out hit);
+
                 m_StateA.RaycastJob.Clear();
 
                 if (!scannable) {

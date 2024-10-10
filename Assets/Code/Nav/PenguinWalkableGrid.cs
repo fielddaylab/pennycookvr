@@ -413,17 +413,34 @@ namespace Pennycook {
         /// <summary>
         /// Returns accurate height information at the given position.
         /// </summary>
-        static public bool GetAccurateTerrainAt(Vector3 position, out float y, out float normal) {
+        static public bool GetAccurateTerrainAt(Vector3 position, out float y, out float normalY) {
             position.y += 8;
             Ray ray = new Ray(position, Vector3.down);
             if (!Physics.Raycast(ray, out RaycastHit hit, 16, WalkGrid.RaycastMask)) {
                 y = WalkGrid.DefaultHeight;
-                normal = 1;
+                normalY = 1;
                 return false;
             }
 
             y = hit.point.y;
-            normal = hit.normal.y;
+            normalY = hit.normal.y;
+            return true;
+        }
+
+        /// <summary>
+        /// Returns accurate height information at the given position.
+        /// </summary>
+        static public bool GetAccurateTerrainAt(Vector3 position, out float y, out Vector3 normal) {
+            position.y += 8;
+            Ray ray = new Ray(position, Vector3.down);
+            if (!Physics.Raycast(ray, out RaycastHit hit, 16, WalkGrid.RaycastMask)) {
+                y = WalkGrid.DefaultHeight;
+                normal = Vector3.up;
+                return false;
+            }
+
+            y = hit.point.y;
+            normal = hit.normal;
             return true;
         }
 
@@ -452,10 +469,17 @@ namespace Pennycook {
         /// Snaps the given position to accurateground.
         /// </summary>
         static public Vector3 SnapPositionToAccurateGround(Vector3 position) {
+            return SnapPositionToAccurateGround(position, WalkGrid.RaycastMask);
+        }
+
+        /// <summary>
+        /// Snaps the given position to accurateground.
+        /// </summary>
+        static public Vector3 SnapPositionToAccurateGround(Vector3 position, LayerMask raycastMask) {
             Vector3 rayPoint = position;
             rayPoint.y += 8;
             Ray ray = new Ray(rayPoint, Vector3.down);
-            if (Physics.Raycast(ray, out RaycastHit hit, 16, WalkGrid.RaycastMask)) {
+            if (Physics.Raycast(ray, out RaycastHit hit, 16, raycastMask)) {
                 position.y = hit.point.y;
             }
             return position;
