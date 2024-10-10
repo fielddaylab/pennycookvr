@@ -239,6 +239,10 @@ PrefabInstance:
       value: Adelie
       objectReference: {fileID: 0}
     - target: {fileID: 954127080336139162, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+      propertyPath: m_SkinnedMotionVectors
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 954127080336139162, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: e9cf8e81d856f9f40882688344bc0e99, type: 2}
@@ -457,7 +461,7 @@ MonoBehaviour:
   RotationRoot: {fileID: 6641921480938123477}
   MovementSpeed: 1.4
   TurningSpeed: 32
-  MaxAngleDeltaToMove: 45
+  MaxAngleDeltaToMove: 60
 --- !u!114 &8377525598834550971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -516,6 +520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftFoot: {fileID: 5780785808713267076}
   RightFoot: {fileID: 8788517440574948314}
+  DecalType: 0
   DefaultStep:
     m_HashValue: 1842619086
   SoftStep:

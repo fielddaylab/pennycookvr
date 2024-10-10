@@ -4,22 +4,27 @@ using UnityEngine.UI;
 
 namespace Pennycook {
     public class ModeLabelDisplay : MonoBehaviour {
-        public ColorPaletteTarget2 Targets;
         public LayoutOffset Offset;
+        public RectTransform BG;
 
         [Header("Selected State")]
         public GameObject ExpandedContent;
-        public ColorPalette2 SelectedColors;
-        public Vector2 SelectedOffset;
+        public Vector4 SelectedBGSize;
 
         [Header("Unselected State")]
-        public ColorPalette2 UnselectedColors;
-        public Vector2 UnselectedOffset;
+        public Vector4 UnselectedBGSize;
 
         public void SetState(bool selected) {
             ExpandedContent.SetActive(selected);
-            Offset.Offset2 = selected ? SelectedOffset : UnselectedOffset;
-            ColorPalette.Apply(selected ? SelectedColors : UnselectedColors, Targets);
+
+            Vector2 offsetMin, offsetMax;
+            Vector4 offsets = selected ? SelectedBGSize : UnselectedBGSize;
+
+            offsetMin = new Vector2(offsets.x, offsets.y);
+            offsetMax = new Vector2(offsets.z, offsets.w);
+
+            BG.offsetMin = offsetMin;
+            BG.offsetMax = offsetMax;
         }
     }
 }
