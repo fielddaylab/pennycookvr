@@ -41,13 +41,17 @@ namespace Pennycook.Animation {
 
             if (isLeft) {
                 Sfx.PlayDetached(stepSfx, component.LeftFoot);
-                VFXUtility.QueueFootstepDecal(component.LeftFoot, component.DecalType | FootstepDecalType.LeftFoot);
+                if (component.DecalType != 0) {
+                    VFXUtility.QueueFootstepDecal(component.LeftFoot, component.DecalType | FootstepDecalType.LeftFoot);
+                }
                 // TODO: decals/particles
             }
 
             if (isRight) {
                 Sfx.PlayDetached(stepSfx, component.RightFoot);
-                VFXUtility.QueueFootstepDecal(component.RightFoot, component.DecalType | FootstepDecalType.RightFoot);
+                if (component.DecalType != 0) {
+                    VFXUtility.QueueFootstepDecal(component.RightFoot, component.DecalType | FootstepDecalType.RightFoot);
+                }
                 // TODO: decals/particles
             }
         }

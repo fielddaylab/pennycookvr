@@ -1,7 +1,17 @@
+#if UNITY_2019_1_OR_NEWER
+#define USE_SRP
+#endif // UNITY_2019_1_OR_NEWER
+
+#if UNITY_2019_1_OR_NEWER && HAS_URP
+#define USING_URP
+#endif // UNITY_2019_1_OR_NEWER
+
 using System;
 using System.CodeDom.Compiler;
+using BeauUtil;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace FieldDay.Editor {
     [CreateAssetMenu(menuName = "Field Day/Code Gen/Layers")]
@@ -83,6 +93,46 @@ namespace FieldDay.Editor {
                     }
                 }
                 writer.CloseScope();
+
+#if USING_URP
+                if (GraphicsSettings.renderPipelineAsset != null) {
+                    string[] layerMasks = GraphicsSettings.renderPipelineAsset.renderingLayerMaskNames;
+                    if (layerMasks != null) {
+                        writer.OpenStaticClass("RenderingLayers");
+                        {
+                            for (int i = 0; i < layerMasks.Length; i++) {
+                                string layerName = layerMasks[i];
+
+                                if (string.IsNullOrEmpty(layerName)) {
+                                    continue;
+                                }
+
+                                uint index = (uint) i;
+                                uint mask = 1u << i;
+
+                                string safeName = CodeGen.NameToSymbol(layerName);
+
+                                writer.WriteComment("Rendering Layer " + index + ": " + layerName);
+
+                                writer.WriteLine();
+                                writer.Write("public const uint ");
+                                writer.Write(safeName);
+                                writer.Write("_Index = ");
+                                writer.Write(index);
+                                writer.Write(";");
+
+                                writer.WriteLine();
+                                writer.Write("public const uint ");
+                                writer.Write(safeName);
+                                writer.Write("_Mask = ");
+                                writer.Write(mask);
+                                writer.Write(";");
+                            }
+                        }
+                        writer.CloseScope();
+                    }
+                }
+#endif // USING_URP
             }
             writer.CloseScope(ns);
         }

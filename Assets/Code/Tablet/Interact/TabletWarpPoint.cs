@@ -22,12 +22,16 @@ namespace Pennycook.Tablet {
         public TabletWarpPoint[] Connections;
         public TabletWarpPointGroup Group;
 
+        [Header("Object Slots")]
+        public Transform TabletCaseLocation;
+
         [Header("Overrides")]
         public Transform OverridePosition;
         public bool Rotate;
 
         [NonSerialized] public TabletHighlightable Highlightable;
         [NonSerialized] public ConnectionState IsConnected;
+        [NonSerialized] public BitSet32 AllowedConnections = new BitSet32(Bits.AllU32);
 
         private void Awake() {
             this.CacheComponent(ref Highlightable);

@@ -57,6 +57,15 @@ static public class LayerMasks {
     // Layer 17: PlayerBody
     public const int PlayerBody_Index = 17;
     public const int PlayerBody_Mask = 131072;
+    // Layer 18: Countable
+    public const int Countable_Index = 18;
+    public const int Countable_Mask = 262144;
+    // Layer 19: SocketVolume
+    public const int SocketVolume_Index = 19;
+    public const int SocketVolume_Mask = 524288;
+    // Layer 30: RestrictWalk
+    public const int RestrictWalk_Index = 30;
+    public const int RestrictWalk_Mask = 1073741824;
     // Layer 31: OffscreenRendering
     public const int OffscreenRendering_Index = 31;
     public const int OffscreenRendering_Mask = -2147483648;
@@ -84,4 +93,16 @@ static public class UnityTags {
     public const string Player = "Player";
     // Tag GameController
     public const string GameController = "GameController";
+}
+static public class RenderingLayers {
+    
+    // Rendering Layer 0: Default
+    public const uint Default_Index = 0;
+    public const uint Default_Mask = 1;
+    // Rendering Layer 1: Interior
+    public const uint Interior_Index = 1;
+    public const uint Interior_Mask = 2;
+    // Rendering Layer 2: Terrain
+    public const uint Terrain_Index = 2;
+    public const uint Terrain_Mask = 4;
 }

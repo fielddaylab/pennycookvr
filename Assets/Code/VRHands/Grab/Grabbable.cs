@@ -25,13 +25,13 @@ namespace FieldDay.VRHands {
         public GrabbablePoseAnim GrabberAnim;
 
         [Header("Snap Node Data -- DO NOT EDIT")]
-        public GrabbableSnapNodeData[] SnapNodes;
-        public OffsetLengthU16 BothSnapNodeRange;
-        public OffsetLengthU16 LeftSnapNodeRange;
-        public OffsetLengthU16 RightSnapNodeRange;
-        public OffsetLengthU16 DynamicBothSnapNodeRange;
-        public OffsetLengthU16 DynamicLeftSnapNodeRange;
-        public OffsetLengthU16 DynamicRightSnapNodeRange;
+        [HideInInspector] public GrabbableSnapNodeData[] SnapNodes;
+        [HideInInspector] public OffsetLengthU16 BothSnapNodeRange;
+        [HideInInspector] public OffsetLengthU16 LeftSnapNodeRange;
+        [HideInInspector] public OffsetLengthU16 RightSnapNodeRange;
+        [HideInInspector] public OffsetLengthU16 DynamicBothSnapNodeRange;
+        [HideInInspector] public OffsetLengthU16 DynamicLeftSnapNodeRange;
+        [HideInInspector] public OffsetLengthU16 DynamicRightSnapNodeRange;
 
         #endregion // Inspector
 
