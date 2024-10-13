@@ -16,6 +16,8 @@ namespace FieldDay.Animation {
             return CrossedThreshold(currentTime, duration * normalizedValue, deltaTime);
         }
 
+        #region Frame Ranges
+
         /// <summary>
         /// Checks if the given frame is within the bounds of the provided frame ranges.
         /// </summary>
@@ -28,6 +30,17 @@ namespace FieldDay.Animation {
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Checks if the given frame is within the bounds of the provided frame range,
+        /// and outputs the interpolation within that range.
+        /// </summary>
+        static public bool FrameInRange(ushort frameIndex, OffsetLengthU16 range, out float lerp) {
+            float rawLerp = (frameIndex - range.Offset) / (float) (range.Length);
+            bool inRange = rawLerp >= 0 && rawLerp < 1;
+            lerp = Mathf.Clamp01(rawLerp);
+            return inRange;
         }
 
         /// <summary>
@@ -45,6 +58,17 @@ namespace FieldDay.Animation {
         }
 
         /// <summary>
+        /// Checks if the given frame is within the bounds of the provided frame range,
+        /// and outputs the interpolation within that range.
+        /// </summary>
+        static public bool FrameInRange(short frameIndex, OffsetLength16 range, out float lerp) {
+            float rawLerp = (frameIndex - range.Offset) / (float) (range.Length);
+            bool inRange = rawLerp >= 0 && rawLerp < 1;
+            lerp = Mathf.Clamp01(rawLerp);
+            return inRange;
+        }
+
+        /// <summary>
         /// Checks if the given frame is within the bounds of the provided frame ranges.
         /// </summary>
         [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
@@ -56,6 +80,17 @@ namespace FieldDay.Animation {
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Checks if the given frame is within the bounds of the provided frame range,
+        /// and outputs the interpolation within that range.
+        /// </summary>
+        static public bool FrameInRange(uint frameIndex, OffsetLengthU32 range, out float lerp) {
+            float rawLerp = (frameIndex - range.Offset) / (float) (range.Length);
+            bool inRange = rawLerp >= 0 && rawLerp < 1;
+            lerp = Mathf.Clamp01(rawLerp);
+            return inRange;
         }
 
         /// <summary>
@@ -71,6 +106,19 @@ namespace FieldDay.Animation {
 
             return false;
         }
+
+        /// <summary>
+        /// Checks if the given frame is within the bounds of the provided frame range,
+        /// and outputs the interpolation within that range.
+        /// </summary>
+        static public bool FrameInRange(int frameIndex, OffsetLength32 range, out float lerp) {
+            float rawLerp = (frameIndex - range.Offset) / (float) (range.Length);
+            bool inRange = rawLerp >= 0 && rawLerp < 1;
+            lerp = Mathf.Clamp01(rawLerp);
+            return inRange;
+        }
+
+        #endregion // Frame Ranges
 
         /// <summary>
         /// Returns the number of frames in a given clip.

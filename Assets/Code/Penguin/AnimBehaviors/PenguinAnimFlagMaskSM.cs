@@ -1,7 +1,7 @@
 using BeauUtil.Debugger;
 using UnityEngine;
 
-namespace Pennycook {
+namespace Pennycook.Animation {
     [SharedBetweenAnimators]
     public sealed class PenguinAnimFlagMaskSM : StateMachineBehaviour {
         public PenguinAnimFlags Flags;

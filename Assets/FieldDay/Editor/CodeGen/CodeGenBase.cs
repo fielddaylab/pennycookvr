@@ -64,6 +64,7 @@ namespace FieldDay.Editor {
                         foreach(CodeGenBase gen in targets) {
                             Undo.RecordObject(gen, "Generating code file...");
                             if (CodeGen.ResolveTarget(ref gen.TargetFile, gen.name)) {
+                                EditorUtility.SetDirty(gen);
                                 try {
                                     serializedObject.ApplyModifiedProperties();
                                     using (var stream = CodeGen.OpenCodeStream(gen.TargetFile)) {

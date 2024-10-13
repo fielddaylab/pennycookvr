@@ -59,7 +59,7 @@ namespace Pennycook {
                 if (currentLookRecord.Object != null) {
                     Log.Msg("[PlayerLookTrackingSystem] Losing focus of '{0}' (frame {1})", currentLookRecord.Object.name, Frame.Index);
                     m_StateA.DecayingLook.PushBack(m_StateA.CurrentLook);
-                    DebugDraw.AddSphere(currentLookRecord.Object.transform.position, 0.2f, ColorBank.DarkBlue.WithAlpha(0.4f), 0.5f, false);
+                    //DebugDraw.AddSphere(currentLookRecord.Object.transform.position, 0.2f, ColorBank.DarkBlue.WithAlpha(0.4f), 0.5f, false);
                 }
 
                 if (currentFocus != null) {
@@ -95,7 +95,7 @@ namespace Pennycook {
                     attack /= m_StateA.HeldObjectLookMultiplier;
                 }
 
-                DebugDraw.AddSphere(currentFocus.transform.position, 0.2f, ColorBank.Firebrick.WithAlpha(0.4f), 0.01f, false);
+                //DebugDraw.AddSphere(currentFocus.transform.position, 0.2f, ColorBank.Firebrick.WithAlpha(0.4f), 0.01f, false);
 
                 if (AnalogSignal.Activate(ref currentLookRecord.Signal, deltaTime, m_StateA.LookLatch, attack)) {
                     using(var table = TempVarTable.Alloc()) {

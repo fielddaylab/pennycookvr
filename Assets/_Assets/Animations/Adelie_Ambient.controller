@@ -116,6 +116,25 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-8303534569653108154
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d1e068b74350842a963f454c2d3546, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ReferenceClip: {fileID: 7284266810856586860, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+  m_FrameCount: 45
+  FrameRange:
+    Offset: 8
+    Length: 22
+  RotateAmount: {x: 0, y: -180, z: 0}
+  RotateCurve: 1
 --- !u!1109 &-8107456675720594785
 AnimatorTransition:
   m_ObjectHideFlags: 1
@@ -355,7 +374,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 4004961315445804120}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -1434101929371457655}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1245,6 +1265,25 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-1434101929371457655
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d1e068b74350842a963f454c2d3546, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ReferenceClip: {fileID: 7995497573791248911, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
+  m_FrameCount: 45
+  FrameRange:
+    Offset: 8
+    Length: 22
+  RotateAmount: {x: 0, y: 180, z: 0}
+  RotateCurve: 1
 --- !u!1101 &-882022616918586946
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -2350,7 +2389,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3278978155791643067}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -8303534569653108154}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1

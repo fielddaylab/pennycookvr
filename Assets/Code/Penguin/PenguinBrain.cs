@@ -61,7 +61,19 @@ namespace Pennycook {
         }
 
         void IScriptActorComponent.OnScriptSceneReady(ScriptActor actor) {
-            StartMainProcess(PenguinSchedules.Wander);
+
+            switch (Type) {
+                case PenguinType.Adult:
+                case PenguinType.Banded:
+                case PenguinType.Subadult:
+                    StartMainProcess(PenguinSchedules.Wander);
+                    break;
+
+                case PenguinType.Chick:
+                    break;
+
+            }
+
             m_ActionProcess = StartProcess(PenguinStates.Idle);
         }
 

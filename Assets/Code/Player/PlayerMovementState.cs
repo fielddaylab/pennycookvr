@@ -100,7 +100,7 @@ namespace Pennycook {
 
             using(PooledSet<TabletWarpPoint> affectedPoints = PooledSet<TabletWarpPoint>.Create()) {
                 if (current != null) {
-                    foreach (var connection in warpPoint.Connections) {
+                    foreach (var connection in current.Connections) {
                         connection.IsConnected = TabletWarpPoint.ConnectionState.NotConnected;
                         affectedPoints.Add(connection);
                     }
@@ -125,6 +125,8 @@ namespace Pennycook {
                     TabletWarpUtility.UpdateWarpActivation(affected);
                 }
             }
+
+            VRGame.Events.Dispatch(GameEvents.WarpPointUpdated, EvtArgs.Ref(warpPoint));
         }
 
         [LeafMember("PlacePlayerAt")]

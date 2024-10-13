@@ -9,7 +9,7 @@ namespace Pennycook {
             Vector3 headPos = m_State.HeadRoot.localPosition;
 
             Vector3 bodyPos = headPos;
-            bodyPos.y /= 2;
+            bodyPos.y = (bodyPos.y + m_State.HeadRadius) / 2;
 
             if (headPos.y > 0) {
                 m_State.BodyCollider.height = headPos.y;

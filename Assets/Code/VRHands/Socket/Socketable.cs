@@ -57,6 +57,10 @@ namespace FieldDay.Sockets {
                 ReleaseCurrent(socket, socket.Current != socketable);
             }
 
+            if (socketable.CurrentSocket != null && socketable.CurrentSocket != socket) {
+                ReleaseCurrent(socketable.CurrentSocket, false);
+            }
+
             socket.Current = socketable;
             socketable.CurrentSocket = socket;
             socketable.LastSocket = socket;
@@ -180,5 +184,12 @@ namespace FieldDay.Sockets {
         static public readonly CastableEvent<Socketable, ObjectSocket> OnObjectRemovedFromSocket = new CastableEvent<Socketable, ObjectSocket>();
 
         #endregion // Events
+    
+        /// <summary>
+        /// Sets the original socket for a given socketable object.
+        /// </summary>
+        static public void SetHomeSocket(Socketable socketable, ObjectSocket socket) {
+            socketable.OriginalSocket = socket;
+        }
     }
 }

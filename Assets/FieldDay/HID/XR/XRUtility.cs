@@ -312,7 +312,9 @@ namespace FieldDay.HID.XR {
         /// </summary>
         static public void SetRefreshRate(float desiredRefreshRate) {
 #if USING_OCULUSXR
-            if (!Unity.XR.Oculus.Performance.TrySetDisplayRefreshRate(desiredRefreshRate)) {
+            if (Unity.XR.Oculus.Performance.TrySetDisplayRefreshRate(desiredRefreshRate)) {
+                Log.Msg("[XRUtility] Set refresh rate to {0}hZ", desiredRefreshRate);
+            } else {
                 Log.Warn("[XRUtility] Unable to set refresh rate to {0}hZ", desiredRefreshRate);
             }
 #endif // USING_OCULUSXR
