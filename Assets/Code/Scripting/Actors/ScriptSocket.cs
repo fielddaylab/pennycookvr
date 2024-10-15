@@ -47,16 +47,6 @@ namespace Pennycook {
 			return false;
 		}
 		
-        [LeafMember("NotIsSocketedBy"), Preserve]
-		static public bool NotIsSocketedBy(ScriptActor actor, ScriptActor socket) {
-            ScriptSocket ss = actor.GetComponent<ScriptSocket>();
-            Socketable s = socket.GetComponent<Socketable>();
-            if(ss != null && s != null) {
-                return !ss.IsSocketedBy(s);
-            }
-			return false;
-		}
-
         #endregion // Leaf
 		
     }

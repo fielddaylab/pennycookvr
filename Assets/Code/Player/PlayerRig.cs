@@ -54,7 +54,7 @@ namespace Pennycook {
             }
 
             public void Rotate(Vector3 rotateEuler) {
-                Rig.MoveRoot.Rotate(rotateEuler, Space.Self);
+                Rig.MoveRoot.RotateAround(Rig.HeadRoot.position, Vector3.up, rotateEuler.y);
             }
 
             public void Translate(Vector3 translation) {

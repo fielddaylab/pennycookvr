@@ -140,13 +140,13 @@ $call SetWarpActive(WarpDesk, true)
 {@Margo}    You can connect me to the uplink at the desk over yonder.  $[Day1/Tent/Margo_14]
 {@Player}   Alright, now to place Margo in the dock.    $[Day1/Tent/Player_11]
 
-$while NotIsSocketedBy(DeskDock, Margo)
+$while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
 $endwhile
 
 {@Player}   And now the big ole button! $[Day1/Tent/Player_12]
 
-$while ButtonNotPressed(BigButton)
+$while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
 

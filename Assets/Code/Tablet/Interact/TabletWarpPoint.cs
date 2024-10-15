@@ -28,6 +28,9 @@ namespace Pennycook.Tablet {
         [Header("Overrides")]
         public Transform OverridePosition;
         public bool Rotate;
+		
+		[Header("Movement")]
+		public float Radius;
 
         [NonSerialized] public TabletHighlightable Highlightable;
         [NonSerialized] public ConnectionState IsConnected;

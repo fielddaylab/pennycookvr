@@ -39,17 +39,6 @@ namespace Pennycook {
         public void SetButtonPressed(bool pressed) {
 			m_Button.WasPressed = pressed;
         }
-
-		[LeafMember("ButtonNotPressed"), Preserve]
-		static bool ButtonNotPressed(ScriptActor actor) {
-			
-            ScriptButton sb = actor.GetComponent<ScriptButton>();
-            if(sb != null) {
-                return !sb.WasButtonPressed();
-            }
-        
-			return false;
-		}
 		
 		[LeafMember("ButtonPressed"), Preserve]
 		static bool ButtonPressed(ScriptActor actor) {

@@ -1453,6 +1453,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
+      propertyPath: Radius
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: CanWarp
       value: 1
       objectReference: {fileID: 0}
@@ -2611,8 +2615,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.49731445, y: 5.3644123, z: 6.412657}
-  m_Center: {x: 53.984837, y: 13.29441, z: 9.972797}
+  m_Size: {x: 0.45637512, y: 5.3644123, z: 6.412657}
+  m_Center: {x: 53.81028, y: 13.294356, z: 9.972755}
 --- !u!1001 &220409983
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2695,6 +2699,59 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8128245f054ee0649b3c5d66da1dba09, type: 3}
   m_PrefabInstance: {fileID: 220409983}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &222788846
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 222788847}
+  - component: {fileID: 222788848}
+  m_Layer: 30
+  m_Name: RestrictWalk2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &222788847
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222788846}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.17278863, z: 0, w: 0.9849589}
+  m_LocalPosition: {x: 47.92, y: 13.29441, z: -17.89}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1094327983}
+  m_LocalEulerAnglesHint: {x: 0, y: -19.9, z: 0}
+--- !u!65 &222788848
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222788846}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.49731445, y: 5.3644123, z: 22.172035}
+  m_Center: {x: -0.00001160523, y: 0, z: 5.4707737}
 --- !u!1001 &233615359
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9247,6 +9304,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
+      propertyPath: Radius
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: CanWarp
       value: 1
       objectReference: {fileID: 0}
@@ -10622,6 +10683,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
+      propertyPath: Radius
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: CanWarp
       value: 1
       objectReference: {fileID: 0}
@@ -10945,8 +11010,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.59058, y: 5.3644123, z: 6.412657}
-  m_Center: {x: 61.270252, y: 13.294013, z: 9.972529}
+  m_Size: {x: 0.35728836, y: 5.3644123, z: 6.412657}
+  m_Center: {x: 61.55472, y: 13.293941, z: 9.972481}
 --- !u!1001 &549106586
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11631,6 +11696,10 @@ PrefabInstance:
       value: Tent Door
       objectReference: {fileID: 0}
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
+      propertyPath: Radius
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: CanWarp
       value: 1
       objectReference: {fileID: 0}
@@ -12137,6 +12206,59 @@ MonoBehaviour:
   Recursive: 0
   DestroyGameObject: 1
   IgnoreAnimators: 1
+--- !u!1 &668591453
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 668591454}
+  - component: {fileID: 668591455}
+  m_Layer: 30
+  m_Name: RestrictWalk
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &668591454
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 668591453}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.3010387, z: 0, w: 0.9536119}
+  m_LocalPosition: {x: 45.55, y: 13.29441, z: 2.52}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1094327983}
+  m_LocalEulerAnglesHint: {x: 0, y: 35.04, z: 0}
+--- !u!65 &668591455
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 668591453}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.49731445, y: 5.3644123, z: 22.899517}
+  m_Center: {x: -0.000007396885, y: 0, z: 5.8345127}
 --- !u!4 &670580643 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1575471195252311185, guid: 7559772da805f7648962487b2037a714, type: 3}
@@ -13212,6 +13334,10 @@ PrefabInstance:
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: Group
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
+      propertyPath: Radius
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: CanWarp
@@ -15275,6 +15401,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
+      propertyPath: Radius
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: CanWarp
       value: 1
       objectReference: {fileID: 0}
@@ -16291,7 +16421,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 668591454}
+  - {fileID: 222788847}
   m_Father: {fileID: 130447496}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1114572909
@@ -17938,6 +18070,10 @@ PrefabInstance:
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: Group
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
+      propertyPath: Radius
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: CanWarp
@@ -21019,6 +21155,10 @@ PrefabInstance:
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: Group
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
+      propertyPath: Radius
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: CanWarp
@@ -25231,6 +25371,10 @@ PrefabInstance:
     - target: {fileID: 5880844211706402438, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: Contents.DetailedHeader
       value: Desk
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
+      propertyPath: Radius
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: CanWarp
@@ -32520,6 +32664,10 @@ PrefabInstance:
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: Group
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
+      propertyPath: Radius
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6242734612256736462, guid: 8845031c8df5d7741a16214bb425248d, type: 3}
       propertyPath: CanWarp
