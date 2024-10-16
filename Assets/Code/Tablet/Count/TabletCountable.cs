@@ -1,6 +1,8 @@
-using System;
+using BeauRoutine;
 using BeauUtil;
+using FieldDay;
 using FieldDay.Components;
+using FieldDay.Scripting;
 using UnityEngine;
 
 namespace Pennycook.Tablet {
@@ -21,6 +23,28 @@ namespace Pennycook.Tablet {
                 return false;
             }
             return true;
+        }
+
+        static public bool TryCount(TabletHighlightable highlightable, TabletCountable countable, double currentTime) {
+            if (IsCountable(countable)) {
+                /*interactable.CooldownTimestamp = currentTime + interactable.InteractionCooldown;
+                interactable.OnInteract.Invoke(new TabletInteractionArgs() {
+                    Interactable = interactable
+                });*/
+
+                countable.Group.CurrentlyCounted.Add(countable);
+
+                //bool identified = Ref.Replace(ref highlightable.Identified, true);
+                //if (identified) {
+                    TabletUtility.UpdateHighlightLabels(Find.State<TabletHighlightState>(), TabletUtility.GetLabelsForHighlightable(highlightable));
+                    TabletUtility.PlayHaptics(0.3f, 0.08f);
+                    TabletUtility.PlaySfx("Tablet.Identified");
+                //}
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

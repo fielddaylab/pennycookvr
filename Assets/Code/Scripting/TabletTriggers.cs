@@ -15,6 +15,8 @@ namespace Pennycook {
         static public readonly StringHash32 TabletInteracted = "TabletInteracted";
         static public readonly StringHash32 TabletIdentified = "TabletIdentified";
 
+        static public readonly StringHash32 TabletCounted = "TabletCounted";
+
         static public readonly StringHash32 ObjectHighlighted = "TabletHighlighted";
         static public readonly StringHash32 ObjectUnhighlighted = "TabletUnhighlighted";
 
