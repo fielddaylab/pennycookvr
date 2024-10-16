@@ -41,6 +41,16 @@ namespace Pennycook.Tablet {
                     TabletUtility.PlaySfx("Tablet.Identified");
                 //}
 
+                if(countable.Group.IsCountFinished()) {
+                    var actor = ScriptUtility.Actor(countable.Group);
+                    if (actor != null) {
+                        using (var table = TempVarTable.Alloc()) {
+                            table.ActorInfo(actor);
+                            ScriptUtility.Trigger(TabletTriggers.TabletCounted, table);
+                        }
+                    }
+                }
+
                 return true;
             }
 

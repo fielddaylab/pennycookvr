@@ -24,15 +24,15 @@ namespace Pennycook {
                     PlayerMovementUtility.SetCurrentWarp(m_StateB, warpPoint);
                 }
                 Array.Clear(s_ColliderWorkList, 0, collided);
-            } else {
-                collided = Physics.OverlapSphereNonAlloc(m_StateA.BodyCollider.transform.position, 0.08f, s_ColliderWorkList, LayerMasks.Solid_Mask | LayerMasks.RestrictWalk_Mask, QueryTriggerInteraction.Collide);
-                if (collided > 0) {
-                    TabletWarpPoint warpPoint = m_StateB.CurrentWarp;
-                    if (warpPoint) {
-                        PlayerMovementUtility.WarpTo(m_StateB, warpPoint);
-                    }
-                    Array.Clear(s_ColliderWorkList, 0, collided);
+            } 
+            
+            collided = Physics.OverlapSphereNonAlloc(m_StateA.BodyCollider.transform.position, 0.08f, s_ColliderWorkList, LayerMasks.Solid_Mask | LayerMasks.SeeThroughSolid_Mask, QueryTriggerInteraction.Collide);
+            if (collided > 0) {
+                TabletWarpPoint warpPoint = m_StateB.CurrentWarp;
+                if (warpPoint) {
+                    PlayerMovementUtility.WarpTo(m_StateB, warpPoint);
                 }
+                Array.Clear(s_ColliderWorkList, 0, collided);
             }
         }
     }

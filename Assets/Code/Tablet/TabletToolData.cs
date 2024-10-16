@@ -1,6 +1,8 @@
 using System;
 using BeauUtil;
 using FieldDay;
+using FieldDay.HID.XR;
+using FieldDay.XR;
 using UnityEngine;
 
 namespace Pennycook.Tablet {
@@ -79,7 +81,7 @@ namespace Pennycook.Tablet {
             RaycastMask = TabletUtility.DefaultSearchMask,
 
             HighlightPredicate = (h, hc) => {
-                return h.CachedCountable && TabletCountUtility.IsCountable(h.CachedCountable);
+                return h.CachedCountable && TabletUtility.IsButtonHeld(XRHandButtons.TriggerButton);
             },
 
             GetState = (h, c, t) => {
@@ -95,6 +97,9 @@ namespace Pennycook.Tablet {
             InteractMode = TabletToolInteractionMode.Hold,
             Interact = (h, c, t) => {
                 // TODO: count
+                if(TabletCountUtility.TryCount(h, h.CachedCountable, t)) {
+                    TabletUtility.PlayHaptics(0.3f, 0.05f);
+                }
             }
         };
 

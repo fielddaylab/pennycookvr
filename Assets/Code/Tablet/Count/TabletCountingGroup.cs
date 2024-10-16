@@ -37,7 +37,7 @@ namespace Pennycook.Tablet {
         }
 
         [LeafMember("IsCountFinished"), Preserve]
-        private bool CountFinished()
+        public bool IsCountFinished()
         {
             if(CurrentlyCounted.Count < TotalInGroup)
             {
@@ -46,11 +46,8 @@ namespace Pennycook.Tablet {
 
             State = TabletCountingGroupState.Completed;
             
-            using (var table = TempVarTable.Alloc()) {
-                table.ActorInfo(Actor);
-                ScriptUtility.Trigger(TabletTriggers.TabletCounted, table);
-            }
-            
+            CurrentlyCounted.Clear();
+
             return true;
         }
     }

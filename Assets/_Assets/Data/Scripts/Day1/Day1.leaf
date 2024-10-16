@@ -63,11 +63,12 @@ $call SetWarpActive(WarpBluff, false)
 $call SetWarpActive(WarpTent, false)
 $call SetWarpGroupActive(Rookery, true)
 
-{@Margo}    I can count 'em up for us! Just put me in "Scan" mode and give me a good gander at 'em. $[Day1/Bluff/Margo_1]
+$call PenguinCount->ActivateCount(5)
 
+{@Margo}    I can count 'em up for us! Just put me in "Count" mode and give me a good gander at 'em. $[Day1/Bluff/Margo_1]
 
 :: ScannedFromBluff
-@trigger	TabletInteracted
+@trigger	TabletCounted
 @who		Player
 @interrupt
 @once
