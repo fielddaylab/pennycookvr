@@ -47,6 +47,7 @@ $set	chapter:hasTalkedToMargo = true
 {@Margo}    Feel free to have yerself a look around! This'll be our den for the season.   $[Day1/Tent/Margo_11]
 {@Margo}    Couldja peek out the front door with me? I can't wait to see who's here! $[Day1/Tent/Margo_12]
 {@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
+$call CreateGoal("day1_goOutside", "Warp to waypoint outside.")
 
 $call SetWarpActive(WarpTent, true)
 $call SetWarpActive(WarpBluff, true)
@@ -57,6 +58,7 @@ $call SetWarpActive(WarpBluff, true)
 @when       targetObject == "WarpTarget-Bluff"
 @once
 
+$call CompleteGoal("day1_goOutside")
 $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
@@ -64,7 +66,7 @@ $call SetWarpActive(WarpTent, false)
 $call SetWarpGroupActive(Rookery, true)
 
 {@Margo}    I can count 'em up for us! Just put me in "Scan" mode and give me a good gander at 'em. $[Day1/Bluff/Margo_1]
-
+$call CreateGoal("day1_countPenguins", "Use 'Count' to count penguins.")
 
 :: ScannedFromBluff
 @trigger	TabletInteracted
@@ -72,9 +74,10 @@ $call SetWarpGroupActive(Rookery, true)
 @interrupt
 @once
 
+$call CompleteGoal("day1_countPenguins")
 {@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny.   $[Day1/Bluff/Partner_1]
 {@Margo}    Let's get on down there and say hello! Find a waypoint in the rookery.  $[Day1/Bluff/Margo_2]
-
+$call CreateGoal("day1_goDown", "Use 'Warp' to travel to the rookery.")
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
@@ -82,13 +85,16 @@ $call SetWarpGroupActive(Rookery, true)
 @when       targetObject == "WarpTarget-Rookery"
 @once
 
+$call CompleteGoal("day1_goDown")
 $call Wait(1)
 
 $call SetWarpActive(WarpBluffBack, true)
 $call SetWarpGroupActive(Rookery, true)
 
+$call ClearGoals()
 {@Player}   Hah! I've never been so close to a penguin before! $[Day1/Rookery/Player_1]
 {@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day/Rookery/Partner_1]
+$call CreateGoal("day1_scanBands", "Use 'Interact' on 5 banded penguins")
 
 :: OnPenguinIdentified
 @function	TabletIdentified
@@ -107,9 +113,11 @@ $endif
 @interrupt
 
 $set	chapter:finishedObservations = true
+$call CompleteGoal("day1_scanBands")
 
 $call Wait(0.3)
 {@Partner}  Great! You can head back to the overlook now.   $[Day1/Rookery/Partner_2]
+$call CreateGoal("day1_return", "Use 'Warp' to return to tent.")
 
 :: WarpedBackToTent
 @trigger    AtWarpPoint
@@ -124,7 +132,9 @@ $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpTent, true)
 $call SetWarpActive(WarpDesk, true)
 
+$call CompleteGoal("day1_return")
 {@Margo} Let's get back in the tent and upload that data!   $[Day1/Bluff/Margo_3]
+$call CreateGoal("day1_upload", "Upload data from Margo.")
 
 
 :: WarpedInsideTent
@@ -150,5 +160,6 @@ $while ButtonNotPressed(BigButton)
 $call Wait(0.5)
 $endwhile
 
+$call CompleteGoal("day1_upload")
 {@Margo}    Looks like we've got 25 returners! Mostly adults, a few subadults...   $[Day1/Tent/Margo_15]
 {@Margo}    Great first day, kiddo! Get some rest now, why don'tcha?    $[Day1/Tent/Margo_16]

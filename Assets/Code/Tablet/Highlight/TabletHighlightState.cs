@@ -18,6 +18,7 @@ namespace Pennycook.Tablet {
     public class TabletHighlightState : SharedStateComponent, IRegistrationCallbacks {
         static public readonly TableKeyPair Var_CurrentHighlightId = TableKeyPair.Parse("tablet:highlightedId");
         static public readonly TableKeyPair Var_CurrentHighlightType = TableKeyPair.Parse("tablet:highlightedType");
+        static public readonly int MaxGoals = 6;
 
         public List<StringHash32> ActiveGoalIds = new List<StringHash32>();
         public BitSet32 GoalsComplete = new BitSet32();
@@ -137,11 +138,20 @@ namespace Pennycook.Tablet {
 
         [LeafMember("CreateGoal")]
         static private void LeafCreateGoal(StringHash32 id, string text) {
-            int index = HighlightState.ActiveGoalIds.Count - 1;
+            int index = HighlightState.ActiveGoalIds.Count;
+            if (index >= TabletHighlightState.MaxGoals) {
+                throw new IndexOutOfRangeException("[LeafCreateGoal] Error: Goal '" + text + "' exceeded maximum number of " + TabletHighlightState.MaxGoals);
+            }
             HighlightState.ActiveGoalIds.Add(id);
-            HighlightState.GoalItems[index].Text.SetTextAndActive(text);
+            HighlightState.GoalItems[index].Text.SetText(text);
             HighlightState.GoalItems[index].Check.SetAlpha(0);
+            HighlightState.GoalItems[index].gameObject.SetActive(true);
             HighlightState.GoalsComplete.Unset(index);
+        }
+
+        [LeafMember("CompleteGoal")]
+        static private bool LeafCompleteGoal(StringHash32 id) {
+            return LeafSetGoalComplete(id, true);
         }
 
         [LeafMember("SetGoalComplete")]
@@ -167,8 +177,9 @@ namespace Pennycook.Tablet {
             HighlightState.ActiveGoalIds.Clear();
             HighlightState.GoalsComplete.Clear();
             for (int i = 0; i <  HighlightState.GoalItems.Length; i++) {
-                HighlightState.GoalItems[i].Text.SetTextAndActive("");
+                HighlightState.GoalItems[i].Text.SetText("Inactive");
                 HighlightState.GoalItems[i].Check.SetAlpha(0);
+                HighlightState.GoalItems[i].gameObject.SetActive(false);
             }
         }
 
