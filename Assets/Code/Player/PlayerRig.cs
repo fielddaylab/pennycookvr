@@ -1,5 +1,4 @@
 using System;
-using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Physics;
 using FieldDay.SharedState;
