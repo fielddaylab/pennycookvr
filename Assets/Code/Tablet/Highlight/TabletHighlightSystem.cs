@@ -14,7 +14,7 @@ namespace Pennycook.Tablet {
 
             if (!ReferenceEquals(m_StateA.HighlightedObject, null)) {
                 if (!m_StateA.HighlightedObject || !m_StateA.HighlightedObject.isActiveAndEnabled || !isGripping || m_StateB.CurrentTool == TabletTool.None || searchMask == 0) {
-                    ClearSelection(m_StateA);
+                    ClearSelection(m_StateA, m_StateB.CurrentTool == TabletTool.Count);
                     return;
                 }
             }
@@ -43,13 +43,13 @@ namespace Pennycook.Tablet {
 
                 if (!scannable) {
                     if (m_StateA.HighlightedObject != null) {
-                        ClearSelection(m_StateA);
+                        ClearSelection(m_StateA, m_StateB.CurrentTool == TabletTool.Count);
                     }
                 } else {
                     Rect viewportRect = TabletUtility.CalculateViewportAlignedBoundingBox(scannable.HighlightCollider.bounds, m_StateA.LookCamera, m_StateA.CachedHighlightCornerScale);
 
                     if (m_StateA.HighlightedObject != scannable) {
-                        SetSelection(m_StateA, scannable, viewportRect);
+                        SetSelection(m_StateA, scannable, viewportRect, m_StateB.CurrentTool == TabletTool.Count);
 
                         float vibAmp = Mathf.Clamp(1 - hit.distance / 60, 0.4f, 1) * 0.3f;
                         TabletUtility.PlayHaptics(vibAmp, 0.02f);
@@ -80,7 +80,7 @@ namespace Pennycook.Tablet {
             }
         }
 
-        static private void SetSelection(TabletHighlightState highlight, TabletHighlightable scannable, Rect rect) {
+        static private void SetSelection(TabletHighlightState highlight, TabletHighlightable scannable, Rect rect, bool isCounting=false) {
             bool wasNotSelected = !highlight.HighlightedObject;
 
             if (!wasNotSelected) {
@@ -99,11 +99,17 @@ namespace Pennycook.Tablet {
                 highlight.BoxTransitionRoutine.Replace(highlight, FadeBoxIn(highlight));
             }
 
-            TabletUtility.UpdateHighlightLabels(highlight, TabletUtility.GetLabelsForHighlightable(scannable));
+            if(!isCounting) {
+                TabletUtility.UpdateHighlightLabels(highlight, TabletUtility.GetLabelsForHighlightable(scannable));
+            }
         }
 
-        static private void ClearSelection(TabletHighlightState highlight) {
-            ClearObjectDetails(highlight);
+        static private void ClearSelection(TabletHighlightState highlight, bool isCounting=false) {
+            
+            if(!isCounting) {
+                ClearObjectDetails(highlight);
+            }
+
             VRGame.Events.Queue(GameEvents.ObjectUnhighlighted, EvtArgs.Ref(highlight.HighlightedObject));
             highlight.HighlightedObject = null;
             highlight.TargetHighlightCorners = highlight.HighlightBox.rect;

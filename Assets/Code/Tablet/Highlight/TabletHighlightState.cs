@@ -183,6 +183,13 @@ namespace Pennycook.Tablet {
             }
         }
 
+        static public void UpdateCountLabel(TabletHighlightState highlight, in TabletCountingGroup countingGroup) {
+            TMPUtility.SetTextAndActive(highlight.DetailsHeader, "Counting Penguins...");
+            TMPUtility.SetTextAndActive(highlight.DetailsText, "Penguin Count: " + countingGroup.CurrentlyCounted.Count);
+            highlight.DetailsGroup.SetActive(true);
+            highlight.GoalsGroup.SetActive(false);
+        }
+
         static public void UpdateHighlightLabels(TabletHighlightState highlight, in TabletDetailsContent contents) {
             TMPUtility.SetTextAndActive(highlight.DetailsHeader, contents.DetailedHeader);
             TMPUtility.SetTextAndActive(highlight.DetailsText, contents.DetailedText);
