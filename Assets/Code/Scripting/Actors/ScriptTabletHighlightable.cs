@@ -31,21 +31,11 @@ namespace Pennycook {
 		
 		public bool IsIdentified() { return m_Highlight.Identified; }
         
-        
 		[LeafMember("IsIdentified"), Preserve]
 		static public bool IsIdentified(ScriptActor actor) {
             ScriptTabletHighlightable ss = actor.GetComponent<ScriptTabletHighlightable>();
             if(ss != null) {
                 return ss.IsIdentified() == true;
-            }
-			return false;
-		}
-		
-        [LeafMember("IsNotIdentified"), Preserve]
-		static public bool IsNotIdentified(ScriptActor actor) {
-            ScriptTabletHighlightable ss = actor.GetComponent<ScriptTabletHighlightable>();
-            if(ss != null) {
-                return (ss.IsIdentified() == false);
             }
 			return false;
 		}
