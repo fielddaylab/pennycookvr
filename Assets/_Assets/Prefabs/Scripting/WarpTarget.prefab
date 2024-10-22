@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2634337146786843516}
   - component: {fileID: 5880844211706402438}
   - component: {fileID: 6242734612256736462}
+  - component: {fileID: 8130236640772144895}
   m_Layer: 9
   m_Name: WarpTarget
   m_TagString: Untagged
@@ -31,6 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 217281138553043338}
   - {fileID: 8193529090048710279}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -48,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightCollider: {fileID: 4086494703758750131}
   Contents:
-    DetailedHeader: 
+    DetailedHeader: Rookery
     DetailedText: 
   UnidentifiedContents:
     DetailedHeader: 
@@ -67,9 +69,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CanWarp: 1
-  Connections: []
+  Connections:
+  - {fileID: 6242734612256736462}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  Group: 2
+  TabletCaseLocation: {fileID: 0}
   OverridePosition: {fileID: 0}
   Rotate: 0
+  Radius: 20
+--- !u!114 &8130236640772144895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686406579663379329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: WarpRookeryFar
+    m_HashValue: 1104406525
+  m_ClassName:
+    m_Source: WarpRookeryFar
+    m_HashValue: 1104406525
 --- !u!1 &6383479147643275716
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,3 +153,65 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.7, y: 4, z: 1.7}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &6238619447156695776
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2634337146786843516}
+    m_Modifications:
+    - target: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.238
+      objectReference: {fileID: 0}
+    - target: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.041
+      objectReference: {fileID: 0}
+    - target: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.552
+      objectReference: {fileID: 0}
+    - target: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -3.7493994e-33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -6.123234e-17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 6.123234e-17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6835382257628643792, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+      propertyPath: m_Name
+      value: WarpRing
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+--- !u!4 &217281138553043338 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6167670198666451818, guid: 26f8f3522540af144b2a17d54871c5fb, type: 3}
+  m_PrefabInstance: {fileID: 6238619447156695776}
+  m_PrefabAsset: {fileID: 0}
