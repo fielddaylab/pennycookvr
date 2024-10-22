@@ -61,16 +61,44 @@ namespace Pennycook {
             }
 
             public void Teleport(Vector3 location) {
+                //will cleanup / combine with 'facing' version of function
+                Quaternion headRot = Rig.HeadLook.localRotation;
+                //headRot.x = headRot.z = 0;
+                Quaternion qInv = Quaternion.Inverse(headRot);
+                Vector3 headPos = Rig.HeadLook.localPosition;
+
+                Quaternion finalRot = Rig.MoveRoot.rotation * qInv;
+                
+                Vector3 euler = finalRot.eulerAngles;
+                euler.x = 0f;
+                euler.z = 0f;
+                finalRot.eulerAngles = euler;
+
+                headPos = finalRot * headPos;
+                headPos.y = 0f;
+                location = location - headPos;// * (1.0f / Rig.ScaleRoot.localScale.x);
                 Rig.MoveRoot.position = location;
             }
 
             public void Teleport(Vector3 location, Vector3 facing) {
                 facing.y = 0;
 
-                Vector3 headRot = Rig.HeadLook.localEulerAngles;
-                headRot.x = headRot.z = 0;
+                Quaternion headRot = Rig.HeadLook.localRotation;
+                Vector3 headPos = Rig.HeadLook.localPosition;
+                //headRot.x = headRot.z = 0;
 
-                Quaternion finalRot = Quaternion.LookRotation(facing, Vector3.up) * Quaternion.Inverse(Quaternion.Euler(headRot));
+                Quaternion finalRot = Quaternion.LookRotation(facing, Vector3.up) * Quaternion.Inverse(headRot);
+
+                Vector3 euler = finalRot.eulerAngles;
+                euler.x = 0f;
+                euler.z = 0f;
+                finalRot.eulerAngles = euler;
+
+                headPos = finalRot * headPos;
+                headPos.y = 0f;
+                
+                location = location - headPos;// * (1.0f / Rig.ScaleRoot.localScale.x);
+
                 Rig.MoveRoot.SetPositionAndRotation(location, finalRot);
             }
 
