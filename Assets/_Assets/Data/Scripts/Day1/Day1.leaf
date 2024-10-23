@@ -62,7 +62,6 @@ $call CompleteGoal("day1_outside")
 $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
-$call SetWarpGroupActive(Rookery, true)
 
 $call PenguinCount->ActivateCount(12)
 
@@ -78,6 +77,7 @@ $call CreateGoal("day1_count", Use Count to count population)
 @once
 
 $call CompleteGoal("day1_count")
+$call SetWarpGroupActive(Rookery, true)
 
 {@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny.   $[Day1/Bluff/Partner_1]
 {@Margo}    Let's get on down there and say hello! Find a waypoint in the rookery.  $[Day1/Bluff/Margo_2]
