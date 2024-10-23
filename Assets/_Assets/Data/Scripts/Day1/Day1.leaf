@@ -49,7 +49,6 @@ $set	chapter:hasTalkedToMargo = true
 {@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
 
 $call CreateGoal("day1_outside", Use Warp to go outside)
-$call SetWarpActive(WarpTent, true)
 $call SetWarpActive(WarpBluff, true)
 
 :: WarpedOutsideTent
@@ -63,7 +62,6 @@ $call CompleteGoal("day1_outside")
 $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
-$call SetWarpActive(WarpTent, false)
 $call SetWarpGroupActive(Rookery, true)
 
 $call PenguinCount->ActivateCount(12)
@@ -158,7 +156,6 @@ $call Wait(1)
 
 $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
-$call SetWarpActive(WarpTent, true)
 $call SetWarpActive(WarpDesk, true)
 
 {@Margo} Let's get back in the tent and upload that data!   $[Day1/Bluff/Margo_3]
@@ -173,7 +170,6 @@ $call CreateGoal("day1_upload", Upload Margo's data)
 
 $call CompleteGoal("day1_return")
 $call Wait(1)
-$call SetWarpActive(WarpTent, false)
 $call SetWarpActive(WarpDesk, true)
 
 {@Margo}    You can connect me to the uplink at the desk over yonder.  $[Day1/Tent/Margo_14]
