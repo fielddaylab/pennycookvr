@@ -77,13 +77,12 @@ $call CreateGoal("day1_count", Use Count to count population)
 @once
 
 $call CompleteGoal("day1_count")
-$call SetWarpGroupActive(Rookery, true)
 
 {@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny.   $[Day1/Bluff/Partner_1]
 {@Margo}    Let's get on down there and say hello! Find a waypoint in the rookery.  $[Day1/Bluff/Margo_2]
 
 $call CreateGoal("day1_rookery", Use Warp to enter rookery)
-
+$call SetWarpGroupActive(Rookery, true)
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
@@ -93,7 +92,6 @@ $call CreateGoal("day1_rookery", Use Warp to enter rookery)
 
 $call CompleteGoal("day1_rookery")
 
-
 $call Wait(1)
 
 $call SetWarpActive(WarpBluffBack, true)
@@ -101,14 +99,14 @@ $call SetWarpGroupActive(Rookery, true)
 
 $call ClearGoals()
 
-{@Player}   Hah! I've never been so close to a penguin before! $[Day1/Rookery/Player_1]
-{@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day/Rookery/Partner_1]
-
 $call CreateGoal("band_red", Scan penguin with red band)
 $call CreateGoal("band_yellow", Scan penguin with yellow band)
 $call CreateGoal("band_green", Scan penguin with green band)
 $call CreateGoal("band_blue", Scan penguin with blue band)
 $call CreateGoal("band_purple", Scan penguin with purple band)
+
+{@Player}   Hah! I've never been so close to a penguin before! $[Day1/Rookery/Player_1]
+{@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day/Rookery/Partner_1]
 
 :: OnPenguinIdentified
 @function	TabletIdentified
@@ -165,7 +163,7 @@ $call CreateGoal("day1_upload", Upload Margo's data)
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-TentDoor"
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
 @interrupt
 
 $call CompleteGoal("day1_return")
@@ -185,7 +183,8 @@ $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
 
+$call CompleteGoal("day1_upload")
+
 {@Margo}    Looks like we've got 25 returners! Mostly adults, a few subadults...   $[Day1/Tent/Margo_15]
 {@Margo}    Great first day, kiddo! Get some rest now, why don'tcha?    $[Day1/Tent/Margo_16]
 
-$call CompleteGoal("day1_upload")
