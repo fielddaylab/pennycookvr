@@ -13,7 +13,7 @@ namespace Pennycook {
         public ObjectSocket MargoSocket;
         public ObjectSocket ExteriorMargoSocket;
 
-        public GameObject ExteriorGroup;
+        //public GameObject ExteriorGroup;
         #endregion
 
         void IRegistrationCallbacks.OnRegister() {
@@ -28,6 +28,7 @@ namespace Pennycook {
         private void SocketMargo() {
             TabletControlState tcs = Find.State<TabletControlState>();
             if(MargoSocket) {
+                SocketUtility.SetHomeSocket(tcs.Socketable, MargoSocket);
                 SocketUtility.TryAddToSocket(tcs.Socketable, MargoSocket, false);
             }
         }
@@ -39,9 +40,9 @@ namespace Pennycook {
                 transform.SetPositionAndRotation(newPos, newRot);
             }
 
-            TabletControlState tcs = Find.State<TabletControlState>();
+            /*TabletControlState tcs = Find.State<TabletControlState>();
 
-            bool isInTent = warpPoint.Group == TabletWarpPointGroup.Tent;
+           bool isInTent = warpPoint.Group == TabletWarpPointGroup.Tent;
             bool tabletWasAttached = tcs.Socketable.CurrentSocket == MargoSocket || tcs.Socketable.CurrentSocket == ExteriorMargoSocket;
 
             MargoSocket.gameObject.SetActive(isInTent);
@@ -57,7 +58,7 @@ namespace Pennycook {
                 if (tabletWasAttached) {
                     SocketUtility.TryAddToSocket(tcs.Socketable, ExteriorMargoSocket, false);
                 }
-            }
+            }*/
         }
     }
 }
