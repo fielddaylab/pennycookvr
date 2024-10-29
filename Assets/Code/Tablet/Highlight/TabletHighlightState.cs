@@ -83,8 +83,10 @@ namespace Pennycook.Tablet {
         private const int IterationCount = 8;
 
         // uncomment the default and solid masks to allow for other objects to occlude the target type
-        public const int DefaultSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask | LayerMasks.Countable_Mask;
+        public const int DefaultSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask;
         public const int TravelSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Warpable_Mask;
+
+        public const int CountSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Highlightable_Mask | LayerMasks.Countable_Mask;
 
         [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
         [Il2CppSetOption(Option.NullChecks, false)]

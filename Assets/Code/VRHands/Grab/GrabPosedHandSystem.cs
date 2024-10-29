@@ -27,9 +27,29 @@ namespace FieldDay.VRHands {
                 XRInputState input = Find.State<XRInputState>();
 
                 if(component.Grabber.Chirality == XRHandIndex.Left) {
-                    component.AnimateGrip(input.LeftHand.Axis.Grip);
+                    if(component.Grabber.HeldObject != null) {
+                        float snapGrip = component.Grabber.HeldObject.GrabberAnim.GripAnimStrength;
+                        if(snapGrip != 0f) {
+                            component.AnimateGrip(snapGrip);
+                        }
+                        else {
+                            component.AnimateGrip(input.LeftHand.Axis.Grip);
+                        }
+                    } else {
+                        component.AnimateGrip(input.LeftHand.Axis.Grip);
+                    }
                 } else if(component.Grabber.Chirality == XRHandIndex.Right) {
-                    component.AnimateGrip(input.RightHand.Axis.Grip);
+                    if(component.Grabber.HeldObject != null) {
+                        float snapGrip = component.Grabber.HeldObject.GrabberAnim.GripAnimStrength;
+                        if(snapGrip != 0f) {
+                            component.AnimateGrip(snapGrip);
+                        }
+                        else {
+                            component.AnimateGrip(input.RightHand.Axis.Grip);
+                        }
+                    } else {
+                        component.AnimateGrip(input.RightHand.Axis.Grip);
+                    }
                 }
             }
         }

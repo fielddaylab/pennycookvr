@@ -78,7 +78,7 @@ namespace Pennycook.Tablet {
         };
 
         static public readonly TabletToolDefinition Count = new TabletToolDefinition() {
-            RaycastMask = TabletUtility.DefaultSearchMask,
+            RaycastMask = TabletUtility.CountSearchMask,
 
             HighlightPredicate = (h, hc) => {
                 return h.CachedCountable && TabletUtility.IsButtonHeld(XRHandButtons.TriggerButton);
