@@ -1,0 +1,191 @@
+#basePath	Day2
+
+:: Prepare
+@function	ScenePrepare
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
+
+$call Wait(2)
+
+{@Margo}   Mornin', kiddo!   $[Day2/Tent/Margo_1]
+{@Margo}   Jeepers... you look exhausted.   $[Day2/Tent/Margo_2]
+{@Player}   Ugh. Is it that obvious?  $[Day2/Tent/Player_1]
+{@Player}   I couldn't sleep. I tried counting sheep, counting penguins, stress-eating some Snickers bars . . .   $[Day2/Tent/Player_2]
+{@Margo}   Aw, don't worry, kid. The midnight sun takes some gettin' used to.     $[Day2/Tent/Margo_3]
+{@Margo}   Just wait til you spend a few days runnin' around after penguins. You'll be so tired you won't know what hit ya.     $[Day2/Tent/Margo_4]
+
+$call SetWarpActive(WarpBluff, true)
+
+:: PickedUpMargo
+@trigger    TabletLifted
+@who        Player
+@interrupt
+@once
+
+$call Wait(1)
+$set	chapter:hasTalkedToMargo = true
+
+{@Player}    Sounds good to me. Let's get out there!   $[Day2/Tent/Player_3]
+{@Margo}   Whoa, slow your roll, kiddo. Last time you almost froze your fingers off, and I've heard those are pretty important for humans.  $[Day2/Tent/Margo_5]
+{@Margo}    Got your cold weather gear on?   $[Day2/Tent/Margo_6]
+{@Player}    All five layers. Plus some extra hand warmers.    $[Day2/Tent/Player_4]
+{@Margo}    Did you make sure to eat a filling breakfast?   $[Day2/Tent/Margo_7]
+{@Player}   Margo, I've literally been eating Halloween candy all night.    $[Day2/Tent/Player_5]
+{@Margo}    Well, okey dokey, then. Looks like somebody's learnin'.  $[Day2/Tent/Margo_8]
+{@Margo}    Whenever you're ready, point me at the door, and we'll head out to the Bluff!     $[Day2/Tent/Margo_9]
+
+$call CreateGoal("Day2_outside", Use Warp to go outside)
+$call SetWarpActive(WarpBluff, true)
+
+:: WarpedOutsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Bluff"
+@once
+
+$call CompleteGoal("Day2_outside")
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluff, false)
+
+{@Player}    Wow, look at them all! $[Day2/Bluff/Player_1]
+{@Margo}    Yep, seems we've got some new arrivals. We'll need a new population count. $[Day2/Bluff/Margo_1]
+{@Margo}    You’ll also have two tasks down at the Rookery: retrieve your penguins’ GPS trackers, and see if they’ve paired up with a mate. $[Day2/Bluff/Margo_2]
+{@Player}   No sweat. I’ve got this. When should we do this? $[Day2/Bluff/Player_2]
+{@Margo}   You’re the scientist, kiddo. You tell me. $[Day2/Bluff/Margo_3]
+
+$call SetWarpGroupActive(Rookery, true)
+$call CreateGoal("Day2_rookery", Use Warp to enter rookery)
+$call CreateGoal("Day2_count", Use Count to count population)
+
+
+:: ScannedFromBluff
+@trigger	TabletCounted
+@who		Player
+@interrupt
+@once
+
+$call CompleteGoal("Day2_count")
+
+{@Margo}  Great job, kid! We’ve got a new population count.  $[Day2/Bluff/Margo_4]
+
+:: WarpedToRookery
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Rookery"
+@once
+
+$call CompleteGoal("Day2_rookery")
+
+$call Wait(1)
+
+//$call SetWarpActive(WarpBluffBack, true)
+$call SetWarpGroupActive(Rookery, true)
+
+$call ClearGoals()
+
+$call CreateGoal("Day2_mates", ID 5 Penguins and their mates)
+$call CreateGoal("Day2_trackers", Retrieve 3 trackers from Penguins)
+
+:: WarpedToRookeryMiddle
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Middle"
+@once
+
+{@Margo}   Okey dokey. Time to track down the Funtastic Five $[Day2/Rookery/Margo_1]
+{@Player}  The Fliptastic Five. $[Day/Rookery/Player_1]
+{@Margo}    And get an ID on their mates. $[Day2/Rookery/Margo_2]
+{@Player}   How can I tell who their mates are? $[Day2/Rookery/Player_2]
+{@Margo}    You will need to look for the mating dances.    $[Day2/Rookery/Margo_3]
+{@Player}   Oh. Right. Got it.  $[Day2/Rookery/Player_3]
+
+:: WarpedToRookeryGate
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Far"
+@once
+
+{@Margo}    Okay, kid. This is the tricky part. You’ll need to remove each penguin’s GPS tracker. $[Day2/Rookery/Margo_4]
+{@Margo}    Place one hand on a penguin to hold it still.    $[Day2/Rookery/Margo_5]
+{@Margo}    Then use your other hand to grab the tracker from its leg.   $[Day2/Rookery/Margo_6]
+{@Margo}   And release it near the Pelican Case to drop it inside.   $[Day2/Rookery/Margo_7]
+{@Player}   Got it. No problem. $[Day2/Rookery/Player_4]
+{@Margo}    Just watch out for their beaks. $[Day2/Rookery/Margo_8]
+{@Player}   Ha. Very funny. You’re just trying to scare me, right? I mean, they don’t even have teeth!  $[Day2/Rookery/Player_5]
+{@Margo}    Oh, you sweet summer child. $[Day2/Rookery/Margo_9]
+
+:: OnPenguinTrackerRemoved
+@function	TabletIdentified
+@when		objectType == "TrackedPenguin"
+$set	chapter:identifiedCount + 1
+
+
+:: ObjectiveCompleted
+@trigger	ObjectiveCompleted
+@who		Player
+@once
+@interrupt
+
+$set	chapter:finishedObservations = true
+$call ClearGoals()
+
+$call Wait(0.3)
+{@Partner}  Great! You can head back to the overlook now.   $[Day2/Rookery/Partner_2]
+
+$call CreateGoal("Day2_return", Return to tent)
+
+:: WarpedBackToTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
+@once
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpGroupActive(Rookery, false)
+$call SetWarpActive(WarpDesk, true)
+
+{@Margo} Let's get back in the tent and upload that data!   $[Day2/Bluff/Margo_3]
+
+$call CreateGoal("Day2_upload", Upload Margo's data)
+
+:: WarpedInsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
+@interrupt
+
+$call CompleteGoal("Day2_return")
+$call Wait(1)
+$call SetWarpActive(WarpDesk, true)
+
+{@Margo}    Okay dokey! Just dock me in the port there, and I’ll take a look at our data. $[Day2/Tent/Margo_10]
+
+$while !IsSocketedBy(DeskDock, Margo)
+$call Wait(0.5)
+$endwhile
+
+$while !ButtonPressed(BigButton)
+$call Wait(0.5)
+$endwhile
+
+$call CompleteGoal("Day2_upload")
+
+{@Margo}    Looks like the population has increased as more penguins show up for mating season.    $[Day2/Tent/Margo_11]
+{@Margo}    All five of your penguins have formed breeding pairs!    $[Day2/Tent/Margo_12]
+{@Margo}    Most penguin parents lay two eggs each season . . . but not all of them end up hatching.    $[Day2/Tent/Margo_13]
+{@Margo}    We'll have to wait and see what happens.    $[Day2/Tent/Margo_14]
+{@Margo}    Nice job, kid. Another excellent day's work.    $[Day2/Tent/Margo_15]
+{@Margo}    And you've still got plenty of time for trick or treating!  $[Day2/Tent/Margo_16]
+{@Margo}    There's a costume parade at McMurdo Station. I'm going as a vintage TV. Penny got me an antenna and everything! $[Day2/Tent/Margo_17]
+{@Player}   I think I'll stay here. I checked out a copy of The Thing from the library. $[Day2/Tent/Player_6]
+{@Margo}    Yikes. Do you, uh... know what it's about? $[Day2/Tent/Margo_18]
+{@Margo}    You better stock up on more candy... I don't think you'll be gettin' much sleep tonight.    $[Day2/Tent/Margo_19]
