@@ -1,0 +1,249 @@
+#basePath	Day5
+
+:: Day5Start
+@trigger    Day5Ready
+@who        Player
+@once
+
+$call Wait(2)
+
+{@Margo}   Mornin', kiddo!   $[Day5/Tent/Margo_1]
+{@Margo}   This is it. Just think… this time tomorrow you’ll be back in Wisconsin.  $[Day5/Tent/Margo_2]
+{@Player}   Ugh. Is it that obvious?  $[Day5/Tent/Player_1]
+{@Player}   I couldn't sleep. I tried counting sheep, counting penguins, stress-eating some Snickers bars . . .   $[Day5/Tent/Player_2]
+{@Margo}   Aw, don't worry, kid. The midnight sun takes some gettin' used to.     $[Day5/Tent/Margo_3]
+{@Margo}   Just wait til you spend a few days runnin' around after penguins. You'll be so tired you won't know what hit ya.     $[Day5/Tent/Margo_4]
+
+$call SetWarpActive(WarpBluff, true)
+
+:: PickedUpMargo
+@trigger    TabletLifted
+@who        Player
+@interrupt
+@once
+
+$call Wait(1)
+$set	chapter:hasTalkedToMargo = true
+
+{@Player}    Sounds good to me. Let's get out there!   $[Day5/Tent/Player_3]
+{@Margo}   Whoa, slow your roll, kiddo. Last time you almost froze your fingers off, and I've heard those are pretty important for humans.  $[Day5/Tent/Margo_5]
+{@Margo}    Got your cold weather gear on?   $[Day5/Tent/Margo_6]
+{@Player}    All five layers. Plus some extra hand warmers.    $[Day5/Tent/Player_4]
+{@Margo}    Did you make sure to eat a filling breakfast?   $[Day5/Tent/Margo_7]
+{@Player}   Margo, I've literally been eating Halloween candy all night.    $[Day5/Tent/Player_5]
+{@Margo}    Well, okey dokey, then. Looks like somebody's learnin'.  $[Day5/Tent/Margo_8]
+{@Margo}    Whenever you're ready, point me at the door, and we'll head out to the Bluff!     $[Day5/Tent/Margo_9]
+
+$call CreateGoal("Day5_outside", Use Warp to go outside)
+$call SetWarpActive(WarpBluff, true)
+
+:: WarpedOutsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Bluff"
+@once
+
+$call CompleteGoal("Day5_outside")
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluff, false)
+
+{@Player}    Wow, look at them all! $[Day5/Bluff/Player_1]
+{@Margo}    Yep, seems we've got some new arrivals. We'll need a new population count. $[Day5/Bluff/Margo_1]
+{@Margo}    You’ll also have two tasks down at the Rookery: retrieve your penguins’ GPS trackers, and see if they’ve paired up with a mate. $[Day5/Bluff/Margo_2]
+{@Player}   No sweat. I’ve got this. When should we do this? $[Day5/Bluff/Player_2]
+{@Margo}   You’re the scientist, kiddo. You tell me. $[Day5/Bluff/Margo_3]
+{@Player}   Hmmm, Maybe we should get a head count. $[Day5/Bluff/Player_3]
+
+$call CreateGoal("Day5_count", Use Count to count population)
+
+:: ScannedFromBluff
+@trigger	TabletCounted
+@who		Player
+@interrupt
+@once
+
+$call CompleteGoal("Day5_count")
+
+{@Margo}  Great job, kid! We’ve got a new population count.  $[Day5/Bluff/Margo_4]
+$call SetWarpGroupActive(Rookery, true)
+$call CreateGoal("Day5_rookery", Use Warp to enter rookery)
+
+:: WarpedToRookery
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Rookery"
+@once
+
+$call CompleteGoal("Day5_rookery")
+
+$call Wait(1)
+
+//$call SetWarpActive(WarpBluffBack, true)
+$call SetWarpGroupActive(Rookery, true)
+
+$call ClearGoals()
+
+$call CreateGoal("Day5_mates", ID 5 Penguins and their mates)
+$call CreateGoal("Day5_trackers", Retrieve 3 trackers from Penguins)
+
+:: WarpedToRookeryMiddle
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Middle"
+@once
+
+{@Margo}   Okey dokey. Time to track down the Funtastic Five $[Day5/Rookery/Margo_1]
+{@Player}  The Fliptastic Five. $[Day/Rookery/Player_1]
+{@Margo}    And get an ID on their mates. $[Day5/Rookery/Margo_2]
+{@Player}   How can I tell who their mates are? $[Day5/Rookery/Player_2]
+{@Margo}    You will need to look for the mating dances.    $[Day5/Rookery/Margo_3]
+{@Player}   Oh. Right. Got it.  $[Day5/Rookery/Player_3]
+
+$call ClearGoals()
+
+$call CreateGoal("id_millie", ID Millie's Mate)
+$call CreateGoal("id_alfredo", ID Alfredo's Mate)
+$call CreateGoal("id_fuzz", ID Fuzz's Mate)
+$call CreateGoal("band_blue", Scan penguin with blue band)
+$call CreateGoal("band_purple", Scan penguin with purple band)
+
+:: OnPenguinIdentified
+@function	TabletIdentified
+@when		targetObject == "Billy"
+$set	chapter:identifiedCount + 1
+
+$call CompleteGoal("id_millie")
+
+{@Player}   Looks like Millie paired up with her same mate from last year!  $[Day5/Rookery/Player_4]
+{@Partner}  Millie and . . . Billy? $[Day5/Rookery/Partner_1]
+{@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Days2/Rookery/Partner_2]
+
+:: OnPenguinIdentified
+@function	TabletIdentified
+@when		targetObject == "Meatball"
+$set	chapter:identifiedCount + 1
+
+$call CompleteGoal("id_alfredo")
+
+{@Margo}    Hmmm. Alfredo’s mate doesn’t have a tag. Looks like a newbie.   $[Day5/Rookery/Margo_4]
+{@Margo}    Why don’t you go ahead and name him?    $[Day5/Rookery/Margo_5]
+{@Player}   Oh… me? $[Day5/Rookery/Player_5]
+{@Player}   Okay, let’s see. Alfredo and…. um….how about . . . $[Day5/Rookery/Player_6]
+{@Player}    . . Meatball?  $[Day5/Rookery/Player_7]
+{@Margo}    Ohhhh kaayyy... $[Day5/Rookery/Margo_6]
+{@Player}   Now I’m getting hungry. Got any candy bars in that case?    $[Day5/Rookery/Player_8]
+
+:: OnPenguinIdentified
+@function	TabletIdentified
+@when		targetObject == "Daisy"
+$set	chapter:identifiedCount + 1
+
+{@Margo}    Hmm. Fuzz and Daisy. Interesting.   $[Day5/Rookery/Margo_7]
+{@Player}   What's interesting?  $[Day5/Rookery/Player_9]
+{@Margo}    I just hope Fuzz is ready to be a parent. He’s so easily distracted.    $[Day5/Rookery/Margo_8]
+{@Margo}    And it’s the first mating season for both of these penguins.    $[Day5/Rookery/Margo_9]
+{@Player}   I’m sure they’ll be fine. It’s instinct for them, right?    $[Day5/Rookery/Player_10]
+{@Margo}    You’d be surprised, kid. Not all penguins make good parents.    $[Day5/Rookery/Margo_10]
+{@Player}   We’ll just have to wait and see.    $[Day5/Rookery/Player_11]
+
+:: OnPenguinIdentified
+@function	TabletIdentified
+@when		targetObject == "Wendy"
+$set	chapter:identifiedCount + 1
+
+{@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day5/Rookery/Margo_11]
+{@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day5/Rookery/Margo_12]
+
+:: OnPenguinIdentified
+@function	TabletIdentified
+@when		targetObject == "Benni"
+$set	chapter:identifiedCount + 1
+
+{@Margo}   Ooh, Benni and Polo! What a good match.  $[Day5/Rookery/Margo_13]
+{@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day5/Rookery/Margo_14]
+
+:: WarpedToRookeryGate
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Far"
+@once
+
+{@Margo}    Okay, kid. This is the tricky part. You’ll need to remove each penguin’s GPS tracker. $[Day5/Rookery/Margo_4]
+{@Margo}    Place one hand on a penguin to hold it still.    $[Day5/Rookery/Margo_5]
+{@Margo}    Then use your other hand to grab the tracker from its leg.   $[Day5/Rookery/Margo_6]
+{@Margo}   And release it near the Pelican Case to drop it inside.   $[Day5/Rookery/Margo_7]
+{@Player}   Got it. No problem. $[Day5/Rookery/Player_4]
+{@Margo}    Just watch out for their beaks. $[Day5/Rookery/Margo_8]
+{@Player}   Ha. Very funny. You’re just trying to scare me, right? I mean, they don’t even have teeth!  $[Day5/Rookery/Player_5]
+{@Margo}    Oh, you sweet summer child. $[Day5/Rookery/Margo_9]
+
+:: OnPenguinTrackerRemoved
+@function	TabletIdentified
+@when		objectType == "TrackedPenguin"
+$set	chapter:identifiedCount + 1
+
+
+:: ObjectiveCompleted
+@trigger	ObjectiveCompleted
+@who		Player
+@once
+@interrupt
+
+$set	chapter:finishedObservations = true
+$call ClearGoals()
+
+$call Wait(0.3)
+{@Partner}  Great! You can head back to the overlook now.   $[Day5/Rookery/Partner_2]
+
+$call CreateGoal("Day5_return", Return to tent)
+
+:: WarpedBackToTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
+@once
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpGroupActive(Rookery, false)
+$call SetWarpActive(WarpDesk, true)
+
+{@Margo} Let's get back in the tent and upload that data!   $[Day5/Bluff/Margo_3]
+
+$call CreateGoal("Day5_upload", Upload Margo's data)
+
+:: WarpedInsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
+@interrupt
+
+$call CompleteGoal("Day5_return")
+$call Wait(1)
+$call SetWarpActive(WarpDesk, true)
+
+{@Margo}    Okay dokey! Just dock me in the port there, and I’ll take a look at our data. $[Day5/Tent/Margo_10]
+
+$while !IsSocketedBy(DeskDock, Margo)
+$call Wait(0.5)
+$endwhile
+
+$while !ButtonPressed(BigButton)
+$call Wait(0.5)
+$endwhile
+
+$call CompleteGoal("Day5_upload")
+
+{@Margo}    Looks like the population has increased as more penguins show up for mating season.    $[Day5/Tent/Margo_11]
+{@Margo}    All five of your penguins have formed breeding pairs!    $[Day5/Tent/Margo_12]
+{@Margo}    Most penguin parents lay two eggs each season . . . but not all of them end up hatching.    $[Day5/Tent/Margo_13]
+{@Margo}    We'll have to wait and see what happens.    $[Day5/Tent/Margo_14]
+{@Margo}    Nice job, kid. Another excellent day's work.    $[Day5/Tent/Margo_15]
+{@Margo}    And you've still got plenty of time for trick or treating!  $[Day5/Tent/Margo_16]
+{@Margo}    There's a costume parade at McMurdo Station. I'm going as a vintage TV. Penny got me an antenna and everything! $[Day5/Tent/Margo_17]
+{@Player}   I think I'll stay here. I checked out a copy of The Thing from the library. $[Day5/Tent/Player_6]
+{@Margo}    Yikes. Do you, uh... know what it's about? $[Day5/Tent/Margo_18]
+{@Margo}    You better stock up on more candy... I don't think you'll be gettin' much sleep tonight.    $[Day5/Tent/Margo_19]

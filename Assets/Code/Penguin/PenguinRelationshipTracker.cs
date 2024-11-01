@@ -12,7 +12,7 @@ namespace Pennycook {
     [RequireComponent(typeof(PenguinBrain))]
     public sealed class PenguinRelationshipTracker : ScriptActorComponent {
         // family
-        [NonSerialized] public PenguinBrain Mate;
+        public PenguinBrain Mate;
         [NonSerialized] public RingBuffer<PenguinBrain> Children = new RingBuffer<PenguinBrain>(4, RingBufferMode.Expand);
         [NonSerialized] public AnalogSignal FamilyAnxiety;
 

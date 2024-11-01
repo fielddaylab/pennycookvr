@@ -1,0 +1,154 @@
+#basePath	Day4
+
+:: Prepare
+@function	ScenePrepare
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+
+:: StartGame
+@trigger    Day4Start
+@who        Player
+@once
+
+$call Wait(2)
+
+{@Margo}   Mornin', kiddo.   $[Day4/Tent/Margo_1]
+{@Player}   Whoa… what’s all this?   $[Day4/Tent/Player_1]
+{@Margo}   Penny got up early to decorate. It’s one week til Christmas!  $[Day4/Tent/Margo_2]
+{@Margo}    Sorry, no presents yet…. Santa usually shows up a little late here. $[Day4/Tent/Margo_3]
+{@Player}   Yeah. I guess we’re about as far from the North Pole as you can get.  $[Day4/Tent/Player_2]
+{@Player}   I wish Lola could meet the Fliptastic Five for Christmas. She’d love them!     $[Day4/Tent/Player_3]
+{@Player}   Especially Polo.    $[Day4/Tent/Player_4]
+{@Margo}   Aw, cheer up, kiddo. You’ll see Lola again before ya know it!     $[Day4/Tent/Margo_4]
+{@Margo}    What’s she doin’ today, do ya think?    $[Day4/Tent/Margo_5]
+{@Player}   She’s a sixth-grade teacher and it’s the last day before winter break.  $[Day4/Tent/Player_5]
+{@Player}   So they’re probably… I don’t know. Eating cookies and making ornaments out of noodles?  $[Day4/Tent/Player_6]
+{@Margo}    For a human, you don’t know too much about human kids, do ya?   $[Day4/Tent/Margo_6]
+{@Player}   Guess not.  $[Day4/Tent/Player_7]
+{@Margo}    Well, at least you’re becomin’ an expert on penguin kids.   $[Day4/Tent/Margo_7]
+{@Margo}    Come on. Let’s get out there and check on those penguins.   $[Day4/Tent/Margo_8]
+
+$call SetWarpActive(WarpBluff, true)
+$call Wait(1)
+$set	chapter:hasTalkedToMargo = true
+
+$call CreateGoal("Day4_outside", Use Warp to go outside)
+$call SetWarpActive(WarpBluff, true)
+
+:: WarpedOutsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Bluff"
+@once
+
+$call CompleteGoal("Day4_outside")
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluff, false)
+
+$call SetWarpGroupActive(Rookery, true)
+$call CreateGoal("Day4_rookery", Use Warp to enter rookery)
+
+
+:: WarpedToRookery
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Rookery"
+@once
+
+$call CompleteGoal("Day4_rookery")
+
+$call Wait(1)
+
+//$call SetWarpActive(WarpBluffBack, true)
+$call SetWarpGroupActive(Rookery, true)
+
+$call ClearGoals()
+
+{@Player}   Whoa… look at them! I keep forgetting how funny the chicks look these days. $[Day4/Rookery/Player_1]
+{@Partner}   Isn’t it great? We call this their awkward-teenager stage. $[Day4/Rookery/Partner_1]
+{@Player}   How’s Polo’s chick doing?   $[Day4/Rookery/Player_2]
+{@Partner}  Seems fine. A little small for her age, but she’s a tough cookie.   $[Day4/Rookery/Partner_2]
+{@Player}   Phew. That’s good. I was rooting for her.   $[Day4/Rookery/Player_3]
+{@Player}   Oh, and speaking of cookies . . . where’d you get all that Christmas stuff? $[Day4/Rookery/Player_4]
+{@Partner}  Oh, did you like it? It’s no biggie, just some old decorations I had lying around.  $[Day4/Rookery/Partner_3]
+{@Player}   At the South Pole?? How?    $[Day4/Rookery/Player_5]
+{@Partner}  I won most of it in a cribbage game at McMurdo. $[Day4/Rookery/Partner_4]
+{@Player}   Oh. Yeah… that tracks.  $[Day4/Rookery/Player_6]
+{@Margo}    Okay, enough chatter. Lots to do today. $[Day4/Rookery/Margo_1]
+{@Margo}    You’ll need to collect data from the weigh bridge—that’s that gate doohickey over there. $[Day4/Rookery/Margo_2]
+{@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/Margo_3]
+{@Margo}    And we’ll need to band 3 of the chicks. $[Day4/Rookery/Margo_4]
+{@Player}   Got it. Let’s get to work.  $[Day4/Rookery/Player_7]
+
+:: WarpedToRookeryGate
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-RookeryFar"
+@once
+
+{@Player}    Okay, Margo. How does this weigh bridge thing work, exactly? $[Day4/Rookery/Player_8]
+{@Margo}    Oh, it’s easy as pie!    $[Day4/Rookery/Margo_5]
+{@Margo}    The weigh bridge gathers data on what the penguins were up to when they were away from the colony.   $[Day4/Rookery/Margo_6]
+{@Margo}    You know . . . where they went, what they were eatin’, stuff like that.   $[Day4/Rookery/Margo_7]
+{@Margo}   Just make sure Scan Mode is on, and then point me at the gate. $[Day4/Rookery/Margo_8]
+{@Margo}    I’ll scan each penguin’s data as it passes through. $[Day4/Rookery/Margo_9]
+
+:: OnPenguinTrackerRemoved
+@function	TabletIdentified
+@when		objectType == "TrackedPenguin"
+$set	chapter:identifiedCount + 1
+
+
+:: ObjectiveCompleted
+@trigger	ObjectiveCompleted
+@who		Player
+@once
+@interrupt
+
+$set	chapter:finishedObservations = true
+$call ClearGoals()
+
+$call Wait(0.3)
+{@Partner}  Great! You can head back to the overlook now.   $[Day4/Rookery/Partner_2]
+
+$call CreateGoal("Day4_return", Return to tent)
+
+:: WarpedBackToTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
+@once
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpGroupActive(Rookery, false)
+$call SetWarpActive(WarpDesk, true)
+
+{@Margo} Let's get back in the tent and upload that data!   $[Day4/Bluff/Margo_3]
+
+$call CreateGoal("Day4_upload", Upload Margo's data)
+
+:: WarpedInsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
+@interrupt
+
+$call CompleteGoal("Day4_return")
+$call Wait(1)
+$call SetWarpActive(WarpDesk, true)
+
+{@Margo}    Okay dokey! Just dock me in the port there, and I’ll take a look at our data. $[Day4/Tent/Margo_10]
+
+$while !IsSocketedBy(DeskDock, Margo)
+$call Wait(0.5)
+$endwhile
+
+$while !ButtonPressed(BigButton)
+$call Wait(0.5)
+$endwhile
+
+$call CompleteGoal("Day4_upload")
