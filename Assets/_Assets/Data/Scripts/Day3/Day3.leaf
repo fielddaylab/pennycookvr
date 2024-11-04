@@ -1,14 +1,12 @@
 #basePath	Day3
 
-:: Prepare
-@function	ScenePrepare
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
-
-:: StartGame
+:: Day3Start
 @trigger    Day3Start
 @who        Player
 @once
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
 
 $call Wait(2)
 
@@ -24,7 +22,6 @@ $call Wait(2)
 
 $call SetWarpActive(WarpBluff, true)
 $call Wait(1)
-$set	chapter:hasTalkedToMargo = true
 
 $call CreateGoal("Day3_outside", Use Warp to go outside)
 $call SetWarpActive(WarpBluff, true)
@@ -81,7 +78,7 @@ $call ClearGoals()
 {@Partner}  You’ll also need to document what tshe parents are feeding their chicks. $[Day3/Rookery/Partner_11]
 {@Player}   Got it. $[Day3/Rookery/Player_6]
 {@Partner}  Oh… and you don’t know what happened to the last slice of pumpkin pie, do you? $[Day3/Rookery/Partner_12]
-{@Player}   Oh, uh… sorry. do you want some of my champurrado?  $[Day3/Rookery/Player_6]
+{@Player}   Oh, uh… sorry. do you want some of my champurrado?  $[Day3/Rookery/Player_7]
 
 $call CreateGoal("Day3_nests", Scan nests)
 
@@ -94,11 +91,66 @@ $call CreateGoal("Day3_nests", Scan nests)
 {@Margo}    Use my Interact mode to take a look at the nests.   $[Day3/Rookery/Margo_1]
 {@Margo}    We need to see how many eggs are hatched and if any are missing.    $[Day3/Rookery/Margo_2]
 
-
-:: OnPenguinTrackerRemoved
+:: OnWinstonWendyIdentified
 @function	TabletIdentified
-@when		objectType == "TrackedPenguin"
+@when		objectId == "WinstonWendyChick"
 $set	chapter:identifiedCount + 1
+
+{@Player}   Yes! Millie and Billy have hatched a healthy chick! $[Day3/Rookery/Player_8]
+{@Margo}    Aw, good for them. Two years in a row!  $[Day3/Rookery/Margo_3]
+
+:: OnAlfredoEggIdentified
+@function	TabletIdentified
+@when		objectId == "AlfredoEgg"
+$set	chapter:identifiedCount + 1
+
+//play egg hatching animation
+{@Player}   Look, Alfredo’s egg is hatching!  $[Day3/Rookery/Player_9]
+{@Margo}    Ooh. We better snag a video later.  $[Day3/Rookery/Margo_4]
+{@Margo}    I betcha those’ll be the most famous Adelie chicks on Youtube.  $[Day3/Rookery/Margo_5]
+
+:: OnFuzzEggIdentified
+@function	TabletIdentified
+@when		objectId == "FuzzEgg"
+$set	chapter:identifiedCount + 1
+
+{@Player}   Uh oh. Something’s not right here.  $[Day3/Rookery/Player_10]
+{@Player}    Maybe the eggs aren’t ready yet?  $[Day3/Rookery/Player_11]
+{@Margo}    I don’t know, kid.  $[Day3/Rookery/Margo_6]
+{@Margo}    Looks like Daisy’s out gettin’ some food. It’s all up to Fuzz here. $[Day3/Rookery/Margo_7]
+{@Margo}    He’s not warmin’ the egg like he’s supposed to. And it’s awful cold out here.  $[Day3/Rookery/Margo_8]
+{@Player}   He’s brand new at this. Maybe he’ll figure it out.  $[Day3/Rookery/Player_12]
+{@Margo}    Well, he’d better hurry. Those eggs are gonna freeze fast.  $[Day3/Rookery/Margo_9]
+
+:: OnMillieBillyIdentified
+@function	TabletIdentified
+@when		objectId == "MillieBillyChick"
+$set	chapter:identifiedCount + 1
+
+{@Player}   Nice. A new chick for Winston and Wendy! $[Day3/Rookery/Player_13]
+{@Margo}    No surprise there. There’s a reason we call them “Old Faithful.”  $[Day3/Rookery/Margo_10]
+{@Margo}    Winston and Wendy have had a successful chick every year.  $[Day3/Rookery/Margo_11]
+{@Player}   Wow. Penguin Parents of the Year award! Keep it up, you two.    $[Day3/Rookery/Player_14]
+
+:: OnPoloNestIdentified
+@function	TabletIdentified
+@when		objectId == "PoloNest"
+$set	chapter:identifiedCount + 1
+
+{@Player}   Whoa, wait a second. Weren’t there an egg here yesterday?   $[Day3/Rookery/Player_15]
+{@Player}   What happened to the egg?   $[Day3/Rookery/Player_16]
+{@Margo}    Oh no. Poor Polo.   $[Day3/Rookery/Margo_12]
+{@Margo}    The skua must’ve been here. $[Day3/Rookery/Margo_13]
+{@Player}   You mean . . . the egg is gone?  $[Day3/Rookery/Player_17]
+
+
+:: WarpedToRookeryGate
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-RookeryBack"
+@once
+
+
 
 :: ObjectiveCompleted
 @trigger	ObjectiveCompleted

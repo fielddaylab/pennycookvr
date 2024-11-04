@@ -1,9 +1,12 @@
 #basePath	Day2
 
 :: Day2Start
-@trigger    Day2Ready
+@trigger    Day2Start
 @who        Player
 @once
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
 
 $call Wait(2)
 
@@ -109,9 +112,9 @@ $call CreateGoal("id_fuzz", ID Fuzz's Mate)
 $call CreateGoal("id_winston", ID Winston's Mate)
 $call CreateGoal("id_polo", ID Polo's Mate)
 
-:: OnPenguinIdentified
+:: OnBillyIdentified
 @function	TabletIdentified
-@when		targetObject == "Billy"
+@when		objectId == "Billy"
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_millie")
@@ -120,9 +123,9 @@ $call CompleteGoal("id_millie")
 {@Partner}  Millie and . . . Billy? $[Day2/Rookery/Partner_1]
 {@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Days2/Rookery/Partner_2]
 
-:: OnPenguinIdentified
+:: OnMeatballIdentified
 @function	TabletIdentified
-@when		targetObject == "Meatball"
+@when		objectId == "Meatball"
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_alfredo")
@@ -135,9 +138,9 @@ $call CompleteGoal("id_alfredo")
 {@Margo}    Ohhhh kaayyy... $[Day2/Rookery/Margo_6]
 {@Player}   Now I’m getting hungry. Got any candy bars in that case?    $[Day2/Rookery/Player_8]
 
-:: OnPenguinIdentified
+:: OnDaisyIdentified
 @function	TabletIdentified
-@when		targetObject == "Daisy"
+@when		objectId == "Daisy"
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_fuzz")
@@ -150,9 +153,9 @@ $call CompleteGoal("id_fuzz")
 {@Margo}    You’d be surprised, kid. Not all penguins make good parents.    $[Day2/Rookery/Margo_10]
 {@Player}   We’ll just have to wait and see.    $[Day2/Rookery/Player_11]
 
-:: OnPenguinIdentified
+:: OnWendyIdentified
 @function	TabletIdentified
-@when		targetObject == "Wendy"
+@when		objectId == "Wendy"
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_winston")
@@ -160,9 +163,9 @@ $call CompleteGoal("id_winston")
 {@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/Margo_11]
 {@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day2/Rookery/Margo_12]
 
-:: OnPenguinIdentified
+:: OnBenniIdentified
 @function	TabletIdentified
-@when		targetObject == "Benni"
+@when		objectId == "Benni"
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_polo")
@@ -200,32 +203,17 @@ $endif
 {@Player}   Ha. Very funny. You’re just trying to scare me, right? I mean, they don’t even have teeth!  $[Day2/Rookery/Player_13]
 {@Margo}    Oh, you sweet summer child. $[Day2/Rookery/Margo_22]
 
-:: OnPenguinTrackerRemoved
-@function	TrackerRemoved
-@when		objectType == "Fuzz"
+::OnFuzzTrackerRemoved
+@function TrackerRemoved
+@when   objectId == "FuzzTracker"
 @once
-$set	chapter:removedCount + 1
 
 {@Player}   Ouch! Fuzz, just hold still!    $[Day2/Rookery/Player_6]
 {@Margo}    Told ya. Those beaks are sharper than they look.    $[Day2/Rookery/Margo_23]
 
-$if chapter:removedCount >= 3
-	$call TriggerResponse(TrackersCompleted)
-$endif
-
-:: OnPenguinTrackerRemoved2 
-@function	TrackerRemoved
-@when		objectType == "Polo"
-@once
-$set	chapter:removedCount + 1
-
-$if chapter:removedCount >= 3
-	$call TriggerResponse(TrackersCompleted)
-$endif
-
-:: OnPenguinTrackerRemoved3
-@function	TrackerRemoved
-@when		objectType == "Winston"
+:: OnPenguinLegTrackerSocketed
+@function	ObjectSocketed
+@when		socketType == "TrackerSocket", objectType == "LegTracker"
 @once
 $set	chapter:removedCount + 1
 
@@ -302,3 +290,7 @@ $call CompleteGoal("Day2_upload")
 {@Player}   Not really, but I've heard it's pretty spooky.  $[Day2/Tent/Player_7]
 {@Margo}    Yeah, ya got that right.    $[Day2/Tent/Margo_19]
 {@Margo}    You better stock up on more candy... I don't think you'll be gettin' much sleep tonight.    $[Day2/Tent/Margo_20]
+
+$call Wait(2)
+
+$call TriggerResponse(Day3Start)

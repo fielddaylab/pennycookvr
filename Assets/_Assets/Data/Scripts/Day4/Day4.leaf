@@ -1,14 +1,12 @@
 #basePath	Day4
 
-:: Prepare
-@function	ScenePrepare
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
-
-:: StartGame
+:: Day4Start
 @trigger    Day4Start
 @who        Player
 @once
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
 
 $call Wait(2)
 
@@ -30,7 +28,6 @@ $call Wait(2)
 
 $call SetWarpActive(WarpBluff, true)
 $call Wait(1)
-$set	chapter:hasTalkedToMargo = true
 
 $call CreateGoal("Day4_outside", Use Warp to go outside)
 $call SetWarpActive(WarpBluff, true)
@@ -95,11 +92,10 @@ $call ClearGoals()
 {@Margo}   Just make sure Scan Mode is on, and then point me at the gate. $[Day4/Rookery/Margo_8]
 {@Margo}    I’ll scan each penguin’s data as it passes through. $[Day4/Rookery/Margo_9]
 
-:: OnPenguinTrackerRemoved
+:: OnWeighGateIdentified
 @function	TabletIdentified
-@when		objectType == "TrackedPenguin"
-$set	chapter:identifiedCount + 1
-
+@when		objectId == "WeighGate"
+$set	chapter:weighGate = true
 
 :: ObjectiveCompleted
 @trigger	ObjectiveCompleted

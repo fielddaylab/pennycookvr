@@ -5,6 +5,9 @@
 @who        Player
 @once
 
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+
 $call Wait(2)
 
 {@Margo}   Mornin', kiddo!   $[Day5/Tent/Margo_1]

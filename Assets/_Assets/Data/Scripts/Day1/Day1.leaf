@@ -188,3 +188,6 @@ $call CompleteGoal("day1_upload")
 {@Margo}    Looks like we've got 25 returners! Mostly adults, a few subadults...   $[Day1/Tent/Margo_15]
 {@Margo}    Great first day, kiddo! Get some rest now, why don'tcha?    $[Day1/Tent/Margo_16]
 
+$call Wait(2)
+
+$call TriggerResponse(Day2Start)
