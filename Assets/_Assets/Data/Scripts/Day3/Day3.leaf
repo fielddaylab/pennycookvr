@@ -18,7 +18,7 @@ $call Wait(2)
 {@Margo}   What happened to not playin’ favorites?     $[Day3/Tent/Margo_2]
 {@Player}   Oh, uh . . . I just . . .    $[Day3/Tent/Player_5]
 {@Margo}   Ha. Relax, kiddo, I’m teasin’.     $[Day3/Tent/Margo_3]
-{@Margo}    Let’s get out there and see how your Fabulous Five are doin’.    $[Day3/Tent/Margo_5]
+{@Margo}    Let’s get out there and see how your Fabulous Five are doin’.    $[Day3/Tent/Margo_4]
 
 $call SetWarpActive(WarpBluff, true)
 $call Wait(1)
@@ -144,7 +144,7 @@ $set	chapter:identifiedCount + 1
 {@Player}   You mean . . . the egg is gone?  $[Day3/Rookery/Player_17]
 
 
-:: WarpedToRookeryGate
+:: WarpedToRookeryBack
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-RookeryBack"
@@ -162,7 +162,6 @@ $set	chapter:finishedObservations = true
 $call ClearGoals()
 
 $call Wait(0.3)
-{@Partner}  Great! You can head back to the overlook now.   $[Day3/Rookery/Partner_2]
 
 $call CreateGoal("Day3_return", Return to tent)
 

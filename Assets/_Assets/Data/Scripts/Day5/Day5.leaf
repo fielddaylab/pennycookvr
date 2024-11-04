@@ -106,67 +106,6 @@ $call CreateGoal("Day5_trackers", Retrieve 3 trackers from Penguins)
 
 $call ClearGoals()
 
-$call CreateGoal("id_millie", ID Millie's Mate)
-$call CreateGoal("id_alfredo", ID Alfredo's Mate)
-$call CreateGoal("id_fuzz", ID Fuzz's Mate)
-$call CreateGoal("band_blue", Scan penguin with blue band)
-$call CreateGoal("band_purple", Scan penguin with purple band)
-
-:: OnPenguinIdentified
-@function	TabletIdentified
-@when		targetObject == "Billy"
-$set	chapter:identifiedCount + 1
-
-$call CompleteGoal("id_millie")
-
-{@Player}   Looks like Millie paired up with her same mate from last year!  $[Day5/Rookery/Player_4]
-{@Partner}  Millie and . . . Billy? $[Day5/Rookery/Partner_1]
-{@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Days2/Rookery/Partner_2]
-
-:: OnPenguinIdentified
-@function	TabletIdentified
-@when		targetObject == "Meatball"
-$set	chapter:identifiedCount + 1
-
-$call CompleteGoal("id_alfredo")
-
-{@Margo}    Hmmm. Alfredo’s mate doesn’t have a tag. Looks like a newbie.   $[Day5/Rookery/Margo_4]
-{@Margo}    Why don’t you go ahead and name him?    $[Day5/Rookery/Margo_5]
-{@Player}   Oh… me? $[Day5/Rookery/Player_5]
-{@Player}   Okay, let’s see. Alfredo and…. um….how about . . . $[Day5/Rookery/Player_6]
-{@Player}    . . Meatball?  $[Day5/Rookery/Player_7]
-{@Margo}    Ohhhh kaayyy... $[Day5/Rookery/Margo_6]
-{@Player}   Now I’m getting hungry. Got any candy bars in that case?    $[Day5/Rookery/Player_8]
-
-:: OnPenguinIdentified
-@function	TabletIdentified
-@when		targetObject == "Daisy"
-$set	chapter:identifiedCount + 1
-
-{@Margo}    Hmm. Fuzz and Daisy. Interesting.   $[Day5/Rookery/Margo_7]
-{@Player}   What's interesting?  $[Day5/Rookery/Player_9]
-{@Margo}    I just hope Fuzz is ready to be a parent. He’s so easily distracted.    $[Day5/Rookery/Margo_8]
-{@Margo}    And it’s the first mating season for both of these penguins.    $[Day5/Rookery/Margo_9]
-{@Player}   I’m sure they’ll be fine. It’s instinct for them, right?    $[Day5/Rookery/Player_10]
-{@Margo}    You’d be surprised, kid. Not all penguins make good parents.    $[Day5/Rookery/Margo_10]
-{@Player}   We’ll just have to wait and see.    $[Day5/Rookery/Player_11]
-
-:: OnPenguinIdentified
-@function	TabletIdentified
-@when		targetObject == "Wendy"
-$set	chapter:identifiedCount + 1
-
-{@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day5/Rookery/Margo_11]
-{@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day5/Rookery/Margo_12]
-
-:: OnPenguinIdentified
-@function	TabletIdentified
-@when		targetObject == "Benni"
-$set	chapter:identifiedCount + 1
-
-{@Margo}   Ooh, Benni and Polo! What a good match.  $[Day5/Rookery/Margo_13]
-{@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day5/Rookery/Margo_14]
-
 :: WarpedToRookeryGate
 @trigger    AtWarpPoint
 @who        Player
@@ -181,12 +120,6 @@ $set	chapter:identifiedCount + 1
 {@Margo}    Just watch out for their beaks. $[Day5/Rookery/Margo_8]
 {@Player}   Ha. Very funny. You’re just trying to scare me, right? I mean, they don’t even have teeth!  $[Day5/Rookery/Player_5]
 {@Margo}    Oh, you sweet summer child. $[Day5/Rookery/Margo_9]
-
-:: OnPenguinTrackerRemoved
-@function	TabletIdentified
-@when		objectType == "TrackedPenguin"
-$set	chapter:identifiedCount + 1
-
 
 :: ObjectiveCompleted
 @trigger	ObjectiveCompleted
@@ -213,8 +146,6 @@ $call Wait(1)
 $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)
-
-{@Margo} Let's get back in the tent and upload that data!   $[Day5/Bluff/Margo_3]
 
 $call CreateGoal("Day5_upload", Upload Margo's data)
 
