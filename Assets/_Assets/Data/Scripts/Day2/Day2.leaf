@@ -1,6 +1,6 @@
 #basePath	Day2
 
-/*:: Prepare
+:: Prepare
 @function	ScenePrepare
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
@@ -10,16 +10,19 @@ $call SetAllWarpsActive(false)
 @who        Player
 @once
 
-$call Wait(2)*/
-:: Day2Start
-@trigger    Day2Start
-@who        Player
-@once
-
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
-
 $call Wait(2)
+//:: Day2Start
+//@trigger    Day2Start
+//@who        Player
+//@once
+
+//$call PlaceAndRotatePlayerAt(WarpDesk, true)
+//$call SetAllWarpsActive(false)
+
+//fade in
+//dock margo
+
+//$call Wait(2)*/
 
 {@Margo}   Mornin', kiddo!   $[Day2/Tent/Margo_1]
 {@Margo}   Jeepers... you look exhausted.   $[Day2/Tent/Margo_2]
@@ -63,12 +66,16 @@ $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
 
+$call TentDoor->Close()
+
 {@Player}    Wow, look at them all! $[Day2/Bluff/Player_1]
 {@Margo}    Yep, seems we've got some new arrivals. We'll need a new population count. $[Day2/Bluff/Margo_1]
 {@Margo}    You’ll also have two tasks down at the Rookery: retrieve your penguins’ GPS trackers, and see if they’ve paired up with a mate. $[Day2/Bluff/Margo_2]
 {@Player}   No sweat. I’ve got this. When should we do this? $[Day2/Bluff/Player_2]
 {@Margo}   You’re the scientist, kiddo. You tell me. $[Day2/Bluff/Margo_3]
 {@Player}   Hmmm, Maybe we should get a head count. $[Day2/Bluff/Player_3]
+
+$call PenguinCount->ActivateCount(12)
 
 $call CreateGoal("Day2_count", Use Count to count population)
 
@@ -99,8 +106,8 @@ $call SetWarpGroupActive(Rookery, true)
 
 $call ClearGoals()
 
-$call CreateGoal("Day2_mates", ID 5 Penguins and their mates)
-$call CreateGoal("Day2_trackers", Retrieve 3 trackers from Penguins)
+$call CreateGoal("Day2_warp_middle", Warp to the middle of the Rookery)
+$call CreateGoal("Day2_warp_far", or Warp near the weigh gate of the Rookery)
 
 :: WarpedToRookeryMiddle2
 @trigger    AtWarpPoint
@@ -108,8 +115,14 @@ $call CreateGoal("Day2_trackers", Retrieve 3 trackers from Penguins)
 @when       targetObject == "WarpTarget-RookeryMiddle"
 @once
 
+$call CompleteGoal("Day2_warp_middle")
+
+$call Wait(2)
+
+$call CreateGoal("Day2_mates", ID 5 Penguins and their mates)
+
 {@Margo}   Okey dokey. Time to track down the Funtastic Five $[Day2/Rookery/Margo_1]
-{@Player}  The Fliptastic Five. $[Day/Rookery/Player_1]
+{@Player}  The Fliptastic Five. $[Day2/Rookery/Player_1]
 {@Margo}    And get an ID on their mates. $[Day2/Rookery/Margo_2]
 {@Player}   How can I tell who their mates are? $[Day2/Rookery/Player_2]
 {@Margo}    You will need to look for the mating dances.    $[Day2/Rookery/Margo_3]
@@ -132,7 +145,7 @@ $call CompleteGoal("id_millie")
 
 {@Player}   Looks like Millie paired up with her same mate from last year!  $[Day2/Rookery/Player_4]
 {@Partner}  Millie and . . . Billy? $[Day2/Rookery/Partner_1]
-{@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Days2/Rookery/Partner_2]
+{@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Day2/Rookery/Partner_2]
 
 :: OnMeatballIdentified
 @function	TabletIdentified
@@ -202,6 +215,14 @@ $endif
 @who        Player
 @when       targetObject == "WarpTarget-RookeryFar"
 @once
+
+$call CompleteGoal("Day2_warp_far")
+
+$call Wait(2)
+
+$call CreateGoal("Day2_trackers", Retrieve 3 trackers from Penguins)
+
+//show the trackers visible on 3 penguins...
 
 {@Margo}    Okay, kid. This is the tricky part. You’ll need to remove each penguin’s GPS tracker. $[Day2/Rookery/Margo_15]
 {@Margo}    Place one hand on a penguin to hold it still.    $[Day2/Rookery/Margo_16]

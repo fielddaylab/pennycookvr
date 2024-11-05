@@ -17,5 +17,7 @@ namespace Pennycook {
 
         static public readonly StringHash32 AtWarpPoint = "AtWarpPoint";
         static public readonly StringHash32 PlayerLookAtObject = "PlayerLookAt";
+
+         static public readonly StringHash32 TabletLookAtObject = "TabletLookAt";
     }
 }

@@ -387,6 +387,8 @@ GameObject:
   - component: {fileID: 3730758072803906673}
   - component: {fileID: 7407224641091295410}
   - component: {fileID: 8860826525602274188}
+  - component: {fileID: 5196015191715806810}
+  - component: {fileID: 9174074232591076019}
   m_Layer: 7
   m_Name: TabletRig
   m_TagString: Untagged
@@ -571,6 +573,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ccd4c7cbc9914bae838ff910fc3b480, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5196015191715806810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6471475439971284886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94017bbba0c6ca2469db3156f728556e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LookRoot: {fileID: 572561772316167985}
+  RaycastSize: 1
+  RaycastDistance: 5
+  HitsPerRay: 1
+  RaycastResolution: 10
+  LookLatch:
+    OnThreshold: 1
+    OffThreshold: 1
+  LookEnvelope:
+    Attack: 2
+    Decay: 1
+  HeldObjectLookMultiplier: 1
+--- !u!114 &9174074232591076019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6471475439971284886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4fd8083bb79f7749befc3336d9dfc2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7385909178958478154

@@ -57,6 +57,8 @@ $call SetWarpActive(WarpBluff, true)
 @when       targetObject == "WarpTarget-Bluff"
 @once
 
+$call TentDoor->Close()
+
 $call CompleteGoal("day1_outside")
 
 $call Wait(1)
