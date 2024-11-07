@@ -1,29 +1,29 @@
 #basePath	Day2
 
-:: Day2Start
-@trigger    Day2Start
-@who        Player
-@once
-
-//:: Prepare
-//@function	ScenePrepare
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
-
-//:: StartGame
-//@trigger    SceneReady
+//:: Day2Start
+//@trigger    Day2Start
 //@who        Player
 //@once
 
-$call Wait(2)
-
+:: Prepare
+@function	ScenePrepare
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
+
+$call Wait(2)
+
+//$call PlaceAndRotatePlayerAt(WarpDesk, true)
+//$call SetAllWarpsActive(false)
 
 //fade in
 //dock margo
 
-//$call Wait(2)*/
+//$call Wait(2)
 
 {@Margo}   Mornin', kiddo!   $[Day2/Tent/Margo_1]
 {@Margo}   Jeepers... you look exhausted.   $[Day2/Tent/Margo_2]
@@ -31,8 +31,6 @@ $call SetAllWarpsActive(false)
 {@Player}   I couldn't sleep. I tried counting sheep, counting penguins, stress-eating some Snickers bars . . .   $[Day2/Tent/Player_2]
 {@Margo}   Aw, don't worry, kid. The midnight sun takes some gettin' used to.     $[Day2/Tent/Margo_3]
 {@Margo}   Just wait til you spend a few days runnin' around after penguins. You'll be so tired you won't know what hit ya.     $[Day2/Tent/Margo_4]
-
-$call SetWarpActive(WarpBluff, true)
 
 :: PickedUpMargo2
 @trigger    TabletLifted
@@ -51,6 +49,8 @@ $set	chapter:hasTalkedToMargo = true
 {@Player}   Margo, I've literally been eating Halloween candy all night.    $[Day2/Tent/Player_5]
 {@Margo}    Well, okey dokey, then. Looks like somebody's learnin'.  $[Day2/Tent/Margo_8]
 {@Margo}    Whenever you're ready, point me at the door, and we'll head out to the Bluff!     $[Day2/Tent/Margo_9]
+
+$call SetWarpActive(WarpBluff, true)
 
 $call CreateGoal("Day2_outside", Use Warp to go outside)
 $call SetWarpActive(WarpBluff, true)
@@ -212,18 +212,21 @@ $call CompleteGoal("id_polo")
 
 $call TriggerResponse(CheckAllMatesIdentified)
 
+::CheckAllComplete
+@trigger CheckAllComplete
+$if chapter:finishedObservations == true, chapter:finishedTrackers == true
+	{@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/Margo_25]
+	{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/Margo_26]
+	$set chapter:finishedAllObservations = true
+	$call CreateGoal("Day2_return", Return to tent)
+$endif
 
 :: CheckAllMatesIdentified
 @trigger    CheckAllMatesIdentified
 $if chapter:identifiedCount >= 5 
     $set	chapter:finishedObservations = true
     $call ClearGoals()
-    $if chapter:finishedObservations == true, chapter:finishedTrackers == true
-        {@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/Margo_25]
-        {@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/Margo_26]
-        $set chapter:finishedAllObservations = true
-        $call CreateGoal("Day2_return", Return to tent)
-    $endif
+	$call TriggerResponse(CheckAllComplete)
 $endif
 
 :: WarpedToRookeryGate2
@@ -239,9 +242,9 @@ $call Wait(2)
 $call CreateGoal("Day2_trackers", Retrieve 3 trackers from Penguins)
 
 //show the trackers visible on 3 penguins...
-$call FuzzTracker->Activate()
-$call AdelieLegTracker1->Activate()
-$call AdelieLegTracker2->Activate()
+$call FuzzLegTracker->SetMeshEnabled(true)
+$call AdelieLegTracker1->SetMeshEnabled(true)
+$call AdelieLegTracker2->SetMeshEnabled(true)
 
 {@Margo}    Okay, kid. This is the tricky part. You’ll need to remove each penguin’s GPS tracker. $[Day2/Rookery/Margo_15]
 {@Margo}    Place one hand on a penguin to hold it still.    $[Day2/Rookery/Margo_16]
@@ -255,16 +258,16 @@ $call AdelieLegTracker2->Activate()
 {@Margo}    Oh, you sweet summer child. $[Day2/Rookery/Margo_22]
 
 ::OnFuzzTrackerRemoved
-@function TrackerRemoved
-@when   objectId == "FuzzTracker"
+@trigger TrackerRemoved
+@when   objectId == "FuzzLegTracker"
 @once
 
 {@Player}   Ouch! Fuzz, just hold still!    $[Day2/Rookery/Player_14]
 {@Margo}    Told ya. Those beaks are sharper than they look.    $[Day2/Rookery/Margo_23]
 
 :: OnPenguinLegTrackerSocketed
-@function	ObjectSocketed
-@when		socketType == "TrackerSocket", objectType == "LegTracker"
+@trigger	ObjectSocketed
+@when		objectType == "LegTracker", socketType == "TrackerSocket"
 @once
 $set	chapter:removedCount + 1
 
@@ -275,21 +278,15 @@ $endif
 :: TrackersCompleted
 @trigger	TrackersCompleted
 @who		Player
-@once
 @interrupt
 
-$set	chapter:finishedTrackers = true
+$set chapter:finishedTrackers = true
 $call ClearGoals()
 
 $call Wait(0.3)
 {@Margo}  Nice work, kid! That’s all the GPS trackers.   $[Day2/Rookery/Margo_24]
 
-$if chapter:finishedObservations == true, chapter:finishedTrackers == true
-//{@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/Margo_25]
-//{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/Margo_26]
-$set chapter:finishedAllObservations = true
-$call CreateGoal("Day2_return", Return to tent)
-$endif
+$call TriggerResponse(CheckAllComplete)
 
 :: WarpedBackToTent2
 @trigger    AtWarpPoint

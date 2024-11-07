@@ -31,6 +31,11 @@ namespace Pennycook {
 		
 		public bool IsIdentified() { return m_Highlight.Identified; }
         
+		[LeafMember("SetIdentified"), Preserve]
+		public void SetIdentified(bool id) {
+			m_Highlight.Identified = id;
+		}
+		
 		[LeafMember("IsIdentified"), Preserve]
 		static public bool IsIdentified(ScriptActor actor) {
             ScriptTabletHighlightable ss = actor.GetComponent<ScriptTabletHighlightable>();
