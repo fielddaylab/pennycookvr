@@ -5,6 +5,16 @@
 @who        Player
 @once
 
+//:: Prepare
+//@function	ScenePrepare
+//$call PlaceAndRotatePlayerAt(WarpDesk, true)
+//$call SetAllWarpsActive(false)
+
+//:: StartGame
+//@trigger    SceneReady
+//@who        Player
+//@once
+
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 
@@ -38,12 +48,12 @@ $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
 
-$call SetWarpGroupActive(Rookery, true)
-$call CreateGoal("Day3_rookery", Use Warp to enter rookery)
-
 {@Player}   What’s on our list for today?  $[Day3/Bluff/Player_1]
 {@Margo}   We need to get some data on those chicks, and see how the parents are doin'.   $[Day3/Bluff/Margo_1]
 {@Margo}    Let’s head down to the Rookery. Looks like Penny is already there.   $[Day3/Bluff/Margo_2]
+
+$call CreateGoal("Day3_rookery", Use Warp to enter rookery)
+$call SetWarpGroupActive(Rookery, true)
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
@@ -80,7 +90,11 @@ $call ClearGoals()
 {@Partner}  Oh… and you don’t know what happened to the last slice of pumpkin pie, do you? $[Day3/Rookery/Partner_12]
 {@Player}   Oh, uh… sorry. do you want some of my champurrado?  $[Day3/Rookery/Player_7]
 
-$call CreateGoal("Day3_nests", Scan nests)
+$call CreateGoal("id_millie_nest", Scan Millie and Billy's Chick)
+$call CreateGoal("id_alfredo_nest", Scan Alfredo's Egg)
+$call CreateGoal("id_fuzz_nest", Scan Fuzz's Egg)
+$call CreateGoal("id_winston_nest", Scan Winston and Wendy's Chick)
+$call CreateGoal("id_polo_nest", Scan Polo's Nest)
 
 :: WarpedToRookeryGate
 @trigger    AtWarpPoint
@@ -91,10 +105,12 @@ $call CreateGoal("Day3_nests", Scan nests)
 {@Margo}    Use my Interact mode to take a look at the nests.   $[Day3/Rookery/Margo_1]
 {@Margo}    We need to see how many eggs are hatched and if any are missing.    $[Day3/Rookery/Margo_2]
 
-:: OnWinstonWendyIdentified
+:: OnMillieBillyIdentified
 @function	TabletIdentified
-@when		objectId == "WinstonWendyChick"
+@when		objectId == "MillieBillyChick"
 $set	chapter:identifiedCount + 1
+
+$call CompleteGoal("id_millie_nest")
 
 {@Player}   Yes! Millie and Billy have hatched a healthy chick! $[Day3/Rookery/Player_8]
 {@Margo}    Aw, good for them. Two years in a row!  $[Day3/Rookery/Margo_3]
@@ -105,6 +121,8 @@ $set	chapter:identifiedCount + 1
 $set	chapter:identifiedCount + 1
 
 //play egg hatching animation
+$call CompleteGoal("id_alfredo_nest")
+
 {@Player}   Look, Alfredo’s egg is hatching!  $[Day3/Rookery/Player_9]
 {@Margo}    Ooh. We better snag a video later.  $[Day3/Rookery/Margo_4]
 {@Margo}    I betcha those’ll be the most famous Adelie chicks on Youtube.  $[Day3/Rookery/Margo_5]
@@ -114,6 +132,8 @@ $set	chapter:identifiedCount + 1
 @when		objectId == "FuzzEgg"
 $set	chapter:identifiedCount + 1
 
+$call CompleteGoal("id_fuzz_nest")
+
 {@Player}   Uh oh. Something’s not right here.  $[Day3/Rookery/Player_10]
 {@Player}    Maybe the eggs aren’t ready yet?  $[Day3/Rookery/Player_11]
 {@Margo}    I don’t know, kid.  $[Day3/Rookery/Margo_6]
@@ -122,10 +142,12 @@ $set	chapter:identifiedCount + 1
 {@Player}   He’s brand new at this. Maybe he’ll figure it out.  $[Day3/Rookery/Player_12]
 {@Margo}    Well, he’d better hurry. Those eggs are gonna freeze fast.  $[Day3/Rookery/Margo_9]
 
-:: OnMillieBillyIdentified
+:: OnWinstonWendyIdentified
 @function	TabletIdentified
-@when		objectId == "MillieBillyChick"
+@when		objectId == "WinstonWendyChick"
 $set	chapter:identifiedCount + 1
+
+$call CompleteGoal("id_winston_nest")
 
 {@Player}   Nice. A new chick for Winston and Wendy! $[Day3/Rookery/Player_13]
 {@Margo}    No surprise there. There’s a reason we call them “Old Faithful.”  $[Day3/Rookery/Margo_10]
@@ -136,6 +158,8 @@ $set	chapter:identifiedCount + 1
 @function	TabletIdentified
 @when		objectId == "PoloNest"
 $set	chapter:identifiedCount + 1
+
+$call CompleteGoal("id_polo_nest")
 
 {@Player}   Whoa, wait a second. Weren’t there an egg here yesterday?   $[Day3/Rookery/Player_15]
 {@Player}   What happened to the egg?   $[Day3/Rookery/Player_16]
@@ -149,8 +173,6 @@ $set	chapter:identifiedCount + 1
 @who        Player
 @when       targetObject == "WarpTarget-RookeryBack"
 @once
-
-
 
 :: ObjectiveCompleted
 @trigger	ObjectiveCompleted
@@ -176,8 +198,6 @@ $call Wait(1)
 $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)
-
-{@Margo} Let's get back in the tent and upload that data!   $[Day3/Bluff/Margo_3]
 
 $call CreateGoal("Day3_upload", Upload Margo's data)
 
