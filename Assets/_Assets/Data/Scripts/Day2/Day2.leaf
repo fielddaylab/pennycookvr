@@ -131,6 +131,12 @@ $call CreateGoal("Day2_mates", ID 5 Penguins and their mates)
 
 $call ClearGoals()
 
+$call Daisy->SetIdentified(false)
+$call Meatball->SetIdentified(false)
+$call Billy->SetIdentified(false)
+$call Benni->SetIdentified(false)
+$call Wendy->SetIdentified(false)
+
 $call CreateGoal("id_millie", ID Millie's Mate)
 $call CreateGoal("id_alfredo", ID Alfredo's Mate)
 $call CreateGoal("id_fuzz", ID Fuzz's Mate)
@@ -148,8 +154,7 @@ $call CompleteGoal("id_millie")
 {@Partner}  Millie and . . . Billy? $[Day2/Rookery/Partner_1]
 {@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Day2/Rookery/Partner_2]
 
-$call TriggerResponse(CheckAllMatesIdentified)
-
+$goto CheckAllMatesIdentified
 
 :: OnMeatballIdentified
 @function	TabletIdentified
@@ -166,7 +171,7 @@ $call CompleteGoal("id_alfredo")
 {@Margo}    Ohhhh kaayyy... $[Day2/Rookery/Margo_6]
 {@Player}   Now I’m getting hungry. Got any candy bars in that case?    $[Day2/Rookery/Player_8]
 
-$call TriggerResponse(CheckAllMatesIdentified)
+$goto CheckAllMatesIdentified
 
 
 :: OnDaisyIdentified
@@ -184,8 +189,7 @@ $call CompleteGoal("id_fuzz")
 {@Margo}    You’d be surprised, kid. Not all penguins make good parents.    $[Day2/Rookery/Margo_10]
 {@Player}   We’ll just have to wait and see.    $[Day2/Rookery/Player_11]
 
-$call TriggerResponse(CheckAllMatesIdentified)
-
+$goto CheckAllMatesIdentified
 
 :: OnWendyIdentified
 @function	TabletIdentified
@@ -197,8 +201,7 @@ $call CompleteGoal("id_winston")
 {@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/Margo_11]
 {@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day2/Rookery/Margo_12]
 
-$call TriggerResponse(CheckAllMatesIdentified)
-
+$goto CheckAllMatesIdentified
 
 :: OnBenniIdentified
 @function	TabletIdentified
@@ -210,7 +213,7 @@ $call CompleteGoal("id_polo")
 {@Margo}   Ooh, Benni and Polo! What a good match.  $[Day2/Rookery/Margo_13]
 {@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day2/Rookery/Margo_14]
 
-$call TriggerResponse(CheckAllMatesIdentified)
+$goto CheckAllMatesIdentified
 
 ::CheckAllComplete
 @trigger CheckAllComplete
@@ -268,7 +271,6 @@ $call AdelieLegTracker2->SetMeshEnabled(true)
 :: OnPenguinLegTrackerSocketed
 @trigger	ObjectSocketed
 @when		objectType == "LegTracker", socketType == "TrackerSocket"
-@once
 $set	chapter:removedCount + 1
 
 $if chapter:removedCount >= 3

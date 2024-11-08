@@ -43,20 +43,6 @@ namespace Pennycook {
         static private void OnSocketed(Socketable socketable, ObjectSocket socket) {
             using(var table = TempVarTable.Alloc()) {
                 
-                /*ScriptActor a = ScriptUtility.Actor(socketable);
-                if(a != null)
-                {
-                    Log.Msg(a.ClassName.ToDebugString());
-                    Log.Msg(a.Id.ToDebugString());
-                }
-
-                ScriptActor b = ScriptUtility.Actor(socket);
-                if(b != null)
-                {
-                    Log.Msg(b.ClassName.ToDebugString());
-                    Log.Msg(b.Id.ToDebugString());
-                }*/
-
                 table.ActorInfo(ScriptUtility.Actor(socketable));
                 table.ActorInfo(ScriptUtility.Actor(socket), "socketId", "socketType");
                 
