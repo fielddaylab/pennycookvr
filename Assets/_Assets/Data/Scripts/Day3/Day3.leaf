@@ -1,19 +1,19 @@
 #basePath	Day3
 
-:: Day3Start
-@trigger    Day3Start
-@who        Player
-@once
-
-//:: Prepare
-//@function	ScenePrepare
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
-
-//:: StartGame
-//@trigger    SceneReady
+//:: Day3Start
+//@trigger    Day3Start
 //@who        Player
 //@once
+
+:: Prepare
+@function	ScenePrepare
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
 
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
@@ -30,7 +30,6 @@ $call Wait(2)
 {@Margo}   Ha. Relax, kiddo, I’m teasin’.     $[Day3/Tent/Margo_3]
 {@Margo}    Let’s get out there and see how your Fabulous Five are doin’.    $[Day3/Tent/Margo_4]
 
-$call SetWarpActive(WarpBluff, true)
 $call Wait(1)
 
 $call CreateGoal("Day3_outside", Use Warp to go outside)
@@ -89,6 +88,12 @@ $call ClearGoals()
 {@Player}   Got it. $[Day3/Rookery/Player_6]
 {@Partner}  Oh… and you don’t know what happened to the last slice of pumpkin pie, do you? $[Day3/Rookery/Partner_12]
 {@Player}   Oh, uh… sorry. do you want some of my champurrado?  $[Day3/Rookery/Player_7]
+
+$call FuzzEgg->Activate()
+$call AlfredoEgg->Activate()
+$call PoloNest->Activate()
+$call WinstonWendyChick->Activate()
+$call MillieBillyChick->Activate()
 
 $call CreateGoal("id_millie_nest", Scan Millie and Billy's Chick)
 $call CreateGoal("id_alfredo_nest", Scan Alfredo's Egg)
