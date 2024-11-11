@@ -1,12 +1,22 @@
 #basePath	Day4
 
-:: Day4Start
-@trigger    Day4Start
+//:: Day4Start
+//@trigger    Day4Start
+//@who        Player
+//@once
+
+:: Prepare
+@function	ScenePrepare
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+
+:: StartGame
+@trigger    SceneReady
 @who        Player
 @once
 
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
+//$call PlaceAndRotatePlayerAt(WarpDesk, true)
+//$call SetAllWarpsActive(false)
 
 $call Wait(2)
 
@@ -96,19 +106,110 @@ $call ClearGoals()
 @function	TabletIdentified
 @when		objectId == "WeighGate"
 $set	chapter:weighGate = true
+$goto CheckCompletedTasks
 
-:: ObjectiveCompleted
-@trigger	ObjectiveCompleted
-@who		Player
+:: WarpedToRookeryMiddle
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-RookeryMiddle"
 @once
-@interrupt
 
-$set	chapter:finishedObservations = true
+{@Margo}    Wahoo! Looks like all the penguins with data loggers have come back.    $[Day4/Rookery/Margo_10]
+{@Margo}    Now we’ll be able to get the stats on their swimming behaviors!     $[Day4/Rookery/Margo_11]
+{@Margo}    Just hold the penguin still with one hand and remove their trackers.    $[Day4/Rookery/Margo_12]
+{@Margo}    Then drop the tracker into the Pelican Case.    $[Day4/Rookery/Margo_13]
+
+:: OnUnsocketedTracker
+@trigger    ObjectUnsocketed
+@when   objectType == "DataTracker", socketType == "DataSocketPenguin"
+
+:: OnSocketedTracker
+@trigger    ObjectSocketed
+@when   objectType == "DataTracker", socketType == "TrackerSocket"
+$set chapter:dataCount + 1
+$goto CheckDataCount
+
+:: CheckDataCount
+@trigger    CheckDataCount
+@who    Player
+
+$if chapter:dataCount >= 3
+$set chapter:dataTrackersDone = true
+$goto CheckCompletedTasks
+$endif
+
+:: WarpedToRookeryCorral
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-RookeryCorral"
+@once
+
+{@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/Margo_14]
+{@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/Margo_15]
+{@Player}    Oh, come on. They're, like, half the size of the grown-ups. How hard can it be?    $[Day4/Rookery/Player_9]
+{@Margo}    Haven’t you been paying attention for the last three months??   $[Day4/Rookery/Margo_16]
+{@Margo}    They’re cuties, but they’re tougher than they look. $[Day4/Rookery/Margo_17]
+{@Margo}    “Though she be but little . . . ”   $[Day4/Rookery/Margo_18]
+{@Player}   Okay, okay, I get it. I'll be careful.  $[Day4/Rookery/Player_10]
+{@Player}   What do I need to do?   $[Day4/Rookery/Player_11]
+{@Margo}    First you’ll need to hold the penguin in place. $[Day4/Rookery/Margo_19]
+{@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/Margo_20]
+{@Player}   Cool, no sweat. $[Day4/Rookery/Player_12]  
+
+:: OnSocketedWingBand
+@trigger ObjectSocketed
+@when   objectType == "WingBand", socketType == "BandSocket"
+$set chapter:wingCount + 1
+
+$if chapter:wingCount == 1
+{@Player}   Jeez! Ouch! Would you just—hold—still?  $[Day4/Rookery/Player_13]
+$elseif chapter:wingCount == 2
+{@Player}   Yikes. This little guy is not happy.    $[Day4/Rookery/Player_14]
+{@Player}   I promise, I’m not gonna hurt you! It’s just like a hair clip. Totally harmless.    $[Day4/Rookery/Player_15]
+{@Player}   Ouch!    $[Day4/Rookery/Player_16]
+{@Margo}    No sweat, huh, kiddo?   $[Day4/Rookery/Margo_21]
+{@Player}   Okay, okay . . . maybe a little sweat.  $[Day4/Rookery/Player_17]
+$elseif chapter:wingCount == 3
+{@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/Margo_22]
+{@Partner}  Nice work, new kid. $[Day4/Rookery/Partner_1]
+{@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/Partner_2]
+{@Player}   Whoa. What do you mean, if they come back?  $[Day4/Rookery/Player_18]
+{@Partner}  Well, most penguin chicks don’t make it to adulthood. $[Day4/Rookery/Partner_3]
+{@Player}   What!?  $[Day4/Rookery/Player_19]
+{@Partner}  It’s a rough world out there for penguins. The skua are only the tip of the iceberg.    $[Day4/Rookery/Partner_4]
+{@Partner}  There’s hungry leopard seals, snow storms, melting sea ice . . .    $[Day4/Rookery/Partner_5]
+{@Player}   Oookay. I just lost my Christmas spirit.    $[Day4/Rookery/Player_20]
+{@Player}   I guess that’s why you and Margo have such a thick skin. You’re used to it by now.  $[Day4/Rookery/Player_21]
+{@Partner}  Me?? A thick skin?  $[Day4/Rookery/Partner_7]
+{@Player}   I mean… none of it seems to bother you. $[Day4/Rookery/Player_22]
+{@Partner}  Oh, trust me, it bothers me. Those skua drive me crazy. $[Day4/Rookery/Partner_8]
+{@Partner}  And some of the parents just can’t seem to figure out how to feed their chicks. $[Day4/Rookery/Partner_9]
+{@Partner}  I’ve been here twenty years, and it’s still hard to watch sometimes.    $[Day4/Rookery/Partner_10]
+{@Player}   Do you ever try to help them?   $[Day4/Rookery/Player_23]
+{@Partner}  Well, that’s not really my job. I mean, where am I gonna find krill?    $[Day4/Rookery/Partner_11]
+{@Partner}  The fact is, we’re not here to rescue penguin chicks.   $[Day4/Rookery/Partner_12]
+{@Partner}  We’re here to learn about them, and to teach other people about them.   $[Day4/Rookery/Partner_13]
+{@Partner}  Plus I just love this work. I love these birds   $[Day4/Rookery/Partner_14]
+{@Player}   Yeah. You’re right. $[Day4/Rookery/Player_24]
+{@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
+{@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/Partner_15]
+$set chapter:finishedBands = true
+$goto CheckCompletedTasks
+$endif
+
+:: CheckCompletedTasks
+@trigger	CheckCompletedTasks
+@who		Player
+
+$if chapter:finishedBands == true, chapter:dataTrackersDone == true, chapter:weighGate == true 
+$set chapter:finishedObservations = true
 $call ClearGoals()
-
 $call Wait(0.3)
-
 $call CreateGoal("Day4_return", Return to tent)
+{@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/Partner_16]
+{@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/Partner_17]
+$endif
+
 
 :: WarpedBackToTent
 @trigger    AtWarpPoint
@@ -122,21 +223,18 @@ $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)
 
-{@Margo} Let's get back in the tent and upload that data!   $[Day4/Bluff/Margo_3]
-
-$call CreateGoal("Day4_upload", Upload Margo's data)
-
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
 @when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
 @interrupt
 
+$call CreateGoal("Day4_upload", Upload Margo's data)
 $call CompleteGoal("Day4_return")
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
-{@Margo}    Okay dokey! Just dock me in the port there, and I’ll take a look at our data. $[Day4/Tent/Margo_10]
+{@Margo}    Okey dokey, let’s have a look at that data! $[Day4/Tent/Margo_9]
 
 $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
@@ -147,3 +245,20 @@ $call Wait(0.5)
 $endwhile
 
 $call CompleteGoal("Day4_upload")
+
+{@Player}   Awesome! Thanks, Margo. $[Day4/Tent/Player_8]
+{@Margo}    Hang on a sec, kiddo.   $[Day4/Tent/Margo_13]
+{@Margo}    There’s still one more thing. Did you forget about the surprise?    $[Day4/Tent/Margo_14]
+{@Player}   Yikes… it’s not a pumpkin pie to the face, is it?   $[Day4/Tent/Player_9]
+{@Player}   Because I already told Penny I was sorry back at Thanksgiving $[Day4/Tent/Player_10]
+{@Margo}  Nope. It’s not a pie, in your face or otherwise.  $[Day4/Tent/Margo_15]
+{@Margo}    Penny and I made a couple phone calls while you were sleepin’.  $[Day4/Tent/Margo_16]
+{@Margo}    Let’s see if we can get connected…. $[Day4/Tent/Margo_17]
+{@Player}   Lola!   $[Day4/Tent/Player_11]
+{@Lola}     Hola, mi amor. How’s Christmas at the South Pole?   $[Day4/Tent/Lola_1]
+{@Player}   A lot better now! What are you doing here?  $[Day4/Tent/Player_12]
+{@Lola}     Well… of course I wanted to see you.    $[Day4/Tent/Lola_2]
+{@Lola}     But also… we’ve been learning all about penguin adaptations, and your friend Penny said that you do virtual classroom visits.    $[Day4/Tent/Lola_3]
+{@Lola}     Do you think my students and I could get in on that?    $[Day4/Tent/Lola_4]
+{@Player}   Claro que si!   $[Day4/Tent/Player_13]
+{@Player}   Are you ready for the grand tour? I’ve got these five new friends I think you’re going to love. $[Day4/Tent/Player_14]
