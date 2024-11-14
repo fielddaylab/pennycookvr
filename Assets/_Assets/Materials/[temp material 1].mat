@@ -8,22 +8,17 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: '[temp material 1]'
-  m_Shader: {fileID: 4800000, guid: e88aeddd2ef1f934d805981244872e27, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 2c3c6a46626419c4f8bbdeab2ec2afbd, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _HALFTONESHAPE_CUSTOM
-  - _OUTLINE
-  - _SPECULAR_COLOR
-  m_InvalidKeywords:
   - _HAFTONESHAPES_DOT
-  - _SPECULARHIGHLIGHTS_OFF
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2051
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -39,6 +34,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseNormalTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseTexture:
+        m_Texture: {fileID: 2800000, guid: 737f17aa44662324d9539cd0f7257b79, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -105,6 +108,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Poop_Diffuse:
+        m_Texture: {fileID: 2800000, guid: 7e791fb1e8ad97e44bbaad1f8367aa94, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Poop_Snow_Diffuse:
+        m_Texture: {fileID: 2800000, guid: d42549c7dd3182744bed7d7e24bff3b2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _RampTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -113,8 +124,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Rock_Diffuse:
+        m_Texture: {fileID: 2800000, guid: 3c4e6d2f408f4c64080f1a311f796c3b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_00e6b0a8397b43d38d76ff8d8536dc73_Texture_1:
         m_Texture: {fileID: 2800000, guid: 15ca4fc4754414bae9c789bbae2fe420, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SmoothnessTexture:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -159,6 +178,7 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+    - _Contrast: 17.4
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -203,9 +223,12 @@ Material:
     - _HatchingEnabled: 0
     - _HatchingRotation: 0
     - _HatchingSmoothness: 0.1
+    - _Level: 3.85
     - _Metallic: 0
     - _NoiseScale: 1
+    - _NoiseSize: 10
     - _NoiseStrength: 0.1
+    - _NormalStrength: 1
     - _OcclusionStrength: 1
     - _OutlineEnabled: 1
     - _OutlineMode: 0
@@ -229,6 +252,10 @@ Material:
     - _Smoothness: 0.37
     - _SmoothnessSource: 0
     - _SmoothnessTextureChannel: 0
+    - _SnowAmount: 0.86
+    - _SnowBlend: 0.462
+    - _SnowColorNoiseSize: 250
+    - _SnowColorNoiseStrength: 0
     - _SnowEdge: -0.12
     - _SnowOffset: 0.12
     - _SpecClipMaskScale: 1
@@ -248,6 +275,7 @@ Material:
     - _StepViaRampTexture: 0
     - _Surface: 0
     - _USERAMPCOLOR: 0
+    - _UpNode: 0.129
     - _UseClipPattern: 0
     - _UseNormalMap: 0
     - _UseRampColor: 0
@@ -267,15 +295,18 @@ Material:
     - _HalftoneColor: {r: 0.517647, g: 0.517647, b: 0.517647, a: 1}
     - _HatchingColor: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 0.947}
     - _HatchingScale: {r: 15, g: 1, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineDistancFade: {r: -25, g: 50, b: 0, a: 0}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SelectColor: {r: 0, g: 0, b: 0, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 0.347}
     - _SnowColor: {r: 0.8867924, g: 0.8867924, b: 0.8867924, a: 1}
-    - _SnowDirection: {r: 0.36, g: -1.97, b: 0.01, a: 0}
+    - _SnowDirection: {r: 0, g: 0.3, b: 0, a: 0}
     - _SpecColor: {r: 0.10188681, g: 0.10188681, b: 0.10188681, a: 0.37}
     - _SpherizeNormalOrigin: {r: 0, g: 0, b: 0, a: 0}
+    - _TextureOffset: {r: 0.65, g: 2.73, b: -0.77, a: 0}
+    - _Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8046487454487888023
 MonoBehaviour:

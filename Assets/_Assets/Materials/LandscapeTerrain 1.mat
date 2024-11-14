@@ -8,17 +8,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LandscapeTerrain 1
-  m_Shader: {fileID: 4800000, guid: 69c1f799e772cb6438f56c23efccb782, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: f77148b23af0a084ba82ec453dacb6d5, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _TERRAIN_INSTANCED_PERPIXEL_NORMAL
-  m_InvalidKeywords:
-  - _HAFTONESHAPES_DOT
-  - _HALFTONESHAPE_CUSTOM
+  - _HAFTONESHAPES_CROSS
   - _RIMLIGHTING_ON
-  - _SPECULARHIGHTLIGHTS
-  - _STEPVIARAMPTEXTURE_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -77,12 +73,16 @@ Material:
         m_Texture: {fileID: 2800000, guid: d4881001f1210af43a369c2b10ae20d7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Halftone_Texture:
+        m_Texture: {fileID: 2800000, guid: d4881001f1210af43a369c2b10ae20d7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _HatchingNoiseMap:
         m_Texture: {fileID: 2800000, guid: 7675bc9184d04ee4c8c1fae934fbdab6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HatchingPatternMap:
-        m_Texture: {fileID: 2800000, guid: b56101eec82209e419fad0bc6fff6584, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -138,7 +138,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d4881001f1210af43a369c2b10ae20d7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -190,13 +190,13 @@ Material:
     - Vector1_48bb6f524e494da799e6a2b3cc237cf8: 0
     - Vector1_85d44c600d6c46b38d9c8065f25681ea: 0
     - Vector1_c89cb8dc56774a9583c7b9c3a5725c4c: 0
-    - Vector1_e5b6f1488dec4326bd8bbd0e05156810: 0.09
+    - Vector1_e5b6f1488dec4326bd8bbd0e05156810: 0.07
     - _AllToon_OverrideShadowColor: 0
     - _AlphaClip: 0
     - _Blend: 0
     - _BrushLowerCut: 0
     - _BrushSize: 0.82
-    - _BumpScale: 1
+    - _BumpScale: 0.729
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -204,7 +204,7 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseStep: 0.18
-    - _DitherTexelSize: 4
+    - _DitherTexelSize: 4.92
     - _DitherThreshold: 1
     - _DstBlend: 0
     - _EnableHeightBlend: 0
@@ -219,8 +219,8 @@ Material:
     - _Glossiness: 0
     - _GlossinessSource: 0
     - _GlossyReflections: 0
-    - _HAFTONESHAPES: 0
-    - _HafltoneFadeDistance: 10
+    - _HAFTONESHAPES: 2
+    - _HafltoneFadeDistance: 30.7
     - _HairSpecExponent: 128
     - _HairSpecNoiseStrength: 1
     - _HairSpecularSize: 0.8
@@ -230,22 +230,24 @@ Material:
     - _HalfToneIncludeReceivedShadow: 1
     - _HalfToneShape: 3
     - _HalfToneUvMode: 0
-    - _HalftoneDiffuseOffest: 0
+    - _HalftoneDiffuseOffest: 0.53
     - _HalftoneFadeDistance: 1226
-    - _HalftoneFadeToColor: 0
-    - _HalftoneLightSizeFactor: 0
+    - _HalftoneFadeToColor: 0.161
+    - _HalftoneLightSizeFactor: 0.687
     - _HalftoneNoiseClip: 1.45
-    - _HalftoneScale: 0
-    - _HalftoneSize: 0.3
+    - _HalftoneScale: 1000
+    - _HalftoneSize: 0.51
     - _HalftoneTilling: 375.8
     - _HalftoneUseScreenSpaceUV: 0
     - _HatchingDensity: 0
     - _HatchingDiffuseOffset: -0.07
-    - _HatchingDrawStrength: 10.59
+    - _HatchingDrawStrength: 10.9
     - _HatchingEnabled: 0
     - _HatchingRotation: 0
     - _HatchingSmoothness: 0.01
     - _HeightTransition: 0
+    - _LerpRock: 0.52
+    - _LerpVoronoi: 0.725
     - _Metallic: 0
     - _Metallic0: 0
     - _Metallic1: 0
@@ -260,7 +262,7 @@ Material:
     - _OutlineWidth: 11.15
     - _OverrideShadowColor: 0
     - _Parallax: 0.005
-    - _QueueControl: -1
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _RIMLIGHTING: 1
     - _ReceiveShadows: 1
@@ -268,7 +270,8 @@ Material:
     - _RimLightAlign: 1
     - _RimLightSmoothness: 0.109
     - _RimLightSmootness: 0.937
-    - _RimPower: 0.433
+    - _RimPower: 0
+    - _SPECULARHIGHLIGHTS: 0
     - _SPECULARHIGHTLIGHTS: 0
     - _ShadowPatternSize: 0.68
     - _Shininess: 0
@@ -280,6 +283,8 @@ Material:
     - _Smoothness3: 0.5
     - _SmoothnessSource: 0
     - _SmoothnessTextureChannel: 0
+    - _SnowEdge: 0.01
+    - _SnowOffset: 0.92
     - _SpecClipMaskScale: 1
     - _SpecColor_1: 0
     - _SpecFalloff: 0
@@ -294,7 +299,7 @@ Material:
     - _SrcBlend: 1
     - _StencilComp: 0
     - _StencilRef: 0
-    - _StepViaRampTexture: 1
+    - _StepViaRampTexture: 0.14
     - _Surface: 0
     - _USERAMPCOLOR: 0
     - _UseClipPattern: 0
@@ -310,13 +315,15 @@ Material:
     - _FaceRightDirection: {r: 1, g: 0, b: 0, a: 0}
     - _HairSpecColor: {r: 0, g: 0, b: 0, a: 1}
     - _HalfToneColor: {r: 0.2924528, g: 0.2264912, b: 0.18347275, a: 0.471}
-    - _HalftoneColor: {r: 1, g: 1, b: 1, a: 1}
+    - _HalftoneColor: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
     - _HatchingColor: {r: 0.05660379, g: 0.05660379, b: 0.05660379, a: 0}
     - _HatchingScale: {r: 25.58, g: 1, b: 0, a: 0}
     - _OutlineColor: {r: 0.10407318, g: 0.23263416, b: 0.25100002, a: 1}
     - _OutlineDistancFade: {r: -5.6, g: 23.964497, b: 0, a: 0}
     - _RimColor: {r: 0.73018867, g: 0.98570085, b: 1, a: 0.549}
     - _ShadowColor: {r: 0.064148016, g: 0.064148016, b: 0.064148016, a: 0.746}
+    - _SnowColor: {r: 1, g: 1, b: 1, a: 0}
+    - _SnowDirection: {r: -0.42, g: 1, b: 0, a: 0}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 0}
     - _SpherizeNormalOrigin: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
