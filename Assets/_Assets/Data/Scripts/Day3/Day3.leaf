@@ -261,7 +261,7 @@ $endif
 @trigger	CheckAllComplete
 @who		Player
 
-%if chapter:trackersSocketed == true, chapter:regurgDone == true, chapter:finishedObservations == true
+$if chapter:trackersSocketed == true, chapter:regurgDone == true, chapter:finishedObservations == true
 $set chapter:day3AllComplete = true
 $call TriggerResponse(ObjectiveCompleted)
 $endif
