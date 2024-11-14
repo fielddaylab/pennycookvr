@@ -66,6 +66,9 @@ namespace Pennycook {
 
                 Renderer r = element.Renderer;
                 bool displayRenderer = level == LODLevel.Close || (bestLook > -0.2f && !levelConfig.Cull);
+#if UNITY_EDITOR
+                displayRenderer = true;
+#endif // UNITY_EDITOR
                 r.enabled = displayRenderer;
 
                 if (level != element.LastAppliedLevel) {
