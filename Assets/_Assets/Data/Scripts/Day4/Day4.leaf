@@ -1,22 +1,22 @@
 #basePath	Day4
 
-//:: Day4Start
-//@trigger    Day4Start
-//@who        Player
-//@once
-
-:: Prepare
-@function	ScenePrepare
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
-
-:: StartGame
-@trigger    SceneReady
+:: Day4Start
+@trigger    Day4Start
 @who        Player
 @once
 
+//:: Prepare
+//@function	ScenePrepare
 //$call PlaceAndRotatePlayerAt(WarpDesk, true)
 //$call SetAllWarpsActive(false)
+
+//:: StartGame
+//@trigger    SceneReady
+//@who        Player
+//@once
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
 
 $call Wait(2)
 
@@ -262,3 +262,5 @@ $call CompleteGoal("Day4_upload")
 {@Lola}     Do you think my students and I could get in on that?    $[Day4/Tent/Lola_4]
 {@Player}   Claro que si!   $[Day4/Tent/Player_13]
 {@Player}   Are you ready for the grand tour? I’ve got these five new friends I think you’re going to love. $[Day4/Tent/Player_14]
+
+$call TriggerResponse(Day5Start)
