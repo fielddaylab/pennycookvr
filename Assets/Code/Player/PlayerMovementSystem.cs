@@ -68,7 +68,14 @@ namespace Pennycook {
         }
 
         private bool TryMove(Vector3 root, Vector3 translation, TabletWarpPoint warpPoint) {
-            Vector3 flatRoot = root;
+            
+			if(warpPoint == null)
+			{
+				return true;
+			}
+			
+			Vector3 flatRoot = root;
+			
             flatRoot.y = warpPoint.transform.position.y;
             if(Vector3.Distance(flatRoot+translation, warpPoint.transform.position) < warpPoint.Radius) {
                 return true;
