@@ -1322,7 +1322,7 @@ namespace FieldDay.Scenes {
                 counter.Reset();
 
                 foreach(var data in linearizedScenes) {
-                    if (data.LateEnable.Length > 0 && !data.IsVisited(SceneDataExt.VisitFlags.LateEnabled)) {
+                    if ((data.LateEnable.Length + data.CustomData.Length) > 0 && !data.IsVisited(SceneDataExt.VisitFlags.LateEnabled)) {
                         m_LateEnableQueue.PushBack(new LateEnableArgs() {
                             Data = data,
                             Counter = counter
