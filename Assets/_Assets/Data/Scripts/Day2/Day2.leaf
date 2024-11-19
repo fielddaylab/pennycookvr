@@ -154,7 +154,7 @@ $call CompleteGoal("id_millie")
 {@Partner}  Millie and . . . Billy? $[Day2/Rookery/Partner_1]
 {@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Day2/Rookery/Partner_2]
 
-$goto CheckAllMatesIdentified
+$goto Day2.CheckAllMatesIdentified
 
 :: OnMeatballIdentified
 @function	TabletIdentified
@@ -171,7 +171,7 @@ $call CompleteGoal("id_alfredo")
 {@Margo}    Ohhhh kaayyy... $[Day2/Rookery/Margo_6]
 {@Player}   Now I’m getting hungry. Got any candy bars in that case?    $[Day2/Rookery/Player_8]
 
-$goto CheckAllMatesIdentified
+$goto Day2.CheckAllMatesIdentified
 
 
 :: OnDaisyIdentified
@@ -189,7 +189,7 @@ $call CompleteGoal("id_fuzz")
 {@Margo}    You’d be surprised, kid. Not all penguins make good parents.    $[Day2/Rookery/Margo_10]
 {@Player}   We’ll just have to wait and see.    $[Day2/Rookery/Player_11]
 
-$goto CheckAllMatesIdentified
+$goto Day2.CheckAllMatesIdentified
 
 :: OnWendyIdentified
 @function	TabletIdentified
@@ -201,7 +201,7 @@ $call CompleteGoal("id_winston")
 {@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/Margo_11]
 {@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day2/Rookery/Margo_12]
 
-$goto CheckAllMatesIdentified
+$goto Day2.CheckAllMatesIdentified
 
 :: OnBenniIdentified
 @function	TabletIdentified
@@ -213,7 +213,7 @@ $call CompleteGoal("id_polo")
 {@Margo}   Ooh, Benni and Polo! What a good match.  $[Day2/Rookery/Margo_13]
 {@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day2/Rookery/Margo_14]
 
-$goto CheckAllMatesIdentified
+$goto Day2.CheckAllMatesIdentified
 
 ::CheckAllComplete
 @trigger CheckAllComplete

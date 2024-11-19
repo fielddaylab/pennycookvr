@@ -106,7 +106,7 @@ $call ClearGoals()
 @function	TabletIdentified
 @when		objectId == "WeighGate"
 $set	chapter:weighGate = true
-$goto CheckCompletedTasks
+$goto Day4.CheckCompletedTasks
 
 :: WarpedToRookeryMiddle
 @trigger    AtWarpPoint
@@ -127,7 +127,7 @@ $goto CheckCompletedTasks
 @trigger    ObjectSocketed
 @when   objectType == "DataTracker", socketType == "TrackerSocket"
 $set chapter:dataCount + 1
-$goto CheckDataCount
+$goto Day4.CheckDataCount
 
 :: CheckDataCount
 @trigger    CheckDataCount
@@ -135,7 +135,7 @@ $goto CheckDataCount
 
 $if chapter:dataCount >= 3
 $set chapter:dataTrackersDone = true
-$goto CheckCompletedTasks
+$goto Day4.CheckCompletedTasks
 $endif
 
 :: WarpedToRookeryCorral
@@ -194,7 +194,7 @@ $elseif chapter:wingCount == 3
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
 {@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/Partner_15]
 $set chapter:finishedBands = true
-$goto CheckCompletedTasks
+$goto Day4.CheckCompletedTasks
 $endif
 
 :: CheckCompletedTasks

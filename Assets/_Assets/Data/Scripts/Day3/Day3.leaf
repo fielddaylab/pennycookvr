@@ -130,7 +130,7 @@ $call CompleteGoal("id_millie_nest")
 {@Player}   Yes! Millie and Billy have hatched a healthy chick! $[Day3/Rookery/Player_8]
 {@Margo}    Aw, good for them. Two years in a row!  $[Day3/Rookery/Margo_3]
 
-$goto CheckAllNestsIdentified
+$goto Day3.CheckAllNestsIdentified
 
 :: OnAlfredoEggIdentified
 @function	TabletIdentified
@@ -144,7 +144,7 @@ $call CompleteGoal("id_alfredo_nest")
 {@Margo}    Ooh. We better snag a video later.  $[Day3/Rookery/Margo_4]
 {@Margo}    I betcha those’ll be the most famous Adelie chicks on Youtube.  $[Day3/Rookery/Margo_5]
 
-$goto CheckAllNestsIdentified
+$goto Day3.CheckAllNestsIdentified
 
 
 :: OnFuzzEggIdentified
@@ -162,7 +162,7 @@ $call CompleteGoal("id_fuzz_nest")
 {@Player}   He’s brand new at this. Maybe he’ll figure it out.  $[Day3/Rookery/Player_12]
 {@Margo}    Well, he’d better hurry. Those eggs are gonna freeze fast.  $[Day3/Rookery/Margo_9]
 
-$goto CheckAllNestsIdentified
+$goto Day3.CheckAllNestsIdentified
 
 :: OnWinstonWendyIdentified
 @function	TabletIdentified
@@ -176,7 +176,7 @@ $call CompleteGoal("id_winston_nest")
 {@Margo}    Winston and Wendy have had a successful chick every year.  $[Day3/Rookery/Margo_11]
 {@Player}   Wow. Penguin Parents of the Year award! Keep it up, you two.    $[Day3/Rookery/Player_14]
 
-$goto CheckAllNestsIdentified
+$goto Day3.CheckAllNestsIdentified
 
 :: OnPoloNestIdentified
 @function	TabletIdentified
@@ -191,14 +191,14 @@ $call CompleteGoal("id_polo_nest")
 {@Margo}    The skua must’ve been here. $[Day3/Rookery/Margo_13]
 {@Player}   You mean . . . the egg is gone?  $[Day3/Rookery/Player_17]
 
-$goto CheckAllNestsIdentified
+$goto Day3.CheckAllNestsIdentified
 
 :: CheckAllNestsIdentified
 @trigger    CheckAllNestsIdentified
 $if chapter:identifiedCount >= 5 
     $set	chapter:finishedObservations = true
 	$call ClearGoals()
-	$goto CheckAllComplete
+	$goto Day3.CheckAllComplete
 $endif
 
 :: WarpedToRookeryBack
@@ -235,7 +235,7 @@ $endwhile
 $set chapter:regurgDone = true
 $call CompleteGoal("day3_regurg")
 
-$goto CheckAllComplete
+$goto Day3.CheckAllComplete
 
 :: WarpedToRookerySide
 @trigger    AtWarpPoint
@@ -274,7 +274,7 @@ $set chapter:trackerSocketedCount + 1
 $if chapter:trackerSocketedCount >= 3
 $set chapter:trackersSocketed = true
 $call CompleteGoal("day3_back_trackers");
-$goto CheckAllComplete
+$goto Day3.CheckAllComplete
 $endif
 
 :: CheckAllComplete
