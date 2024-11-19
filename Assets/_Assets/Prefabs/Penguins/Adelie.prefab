@@ -118,6 +118,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5116856630524091801}
   - component: {fileID: 1658703068732986560}
+  - component: {fileID: 3776984803518954591}
+  - component: {fileID: 5118686094817263070}
   m_Layer: 0
   m_Name: LegSocket
   m_TagString: Untagged
@@ -164,6 +166,36 @@ MonoBehaviour:
   ReleaseForce: {x: 0, y: 0, z: 0}
   Location: {fileID: 6129722569293967429}
   Detector: {fileID: 340833325528977104}
+--- !u!114 &3776984803518954591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2249990480591384902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: 
+    m_HashValue: 0
+  m_ClassName:
+    m_Source: LegSocket
+    m_HashValue: 537059950
+--- !u!114 &5118686094817263070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2249990480591384902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360f5c3b055cd421d86a2264e5ddd8dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2254975769069779583
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,6 +237,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1752010969628039909}
   - component: {fileID: 6862235390430512804}
+  - component: {fileID: 3019331609449496187}
+  - component: {fileID: 2136597747308373094}
   m_Layer: 0
   m_Name: LegSocket
   m_TagString: Untagged
@@ -241,7 +275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Locked: 0
-  Current: {fileID: 4111639823015317013}
+  Current: {fileID: 0}
   Mode: 0
   JointConfig:
     BreakForce: Infinity
@@ -251,6 +285,36 @@ MonoBehaviour:
   ReleaseForce: {x: 0, y: 0, z: 0}
   Location: {fileID: 6815325420155553676}
   Detector: {fileID: 6555041138393002075}
+--- !u!114 &3019331609449496187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2357639815700801020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: 
+    m_HashValue: 0
+  m_ClassName:
+    m_Source: LegSocket
+    m_HashValue: 537059950
+--- !u!114 &2136597747308373094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2357639815700801020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360f5c3b055cd421d86a2264e5ddd8dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4636179353046740243
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,17 +817,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed088ff268e6c47deb00046936bc3f86, type: 3}
---- !u!114 &4111639823015317013 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8124216371476101191, guid: ed088ff268e6c47deb00046936bc3f86, type: 3}
-  m_PrefabInstance: {fileID: 5309877124034950738}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dafab9db04b59c4bb36e52c1514ad6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &8944887273496107244 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3860401310179700414, guid: ed088ff268e6c47deb00046936bc3f86, type: 3}
