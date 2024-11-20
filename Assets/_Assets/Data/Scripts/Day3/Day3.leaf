@@ -107,11 +107,19 @@ $call CreateGoal("day3_warp_side", Warp to side of Rookery)
 
 $call CompleteGoal("day3_warp_middle");
 
+$call AlfredoEgg->Activate()
+$call FuzzEgg->Activate()
+$call WinstonWendyChick->Activate()
+$call MillieBillyChick->Activate()
+
 $call AlfredoEgg->SetIdentified(false)
 $call MilleBillyChick->SetIdentified(false)
 $call FuzzEgg->SetIdentified(false)
 $call WinstonWendyChick->SetIdentified(false)
 $call PoloNest->SetIdentified(false)
+$call PoloNest->SetInteractable(true)
+
+$call ClearGoals()
 
 $call CreateGoal("id_millie_nest", Scan Millie and Billy's Chick)
 $call CreateGoal("id_alfredo_nest", Scan Alfredo's Egg)
@@ -200,6 +208,8 @@ $goto Day3.CheckAllNestsIdentified
 $if chapter:identifiedCount >= 5 
     $set	chapter:finishedObservations = true
 	$call ClearGoals()
+	$call CreateGoal("id_nests", ID Chicks Eggs and Nest)
+	$call CompleteGoal("id_nests")
 	$goto Day3.CheckAllComplete
 $endif
 
@@ -213,12 +223,9 @@ $call CompleteGoal("day3_warp_far");
 
 {@Margo}	We need to get some data on what the parents are feeding their young.	$[Day3/Rookery/Margo_14]
 
-$call CreateGoal("day3_regurg", Take a picture of a penguin feeding their young)
+$call CreateGoal("day3_regurg", Observe a penguin feeding their chick)
 
 {@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/Margo_15]
-{@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
-{@Margo}	Says the guy with pumpkin pie on his face.	$[Day3/Rookery/Margo_16]
-{@Player}	Seriously?	$[Day3/Rookery/Player_19]
 
 $set chapter:regurgCount = 0
 $while chapter:regurgCount < 20
@@ -229,11 +236,14 @@ $endwhile
 
 ::TabletIdentifiedRegurg
 @trigger TabletIdentified
-@who	Player
-@when	objectId == "Green-Adelie"
+@when	objectId == "GreenAdelie"
 @once
 
+{@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
+{@Margo}	Says the guy with pumpkin pie on his face.	$[Day3/Rookery/Margo_16]
+{@Player}	Seriously?	$[Day3/Rookery/Player_19]
 {@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/Margo_17]
+
 $set chapter:regurgDone = true
 $call CompleteGoal("day3_regurg")
 
@@ -258,14 +268,6 @@ $call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
 
 {@Margo}	Grab a data logger from the Pelican Case.	$[Day3/Rookery/Margo_20]
 {@Margo}	Place one hand on the penguin to stop them, and then attach the logger to their back.	$[Day3/Rookery/Margo_21]
-{@Margo}	Nice work! Let’s do two more. 	$[Day3/Rookery/Margo_22]
-{@Margo}	Great job. That should get us plenty of data.	$[Day3/Rookery/Margo_23]
-{@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]
-{@Margo}	Yep, looks like we've got all the data we need!	$[Day3/Rookery/Margo_24]
-{@Player}	Phew, good. All this running around in the cold is making me hungry. $[Day3/Rookery/Player_21]
-{@Player}	I can see why you all keep so much candy around here. 	$[Day3/Rookery/Player_22]
-{@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/Partner_12]
-{@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/Partner_13]
 
 ::	TrackerSocketed
 @trigger ObjectSocketed
@@ -273,9 +275,18 @@ $call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
 @when 	objectType == "DataTracker", socketType == "DataSocketPenguin"
 $set chapter:trackerSocketedCount + 1
 
-$if chapter:trackerSocketedCount >= 3
+$if chapter:trackerSocketedCount == 1
+{@Margo}	Nice work! Let’s do two more. 	$[Day3/Rookery/Margo_22]
+$elseif chapter:trackerSocketedCount >= 3
 $set chapter:trackersSocketed = true
 $call CompleteGoal("day3_back_trackers");
+{@Margo}	Great job. That should get us plenty of data.	$[Day3/Rookery/Margo_23]
+{@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]
+{@Margo}	Yep, looks like we've got all the data we need!	$[Day3/Rookery/Margo_24]
+{@Player}	Phew, good. All this running around in the cold is making me hungry. $[Day3/Rookery/Player_21]
+{@Player}	I can see why you all keep so much candy around here. 	$[Day3/Rookery/Player_22]
+{@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/Partner_12]
+{@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/Partner_13]
 $goto Day3.CheckAllComplete
 $endif
 
