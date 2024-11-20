@@ -18,7 +18,7 @@ namespace Pennycook {
     public class ScriptTabletHighlightable : ScriptActorComponent {
 		
         #region Inspector
-		
+		public TabletInteractable Interactable;
 		
 		#endregion // Inspector
 		
@@ -35,6 +35,13 @@ namespace Pennycook {
 		public void SetIdentified(bool id) {
 			m_Highlight.Identified = id;
 		}
+
+        [LeafMember("SetInteractable"), Preserve]
+        public void SetInteractable(bool i) {
+            if(Interactable != null) {
+                Interactable.CanInteract = i;
+            }
+        }
 		
 		[LeafMember("IsIdentified"), Preserve]
 		static public bool IsIdentified(ScriptActor actor) {

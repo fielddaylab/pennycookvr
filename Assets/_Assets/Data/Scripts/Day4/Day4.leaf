@@ -1,22 +1,22 @@
 #basePath	Day4
 
-:: Day4Start
-@trigger    Day4Start
-@who        Player
-@once
-
-//:: Prepare
-//@function	ScenePrepare
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
-
-//:: StartGame
-//@trigger    SceneReady
+//:: Day4Start
+//@trigger    Day4Start
 //@who        Player
 //@once
 
+:: Prepare
+@function	ScenePrepare
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
+
+//$call PlaceAndRotatePlayerAt(WarpDesk, true)
+//$call SetAllWarpsActive(false)
 
 $call Wait(2)
 $call DayHeader->SetText(Day 4)
@@ -90,11 +90,18 @@ $call ClearGoals()
 {@Margo}    And we’ll need to band 3 of the chicks. $[Day4/Rookery/Margo_4]
 {@Player}   Got it. Let’s get to work.  $[Day4/Rookery/Player_7]
 
+$call ClearGoals()
+$call CreateGoal("day4_gate", Scan the Weigh Gate)
+$call CreateGoal("day4_loggers", Collect Data Loggers)
+$call CreateGoal("day4_band", Band 3 Chicks)
+
 :: WarpedToRookeryGate
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-RookeryFar"
 @once
+
+$call WeighGate->SetInteractable(true)
 
 {@Player}    Okay, Margo. How does this weigh bridge thing work, exactly? $[Day4/Rookery/Player_8]
 {@Margo}    Oh, it’s easy as pie!    $[Day4/Rookery/Margo_5]
@@ -106,6 +113,8 @@ $call ClearGoals()
 :: OnWeighGateIdentified
 @function	TabletIdentified
 @when		objectId == "WeighGate"
+
+$call CompleteGoal("day4_gate")
 $set	chapter:weighGate = true
 $goto Day4.CheckCompletedTasks
 
@@ -115,14 +124,17 @@ $goto Day4.CheckCompletedTasks
 @when       targetObject == "WarpTarget-RookeryMiddle"
 @once
 
+//these activates are just for testing - these will normally already be enabled.
+$call DataTrackerBack1->SetMeshEnabled(true)
+$call DataTrackerBack2->SetMeshEnabled(true)
+$call DataTrackerBack3->SetMeshEnabled(true)
+$call DataTrackerBack4->SetMeshEnabled(true)
+$call DataTrackerBack5->SetMeshEnabled(true)
+
 {@Margo}    Wahoo! Looks like all the penguins with data loggers have come back.    $[Day4/Rookery/Margo_10]
 {@Margo}    Now we’ll be able to get the stats on their swimming behaviors!     $[Day4/Rookery/Margo_11]
 {@Margo}    Just hold the penguin still with one hand and remove their trackers.    $[Day4/Rookery/Margo_12]
 {@Margo}    Then drop the tracker into the Pelican Case.    $[Day4/Rookery/Margo_13]
-
-:: OnUnsocketedTracker
-@trigger    ObjectUnsocketed
-@when   objectType == "DataTracker", socketType == "DataSocketPenguin"
 
 :: OnSocketedTracker
 @trigger    ObjectSocketed
@@ -135,6 +147,7 @@ $goto Day4.CheckDataCount
 @who    Player
 
 $if chapter:dataCount >= 3
+$call CompleteGoal("day4_loggers")
 $set chapter:dataTrackersDone = true
 $goto Day4.CheckCompletedTasks
 $endif
@@ -144,6 +157,10 @@ $endif
 @who        Player
 @when       targetObject == "WarpTarget-RookeryCorral"
 @once
+
+$call WingBand1->Activate()
+$call WingBand2->Activate()
+$call WingBand3->Activate()
 
 {@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/Margo_14]
 {@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/Margo_15]
@@ -194,6 +211,7 @@ $elseif chapter:wingCount == 3
 {@Player}   Yeah. You’re right. $[Day4/Rookery/Player_24]
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
 {@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/Partner_19]
+$call CompleteGoal("day4_bands")
 $set chapter:finishedBands = true
 $goto Day4.CheckCompletedTasks
 $endif
