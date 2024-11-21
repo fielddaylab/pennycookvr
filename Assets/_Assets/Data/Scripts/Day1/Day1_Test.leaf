@@ -14,9 +14,9 @@ $set global:level = 1
 
 $call Wait(2)
 
-$call FuzzLegTracker->SetMeshEnabled(true)
-$call AdelieLegTracker1->SetMeshEnabled(true)
-$call AdelieLegTracker2->SetMeshEnabled(true)
+//$call FuzzLegTracker->SetMeshEnabled(true)
+//$call AdelieLegTracker1->SetMeshEnabled(true)
+//$call AdelieLegTracker2->SetMeshEnabled(true)
 
 {@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
 {@Player}   Brr. Lola was right though... I should've packed an extra sweater.   $[Day1/Tent/Player_2]
@@ -215,9 +215,6 @@ $set chapter:finishedObservations = false
 
 $call Wait(2)
 
-//fade in
-//dock margo
-
 $call DayHeader->SetText(Day 2)
 $call Wait(2)
 
@@ -351,7 +348,7 @@ $call CompleteGoal("id_millie")
 {@Partner}  Millie and . . . Billy? $[Day2/Rookery/Partner_1]
 {@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Day2/Rookery/Partner_2]
 
-$goto CheckAllMatesIdentified
+$goto Day1.CheckAllMatesIdentified
 
 :: OnMeatballIdentified
 @function	TabletIdentified
@@ -368,8 +365,7 @@ $call CompleteGoal("id_alfredo")
 {@Margo}    Ohhhh kaayyy... $[Day2/Rookery/Margo_6]
 {@Player}   Now I’m getting hungry. Got any candy bars in that case?    $[Day2/Rookery/Player_8]
 
-$goto CheckAllMatesIdentified
-
+$goto Day1.CheckAllMatesIdentified
 
 :: OnDaisyIdentified
 @function	TabletIdentified
@@ -386,7 +382,7 @@ $call CompleteGoal("id_fuzz")
 {@Margo}    You’d be surprised, kid. Not all penguins make good parents.    $[Day2/Rookery/Margo_10]
 {@Player}   We’ll just have to wait and see.    $[Day2/Rookery/Player_11]
 
-$goto CheckAllMatesIdentified
+$goto Day1.CheckAllMatesIdentified
 
 :: OnWendyIdentified
 @function	TabletIdentified
@@ -398,7 +394,7 @@ $call CompleteGoal("id_winston")
 {@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/Margo_11]
 {@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day2/Rookery/Margo_12]
 
-$goto CheckAllMatesIdentified
+$goto Day1.CheckAllMatesIdentified
 
 :: OnBenniIdentified
 @function	TabletIdentified
@@ -410,7 +406,7 @@ $call CompleteGoal("id_polo")
 {@Margo}   Ooh, Benni and Polo! What a good match.  $[Day2/Rookery/Margo_13]
 {@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day2/Rookery/Margo_14]
 
-$goto CheckAllMatesIdentified
+$goto Day1.CheckAllMatesIdentified
 
 ::CheckAllComplete
 @trigger CheckAllComplete
@@ -539,3 +535,360 @@ $call CompleteGoal("Day2_upload")
 $call Wait(2)
 
 $call TriggerResponse(Day3Start)
+
+:: Day3Start
+@trigger    Day3Start
+@once
+
+$call FadeOutIn(1.0)
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+$set global:level = 3
+$set chapter:identifiedCount = 0
+$set chapter:finishedObservations = false
+
+//:: Prepare
+//@function	ScenePrepare
+//$call PlaceAndRotatePlayerAt(WarpDesk, true)
+//$call SetAllWarpsActive(false)
+
+//:: StartGame
+//@trigger    SceneReady
+//@who        Player
+//@once
+
+$call DayHeader->SetText(Day 3)
+
+$call Wait(2)
+
+{@Margo}   Mornin’, kiddo! You’re up awfully early.   $[Day3/Tent/Margo_1]
+{@Player}   I was too excited to sleep.   $[Day3/Tent/Player_1]
+{@Player}   Some of the eggs have probably already hatched!  $[Day3/Tent/Player_2]
+{@Player}   I hope Alfredo’s doing okay. $[Day3/Tent/Player_3]
+{@Player}   And hopefully Fuzz has figured things out by now . . . I don’t know what he was thinking yesterday.  $[Day3/Tent/Player_4]
+{@Margo}   What happened to not playin’ favorites?     $[Day3/Tent/Margo_2]
+{@Player}   Oh, uh . . . I just . . .    $[Day3/Tent/Player_5]
+{@Margo}   Ha. Relax, kiddo, I’m teasin’.     $[Day3/Tent/Margo_3]
+{@Margo}    Let’s get out there and see how your Fabulous Five are doin’.    $[Day3/Tent/Margo_4]
+
+$call Wait(1)
+
+$call CreateGoal("Day3_outside", Use Warp to go outside)
+$call SetWarpActive(WarpBluff, true)
+
+:: WarpedOutsideTent3
+@trigger    AtWarpPoint
+@who        Player
+@when       targetId == "WarpBluff", global:level == 3
+@once
+
+$call CompleteGoal("Day3_outside")
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluff, false)
+
+{@Player}   What’s on our list for today?  $[Day3/Bluff/Player_1]
+{@Margo}   We need to get some data on those chicks, and see how the parents are doin'.   $[Day3/Bluff/Margo_1]
+{@Margo}    Let’s head down to the Rookery. Looks like Penny is already there.   $[Day3/Bluff/Margo_2]
+
+$call CreateGoal("Day3_rookery", Use Warp to enter rookery)
+$call SetWarpGroupActive(Rookery, true)
+
+:: WarpedToRookery3
+@trigger    AtWarpPoint
+@who        Player
+@when       targetId == "WarpRookery", global:level == 3
+@once
+
+$call FuzzEgg->Activate()
+$call AlfredoEgg->Activate()
+$call PoloNest->Activate()
+$call WinstonWendyChick->Activate()
+$call MillieBillyChick->Activate()
+
+$call CompleteGoal("Day3_rookery")
+
+$call Wait(1)
+
+$call ClearGoals()
+
+{@Player}   Oh. My. God. They’re amazing! $[Day3/Rookery/Player_1]
+{@Partner}   Hey there, new kid. $[Day3/Rookery/Partner_1]
+{@Partner}   Pretty extraordinary, aren’t they?   $[Day3/Rookery/Partner_2]
+{@Partner}  This is our favorite time of year around here.   $[Day3/Rookery/Partner_3]
+{@Player}   The skua are pretty active today   $[Day3/Rookery/Player_2]
+{@Partner}   They drive me crazy. They’re pretty nasty. $[Day3/Rookery/Partner_4]
+{@Partner}  Harmless to adult penguins, but they love a nice breakfast of penguin chicks and eggs.  $[Day3/Rookery/Partner_5]
+{@Player}  They look like they are hunting today. These poor chicks. $[Day3/Rookery/Player_3]
+{@Player}   I want to help them.  $[Day3/Rookery/Player_4]
+{@Partner}    Help the chicks? Yeah, I wish.  $[Day3/Rookery/Partner_6]
+{@Partner}    We cant interfere.  $[Day3/Rookery/Partner_7]
+{@Partner}    You just keep an eye on your—what did you call them? $[Day3/Rookery/Partner_8]
+{@Player}    Oh, uh… the Fliptastic Five? $[Day3/Rookery/Player_5]
+{@Partner}   Right. Take a look at which eggs hatched and how the chicks are doing.  $[Day3/Rookery/Partner_9]
+{@Partner}  You’ll also need to document what the parents are feeding their chicks. $[Day3/Rookery/Partner_10]
+{@Player}   Got it. $[Day3/Rookery/Player_6]
+{@Partner}  Oh… and you don’t know what happened to the last slice of pumpkin pie, do you? $[Day3/Rookery/Partner_11]
+{@Player}   Oh, uh… sorry. do you want some of my champurrado?  $[Day3/Rookery/Player_7]
+
+$call CreateGoal("day3_warp_middle", Warp to middle of Rookery)
+$call CreateGoal("day3_warp_far", Warp to back of Rookery)
+$call CreateGoal("day3_warp_side", Warp to side of Rookery)
+
+:: WarpedToRookeryMiddle3
+@trigger    AtWarpPoint
+@who        Player
+@when       targetId == "WarpRookeryMiddle", global:level == 3
+@once
+
+$call CompleteGoal("day3_warp_middle");
+
+$call AlfredoEgg->Activate()
+$call FuzzEgg->Activate()
+$call WinstonWendyChick->Activate()
+$call MillieBillyChick->Activate()
+
+$call AlfredoEgg->SetIdentified(false)
+$call MillieBillyChick->SetIdentified(false)
+$call FuzzEgg->SetIdentified(false)
+$call WinstonWendyChick->SetIdentified(false)
+$call PoloNest->SetIdentified(false)
+$call PoloNest->SetInteractable(true)
+
+$call ClearGoals()
+
+$call CreateGoal("id_millie_nest", Scan Millie and Billy's Chick)
+$call CreateGoal("id_alfredo_nest", Scan Alfredo's Egg)
+$call CreateGoal("id_fuzz_nest", Scan Fuzz's Egg)
+$call CreateGoal("id_winston_nest", Scan Winston and Wendy's Chick)
+$call CreateGoal("id_polo_nest", Scan Polo's Nest)
+
+{@Margo}    Use my Scan mode to take a look at the nests.   $[Day3/Rookery/Margo_1]
+{@Margo}    We need to see how many eggs are hatched and if any are missing.    $[Day3/Rookery/Margo_2]
+
+:: OnMillieBillyIdentified
+@function	TabletIdentified
+@when		objectId == "MillieBillyChick", global:level == 3
+$set	chapter:identifiedCount + 1
+
+$call CompleteGoal("id_millie_nest")
+
+{@Player}   Yes! Millie and Billy have hatched a healthy chick! $[Day3/Rookery/Player_8]
+{@Margo}    Aw, good for them. Two years in a row!  $[Day3/Rookery/Margo_3]
+
+$goto Day1.CheckAllNestsIdentified
+
+:: OnAlfredoEggIdentified
+@function	TabletIdentified
+@when		objectId == "AlfredoEgg", global:level == 3
+$set	chapter:identifiedCount + 1
+
+//play egg hatching animation
+$call CompleteGoal("id_alfredo_nest")
+
+{@Player}   Look, Alfredo’s egg is hatching!  $[Day3/Rookery/Player_9]
+{@Margo}    Ooh. We better snag a video later.  $[Day3/Rookery/Margo_4]
+{@Margo}    I betcha those’ll be the most famous Adelie chicks on Youtube.  $[Day3/Rookery/Margo_5]
+
+$goto Day1.CheckAllNestsIdentified
+
+:: OnFuzzEggIdentified
+@function	TabletIdentified
+@when		objectId == "FuzzEgg", global:level == 3
+$set	chapter:identifiedCount + 1
+
+$call CompleteGoal("id_fuzz_nest")
+
+{@Player}   Uh oh. Something’s not right here.  $[Day3/Rookery/Player_10]
+{@Player}    Maybe the eggs aren’t ready yet?  $[Day3/Rookery/Player_11]
+{@Margo}    I don’t know, kid.  $[Day3/Rookery/Margo_6]
+{@Margo}    Looks like Daisy’s out gettin’ some food. It’s all up to Fuzz here. $[Day3/Rookery/Margo_7]
+{@Margo}    He’s not warmin’ the egg like he’s supposed to. And it’s awful cold out here.  $[Day3/Rookery/Margo_8]
+{@Player}   He’s brand new at this. Maybe he’ll figure it out.  $[Day3/Rookery/Player_12]
+{@Margo}    Well, he’d better hurry. Those eggs are gonna freeze fast.  $[Day3/Rookery/Margo_9]
+
+$goto Day1.CheckAllNestsIdentified
+
+:: OnWinstonWendyIdentified
+@function	TabletIdentified
+@when		objectId == "WinstonWendyChick", global:level == 3
+$set	chapter:identifiedCount + 1
+
+$call CompleteGoal("id_winston_nest")
+
+{@Player}   Nice. A new chick for Winston and Wendy! $[Day3/Rookery/Player_13]
+{@Margo}    No surprise there. There’s a reason we call them “Old Faithful.”  $[Day3/Rookery/Margo_10]
+{@Margo}    Winston and Wendy have had a successful chick every year.  $[Day3/Rookery/Margo_11]
+{@Player}   Wow. Penguin Parents of the Year award! Keep it up, you two.    $[Day3/Rookery/Player_14]
+
+$goto Day1.CheckAllNestsIdentified
+
+:: OnPoloNestIdentified
+@function	TabletIdentified
+@when		objectId == "PoloNest", global:level == 3
+$set	chapter:identifiedCount + 1
+
+$call CompleteGoal("id_polo_nest")
+
+{@Player}   Whoa, wait a second. Weren’t there an egg here yesterday?   $[Day3/Rookery/Player_15]
+{@Player}   What happened to the egg?   $[Day3/Rookery/Player_16]
+{@Margo}    Oh no. Poor Polo.   $[Day3/Rookery/Margo_12]
+{@Margo}    The skua must’ve been here. $[Day3/Rookery/Margo_13]
+{@Player}   You mean . . . the egg is gone?  $[Day3/Rookery/Player_17]
+
+$goto Day1.CheckAllNestsIdentified
+
+:: CheckAllNestsIdentified
+@trigger    CheckAllNestsIdentified
+$if chapter:identifiedCount >= 5 
+    $set	chapter:finishedObservations = true
+	$call ClearGoals()
+	$call CreateGoal("id_nests", ID Chicks Eggs and Nest)
+	$call CompleteGoal("id_nests")
+	$goto Day1.CheckAllComplete3
+$endif
+
+:: WarpedToRookeryBack3
+@trigger    AtWarpPoint
+@who        Player
+@when       targetId == "WarpRookeryBack", global:level == 3
+@once
+
+$call CompleteGoal("day3_warp_far");
+
+{@Margo}	We need to get some data on what the parents are feeding their young.	$[Day3/Rookery/Margo_14]
+
+$call CreateGoal("day3_regurg", Observe a penguin feeding their chick)
+
+{@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/Margo_15]
+
+//$start Day3.StartRegurgitation
+
+//:: StartRegurgitation
+//@trigger StartRegurgitation
+//$set chapter:regurgCount = 0
+//$while chapter:regurgCount < 20
+//$call GreenAdelie->Regurgitate()
+//$call Wait(5)
+//$set chapter:regurgCount + 1
+//$endwhile
+
+::TabletIdentifiedRegurg
+@trigger TabletIdentified
+@when	objectId == "GreenAdelie", global:level == 3
+@once
+
+{@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
+{@Margo}	Says the guy with pumpkin pie on his face.	$[Day3/Rookery/Margo_16]
+{@Player}	Seriously?	$[Day3/Rookery/Player_19]
+{@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/Margo_17]
+
+$set chapter:regurgDone = true
+$call CompleteGoal("day3_regurg")
+
+$goto Day1.CheckAllComplete3
+
+:: WarpedToRookerySide3
+@trigger    AtWarpPoint
+@who        Player
+@when       targetId == "WarpRookerySide", global:level == 3
+@once
+
+$call CompleteGoal("day3_warp_side");
+
+$call DataTracker1->Activate()
+$call DataTracker2->Activate()
+$call DataTracker3->Activate()
+
+{@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/Margo_18]
+{@Margo}	You’ll need to attach a data logger to their backs.	$[Day3/Rookery/Margo_19]
+
+$call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
+
+{@Margo}	Grab a data logger from the Pelican Case.	$[Day3/Rookery/Margo_20]
+{@Margo}	Place one hand on the penguin to stop them, and then attach the logger to their back.	$[Day3/Rookery/Margo_21]
+
+::	TrackerSocketed
+@trigger ObjectSocketed
+@who	Player
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", global:level == 3
+$set chapter:trackerSocketedCount + 1
+
+$if chapter:trackerSocketedCount == 1
+{@Margo}	Nice work! Let’s do two more. 	$[Day3/Rookery/Margo_22]
+$elseif chapter:trackerSocketedCount >= 3
+$set chapter:trackersSocketed = true
+$call CompleteGoal("day3_back_trackers");
+{@Margo}	Great job. That should get us plenty of data.	$[Day3/Rookery/Margo_23]
+$goto Day1.CheckAllComplete3
+$endif
+
+:: CheckAllComplete3
+@trigger	CheckAllComplete3
+@who		Player
+
+$if chapter:trackersSocketed == true, chapter:regurgDone == true, chapter:finishedObservations == true
+$set chapter:day3AllComplete = true
+$call ClearGoals()
+$call Wait(0.3)
+$call CreateGoal("Day3_return", Return to tent)
+$call SetWarpActive(WarpBluffBack, true)
+{@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]
+{@Margo}	Yep, looks like we've got all the data we need!	$[Day3/Rookery/Margo_24]
+{@Player}	Phew, good. All this running around in the cold is making me hungry. $[Day3/Rookery/Player_21]
+{@Player}	I can see why you all keep so much candy around here. 	$[Day3/Rookery/Player_22]
+{@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/Partner_12]
+{@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/Partner_13]
+$endif
+
+:: WarpedBackToTent3
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:day3AllComplete, targetId == "WarpBluffBack", global:level == 3
+@once
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpGroupActive(Rookery, false)
+$call SetWarpActive(WarpDesk, true)
+
+$call CreateGoal("Day3_upload", Upload Margo's data)
+
+:: WarpedInsideTent3
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:day3AllComplete, targetId == "WarpDesk", global:level == 3
+@interrupt
+
+$call CompleteGoal("Day3_return")
+$call Wait(1)
+$call SetWarpActive(WarpDesk, true)
+
+{@Margo}    Okay, kiddo. Put me in the dock and let’s have a look at our findings! $[Day3/Tent/Margo_5]
+
+$while !IsSocketedBy(DeskDock, Margo)
+$call Wait(0.5)
+$endwhile
+
+$while !ButtonPressed(BigButton)
+$call Wait(0.5)
+$endwhile
+
+$call CompleteGoal("Day3_upload")
+
+{@Margo}    You've got three successful breeding pairs. $[Day3/Tent/Margo_6]
+{@Margo}    Millie and Billy, Alfredo and Meatball, and Winston and Wendy.  $[Day3/Tent/Margo_7]
+{@Margo}    All the chicks seem to be doing well so far.    $[Day3/Tent/Margo_8]
+{@Margo}    Fuzz and Daisy's egg isnt lookin' too good.     $[Day3/Tent/Margo_9]
+{@Margo}    Fuzz hasn't figured out how to keep it warm... I've got a bad feelin' that we won't see their egg hatch.    $[Day3/Tent/Margo_10]
+{@Margo}    Polo and Benni lost their chick.    $[Day3/Tent/Margo_11]
+{@Margo}    All the parents are feedin' their little ones krill, which is what we'd expect to see this time of year.    $[Day3/Tent/Margo_12]
+{@Margo}    A month from now, the chicks should be waddlin' around on their own...  $[Day3/Tent/Margo_13]
+{@Margo}    Assuming the skua don't get to 'em first.   $[Day3/Tent/Margo_14]
+{@Margo}    Nice work, kid. Another good day's work!    $[Day3/Tent/Margo_15]
+
+$call Wait(5)
+$call TriggerResponse(Day4Start)
