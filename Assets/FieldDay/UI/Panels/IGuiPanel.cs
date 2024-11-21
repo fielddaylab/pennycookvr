@@ -11,6 +11,7 @@ namespace FieldDay.UI {
 
         void Show();
         void Hide();
+        void SetVisibleNow(bool visible);
 
         bool IsShowing();
         bool IsTransitioning();

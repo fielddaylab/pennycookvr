@@ -3,7 +3,7 @@
 :: Prepare
 @function	ScenePrepare
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(true)
+$call SetAllWarpsActive(false)
 
 :: StartGame
 @trigger    SceneReady

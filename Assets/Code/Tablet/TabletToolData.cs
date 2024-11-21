@@ -10,6 +10,8 @@ namespace Pennycook.Tablet {
         public LayerMask RaycastMask;
 
         public Predicate<TabletHighlightable, TabletHighlightState> HighlightPredicate;
+        public TabletToolHighlightEventDelegate OnHighlighted;
+        public TabletToolHighlightEventDelegate OnUnhighlighted;
 
         public TabletToolAnalyzePredicate GetState;
         
@@ -20,12 +22,17 @@ namespace Pennycook.Tablet {
 
         public TabletToolInteractionMode InteractMode;
         public TabletToolInteractDelegate Interact;
+
+        public TabletToolEventDelegate OnOpen;
+        public TabletToolEventDelegate OnClose;
     }
 
     public delegate TabletInteractionState.State TabletToolAnalyzePredicate(TabletHighlightable highlightable, TabletControlState controlState, double timestamp);
     public delegate string TabletToolInteractionVerbPredicate(TabletHighlightable highlightable, TabletInteractionState.State highlightableState);
     public delegate void TabletToolUpdateAction(TabletHighlightable highlightable, TabletControlState controlState, TabletInteractionState.State highlightableState);
     public delegate void TabletToolInteractDelegate(TabletHighlightable highlightable, TabletControlState controlState, double timestamp);
+    public delegate void TabletToolHighlightEventDelegate(TabletHighlightable highlightable, TabletControlState controlState);
+    public delegate void TabletToolEventDelegate(TabletControlState controlState);
 
     public enum TabletToolInteractionMode {
         None,
@@ -39,11 +46,11 @@ namespace Pennycook.Tablet {
         static public readonly TabletToolDefinition Scan = new TabletToolDefinition() {
             RaycastMask = TabletUtility.DefaultSearchMask,
 
-            GetState = (h, c, t) => {
-                if (!h.CachedInteraction || !TabletInteractionUtility.HasInteractions(h, h.CachedInteraction)) {
-                    return TabletInteractionState.State.Unavailable;
-                }
+            HighlightPredicate = (h, hc) => {
+                return h.CachedInteraction && TabletInteractionUtility.HasInteractions(h, h.CachedInteraction);
+            },
 
+            GetState = (h, c, t) => {
                 if (!TabletInteractionUtility.CanInteract(h.CachedInteraction, t)) {
                     return TabletInteractionState.State.Disabled;
                 }
@@ -51,7 +58,7 @@ namespace Pennycook.Tablet {
                 return TabletInteractionState.State.Available;
             },
 
-            DefaultVerb = "Interact",
+            DefaultVerb = "Scan",
             GetVerb = (h, hs) => {
                 switch (h.CachedInteraction.Verb) {
                     case TabletInteractableVerb.Identify:
@@ -70,6 +77,11 @@ namespace Pennycook.Tablet {
                 if (TabletInteractionUtility.TryInteract(h, h.CachedInteraction, t)) {
                     TabletUtility.PlayHaptics(0.3f, 0.05f);
                 }
+            },
+
+            OnUnhighlighted = (h, c) => {
+                TabletInteractionState iState = Find.State<TabletInteractionState>();
+                iState.DetailsGroup.Hide();
             }
         };
 
@@ -81,7 +93,7 @@ namespace Pennycook.Tablet {
             RaycastMask = TabletUtility.CountSearchMask,
 
             HighlightPredicate = (h, hc) => {
-                return h.CachedCountable && TabletUtility.IsButtonHeld(XRHandButtons.TriggerButton);
+                return h.CachedCountable && TabletUtility.IsButtonHeld(XRHandButtons.TriggerButton) && TabletCountUtility.IsCountable(h.CachedCountable);
             },
 
             GetState = (h, c, t) => {

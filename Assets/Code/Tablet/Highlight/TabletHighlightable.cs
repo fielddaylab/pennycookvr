@@ -3,6 +3,7 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
 using FieldDay.Scripting;
+using Leaf.Runtime;
 using UnityEngine;
 
 namespace Pennycook.Tablet {
@@ -12,9 +13,6 @@ namespace Pennycook.Tablet {
 
         [Inline(InlineAttribute.DisplayType.HeaderLabel)]
         public TabletDetailsContent Contents;
-
-        [Inline(InlineAttribute.DisplayType.HeaderLabel)]
-        public TabletDetailsContent UnidentifiedContents;
 
         [Header("State")]
         public bool Identified;
@@ -36,6 +34,15 @@ namespace Pennycook.Tablet {
         void IRegistrationCallbacks.OnDeregister() {
             
         }
+
+        #region Leaf
+
+        [LeafMember("IsObjectIdentified")]
+        static private bool LeafIsIdentified(ScriptActor actor) {
+            return actor.TryGetComponent<TabletHighlightable>(out var highlight) && highlight.Identified;
+        }
+
+        #endregion // Leaf
     }
 
     [Serializable]

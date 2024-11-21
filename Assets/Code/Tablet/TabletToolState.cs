@@ -60,8 +60,16 @@ namespace Pennycook.Tablet {
                 return;
             }
 
+            TabletHighlightState highlights = Find.State<TabletHighlightState>();
+            TabletControlState ctrl = Find.State<TabletControlState>();
+
             if (prevIdx >= 0) {
                 toolState.Configs[prevIdx].Label.SetState(false);
+
+                var oldTool = TabletToolDefinitions.Get(toolState.CurrentTool);
+                oldTool.OnUnhighlighted?.Invoke(highlights.HighlightedObject, ctrl);
+
+                oldTool.OnClose?.Invoke(ctrl);
             }
 
             toolState.CurrentToolIndex = index;
@@ -78,13 +86,18 @@ namespace Pennycook.Tablet {
                 foreach(var graphic in toolState.ToolColorTinted) {
                     graphic.color = config.ThemeColor;
                 }
-
             } else {
                 toolState.Outline.enabled = false;
             }
 
             toolState.CurrentTool = tool;
             toolState.CurrentToolDef = TabletToolDefinitions.Get(tool);
+
+            toolState.CurrentToolDef.OnOpen?.Invoke(ctrl);
+
+            if (highlights.HighlightedObject) {
+                toolState.CurrentToolDef.OnHighlighted?.Invoke(highlights.HighlightedObject, ctrl);
+            }
 
             if (playFeedback) {
                 TabletUtility.PlaySfx("Tablet.ModeChanged");
