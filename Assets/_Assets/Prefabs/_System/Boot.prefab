@@ -225,6 +225,7 @@ MonoBehaviour:
   m_TargetFramerate: 90
   m_DefaultPixelSprite: {fileID: 21300000, guid: 0ecf9a0372df4cf4fb588b863f7144b9, type: 3}
   m_AllowMultiTouchInput: 0
+  m_ReflectionData: {fileID: 11400000, guid: 8ba8df1aface7ec459a93e8b4abf6d1c, type: 2}
   m_AudioConfig:
     Is3D: 1
     DefaultEmitterProfile: {fileID: 11400000, guid: 0bdb048b66d7e314cbbd06537d9381e7, type: 2}
@@ -313,6 +314,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4279285798545000404}
   - component: {fileID: 2690007887474805540}
+  - component: {fileID: 6478404523825730324}
   m_Layer: 0
   m_Name: Physics
   m_TagString: Untagged
@@ -348,6 +350,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InitialCapacity: 4
+--- !u!114 &6478404523825730324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4276320307237363128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4ac5ca8ebf1090458bd7dacd0c29d06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 64
 --- !u!1 &4675855111340479847
 GameObject:
   m_ObjectHideFlags: 0

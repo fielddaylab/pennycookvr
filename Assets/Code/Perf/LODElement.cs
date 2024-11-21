@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using BeauUtil;
+using FieldDay;
 using FieldDay.Components;
 using FieldDay.Scenes;
+using ScriptableBake;
 using UnityEngine;
 
 namespace Pennycook {
-    public sealed class LODElement : BatchedComponent, IScenePreload {
+    public sealed class LODElement : BatchedComponent, IScenePreload, IBaked {
         #region Inspector
 
         [Header("Components")]
@@ -23,10 +25,14 @@ namespace Pennycook {
         public LODLevelConfig Mid = new LODLevelConfig() { ScreenProportion = 0.3f, Skinning = SkinQuality.Bone2 };
         public LODLevelConfig Far = new LODLevelConfig() { ScreenProportion = 0.1f, Skinning = SkinQuality.Bone1 };
 
+        [Header("Behavior Changes")]
+        public ActiveGroup HighDetailGroup;
+        public ActiveGroup LowDetailGroup;
+
         #endregion // Inspector
 
         [NonSerialized] public Transform CachedTransform;
-        [NonSerialized] public LODLevel LastAppliedLevel;
+        [NonSerialized] public LODLevel LastAppliedLevel = LODLevel.Uninitialized;
 
         public readonly CastableEvent<LODLevel> OnLevelChanged = new CastableEvent<LODLevel>();
 
@@ -36,6 +42,28 @@ namespace Pennycook {
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             this.CacheComponent(ref CachedTransform);
+
+            if (Animator) {
+                Animator.keepAnimatorStateOnDisable = true;
+            }
+
+            return null;
+        }
+
+#if UNITY_EDITOR
+
+        private void Reset() {
+            SkinnedMesh = GetComponent<SkinnedMeshRenderer>();
+            MeshFilter = GetComponent<MeshFilter>();
+            MeshRenderer = GetComponent<MeshRenderer>();
+            Animator = GetComponentInParent<Animator>();
+        }
+
+        int IBaked.Order { get { return 0; } }
+
+        bool IBaked.Bake(BakeFlags flags, BakeContext context) {
+            HighDetailGroup.SetActive(false);
+            LowDetailGroup.SetActive(true);
 
             Mesh closeMesh = null;
             Material closeMaterial = null;
@@ -66,20 +94,7 @@ namespace Pennycook {
                 Far.Material = Mid.Material;
             }
 
-            if (Animator) {
-                Animator.keepAnimatorStateOnDisable = true;
-            }
-
-            return null;
-        }
-
-#if UNITY_EDITOR
-
-        private void Reset() {
-            SkinnedMesh = GetComponent<SkinnedMeshRenderer>();
-            MeshFilter = GetComponent<MeshFilter>();
-            MeshRenderer = GetComponent<MeshRenderer>();
-            Animator = GetComponentInParent<Animator>();
+            return true;
         }
 
 #endif // UNITY_EDITOR
@@ -89,7 +104,8 @@ namespace Pennycook {
         Close,
         Mid,
         Far,
-        SuperFar
+        SuperFar,
+        Uninitialized = -1
     }
 
     [Serializable]

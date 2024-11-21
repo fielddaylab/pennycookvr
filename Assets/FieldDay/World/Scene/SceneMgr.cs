@@ -1274,6 +1274,8 @@ namespace FieldDay.Scenes {
 
                 counter.Reset();
 
+                Log.Trace("[SceneMgr] Processing PreloadManifests...");
+
                 PreloadManifest[] manifests = new PreloadManifest[linearizedScenes.Count];
 
                 for(int i = 0; i < manifests.Length; i++) {
@@ -1298,16 +1300,25 @@ namespace FieldDay.Scenes {
 
                 // dependencies
 
-                while(!AreDependenciesAndStreamingLoaded(SceneLoadPhase.BeforeLateEnable)) {
+                Log.Trace("[SceneMgr] Waiting for dependencies and streaming load...");
+
+                while (!AreDependenciesAndStreamingLoaded(SceneLoadPhase.BeforeLateEnable)) {
                     yield return null;
                 }
 
                 // unload unused assets
 
+                Log.Trace("[SceneMgr] Unloading unused assets...");
+
                 yield return AssetUtility.UnloadUnused();
+
+                Log.Trace("[SceneMgr] Unloading unused streaming assets...");
+
                 Streaming.UnloadUnusedAsync();
 
                 if (args.Type == SceneType.Main) {
+
+                    Log.Trace("[SceneMgr] Collecting garbage...");
                     using (Profiling.Time("gc collect", ProfileTimeUnits.Microseconds)) {
                         GC.Collect();
                     }
@@ -1321,8 +1332,10 @@ namespace FieldDay.Scenes {
 
                 counter.Reset();
 
-                foreach(var data in linearizedScenes) {
-                    if ((data.LateEnable.Length + data.CustomData.Length) > 0 && !data.IsVisited(SceneDataExt.VisitFlags.LateEnabled)) {
+                Log.Trace("[SceneMgr] Processing LateEnable...");
+
+                foreach (var data in linearizedScenes) {
+                    if (data.LateEnable.Length > 0 && !data.IsVisited(SceneDataExt.VisitFlags.LateEnabled)) {
                         m_LateEnableQueue.PushBack(new LateEnableArgs() {
                             Data = data,
                             Counter = counter
@@ -1330,6 +1343,9 @@ namespace FieldDay.Scenes {
                         counter.Increment();
                     } else {
                         data.TryVisit(SceneDataExt.VisitFlags.LateEnabled);
+                        foreach (ISceneCustomData custom in data.CustomData) {
+                            custom.OnLateEnable();
+                        }
                         FlushCallbacks(data.LateEnableCallbackQueue);
                         if (!OnAnySceneEnabled.IsEmpty) {
                             OnAnySceneEnabled.Invoke();
@@ -1346,6 +1362,8 @@ namespace FieldDay.Scenes {
                 }
 
                 // one more check for dependencies
+
+                Log.Trace("[SceneMgr] Waiting for remaining dependencies...");
 
                 while (!AreDependenciesAndStreamingLoaded(SceneLoadPhase.BeforeReady)) {
                     yield return null;

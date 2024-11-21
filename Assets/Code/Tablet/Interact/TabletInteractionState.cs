@@ -1,6 +1,7 @@
 using System;
 using FieldDay;
 using FieldDay.SharedState;
+using FieldDay.UI.Animation;
 using TMPro;
 using UnityEngine;
 
@@ -14,8 +15,14 @@ namespace Pennycook.Tablet {
         }
         
         [Header("Components")]
-        public CanvasGroup InteractionGroup;
+        public FadeGroup InteractionGroup;
         public TMP_Text InteractionLabel;
+        [Space]
+        public FadeGroup DetailsGroup;
+        public GameObject DetailsHeaderGroup;
+        public TMP_Text DetailsHeader;
+        public GameObject DetailsDescriptionGroup;
+        public TMP_Text DetailsDescription;
         
         [NonSerialized] public State CurrentState = State.Disabled;
 

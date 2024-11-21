@@ -13,9 +13,10 @@ namespace Pennycook {
     public sealed class PenguinBrain : ProcessBehaviour, IScriptActorComponent {
         [Header("Components")]
         public Transform Position;
-        public PenguinAnimator Animator;
-        public PenguinRelationshipTracker Relationships;
-        public PenguinNavigator Navigator;
+        [Required] public PenguinAnimator Animator;
+        [Required] public PenguinRelationshipTracker Relationships;
+        [Required] public PenguinNavigator Navigator;
+        [Required] public PenguinContacts Contacts;
         public AudioSource Voice;
 
         [Header("Configuration")]

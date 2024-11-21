@@ -4,6 +4,7 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
 using FieldDay.Scripting;
+using FieldDay.UI;
 using UnityEngine;
 
 namespace Pennycook.Tablet {
@@ -57,9 +58,6 @@ namespace Pennycook.Tablet {
             if (interactable.OnInteract.Count > 0) {
                 return true;
             }
-            if (interactable.Verb == TabletInteractableVerb.Identify) {
-                return !highlightable.Identified;
-            }
             return interactable.Verb != TabletInteractableVerb.None;
         }
 
@@ -72,10 +70,15 @@ namespace Pennycook.Tablet {
 
                 bool identified = Ref.Replace(ref highlightable.Identified, true);
                 if (identified) {
-                    TabletUtility.UpdateHighlightLabels(Find.State<TabletHighlightState>(), TabletUtility.GetLabelsForHighlightable(highlightable));
                     TabletUtility.PlayHaptics(0.3f, 0.08f);
                     TabletUtility.PlaySfx("Tablet.Identified");
                 }
+
+                TabletInteractionState iState = Find.State<TabletInteractionState>();
+                iState.InteractionGroup.Hide();
+                TMPUtility.SetTextAndActive(iState.DetailsHeader, highlightable.Contents.DetailedHeader, iState.DetailsHeaderGroup);
+                TMPUtility.SetTextAndActive(iState.DetailsDescription, highlightable.Contents.DetailedText, iState.DetailsDescriptionGroup);
+                iState.DetailsGroup.Show();
 
                 var actor = ScriptUtility.Actor(interactable);
                 if (actor != null) {

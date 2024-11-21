@@ -18,24 +18,12 @@ namespace Pennycook.Tablet {
     public class TabletHighlightState : SharedStateComponent, IRegistrationCallbacks {
         static public readonly TableKeyPair Var_CurrentHighlightId = TableKeyPair.Parse("tablet:highlightedId");
         static public readonly TableKeyPair Var_CurrentHighlightType = TableKeyPair.Parse("tablet:highlightedType");
-        static public readonly int MaxGoals = 6;
-
-        public List<StringHash32> ActiveGoalIds = new List<StringHash32>();
-        public BitSet32 GoalsComplete = new BitSet32();
-
 
         public Camera LookCamera;
 
         [Header("Selection Box")]
         public RectTransform HighlightBox;
         public CanvasGroup HighlightBoxGroup;
-
-        [Header("Details")]
-        public GameObject DetailsGroup;
-        public GameObject GoalsGroup;
-        public TabletCheckboxItem[] GoalItems;
-        public TMP_Text DetailsHeader;
-        public TMP_Text DetailsText;
 
         [Header("Raycast Configuration")]
         public float RaycastSize = 0.4f;
@@ -64,12 +52,6 @@ namespace Pennycook.Tablet {
 
             Log.Msg("[TabletHighlightState] Parent size is {0}", CachedHighlightCornerScale);
         }
-    }
-
-    public struct TabletGoal {
-        public bool Completed;
-        public StringHash32 Id;
-        public string Text;
     }
 
     static public partial class TabletUtility {
@@ -138,71 +120,14 @@ namespace Pennycook.Tablet {
             return Find.State<TabletHighlightState>().HighlightedObject == h;
         }
 
-        [LeafMember("CreateGoal")]
-        static private void LeafCreateGoal(StringHash32 id, string text) {
-            int index = HighlightState.ActiveGoalIds.Count;
-            if (index >= TabletHighlightState.MaxGoals) {
-                throw new IndexOutOfRangeException("[LeafCreateGoal] Error: Goal '" + text + "' exceeded maximum number of " + TabletHighlightState.MaxGoals);
-            }
-            HighlightState.ActiveGoalIds.Add(id);
-            HighlightState.GoalItems[index].Text.SetText(text);
-            HighlightState.GoalItems[index].Check.SetAlpha(0);
-            HighlightState.GoalItems[index].gameObject.SetActive(true);
-            HighlightState.GoalsComplete.Unset(index);
-        }
-
-        [LeafMember("CompleteGoal")]
-        static private bool LeafCompleteGoal(StringHash32 id) {
-            return LeafSetGoalComplete(id, true);
-        }
-
-        [LeafMember("SetGoalComplete")]
-        static private bool LeafSetGoalComplete(StringHash32 id, bool complete) {
-            int index = HighlightState.ActiveGoalIds.IndexOf(id);
-            return SetGoalComplete(index, complete);
-        }
-
-        static public bool SetGoalComplete(int index, bool complete) {
-            if (index < 0 || index >= HighlightState.GoalItems.Length) return false;
-            HighlightState.GoalsComplete.Set(index);
-            HighlightState.GoalItems[index].Check.SetAlpha(complete ? 1 : 0);
-            return true;
-        }
-
-        [LeafMember("IsGoalComplete")]
-        static private bool LeafCheckGoalComplete(StringHash32 id) {
-            return HighlightState.GoalsComplete[HighlightState.ActiveGoalIds.IndexOf(id)];
-        }
-
-        [LeafMember("ClearGoals")]
-        static private void LeafClearGoals() {
-            HighlightState.ActiveGoalIds.Clear();
-            HighlightState.GoalsComplete.Clear();
-            for (int i = 0; i <  HighlightState.GoalItems.Length; i++) {
-                HighlightState.GoalItems[i].Text.SetText("Inactive");
-                HighlightState.GoalItems[i].Check.SetAlpha(0);
-                HighlightState.GoalItems[i].gameObject.SetActive(false);
-            }
-        }
-
         static public void UpdateCountLabel(TabletHighlightState highlight, in TabletCountingGroup countingGroup) {
-            TMPUtility.SetTextAndActive(highlight.DetailsHeader, "Counting Penguins...");
-            TMPUtility.SetTextAndActive(highlight.DetailsText, "Penguin Count: " + countingGroup.CurrentlyCounted.Count);
-            highlight.DetailsGroup.SetActive(true);
-            highlight.GoalsGroup.SetActive(false);
-        }
-
-        static public void UpdateHighlightLabels(TabletHighlightState highlight, in TabletDetailsContent contents) {
-            TMPUtility.SetTextAndActive(highlight.DetailsHeader, contents.DetailedHeader);
-            TMPUtility.SetTextAndActive(highlight.DetailsText, contents.DetailedText);
-            highlight.DetailsGroup.SetActive(true);
-            highlight.GoalsGroup.SetActive(false);
+            //TMPUtility.SetTextAndActive(highlight.DetailsHeader, "Counting Penguins...");
+            //TMPUtility.SetTextAndActive(highlight.DetailsText, "Penguin Count: " + countingGroup.CurrentlyCounted.Count);
+            //highlight.DetailsGroup.SetActive(true);
+            //highlight.GoalsGroup.SetActive(false);
         }
 
         static public TabletDetailsContent GetLabelsForHighlightable(TabletHighlightable highlightable) {
-            if (!highlightable.Identified) {
-                return highlightable.UnidentifiedContents;
-            }
             return highlightable.Contents;
         }
     }
