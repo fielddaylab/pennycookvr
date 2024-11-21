@@ -11,7 +11,7 @@ namespace Pennycook {
         [InvokeOnBoot]
         static private void Initialize() {
             GameLoop.OnDebugUpdate.Register(() => {
-                if (DebugInput.IsPressed(XRHandIndex.Right, XRHandButtons.PrimaryAxisClick)) {
+                if (DebugInput.IsPressed(XRHandIndex.Right, XRHandButtons.PrimaryAxisClick) || DebugInput.IsPressed(UnityEngine.KeyCode.K)) {
                     ScriptUtility.ForEachThread((t) => {
                         t.SkipSingle();
                     });
