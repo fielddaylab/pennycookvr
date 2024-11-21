@@ -10,6 +10,8 @@ $call SetAllWarpsActive(false)
 @who        Player
 @once
 
+$set global:level = 1
+
 $call Wait(2)
 
 {@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
@@ -18,8 +20,6 @@ $call Wait(2)
 {@Player}   Step one: Find research tent. Check.    $[Day1/Tent/Player_4]
 {@Player}   Step two: Report to Margo, penguin expert and senior researcher.    $[Day1/Tent/Player_5]
 {@Player}   Hmmm. But where is she?     $[Day1/Tent/Player_6]
-
-$call SetWarpActive(WarpBluff, true)
 
 :: PickedUpMargo
 @trigger    TabletLifted

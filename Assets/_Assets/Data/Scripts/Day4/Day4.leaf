@@ -6,16 +6,19 @@
 @once
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
+$set global:level = 4
+$set chapter:identifiedCount = 0
+$set chapter:finishedObservations = false
 
-:: Prepare
-@function	ScenePrepare
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
+//:: Prepare
+//@function	ScenePrepare
+//$call PlaceAndRotatePlayerAt(WarpDesk, true)
+//$call SetAllWarpsActive(false)
 
-:: StartGame
-@trigger    SceneReady
-@who        Player
-@once
+//:: StartGame
+//@trigger    SceneReady
+//@who        Player
+//@once
 
 $call Wait(2)
 $call DayHeader->SetText(Day 4)
@@ -45,7 +48,7 @@ $call SetWarpActive(WarpBluff, true)
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff"
+@when       targetObject == "WarpTarget-Bluff", global:level == 4
 @once
 
 $call CompleteGoal("Day4_outside")
@@ -61,7 +64,7 @@ $call CreateGoal("Day4_rookery", Use Warp to enter rookery)
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Rookery"
+@when       targetObject == "WarpTarget-Rookery", global:level == 4
 @once
 
 $call CompleteGoal("Day4_rookery")
@@ -97,7 +100,7 @@ $call CreateGoal("day4_band", Band 3 Chicks)
 :: WarpedToRookeryGate
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryFar"
+@when       targetObject == "WarpTarget-RookeryFar", global:level == 4
 @once
 
 $call WeighGate->SetInteractable(true)
@@ -111,7 +114,7 @@ $call WeighGate->SetInteractable(true)
 
 :: OnWeighGateIdentified
 @function	TabletIdentified
-@when		objectId == "WeighGate"
+@when		objectId == "WeighGate", global:level == 4
 
 $call CompleteGoal("day4_gate")
 $set	chapter:weighGate = true
@@ -120,7 +123,7 @@ $goto Day4.CheckCompletedTasks
 :: WarpedToRookeryMiddle
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryMiddle"
+@when       targetObject == "WarpTarget-RookeryMiddle", global:level == 4
 @once
 
 //these activates are just for testing - these will normally already be enabled.
@@ -137,7 +140,7 @@ $call DataTrackerBack5->SetMeshEnabled(true)
 
 :: OnSocketedTracker
 @trigger    ObjectSocketed
-@when   objectType == "DataTracker", socketType == "TrackerSocket"
+@when   objectType == "DataTracker", socketType == "TrackerSocket", global:level == 4
 $set chapter:dataCount + 1
 $goto Day4.CheckDataCount
 
@@ -154,7 +157,7 @@ $endif
 :: WarpedToRookeryCorral
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryCorral"
+@when       targetObject == "WarpTarget-RookeryCorral", global:level == 4
 @once
 
 $call WingBand1->Activate()
@@ -175,7 +178,7 @@ $call WingBand3->Activate()
 
 :: OnSocketedWingBand
 @trigger ObjectSocketed
-@when   objectType == "WingBand", socketType == "BandSocket"
+@when   objectType == "WingBand", socketType == "BandSocket", global:level == 4
 $set chapter:wingCount + 1
 
 $if chapter:wingCount == 1
@@ -232,7 +235,7 @@ $endif
 :: WarpedBackToTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back", global:level == 4
 @once
 
 $call Wait(1)
@@ -244,7 +247,7 @@ $call SetWarpActive(WarpDesk, true)
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk", global:level == 4
 @interrupt
 
 $call CreateGoal("Day4_upload", Upload Margo's data)

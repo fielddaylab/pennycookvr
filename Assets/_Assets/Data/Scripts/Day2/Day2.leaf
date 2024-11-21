@@ -6,16 +6,19 @@
 @once
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
+$set global:level = 2
+$set chapter:identifiedCount = 0
+$set chapter:finishedAllObservations = false
 
-:: Prepare
-@function	ScenePrepare
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
+//:: Prepare
+//@function	ScenePrepare
+//$call PlaceAndRotatePlayerAt(WarpDesk, true)
+//$call SetAllWarpsActive(false)
 
-:: StartGame
-@trigger    SceneReady
-@who        Player
-@once
+//:: StartGame
+//@trigger    SceneReady
+//@who        Player
+//@once
 
 $call Wait(2)
 
@@ -35,11 +38,11 @@ $call Wait(2)
 :: PickedUpMargo2
 @trigger    TabletLifted
 @who        Player
+@when		global:level == 2
 @interrupt
 @once
 
 $call Wait(1)
-$set	chapter:hasTalkedToMargo = true
 
 {@Player}    Sounds good to me. Let's get out there!   $[Day2/Tent/Player_3]
 {@Margo}   Whoa, slow your roll, kiddo. Last time you almost froze your fingers off, and I've heard those are pretty important for humans.  $[Day2/Tent/Margo_5]
@@ -58,7 +61,7 @@ $call SetWarpActive(WarpBluff, true)
 :: WarpedOutsideTent2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff"
+@when       targetObject == "WarpTarget-Bluff", global:level == 2
 @once
 
 $call CompleteGoal("Day2_outside")
@@ -83,6 +86,7 @@ $call CreateGoal("Day2_count", Use Count to count population)
 :: ScannedFromBluff2
 @trigger	TabletCounted
 @who		Player
+@when		global:level == 2
 @interrupt
 @once
 
@@ -95,7 +99,7 @@ $call CreateGoal("Day2_rookery", Use Warp to enter rookery)
 :: WarpedToRookery2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Rookery"
+@when       targetObject == "WarpTarget-Rookery", global:level == 2
 @once
 
 $call CompleteGoal("Day2_rookery")
@@ -113,7 +117,7 @@ $call CreateGoal("Day2_warp_far", or Warp near the weigh gate of the Rookery)
 :: WarpedToRookeryMiddle2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryMiddle"
+@when       targetObject == "WarpTarget-RookeryMiddle", global:level == 2
 @once
 
 $call CompleteGoal("Day2_warp_middle")
@@ -145,7 +149,7 @@ $call CreateGoal("id_polo", ID Polo's Mate)
 
 :: OnBillyIdentified
 @trigger	TabletIdentified
-@when		objectId == "Billy"
+@when		objectId == "Billy", global:level == 2
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_millie")
@@ -158,7 +162,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnMeatballIdentified
 @function	TabletIdentified
-@when		objectId == "Meatball"
+@when		objectId == "Meatball", global:level == 2
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_alfredo")
@@ -176,7 +180,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnDaisyIdentified
 @function	TabletIdentified
-@when		objectId == "Daisy"
+@when		objectId == "Daisy", global:level == 2
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_fuzz")
@@ -193,7 +197,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnWendyIdentified
 @function	TabletIdentified
-@when		objectId == "Wendy"
+@when		objectId == "Wendy", global:level == 2
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_winston")
@@ -205,7 +209,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnBenniIdentified
 @function	TabletIdentified
-@when		objectId == "Benni"
+@when		objectId == "Benni", global:level == 2
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_polo")
@@ -235,7 +239,7 @@ $endif
 :: WarpedToRookeryGate2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryFar"
+@when       targetObject == "WarpTarget-RookeryFar", global:level == 2
 @once
 
 $call CompleteGoal("Day2_warp_far")
@@ -293,7 +297,7 @@ $call TriggerResponse(CheckAllComplete)
 :: WarpedBackToTent2
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Bluff-Back"
+@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Bluff-Back", global:level == 2
 @once
 
 $call Wait(1)
@@ -307,7 +311,7 @@ $call CreateGoal("Day2_upload", Upload Margo's data)
 :: WarpedInsideTent2
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
+@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Desk", global:level == 2
 @interrupt
 
 $call CompleteGoal("Day2_return")
