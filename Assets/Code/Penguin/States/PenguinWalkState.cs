@@ -22,7 +22,9 @@ namespace Pennycook {
 
         public override void OnExit(Process p) {
             PenguinBrain brain = Brain(p);
-            brain.Animator.Animator.SetBool("Waddle", false);
+            if (brain.Animator) {
+                brain.Animator.Animator.SetBool("Waddle", false);
+            }
             PenguinUtility.StopPathing(brain.Navigator);
         }
     }

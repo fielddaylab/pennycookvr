@@ -1,6 +1,8 @@
 using FieldDay;
 using FieldDay.HID.XR;
+using FieldDay.Scenes;
 using FieldDay.Scripting;
+using UnityEngine.SceneManagement;
 
 namespace Pennycook {
     public class VRGame : Game {
@@ -10,6 +12,9 @@ namespace Pennycook {
         static private void PreBoot() {
             Events = new EventDispatcher<EvtArgs>();
             SetEventDispatcher(Events);
+
+            PlayerProgressState progress = new PlayerProgressState();
+            Game.SharedState.Register(progress);
         }
 
         [InvokeOnBoot]
@@ -23,6 +28,8 @@ namespace Pennycook {
             Game.Scenes.OnMainSceneLateEnable.Register(() => {
                 ScriptUtility.Invoke(GameTriggers.ScenePrepare);
             });
+
+            Find.State<PlayerProgressState>().Mode = UniverseUtility.GetModeForCurrentScene();
 
             GameLoop.OnShutdown.Register(() => {
                 RaycastJobs.Shutdown();
