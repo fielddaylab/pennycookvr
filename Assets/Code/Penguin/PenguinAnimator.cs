@@ -18,6 +18,7 @@ namespace Pennycook {
         IsReaction = 0x04,
         IsRandomIdle = 0x08,
         AllowMove = 0x10,
+        IsTransitioning = 0x20
     }
 
     static public partial class PenguinUtility {

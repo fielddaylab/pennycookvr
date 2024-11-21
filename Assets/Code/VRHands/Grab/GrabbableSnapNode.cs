@@ -14,6 +14,7 @@ namespace FieldDay.VRHands {
         public XRHandIndex ValidHandType = XRHandIndex.Any;
         public bool IsDynamic;
         public bool AnyOrientation;
+        public SerializedHash32 Label;
 
         #endregion // Inspector
 

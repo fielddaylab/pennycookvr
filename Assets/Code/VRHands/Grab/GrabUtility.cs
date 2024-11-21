@@ -201,9 +201,9 @@ namespace FieldDay.VRHands {
                 }
             }
 
-            if (CleanUpHeldObjectReference(grabber, out Grabbable releasedObj)) {
-                grabber.OnRelease.Invoke(releasedObj);
-                releasedObj.OnReleased.Invoke(grabber);
+            if (CleanUpHeldObjectReference(grabber, out Grabbable releasedObj, out int releasedSnapNode)) {
+                grabber.OnRelease.Invoke(releasedObj, releasedSnapNode);
+                releasedObj.OnReleased.Invoke(grabber, releasedSnapNode);
             }
 
             grabber.HeldObject = grabbable;
@@ -227,9 +227,9 @@ namespace FieldDay.VRHands {
 
             // TODO: configure animations
 
-            grabber.OnGrab.Invoke(grabbable);
-            grabbable.OnGrabbed.Invoke(grabber);
-            OnObjectGrabbed.Invoke(grabbable, grabber);
+            grabber.OnGrab.Invoke(grabbable, snapIndex);
+            grabbable.OnGrabbed.Invoke(grabber, snapIndex);
+            OnObjectGrabbed.Invoke(grabbable, grabber, snapIndex);
 
             return true;
         }
@@ -304,7 +304,7 @@ namespace FieldDay.VRHands {
             bool detachedAnything = false;
             Grabbable releasedObj = null;
 
-            detachedAnything = CleanUpHeldObjectReference(grabber, out releasedObj, indexInArray);
+            detachedAnything = CleanUpHeldObjectReference(grabber, out releasedObj, out int releasedSnap, indexInArray);
             detachedAnything |= CleanUpJoint(grabber, applyReleaseForce);
 
             if (detachedAnything) {
@@ -312,9 +312,9 @@ namespace FieldDay.VRHands {
             }
 
             if (!ReferenceEquals(releasedObj, null)) {
-                grabber.OnRelease.Invoke(releasedObj);
-                releasedObj.OnReleased.Invoke(grabber);
-                OnObjectReleased.Invoke(releasedObj, grabber);
+                grabber.OnRelease.Invoke(releasedObj, releasedSnap);
+                releasedObj.OnReleased.Invoke(grabber, releasedSnap);
+                OnObjectReleased.Invoke(releasedObj, grabber, releasedSnap);
             }
 
             return detachedAnything;
@@ -345,9 +345,10 @@ namespace FieldDay.VRHands {
             return false;
         }
 
-        static private bool CleanUpHeldObjectReference(Grabber grabber, out Grabbable removedGrabbable, int arrayIndex = -1) {
+        static private bool CleanUpHeldObjectReference(Grabber grabber, out Grabbable removedGrabbable, out int removedSnapNode, int arrayIndex = -1) {
             if (!ReferenceEquals(grabber.HeldObject, null)) {
                 Grabbable cachedGrabbable = grabber.HeldObject;
+                int cachedSnapNode = grabber.HeldObjectSnapNodeIndex;
                 if (cachedGrabbable) {
                     if (arrayIndex < 0) {
                         arrayIndex = Array.IndexOf(cachedGrabbable.CurrentGrabbers, grabber);
@@ -365,10 +366,12 @@ namespace FieldDay.VRHands {
                 grabber.HeldObjectSnapNodeIndex = -1;
 
                 removedGrabbable = cachedGrabbable;
+                removedSnapNode = cachedSnapNode;
                 return true;
             }
 
             removedGrabbable = null;
+            removedSnapNode = -1;
             return false;
         }
 
@@ -404,8 +407,8 @@ namespace FieldDay.VRHands {
 
         #region Events
 
-        static public readonly CastableEvent<Grabbable, Grabber> OnObjectGrabbed = new CastableEvent<Grabbable, Grabber>();
-        static public readonly CastableEvent<Grabbable, Grabber> OnObjectReleased = new CastableEvent<Grabbable, Grabber>();
+        static public readonly CastableEvent<Grabbable, Grabber, int> OnObjectGrabbed = new CastableEvent<Grabbable, Grabber, int>();
+        static public readonly CastableEvent<Grabbable, Grabber, int> OnObjectReleased = new CastableEvent<Grabbable, Grabber, int>();
 
         #endregion // Events
     }

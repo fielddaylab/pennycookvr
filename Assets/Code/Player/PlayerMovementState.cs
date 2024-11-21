@@ -27,6 +27,42 @@ namespace Pennycook {
         [NonSerialized] public State CurrentState;
         [NonSerialized] public TabletWarpPoint CurrentWarp;
         public Routine WarpRoutine;
+
+        [LeafMember("FadeOut")]
+        private void FadeOut(float fTime) {
+            if(!WarpFader.enabled) {
+                WarpRoutine = Routine.Start(this, DoWarp(1.0f, fTime));
+            }
+        }
+
+        [LeafMember("FadeIn")]
+        private void FadeIn(float fTime) {
+            if(!WarpFader.enabled) {
+                WarpRoutine = Routine.Start(this, DoWarp(0.0f, fTime));
+            }
+        }
+
+        [LeafMember("FadeOutIn")]
+        private void FadeOutIn(float fTime) {
+            if(!WarpFader.enabled) {
+                WarpRoutine = Routine.Start(this, DoWarpInOut(fTime));
+            }
+        }
+
+        private IEnumerator DoWarp(float fVis, float fTime) {
+            WarpFader.enabled = true;
+            yield return WarpFader.FadeTo(fVis, fTime);
+            yield return 0.1f;
+            WarpFader.enabled = false;
+        }
+
+        private IEnumerator DoWarpInOut(float fTime) {
+            WarpFader.enabled = true;
+            yield return WarpFader.FadeTo(1.0f, fTime);
+            yield return 0.1f;
+            yield return WarpFader.FadeTo(0.0f, fTime);
+            WarpFader.enabled = false;
+        }
     }
 
     static public class PlayerMovementUtility {

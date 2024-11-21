@@ -1,9 +1,12 @@
 #basePath	Day5
 
 :: Day5Start
-@trigger    Day5Ready
-@who        Player
+@trigger    Day5Start
 @once
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+$set global:level = 5
 
 //:: Prepare
 //@function	ScenePrepare
@@ -15,9 +18,9 @@
 //@who        Player
 //@once
 
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
+$set chapter:legCount = 0
 
+$call DayHeader->SetText(Day 5)
 $call Wait(2)
 
 {@Margo}   Mornin', kiddo!   $[Day5/Tent/Margo_1]
@@ -49,7 +52,7 @@ $call SetWarpActive(WarpBluff, true)
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff"
+@when       targetObject == "WarpTarget-Bluff", global:level == 5
 @once
 
 $call CompleteGoal("Day5_outside")
@@ -67,7 +70,7 @@ $call CreateGoal("Day5_rookery", Use Warp to enter rookery)
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Rookery"
+@when       targetObject == "WarpTarget-Rookery", global:level == 5
 @once
 
 $call CompleteGoal("Day5_rookery")
@@ -88,35 +91,40 @@ $call Wait(1)
 {@Margo}	Hold the penguin still with one hand. Then snap the trackers onto their legs.	$[Day5/Rookery/Margo_9]
 {@Player}	Got it.	$[Day5/Rookery/Player_4]
 
+$call LegTracker1->Activate()
+$call LegTracker2->Activate()
+$call LegTracker3->Activate()
 
 $call ClearGoals()
 
 $call CreateGoal("Day5_band", Band 3 Parent Penguins)
 
-:: OnSocketedWingBand
+:: OnSocketedLegTracker
 @trigger ObjectSocketed
-@when   objectType == "WingBand", socketType == "BandSocket"
-$set chapter:wingCount + 1
+@when   objectType == "LegTracker", socketType == "LegSocket", global:level == 5
+$set chapter:legCount + 1
 
-$if chapter:wingCount >= 3
-$goto WingBandsComplete
+$if chapter:legCount >= 3
+$goto Day5.LegTrackersComplete
 $endif
 
-:: OnSocketedWingBandPolo
+:: OnSocketedLegTrackerPolo
 @trigger ObjectSocketed
-@when   objectType == "WingBand", socketType == "BandSocket", socketId == "BandSocketPolo"
-$set chapter:wingCount + 1
+@when   objectType == "LegTracker", socketType == "LegSocketPolo", global:level == 5
+$set chapter:legCount + 1
 
 {@Player}	Ouch!	$[Day5/Rookery/Player_5]
 {@Player}	Thanks, Polo. I’ll miss you too.	$[Day5/Rookery/Player_6]
 
-$if chapter:wingCount >= 3
-$goto WingBandsComplete
+$if chapter:legCount >= 3
+$goto Day5.LegTrackersComplete
 $endif
 
-:: WingBandsComplete
-@trigger WingBandsComplete
+:: LegTrackersComplete
+@trigger LegTrackersComplete
 @who	Player
+
+$call CompleteGoal("Day5_band")
 
 {@Margo}	Great work, kiddo.	$[Day5/Rookery/Margo_10]
 {@Margo}	Your penguins are all ready to head out into the world.	$[Day5/Rookery/Margo_11]
@@ -124,20 +132,38 @@ $endif
 {@Margo}	Not so fast. Just one more job.	$[Day5/Rookery/Margo_12]
 {@Margo}	Let’s head back up to the Bluff.	$[Day5/Rookery/Margo_13]
 
+$call SetWarpActive(WarpBluffBack, true)
 
-:: WarpedBackToTent
+$call CreateGoal("Day5_bluff_back",  Warp to Bluff)
+
+:: WarpedBackToBluff
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
+@when       targetObject == "WarpTarget-Bluff-Back", global:level == 5
 @once
+
+$call CompleteGoal("Day5_bluff_back")
 
 $call Wait(1)
 
 $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
-$call SetWarpActive(WarpDesk, true)
 
 {@Margo}	Almost done. Your last task of the season is to do one more scan of the chicks and adults in the Rookery.	$[Day5/Bluff/Margo_3]
+
+$call CreateGoal("Day5_count",  Count Penguins)
+
+$call PenguinCount->ActivateCount(12)
+
+:: ScannedFromBluff
+@trigger	TabletCounted
+@who		Player
+@when		global:level == 5
+@interrupt
+@once
+
+$call CompleteGoal("day5_count")
+
 {@Margo}	Nice work, kiddo. There they go.	$[Day5/Bluff/Margo_4]
 {@Margo}	They’ll be back next year, around the same time you are.	$[Day5/Bluff/Margo_5]
 {@Partner}	Hey, kid. You ready? The plane’s waiting.	$[Day5/Bluff/Partner_1]

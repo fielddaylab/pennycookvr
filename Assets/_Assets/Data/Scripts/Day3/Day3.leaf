@@ -1,22 +1,26 @@
 #basePath	Day3
 
-//:: Day3Start
-//@trigger    Day3Start
+:: Day3Start
+@trigger    Day3Start
+@once
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+$set global:level = 3
+$set chapter:identifiedCount = 0
+$set chapter:finishedObservations = false
+
+//:: Prepare
+//@function	ScenePrepare
+//$call PlaceAndRotatePlayerAt(WarpDesk, true)
+//$call SetAllWarpsActive(false)
+
+//:: StartGame
+//@trigger    SceneReady
 //@who        Player
 //@once
 
-:: Prepare
-@function	ScenePrepare
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
-
-:: StartGame
-@trigger    SceneReady
-@who        Player
-@once
-
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
+$call DayHeader->SetText(Day 3)
 
 $call Wait(2)
 
@@ -38,7 +42,7 @@ $call SetWarpActive(WarpBluff, true)
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff"
+@when       targetId == "WarpBluff", global:level == 3
 @once
 
 $call CompleteGoal("Day3_outside")
@@ -57,7 +61,7 @@ $call SetWarpGroupActive(Rookery, true)
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Rookery"
+@when       targetId == "WarpRookery", global:level == 3
 @once
 
 $call FuzzEgg->Activate()
@@ -71,8 +75,6 @@ $call CompleteGoal("Day3_rookery")
 $call Wait(1)
 
 $call ClearGoals()
-
-$call SetWarpGroupActive(Rookery, true)
 
 {@Player}   Oh. My. God. They’re amazing! $[Day3/Rookery/Player_1]
 {@Partner}   Hey there, new kid. $[Day3/Rookery/Partner_1]
@@ -100,16 +102,24 @@ $call CreateGoal("day3_warp_side", Warp to side of Rookery)
 :: WarpedToRookeryMiddle
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryMiddle"
+@when       targetId == "WarpRookeryMiddle", global:level == 3
 @once
 
 $call CompleteGoal("day3_warp_middle");
 
+$call AlfredoEgg->Activate()
+$call FuzzEgg->Activate()
+$call WinstonWendyChick->Activate()
+$call MillieBillyChick->Activate()
+
 $call AlfredoEgg->SetIdentified(false)
-$call MilleBillyChick->SetIdentified(false)
+$call MillieBillyChick->SetIdentified(false)
 $call FuzzEgg->SetIdentified(false)
 $call WinstonWendyChick->SetIdentified(false)
 $call PoloNest->SetIdentified(false)
+$call PoloNest->SetInteractable(true)
+
+$call ClearGoals()
 
 $call CreateGoal("id_millie_nest", Scan Millie and Billy's Chick)
 $call CreateGoal("id_alfredo_nest", Scan Alfredo's Egg)
@@ -122,7 +132,7 @@ $call CreateGoal("id_polo_nest", Scan Polo's Nest)
 
 :: OnMillieBillyIdentified
 @function	TabletIdentified
-@when		objectId == "MillieBillyChick"
+@when		objectId == "MillieBillyChick", global:level == 3
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_millie_nest")
@@ -130,11 +140,11 @@ $call CompleteGoal("id_millie_nest")
 {@Player}   Yes! Millie and Billy have hatched a healthy chick! $[Day3/Rookery/Player_8]
 {@Margo}    Aw, good for them. Two years in a row!  $[Day3/Rookery/Margo_3]
 
-$goto CheckAllNestsIdentified
+$goto Day3.CheckAllNestsIdentified
 
 :: OnAlfredoEggIdentified
 @function	TabletIdentified
-@when		objectId == "AlfredoEgg"
+@when		objectId == "AlfredoEgg", global:level == 3
 $set	chapter:identifiedCount + 1
 
 //play egg hatching animation
@@ -144,12 +154,12 @@ $call CompleteGoal("id_alfredo_nest")
 {@Margo}    Ooh. We better snag a video later.  $[Day3/Rookery/Margo_4]
 {@Margo}    I betcha those’ll be the most famous Adelie chicks on Youtube.  $[Day3/Rookery/Margo_5]
 
-$goto CheckAllNestsIdentified
+$goto Day3.CheckAllNestsIdentified
 
 
 :: OnFuzzEggIdentified
 @function	TabletIdentified
-@when		objectId == "FuzzEgg"
+@when		objectId == "FuzzEgg", global:level == 3
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_fuzz_nest")
@@ -162,11 +172,11 @@ $call CompleteGoal("id_fuzz_nest")
 {@Player}   He’s brand new at this. Maybe he’ll figure it out.  $[Day3/Rookery/Player_12]
 {@Margo}    Well, he’d better hurry. Those eggs are gonna freeze fast.  $[Day3/Rookery/Margo_9]
 
-$goto CheckAllNestsIdentified
+$goto Day3.CheckAllNestsIdentified
 
 :: OnWinstonWendyIdentified
 @function	TabletIdentified
-@when		objectId == "WinstonWendyChick"
+@when		objectId == "WinstonWendyChick", global:level == 3
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_winston_nest")
@@ -176,11 +186,11 @@ $call CompleteGoal("id_winston_nest")
 {@Margo}    Winston and Wendy have had a successful chick every year.  $[Day3/Rookery/Margo_11]
 {@Player}   Wow. Penguin Parents of the Year award! Keep it up, you two.    $[Day3/Rookery/Player_14]
 
-$goto CheckAllNestsIdentified
+$goto Day3.CheckAllNestsIdentified
 
 :: OnPoloNestIdentified
 @function	TabletIdentified
-@when		objectId == "PoloNest"
+@when		objectId == "PoloNest", global:level == 3
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_polo_nest")
@@ -191,56 +201,62 @@ $call CompleteGoal("id_polo_nest")
 {@Margo}    The skua must’ve been here. $[Day3/Rookery/Margo_13]
 {@Player}   You mean . . . the egg is gone?  $[Day3/Rookery/Player_17]
 
-$goto CheckAllNestsIdentified
+$goto Day3.CheckAllNestsIdentified
 
 :: CheckAllNestsIdentified
 @trigger    CheckAllNestsIdentified
 $if chapter:identifiedCount >= 5 
     $set	chapter:finishedObservations = true
 	$call ClearGoals()
-	$goto CheckAllComplete
+	$call CreateGoal("id_nests", ID Chicks Eggs and Nest)
+	$call CompleteGoal("id_nests")
+	$goto Day3.CheckAllComplete
 $endif
 
 :: WarpedToRookeryBack
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryBack"
+@when       targetId == "WarpRookeryBack", global:level == 3
 @once
 
 $call CompleteGoal("day3_warp_far");
 
 {@Margo}	We need to get some data on what the parents are feeding their young.	$[Day3/Rookery/Margo_14]
 
-$call CreateGoal("day3_regurg", Take a picture of a penguin feeding their young)
+$call CreateGoal("day3_regurg", Observe a penguin feeding their chick)
 
 {@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/Margo_15]
-{@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
-{@Margo}	Says the guy with pumpkin pie on his face.	$[Day3/Rookery/Margo_16]
-{@Player}	Seriously?	$[Day3/Rookery/Player_19]
 
-$set chapter:regurgCount = 0
-$while chapter:regurgCount < 20
-$call GreenAdelie->Regurgitate()
-$call Wait(5)
-$set chapter:regurgCount + 1
-$endwhile
+//$start Day3.StartRegurgitation
+
+//:: StartRegurgitation
+//@trigger StartRegurgitation
+//$set chapter:regurgCount = 0
+//$while chapter:regurgCount < 20
+//$call GreenAdelie->Regurgitate()
+//$call Wait(5)
+//$set chapter:regurgCount + 1
+//$endwhile
 
 ::TabletIdentifiedRegurg
 @trigger TabletIdentified
-@who	Player
-@when	objectId == "Green-Adelie"
+@when	objectId == "GreenAdelie", global:level == 3
 @once
 
+{@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
+{@Margo}	Says the guy with pumpkin pie on his face.	$[Day3/Rookery/Margo_16]
+{@Player}	Seriously?	$[Day3/Rookery/Player_19]
 {@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/Margo_17]
+
 $set chapter:regurgDone = true
 $call CompleteGoal("day3_regurg")
 
-$goto CheckAllComplete
+$goto Day3.CheckAllComplete
 
 :: WarpedToRookerySide
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookerySide"
+@when       targetId == "WarpRookerySide", global:level == 3
 @once
 
 $call CompleteGoal("day3_warp_side");
@@ -256,25 +272,20 @@ $call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
 
 {@Margo}	Grab a data logger from the Pelican Case.	$[Day3/Rookery/Margo_20]
 {@Margo}	Place one hand on the penguin to stop them, and then attach the logger to their back.	$[Day3/Rookery/Margo_21]
-{@Margo}	Nice work! Let’s do two more. 	$[Day3/Rookery/Margo_22]
-{@Margo}	Great job. That should get us plenty of data.	$[Day3/Rookery/Margo_23]
-{@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]
-{@Margo}	Yep, looks like we've got all the data we need!	$[Day3/Rookery/Margo_24]
-{@Player}	Phew, good. All this running around in the cold is making me hungry. $[Day3/Rookery/Player_21]
-{@Player}	I can see why you all keep so much candy around here. 	$[Day3/Rookery/Player_22]
-{@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/Partner_12]
-{@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/Partner_13]
 
 ::	TrackerSocketed
 @trigger ObjectSocketed
 @who	Player
-@when 	objectType == "DataTracker", socketType == "DataSocketPenguin"
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", global:level == 3
 $set chapter:trackerSocketedCount + 1
 
-$if chapter:trackerSocketedCount >= 3
+$if chapter:trackerSocketedCount == 1
+{@Margo}	Nice work! Let’s do two more. 	$[Day3/Rookery/Margo_22]
+$elseif chapter:trackerSocketedCount >= 3
 $set chapter:trackersSocketed = true
 $call CompleteGoal("day3_back_trackers");
-$goto CheckAllComplete
+{@Margo}	Great job. That should get us plenty of data.	$[Day3/Rookery/Margo_23]
+$goto Day3.CheckAllComplete
 $endif
 
 :: CheckAllComplete
@@ -286,12 +297,19 @@ $set chapter:day3AllComplete = true
 $call ClearGoals()
 $call Wait(0.3)
 $call CreateGoal("Day3_return", Return to tent)
+$call SetWarpActive(WarpBluffBack, true)
+{@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]
+{@Margo}	Yep, looks like we've got all the data we need!	$[Day3/Rookery/Margo_24]
+{@Player}	Phew, good. All this running around in the cold is making me hungry. $[Day3/Rookery/Player_21]
+{@Player}	I can see why you all keep so much candy around here. 	$[Day3/Rookery/Player_22]
+{@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/Partner_12]
+{@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/Partner_13]
 $endif
 
 :: WarpedBackToTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:day3AllComplete, targetObject == "WarpTarget-Bluff-Back"
+@when       chapter:day3AllComplete, targetId == "WarpBluffBack", global:level == 3
 @once
 
 $call Wait(1)
@@ -305,7 +323,7 @@ $call CreateGoal("Day3_upload", Upload Margo's data)
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:day3AllComplete, targetObject == "WarpTarget-Desk"
+@when       chapter:day3AllComplete, targetId == "WarpDesk", global:level == 3
 @interrupt
 
 $call CompleteGoal("Day3_return")

@@ -2,8 +2,13 @@
 
 :: Day4Start
 @trigger    Day4Start
-@who        Player
 @once
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+$set global:level = 4
+$set chapter:identifiedCount = 0
+$set chapter:finishedObservations = false
 
 //:: Prepare
 //@function	ScenePrepare
@@ -15,10 +20,8 @@
 //@who        Player
 //@once
 
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
-
 $call Wait(2)
+$call DayHeader->SetText(Day 4)
 
 {@Margo}   Mornin', kiddo.   $[Day4/Tent/Margo_1]
 {@Player}   Whoa… what’s all this?   $[Day4/Tent/Player_1]
@@ -45,7 +48,7 @@ $call SetWarpActive(WarpBluff, true)
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff"
+@when       targetObject == "WarpTarget-Bluff", global:level == 4
 @once
 
 $call CompleteGoal("Day4_outside")
@@ -61,7 +64,7 @@ $call CreateGoal("Day4_rookery", Use Warp to enter rookery)
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Rookery"
+@when       targetObject == "WarpTarget-Rookery", global:level == 4
 @once
 
 $call CompleteGoal("Day4_rookery")
@@ -89,11 +92,18 @@ $call ClearGoals()
 {@Margo}    And we’ll need to band 3 of the chicks. $[Day4/Rookery/Margo_4]
 {@Player}   Got it. Let’s get to work.  $[Day4/Rookery/Player_7]
 
+$call ClearGoals()
+$call CreateGoal("day4_gate", Scan the Weigh Gate)
+$call CreateGoal("day4_loggers", Collect Data Loggers)
+$call CreateGoal("day4_band", Band 3 Chicks)
+
 :: WarpedToRookeryGate
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryFar"
+@when       targetObject == "WarpTarget-RookeryFar", global:level == 4
 @once
+
+$call WeighGate->SetInteractable(true)
 
 {@Player}    Okay, Margo. How does this weigh bridge thing work, exactly? $[Day4/Rookery/Player_8]
 {@Margo}    Oh, it’s easy as pie!    $[Day4/Rookery/Margo_5]
@@ -104,45 +114,55 @@ $call ClearGoals()
 
 :: OnWeighGateIdentified
 @function	TabletIdentified
-@when		objectId == "WeighGate"
+@when		objectId == "WeighGate", global:level == 4
+
+$call CompleteGoal("day4_gate")
 $set	chapter:weighGate = true
-$goto CheckCompletedTasks
+$goto Day4.CheckCompletedTasks
 
 :: WarpedToRookeryMiddle
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryMiddle"
+@when       targetObject == "WarpTarget-RookeryMiddle", global:level == 4
 @once
+
+//these activates are just for testing - these will normally already be enabled.
+$call DataTrackerBack1->SetMeshEnabled(true)
+$call DataTrackerBack2->SetMeshEnabled(true)
+$call DataTrackerBack3->SetMeshEnabled(true)
+$call DataTrackerBack4->SetMeshEnabled(true)
+$call DataTrackerBack5->SetMeshEnabled(true)
 
 {@Margo}    Wahoo! Looks like all the penguins with data loggers have come back.    $[Day4/Rookery/Margo_10]
 {@Margo}    Now we’ll be able to get the stats on their swimming behaviors!     $[Day4/Rookery/Margo_11]
 {@Margo}    Just hold the penguin still with one hand and remove their trackers.    $[Day4/Rookery/Margo_12]
 {@Margo}    Then drop the tracker into the Pelican Case.    $[Day4/Rookery/Margo_13]
 
-:: OnUnsocketedTracker
-@trigger    ObjectUnsocketed
-@when   objectType == "DataTracker", socketType == "DataSocketPenguin"
-
 :: OnSocketedTracker
 @trigger    ObjectSocketed
-@when   objectType == "DataTracker", socketType == "TrackerSocket"
+@when   objectType == "DataTracker", socketType == "TrackerSocket", global:level == 4
 $set chapter:dataCount + 1
-$goto CheckDataCount
+$goto Day4.CheckDataCount
 
 :: CheckDataCount
 @trigger    CheckDataCount
 @who    Player
 
 $if chapter:dataCount >= 3
+$call CompleteGoal("day4_loggers")
 $set chapter:dataTrackersDone = true
-$goto CheckCompletedTasks
+$goto Day4.CheckCompletedTasks
 $endif
 
 :: WarpedToRookeryCorral
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryCorral"
+@when       targetObject == "WarpTarget-RookeryCorral", global:level == 4
 @once
+
+$call WingBand1->Activate()
+$call WingBand2->Activate()
+$call WingBand3->Activate()
 
 {@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/Margo_14]
 {@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/Margo_15]
@@ -158,7 +178,7 @@ $endif
 
 :: OnSocketedWingBand
 @trigger ObjectSocketed
-@when   objectType == "WingBand", socketType == "BandSocket"
+@when   objectType == "WingBand", socketType == "BandSocket", global:level == 4
 $set chapter:wingCount + 1
 
 $if chapter:wingCount == 1
@@ -171,30 +191,31 @@ $elseif chapter:wingCount == 2
 {@Player}   Okay, okay . . . maybe a little sweat.  $[Day4/Rookery/Player_17]
 $elseif chapter:wingCount == 3
 {@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/Margo_22]
-{@Partner}  Nice work, new kid. $[Day4/Rookery/Partner_1]
-{@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/Partner_2]
+{@Partner}  Nice work, new kid. $[Day4/Rookery/Partner_5]
+{@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/Partner_6]
 {@Player}   Whoa. What do you mean, if they come back?  $[Day4/Rookery/Player_18]
-{@Partner}  Well, most penguin chicks don’t make it to adulthood. $[Day4/Rookery/Partner_3]
+{@Partner}  Well, most penguin chicks don’t make it to adulthood. $[Day4/Rookery/Partner_7]
 {@Player}   What!?  $[Day4/Rookery/Player_19]
-{@Partner}  It’s a rough world out there for penguins. The skua are only the tip of the iceberg.    $[Day4/Rookery/Partner_4]
-{@Partner}  There’s hungry leopard seals, snow storms, melting sea ice . . .    $[Day4/Rookery/Partner_5]
+{@Partner}  It’s a rough world out there for penguins. The skua are only the tip of the iceberg.    $[Day4/Rookery/Partner_8]
+{@Partner}  There’s hungry leopard seals, snow storms, melting sea ice . . .    $[Day4/Rookery/Partner_9]
 {@Player}   Oookay. I just lost my Christmas spirit.    $[Day4/Rookery/Player_20]
 {@Player}   I guess that’s why you and Margo have such a thick skin. You’re used to it by now.  $[Day4/Rookery/Player_21]
-{@Partner}  Me?? A thick skin?  $[Day4/Rookery/Partner_7]
-{@Player}   I mean… none of it seems to bother you. $[Day4/Rookery/Player_22]
-{@Partner}  Oh, trust me, it bothers me. Those skua drive me crazy. $[Day4/Rookery/Partner_8]
-{@Partner}  And some of the parents just can’t seem to figure out how to feed their chicks. $[Day4/Rookery/Partner_9]
-{@Partner}  I’ve been here twenty years, and it’s still hard to watch sometimes.    $[Day4/Rookery/Partner_10]
+{@Partner}  Me?? A thick skin?  $[Day4/Rookery/Partner_11]
+{@Player}   I mean… none of it seems to bother you. $[Day49/Rookery/Player_22]
+{@Partner}  Oh, trust me, it bothers me. Those skua drive me crazy. $[Day4/Rookery/Partner_12]
+{@Partner}  And some of the parents just can’t seem to figure out how to feed their chicks. $[Day4/Rookery/Partner_13]
+{@Partner}  I’ve been here twenty years, and it’s still hard to watch sometimes.    $[Day4/Rookery/Partner_14]
 {@Player}   Do you ever try to help them?   $[Day4/Rookery/Player_23]
-{@Partner}  Well, that’s not really my job. I mean, where am I gonna find krill?    $[Day4/Rookery/Partner_11]
-{@Partner}  The fact is, we’re not here to rescue penguin chicks.   $[Day4/Rookery/Partner_12]
-{@Partner}  We’re here to learn about them, and to teach other people about them.   $[Day4/Rookery/Partner_13]
-{@Partner}  Plus I just love this work. I love these birds   $[Day4/Rookery/Partner_14]
+{@Partner}  Well, that’s not really my job. I mean, where am I gonna find krill?    $[Day4/Rookery/Partner_15]
+{@Partner}  The fact is, we’re not here to rescue penguin chicks.   $[Day4/Rookery/Partner_16]
+{@Partner}  We’re here to learn about them, and to teach other people about them.   $[Day4/Rookery/Partner_17]
+{@Partner}  Plus I just love this work. I love these birds   $[Day4/Rookery/Partner_18]
 {@Player}   Yeah. You’re right. $[Day4/Rookery/Player_24]
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
-{@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/Partner_15]
+{@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/Partner_19]
+$call CompleteGoal("day4_bands")
 $set chapter:finishedBands = true
-$goto CheckCompletedTasks
+$goto Day4.CheckCompletedTasks
 $endif
 
 :: CheckCompletedTasks
@@ -206,15 +227,15 @@ $set chapter:finishedObservations = true
 $call ClearGoals()
 $call Wait(0.3)
 $call CreateGoal("Day4_return", Return to tent)
-{@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/Partner_16]
-{@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/Partner_17]
+{@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/Partner_20]
+{@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/Partner_21]
 $endif
 
 
 :: WarpedBackToTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back", global:level == 4
 @once
 
 $call Wait(1)
@@ -226,7 +247,7 @@ $call SetWarpActive(WarpDesk, true)
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk", global:level == 4
 @interrupt
 
 $call CreateGoal("Day4_upload", Upload Margo's data)

@@ -10,6 +10,8 @@ $call SetAllWarpsActive(true)
 @who        Player
 @once
 
+$set global:level = 1
+
 $call Wait(2)
 
 {@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
@@ -18,8 +20,6 @@ $call Wait(2)
 {@Player}   Step one: Find research tent. Check.    $[Day1/Tent/Player_4]
 {@Player}   Step two: Report to Margo, penguin expert and senior researcher.    $[Day1/Tent/Player_5]
 {@Player}   Hmmm. But where is she?     $[Day1/Tent/Player_6]
-
-$call SetWarpActive(WarpBluff, true)
 
 :: PickedUpMargo
 @trigger    TabletLifted
@@ -108,7 +108,7 @@ $call CreateGoal("band_blue", Scan penguin with blue band)
 $call CreateGoal("band_purple", Scan penguin with purple band)
 
 {@Player}   Hah! I've never been so close to a penguin before! $[Day1/Rookery/Player_1]
-{@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day/Rookery/Partner_1]
+{@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day1/Rookery/Partner_1]
 
 :: OnPenguinIdentified
 @function	TabletIdentified
@@ -192,4 +192,4 @@ $call CompleteGoal("day1_upload")
 
 $call Wait(2)
 
-$call TriggerResponse(Day2Start)
+$call TriggerResponse(Day2.Day2Start)

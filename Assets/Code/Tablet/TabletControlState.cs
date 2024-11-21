@@ -28,7 +28,7 @@ namespace Pennycook.Tablet {
             Grabbable.OnReleased.Register(OnGrabReleased);
         }
 
-        private void OnGrabbed(Grabber grabber) {
+        private void OnGrabbed(Grabber grabber, int snapIndex) {
             StringHash32 nodeName = GrabUtility.ResolveSnapNodeName(grabber);
             switch (grabber.Chirality) {
                 case XRHandIndex.Left: {
@@ -50,7 +50,7 @@ namespace Pennycook.Tablet {
             }
         }
 
-        private void OnGrabReleased(Grabber grabber) {
+        private void OnGrabReleased(Grabber grabber, int snapIndex) {
             if (grabber.Chirality != XRHandIndex.Any) {
                 GrippedHandMask.Unset((int) grabber.Chirality);
 

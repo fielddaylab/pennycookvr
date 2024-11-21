@@ -1,45 +1,50 @@
 #basePath	Day2
 
-//:: Day2Start
-//@trigger    Day2Start
+:: Day2Start
+@trigger    Day2Start
+@once
+
+$call ClearGoals()
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+$set global:level = 2
+$set chapter:identifiedCount = 0
+$set chapter:finishedAllObservations = false
+$set chapter:finishedObservations = false
+
+//:: Prepare
+//@function	ScenePrepare
+//$call PlaceAndRotatePlayerAt(WarpDesk, true)
+//$call SetAllWarpsActive(false)
+
+//:: StartGame
+//@trigger    SceneReady
 //@who        Player
 //@once
 
-:: Prepare
-@function	ScenePrepare
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
-
-:: StartGame
-@trigger    SceneReady
-@who        Player
-@once
-
 $call Wait(2)
-
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
 
 //fade in
 //dock margo
 
-//$call Wait(2)
+$call DayHeader->SetText(Day 2)
+$call Wait(2)
 
 {@Margo}   Mornin', kiddo!   $[Day2/Tent/Margo_1]
 {@Margo}   Jeepers... you look exhausted.   $[Day2/Tent/Margo_2]
 {@Player}   Ugh. Is it that obvious?  $[Day2/Tent/Player_1]
-{@Player}   I couldn't sleep. I tried counting sheep, counting penguins, stress-eating some Snickers bars . . .   $[Day2/Tent/Player_2]
+{@Player}   I couldn't sleep. I tried counting sheep, counting penguins, stress-eating candy bars . . .   $[Day2/Tent/Player_2]
 {@Margo}   Aw, don't worry, kid. The midnight sun takes some gettin' used to.     $[Day2/Tent/Margo_3]
 {@Margo}   Just wait til you spend a few days runnin' around after penguins. You'll be so tired you won't know what hit ya.     $[Day2/Tent/Margo_4]
 
 :: PickedUpMargo2
 @trigger    TabletLifted
 @who        Player
+@when		global:level == 2
 @interrupt
 @once
 
 $call Wait(1)
-$set	chapter:hasTalkedToMargo = true
 
 {@Player}    Sounds good to me. Let's get out there!   $[Day2/Tent/Player_3]
 {@Margo}   Whoa, slow your roll, kiddo. Last time you almost froze your fingers off, and I've heard those are pretty important for humans.  $[Day2/Tent/Margo_5]
@@ -58,7 +63,7 @@ $call SetWarpActive(WarpBluff, true)
 :: WarpedOutsideTent2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff"
+@when       targetObject == "WarpTarget-Bluff", global:level == 2
 @once
 
 $call CompleteGoal("Day2_outside")
@@ -72,7 +77,7 @@ $call TentDoor->Close()
 {@Player}    Wow, look at them all! $[Day2/Bluff/Player_1]
 {@Margo}    Yep, seems we've got some new arrivals. We'll need a new population count. $[Day2/Bluff/Margo_1]
 {@Margo}    You’ll also have two tasks down at the Rookery: retrieve your penguins’ GPS trackers, and see if they’ve paired up with a mate. $[Day2/Bluff/Margo_2]
-{@Player}   No sweat. I’ve got this. When should we do this? $[Day2/Bluff/Player_2]
+{@Player}   No sweat. I’ve got this. What should we do first? $[Day2/Bluff/Player_2]
 {@Margo}   You’re the scientist, kiddo. You tell me. $[Day2/Bluff/Margo_3]
 {@Player}   Hmmm, Maybe we should get a head count. $[Day2/Bluff/Player_3]
 
@@ -83,6 +88,7 @@ $call CreateGoal("Day2_count", Use Count to count population)
 :: ScannedFromBluff2
 @trigger	TabletCounted
 @who		Player
+@when		global:level == 2
 @interrupt
 @once
 
@@ -95,7 +101,7 @@ $call CreateGoal("Day2_rookery", Use Warp to enter rookery)
 :: WarpedToRookery2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Rookery"
+@when       targetObject == "WarpTarget-Rookery", global:level == 2
 @once
 
 $call CompleteGoal("Day2_rookery")
@@ -113,7 +119,7 @@ $call CreateGoal("Day2_warp_far", or Warp near the weigh gate of the Rookery)
 :: WarpedToRookeryMiddle2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryMiddle"
+@when       targetObject == "WarpTarget-RookeryMiddle", global:level == 2
 @once
 
 $call CompleteGoal("Day2_warp_middle")
@@ -145,7 +151,7 @@ $call CreateGoal("id_polo", ID Polo's Mate)
 
 :: OnBillyIdentified
 @trigger	TabletIdentified
-@when		objectId == "Billy"
+@when		objectId == "Billy", global:level == 2
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_millie")
@@ -154,11 +160,11 @@ $call CompleteGoal("id_millie")
 {@Partner}  Millie and . . . Billy? $[Day2/Rookery/Partner_1]
 {@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Day2/Rookery/Partner_2]
 
-$goto CheckAllMatesIdentified
+$goto Day2.CheckAllMatesIdentified
 
 :: OnMeatballIdentified
 @function	TabletIdentified
-@when		objectId == "Meatball"
+@when		objectId == "Meatball", global:level == 2
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_alfredo")
@@ -171,12 +177,12 @@ $call CompleteGoal("id_alfredo")
 {@Margo}    Ohhhh kaayyy... $[Day2/Rookery/Margo_6]
 {@Player}   Now I’m getting hungry. Got any candy bars in that case?    $[Day2/Rookery/Player_8]
 
-$goto CheckAllMatesIdentified
+$goto Day2.CheckAllMatesIdentified
 
 
 :: OnDaisyIdentified
 @function	TabletIdentified
-@when		objectId == "Daisy"
+@when		objectId == "Daisy", global:level == 2
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_fuzz")
@@ -189,11 +195,11 @@ $call CompleteGoal("id_fuzz")
 {@Margo}    You’d be surprised, kid. Not all penguins make good parents.    $[Day2/Rookery/Margo_10]
 {@Player}   We’ll just have to wait and see.    $[Day2/Rookery/Player_11]
 
-$goto CheckAllMatesIdentified
+$goto Day2.CheckAllMatesIdentified
 
 :: OnWendyIdentified
 @function	TabletIdentified
-@when		objectId == "Wendy"
+@when		objectId == "Wendy", global:level == 2
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_winston")
@@ -201,11 +207,11 @@ $call CompleteGoal("id_winston")
 {@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/Margo_11]
 {@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day2/Rookery/Margo_12]
 
-$goto CheckAllMatesIdentified
+$goto Day2.CheckAllMatesIdentified
 
 :: OnBenniIdentified
 @function	TabletIdentified
-@when		objectId == "Benni"
+@when		objectId == "Benni", global:level == 2
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_polo")
@@ -213,7 +219,7 @@ $call CompleteGoal("id_polo")
 {@Margo}   Ooh, Benni and Polo! What a good match.  $[Day2/Rookery/Margo_13]
 {@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day2/Rookery/Margo_14]
 
-$goto CheckAllMatesIdentified
+$goto Day2.CheckAllMatesIdentified
 
 ::CheckAllComplete
 @trigger CheckAllComplete
@@ -235,7 +241,7 @@ $endif
 :: WarpedToRookeryGate2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryFar"
+@when       targetObject == "WarpTarget-RookeryFar", global:level == 2
 @once
 
 $call CompleteGoal("Day2_warp_far")
@@ -293,7 +299,7 @@ $call TriggerResponse(CheckAllComplete)
 :: WarpedBackToTent2
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Bluff-Back"
+@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Bluff-Back", global:level == 2
 @once
 
 $call Wait(1)
@@ -307,7 +313,7 @@ $call CreateGoal("Day2_upload", Upload Margo's data)
 :: WarpedInsideTent2
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
+@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Desk", global:level == 2
 @interrupt
 
 $call CompleteGoal("Day2_return")

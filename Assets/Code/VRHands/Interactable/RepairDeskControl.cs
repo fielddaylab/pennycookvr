@@ -72,7 +72,7 @@ namespace Pennycook {
 			} 
 		}
 		
-		private void OnGrabPanel(Grabber grabber) {
+		private void OnGrabPanel(Grabber grabber, int snapIndex) {
 			
 			PlayerRig playerRig = Find.State<PlayerRig>();
 			
@@ -87,7 +87,7 @@ namespace Pennycook {
 			}	
 		}
 		
-		private void OnReleasePanel(Grabber grabber) {
+		private void OnReleasePanel(Grabber grabber, int snapIndex) {
 			PlayerRig playerRig = Find.State<PlayerRig>();
 			
 			if(grabber == playerRig.RightHand.Grabber) {

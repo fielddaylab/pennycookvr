@@ -8,6 +8,7 @@ using FieldDay.Sockets;
 using FieldDay.HID.XR;
 using ScriptableBake;
 using UnityEngine;
+using Pennycook;
 
 
 namespace FieldDay.VRHands {
@@ -48,9 +49,9 @@ namespace FieldDay.VRHands {
 
         #region Events
 
-        public readonly CastableEvent<Grabber> OnGrabbed = new CastableEvent<Grabber>();
-        public readonly CastableEvent<Grabber> OnGrabUpdate = new CastableEvent<Grabber>();
-        public readonly CastableEvent<Grabber> OnReleased = new CastableEvent<Grabber>();
+        public readonly CastableEvent<Grabber, int> OnGrabbed = new CastableEvent<Grabber, int>();
+        public readonly CastableEvent<Grabber, int> OnGrabUpdate = new CastableEvent<Grabber, int>();
+        public readonly CastableEvent<Grabber, int> OnReleased = new CastableEvent<Grabber, int>();
 
         #endregion // Events
 
@@ -95,6 +96,7 @@ namespace FieldDay.VRHands {
 
                 GrabbableSnapNodeData data = default;
                 data.Name = node.gameObject.name;
+                data.Label = node.Label;
 
                 switch (node.ValidHandType) {
                     case XRHandIndex.Any: {
@@ -196,6 +198,7 @@ namespace FieldDay.VRHands {
         [AutoEnum] public GrabbableSnapFlags Flags;
         public Transform DynamicPose;
         public StringHash32 Name;
+        public StringHash32 Label;
     }
 
     [Serializable]
