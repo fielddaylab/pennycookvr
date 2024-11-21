@@ -50,12 +50,13 @@ namespace FieldDay.VRHands {
             // if object is deleted, deactivated, or otherwise set to not be grabbable
             if (!grabber.HeldObject || !grabber.HeldObject.GrabEnabled || !grabber.HeldObject.isActiveAndEnabled || (grabber.HeldObjectSnapNodeIndex >= 0 && grabber.HeldObject.DisabledSnapNodes[grabber.HeldObjectSnapNodeIndex]) || (grabber.Joint && !grabber.Joint.connectedBody)) {
                 GrabUtility.DropCurrent(grabber, false);
-            } else {
-                // DebugDraw.AddPoint(grabber.CachedTransform.TransformPoint(grabber.Joint.anchor), 0.05f, Color.yellow);
-                // DebugDraw.AddPoint(grabber.Joint.connectedBody.transform.TransformPoint(grabber.Joint.connectedAnchor), 0.05f, Color.green);
-
-                // dampen angular velocity
-                //grabber.Joint.connectedBody.angularVelocity *= 0.5f;
+            } else if (grabber.HeldObjectSnapNodeIndex >= 0) {
+                GrabbableSnapNodeData snapping = GrabUtility.ResolveSnapNode(grabber.HeldObject, grabber.HeldObjectSnapNodeIndex);
+                if ((snapping.Flags & GrabbableSnapFlags.IsDynamic) != 0) {
+                    Pose p = GrabUtility.ResolveSnapNodePose(grabber.HeldObject, grabber.HeldObjectSnapNodeIndex, grabber);
+                    Vector3 anchorInGrabbableSpace = grabber.HeldObject.CachedTransform.InverseTransformPoint(p.position);
+                    grabber.Joint.connectedAnchor = anchorInGrabbableSpace;
+                }
             }
         }
 

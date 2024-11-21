@@ -60,8 +60,13 @@ namespace FieldDay.VRHands {
                 ref GrabbableSnapNodeData node = ref data[i];
                 Assert.True((node.Flags & GrabbableSnapFlags.IsDynamic) == 0);
                 Vector3 transformedPos = grabbable.CachedTransform.TransformPoint(node.RelativePose.position);
-                Quaternion transformedRot = grabbable.CachedTransform.rotation * node.RelativePose.rotation;
-                float align = Vector3.Dot(worldForward, Geom.Forward(transformedRot));
+                float align;
+                if ((node.Flags & GrabbableSnapFlags.DoNotReorient) != 0) {
+                    align = 1;
+                } else {
+                    Quaternion transformedRot = grabbable.CachedTransform.rotation * node.RelativePose.rotation;
+                    align = Vector3.Dot(worldForward, Geom.Forward(transformedRot));
+                }
 
                 if (align >= GrabConfig.MinAlignmentForSnap) {
                     float sqDist = Vector3.SqrMagnitude(transformedPos - worldPos);
@@ -90,7 +95,12 @@ namespace FieldDay.VRHands {
                 ref GrabbableSnapNodeData node = ref data[i];
                 Assert.True((node.Flags & GrabbableSnapFlags.IsDynamic) != 0);
                 node.DynamicPose.GetPositionAndRotation(out Vector3 transformedPos, out Quaternion transformedRot);
-                float align = Vector3.Dot(worldForward, Geom.Forward(transformedRot));
+                float align;
+                if ((node.Flags & GrabbableSnapFlags.DoNotReorient) != 0) {
+                    align = 1;
+                } else {
+                    align = Vector3.Dot(worldForward, Geom.Forward(transformedRot));
+                }
 
                 if (align >= GrabConfig.MinAlignmentForSnap) {
                     float sqDist = Vector3.SqrMagnitude(transformedPos - worldPos);
@@ -122,6 +132,10 @@ namespace FieldDay.VRHands {
                 p.rotation = p.rotation * Quaternion.Inverse(localGripRot);
             }
 
+            if ((node.Flags & GrabbableSnapFlags.DoNotReorient) != 0) {
+                p.rotation = grabberReference.CachedTransform.rotation;
+            }
+
             return p;
         }
 
@@ -145,6 +159,28 @@ namespace FieldDay.VRHands {
             }
 
             return default(StringHash32);
+        }
+
+        /// <summary>
+        /// Resolves the data for a snapping node.
+        /// </summary>
+        static public GrabbableSnapNodeData ResolveSnapNode(Grabbable grabbable, int nodeIndex) {
+            if (nodeIndex < 0 || nodeIndex >= grabbable.SnapNodes.Length) {
+                return default(GrabbableSnapNodeData);
+            }
+
+            return grabbable.SnapNodes[nodeIndex];
+        }
+
+        /// <summary>
+        /// Resolves the data for the currently gripped snap node.
+        /// </summary>
+        static public GrabbableSnapNodeData ResolveSnapNode(Grabber grabber) {
+            if (grabber.HeldObject && grabber.HeldObjectSnapNodeIndex >= 0) {
+                return ResolveSnapNode(grabber.HeldObject, grabber.HeldObjectSnapNodeIndex);
+            }
+
+            return default(GrabbableSnapNodeData);
         }
 
         #endregion // Snap Nodes

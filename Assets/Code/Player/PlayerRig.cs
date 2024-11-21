@@ -44,12 +44,14 @@ namespace Pennycook {
             public readonly PlayerRig Rig;
             public ReparentRecord Left;
             public ReparentRecord Right;
+            public Pose? LeftSnap;
+            public Pose? RightSnap;
 
             public MovementRequest(PlayerRig rig) {
                 Rig = rig;
                 Left = Right = default;
-                PopulateHand(ref Left, rig.LeftHand.Grabber, rig.MoveRoot);
-                PopulateHand(ref Right, rig.RightHand.Grabber, rig.MoveRoot);
+                PopulateHand(ref Left, rig.LeftHand.Grabber, rig.MoveRoot, out LeftSnap);
+                PopulateHand(ref Right, rig.RightHand.Grabber, rig.MoveRoot, out RightSnap);
             }
 
             public void Rotate(Vector3 rotateEuler) {
@@ -103,31 +105,47 @@ namespace Pennycook {
             }
 
             public void Dispose() {
-                UnparentHand(ref Right);
-                UnparentHand(ref Left);
+                UnparentHand(ref Right, ref RightSnap, Rig.LeftHand.Grabber);
+                UnparentHand(ref Left, ref LeftSnap, Rig.RightHand.Grabber);
 
                 SyncPhysicsHands(Rig, false);
             }
 
-            static private void PopulateHand(ref ReparentRecord grabbed, Grabber grabber, Transform reparent) {
+            static private void PopulateHand(ref ReparentRecord grabbed, Grabber grabber, Transform reparent, out Pose? snap) {
                 if (grabbed.Root) {
+                    snap = null;
                     return;
                 }
 
                 if (grabber.HeldObject != null) {
-                    grabbed.Root = grabber.HeldObject.CachedTransform;
-                    grabbed.OriginalParent = grabbed.Root.parent;
-                    grabbed.Root.SetParent(reparent, true);
+                    if (!grabber.HeldObject.IsAnchored) {
+                        grabbed.Root = grabber.HeldObject.CachedTransform;
+                        grabbed.OriginalParent = grabbed.Root.parent;
+                        grabbed.Root.SetParent(reparent, true);
+                        snap = null;
+                    } else {
+                        //Pose p;
+                        //grabber.CachedTransform.GetPositionAndRotation(out p.position, out p.rotation);
+                        //snap = p;
+                        GrabUtility.DropCurrent(grabber, false);
+                        snap = null;
+                    }
+                } else {
+                    snap = null;
                 }
             }
 
-            static private void UnparentHand(ref ReparentRecord grabbed) {
-                if (!grabbed.Root) {
-                    return;
+            static private void UnparentHand(ref ReparentRecord grabbed, ref Pose? snap, Grabber grabber) {
+                if (grabbed.Root != null) {
+                    grabbed.Root.SetParent(grabbed.OriginalParent, true);
+                    grabbed = default;
                 }
 
-                grabbed.Root.SetParent(grabbed.OriginalParent, true);
-                grabbed = default;
+                if (snap.HasValue) {
+                    Pose p = snap.Value;
+                    grabber.CachedTransform.SetPositionAndRotation(p.position, p.rotation);
+                    snap = default;
+                }
             }
         }
     }

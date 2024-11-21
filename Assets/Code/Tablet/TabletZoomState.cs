@@ -34,7 +34,8 @@ namespace Pennycook.Tablet {
             Assert.True(ZoomLabels.Length == ZoomLevels.Length);
 
             ZoomLabels[0].SetState(true);
-            ZoomMultiplier = 1;
+            ZoomMultiplier = ZoomLevels[0];
+            ZoomCamera.fieldOfView = OriginalFOV / ZoomMultiplier;
 
             ScriptUtility.BindVariable(Var_CurrentZoomLevel, () => ZoomIndex);
             ScriptUtility.BindVariable(Var_CurrentZoomMultiplier, () => ZoomMultiplier);

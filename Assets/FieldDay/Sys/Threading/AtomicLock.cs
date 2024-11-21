@@ -82,7 +82,7 @@ namespace FieldDay.Threading {
 #endif // DEADLOCK_DETECTION
             }
 #else
-            Assert.True(atomic.m_Value != AtomicLock.WriteValue);
+            Assert.True(atomic.m_Value != AtomicRWLock.WriteValue);
             atomic.m_Value++;
 #endif // SUPPORTS_THREADING
         }
@@ -95,7 +95,7 @@ namespace FieldDay.Threading {
 
             return true;
 #else
-            if (atomic.m_Value == AtomicLock.WriteValue) {
+            if (atomic.m_Value == AtomicRWLock.WriteValue) {
                 return false;
             }
 
@@ -118,7 +118,7 @@ namespace FieldDay.Threading {
 #if SUPPORTS_THREADING
             return Interlocked.Read(ref atomic.m_Value) != AtomicRWLock.WriteValue;
 #else
-            return atomic.m_Value != AtomicLock.WriteValue;
+            return atomic.m_Value != AtomicRWLock.WriteValue;
 #endif // SUPPORTS_THREADING
         }
 
@@ -142,7 +142,7 @@ namespace FieldDay.Threading {
             }
 #else
             Assert.True(atomic.m_Value == 0);
-            atomic.m_Value = AtomicLock.WriteValue;
+            atomic.m_Value = AtomicRWLock.WriteValue;
 #endif // SUPPORTS_THREADING
         }
 
@@ -151,7 +151,7 @@ namespace FieldDay.Threading {
             Assert.True(Interlocked.Read(ref atomic.m_Value) == AtomicRWLock.WriteValue, "Atomics.ReleaseWrite unbalanced");
             Interlocked.Exchange(ref atomic.m_Value, 0);
 #else
-            Assert.True(atomic.m_Value == AtomicLock.WriteValue, "Atomics.ReleaseWrite unbalanced");
+            Assert.True(atomic.m_Value == AtomicRWLock.WriteValue, "Atomics.ReleaseWrite unbalanced");
             atomic.m_Value = 0;
 #endif // SUPPORTS_THREADING
         }

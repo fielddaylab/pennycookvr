@@ -1,3 +1,5 @@
+#if HAS_MESHSIMPLIFIER
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -553,3 +555,5 @@ namespace FieldDay.Editor {
         }
     }
 }
+
+#endif // HAS_MESHSIMPLIFIER
