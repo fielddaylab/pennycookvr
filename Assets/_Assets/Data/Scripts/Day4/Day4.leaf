@@ -1,9 +1,11 @@
 #basePath	Day4
 
-//:: Day4Start
-//@trigger    Day4Start
-//@who        Player
-//@once
+:: Day4Start
+@trigger    Day4Start
+@who        Player
+@once
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
 
 :: Prepare
 @function	ScenePrepare
@@ -14,9 +16,6 @@ $call SetAllWarpsActive(false)
 @trigger    SceneReady
 @who        Player
 @once
-
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
 
 $call Wait(2)
 $call DayHeader->SetText(Day 4)

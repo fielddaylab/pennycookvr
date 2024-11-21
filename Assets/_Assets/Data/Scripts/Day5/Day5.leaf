@@ -1,9 +1,11 @@
 #basePath	Day5
 
-//:: Day5Start
-//@trigger    Day5Ready
-//@who        Player
-//@once
+:: Day5Start
+@trigger    Day5Ready
+@who        Player
+@once
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
 
 :: Prepare
 @function	ScenePrepare
@@ -14,9 +16,6 @@ $call SetAllWarpsActive(false)
 @trigger    SceneReady
 @who        Player
 @once
-
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
 
 $set chapter:legCount = 0
 

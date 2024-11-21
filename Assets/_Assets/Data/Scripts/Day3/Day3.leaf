@@ -1,9 +1,11 @@
 #basePath	Day3
 
-//:: Day3Start
-//@trigger    Day3Start
-//@who        Player
-//@once
+:: Day3Start
+@trigger    Day3Start
+@who        Player
+@once
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
 
 :: Prepare
 @function	ScenePrepare
@@ -14,9 +16,6 @@ $call SetAllWarpsActive(false)
 @trigger    SceneReady
 @who        Player
 @once
-
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
 
 $call DayHeader->SetText(Day 3)
 
@@ -40,7 +39,7 @@ $call SetWarpActive(WarpBluff, true)
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff"
+@when       targetId == "WarpBluff"
 @once
 
 $call CompleteGoal("Day3_outside")
@@ -59,7 +58,7 @@ $call SetWarpGroupActive(Rookery, true)
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Rookery"
+@when       targetId == "WarpRookery"
 @once
 
 $call FuzzEgg->Activate()
@@ -73,8 +72,6 @@ $call CompleteGoal("Day3_rookery")
 $call Wait(1)
 
 $call ClearGoals()
-
-$call SetWarpGroupActive(Rookery, true)
 
 {@Player}   Oh. My. God. They’re amazing! $[Day3/Rookery/Player_1]
 {@Partner}   Hey there, new kid. $[Day3/Rookery/Partner_1]
@@ -102,7 +99,7 @@ $call CreateGoal("day3_warp_side", Warp to side of Rookery)
 :: WarpedToRookeryMiddle
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryMiddle"
+@when       targetId == "WarpRookeryMiddle"
 @once
 
 $call CompleteGoal("day3_warp_middle");
@@ -113,7 +110,7 @@ $call WinstonWendyChick->Activate()
 $call MillieBillyChick->Activate()
 
 $call AlfredoEgg->SetIdentified(false)
-$call MilleBillyChick->SetIdentified(false)
+$call MillieBillyChick->SetIdentified(false)
 $call FuzzEgg->SetIdentified(false)
 $call WinstonWendyChick->SetIdentified(false)
 $call PoloNest->SetIdentified(false)
@@ -216,7 +213,7 @@ $endif
 :: WarpedToRookeryBack
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryBack"
+@when       targetId == "WarpRookeryBack"
 @once
 
 $call CompleteGoal("day3_warp_far");
@@ -227,12 +224,16 @@ $call CreateGoal("day3_regurg", Observe a penguin feeding their chick)
 
 {@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/Margo_15]
 
-$set chapter:regurgCount = 0
-$while chapter:regurgCount < 20
-$call GreenAdelie->Regurgitate()
-$call Wait(5)
-$set chapter:regurgCount + 1
-$endwhile
+//$start Day3.StartRegurgitation
+
+//:: StartRegurgitation
+//@trigger StartRegurgitation
+//$set chapter:regurgCount = 0
+//$while chapter:regurgCount < 20
+//$call GreenAdelie->Regurgitate()
+//$call Wait(5)
+//$set chapter:regurgCount + 1
+//$endwhile
 
 ::TabletIdentifiedRegurg
 @trigger TabletIdentified
@@ -252,7 +253,7 @@ $goto Day3.CheckAllComplete
 :: WarpedToRookerySide
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookerySide"
+@when       targetId == "WarpRookerySide"
 @once
 
 $call CompleteGoal("day3_warp_side");
@@ -299,12 +300,13 @@ $set chapter:day3AllComplete = true
 $call ClearGoals()
 $call Wait(0.3)
 $call CreateGoal("Day3_return", Return to tent)
+$call SetWarpActive(WarpBluffBack, true)
 $endif
 
 :: WarpedBackToTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:day3AllComplete, targetObject == "WarpTarget-Bluff-Back"
+@when       chapter:day3AllComplete, targetId == "WarpBluffBack"
 @once
 
 $call Wait(1)
@@ -318,7 +320,7 @@ $call CreateGoal("Day3_upload", Upload Margo's data)
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:day3AllComplete, targetObject == "WarpTarget-Desk"
+@when       chapter:day3AllComplete, targetId == "WarpDesk"
 @interrupt
 
 $call CompleteGoal("Day3_return")
