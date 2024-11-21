@@ -28,35 +28,14 @@ namespace Pennycook {
         [NonSerialized] public TabletWarpPoint CurrentWarp;
         public Routine WarpRoutine;
 
-        [LeafMember("FadeOut")]
-        private void FadeOut(float fTime) {
-            if(!WarpFader.enabled) {
-                WarpRoutine = Routine.Start(this, DoWarp(1.0f, fTime));
-            }
-        }
-
-        [LeafMember("FadeIn")]
-        private void FadeIn(float fTime) {
-            if(!WarpFader.enabled) {
-                WarpRoutine = Routine.Start(this, DoWarp(0.0f, fTime));
-            }
-        }
-
-        [LeafMember("FadeOutIn")]
-        private void FadeOutIn(float fTime) {
-            if(!WarpFader.enabled) {
-                WarpRoutine = Routine.Start(this, DoWarpInOut(fTime));
-            }
-        }
-
-        private IEnumerator DoWarp(float fVis, float fTime) {
+        public IEnumerator DoWarp(float fVis, float fTime) {
             WarpFader.enabled = true;
             yield return WarpFader.FadeTo(fVis, fTime);
             yield return 0.1f;
             WarpFader.enabled = false;
         }
 
-        private IEnumerator DoWarpInOut(float fTime) {
+        public IEnumerator DoWarpInOut(float fTime) {
             WarpFader.enabled = true;
             yield return WarpFader.FadeTo(1.0f, fTime);
             yield return 0.1f;
@@ -205,5 +184,37 @@ namespace Pennycook {
 
             WarpTo(movementState, warpPoint, true);
         }
+
+        
+        [LeafMember("FadeOut")]
+        static private void FadeOut(float fTime) {
+            PlayerMovementState movementState = Find.State<PlayerMovementState>();
+            if(movementState) {
+                if(!movementState.WarpFader.enabled) {
+                    movementState.WarpRoutine.Replace(movementState, movementState.DoWarp(1.0f, fTime));
+                }
+            }
+        }
+
+        [LeafMember("FadeIn")]
+        static private void FadeIn(float fTime) {
+            PlayerMovementState movementState = Find.State<PlayerMovementState>();
+            if(movementState) {
+                if(!movementState.WarpFader.enabled) {
+                    movementState.WarpRoutine.Replace(movementState, movementState.DoWarp(0.0f, fTime));
+                }
+            }
+        }
+
+        [LeafMember("FadeOutIn")]
+        static private void FadeOutIn(float fTime) {
+            PlayerMovementState movementState = Find.State<PlayerMovementState>();
+            if(movementState) {
+                if(!movementState.WarpFader.enabled) {
+                    movementState.WarpRoutine.Replace(movementState, movementState.DoWarpInOut(fTime));
+                }
+            }
+        }
+
     }
 }

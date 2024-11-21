@@ -1,27 +1,20 @@
 #basePath	Day4
 
-:: Day4Start
-@trigger    Day4Start
-@once
-
+:: Prepare
+@function	ScenePrepare
+$call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-$set global:level = 4
 $set chapter:identifiedCount = 0
 $set chapter:finishedObservations = false
-
-//:: Prepare
-//@function	ScenePrepare
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
-
-//:: StartGame
-//@trigger    SceneReady
-//@who        Player
-//@once
-
-$call Wait(2)
 $call DayHeader->SetText(Day 4)
+$call FadeIn(1.0)
+$call Wait(2)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
 
 {@Margo}   Mornin', kiddo.   $[Day4/Tent/Margo_1]
 {@Player}   Whoa… what’s all this?   $[Day4/Tent/Player_1]
@@ -48,7 +41,7 @@ $call SetWarpActive(WarpBluff, true)
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff", global:level == 4
+@when       targetObject == "WarpTarget-Bluff"
 @once
 
 $call CompleteGoal("Day4_outside")
@@ -64,7 +57,7 @@ $call CreateGoal("Day4_rookery", Use Warp to enter rookery)
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Rookery", global:level == 4
+@when       targetObject == "WarpTarget-Rookery"
 @once
 
 $call CompleteGoal("Day4_rookery")
@@ -100,7 +93,7 @@ $call CreateGoal("day4_band", Band 3 Chicks)
 :: WarpedToRookeryGate
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryFar", global:level == 4
+@when       targetObject == "WarpTarget-RookeryFar"
 @once
 
 $call WeighGate->SetInteractable(true)
@@ -114,7 +107,7 @@ $call WeighGate->SetInteractable(true)
 
 :: OnWeighGateIdentified
 @function	TabletIdentified
-@when		objectId == "WeighGate", global:level == 4
+@when		objectId == "WeighGate"
 
 $call CompleteGoal("day4_gate")
 $set	chapter:weighGate = true
@@ -123,7 +116,7 @@ $goto Day4.CheckCompletedTasks
 :: WarpedToRookeryMiddle
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryMiddle", global:level == 4
+@when       targetObject == "WarpTarget-RookeryMiddle"
 @once
 
 //these activates are just for testing - these will normally already be enabled.
@@ -140,7 +133,7 @@ $call DataTrackerBack5->SetMeshEnabled(true)
 
 :: OnSocketedTracker
 @trigger    ObjectSocketed
-@when   objectType == "DataTracker", socketType == "TrackerSocket", global:level == 4
+@when   objectType == "DataTracker", socketType == "TrackerSocket"
 $set chapter:dataCount + 1
 $goto Day4.CheckDataCount
 
@@ -157,7 +150,7 @@ $endif
 :: WarpedToRookeryCorral
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryCorral", global:level == 4
+@when       targetObject == "WarpTarget-RookeryCorral"
 @once
 
 $call WingBand1->Activate()
@@ -178,7 +171,7 @@ $call WingBand3->Activate()
 
 :: OnSocketedWingBand
 @trigger ObjectSocketed
-@when   objectType == "WingBand", socketType == "BandSocket", global:level == 4
+@when   objectType == "WingBand", socketType == "BandSocket"
 $set chapter:wingCount + 1
 
 $if chapter:wingCount == 1
@@ -235,7 +228,7 @@ $endif
 :: WarpedBackToTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back", global:level == 4
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
 @once
 
 $call Wait(1)
@@ -247,7 +240,7 @@ $call SetWarpActive(WarpDesk, true)
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk", global:level == 4
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
 @interrupt
 
 $call CreateGoal("Day4_upload", Upload Margo's data)
@@ -284,4 +277,7 @@ $call CompleteGoal("Day4_upload")
 {@Player}   Claro que si!   $[Day4/Tent/Player_13]
 {@Player}   Are you ready for the grand tour? I’ve got these five new friends I think you’re going to love. $[Day4/Tent/Player_14]
 
-$call TriggerResponse(Day5Start)
+$call FadeOut(1.0)
+$call Wait(2)
+
+$call LoadNextDay()

@@ -1,34 +1,21 @@
 #basePath	Day2
 
-:: Day2Start
-@trigger    Day2Start
-@once
-
+:: Prepare
+@function	ScenePrepare
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-$set global:level = 2
 $set chapter:identifiedCount = 0
 $set chapter:finishedAllObservations = false
 $set chapter:finishedObservations = false
-
-//:: Prepare
-//@function	ScenePrepare
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
-
-//:: StartGame
-//@trigger    SceneReady
-//@who        Player
-//@once
-
-$call Wait(2)
-
-//fade in
-//dock margo
-
 $call DayHeader->SetText(Day 2)
+$call FadeIn(1.0)
 $call Wait(2)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
 
 {@Margo}   Mornin', kiddo!   $[Day2/Tent/Margo_1]
 {@Margo}   Jeepers... you look exhausted.   $[Day2/Tent/Margo_2]
@@ -40,7 +27,6 @@ $call Wait(2)
 :: PickedUpMargo2
 @trigger    TabletLifted
 @who        Player
-@when		global:level == 2
 @interrupt
 @once
 
@@ -63,7 +49,7 @@ $call SetWarpActive(WarpBluff, true)
 :: WarpedOutsideTent2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff", global:level == 2
+@when       targetObject == "WarpTarget-Bluff"
 @once
 
 $call CompleteGoal("Day2_outside")
@@ -88,7 +74,6 @@ $call CreateGoal("Day2_count", Use Count to count population)
 :: ScannedFromBluff2
 @trigger	TabletCounted
 @who		Player
-@when		global:level == 2
 @interrupt
 @once
 
@@ -101,25 +86,24 @@ $call CreateGoal("Day2_rookery", Use Warp to enter rookery)
 :: WarpedToRookery2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Rookery", global:level == 2
+@when       targetObject == "WarpTarget-Rookery"
 @once
 
 $call CompleteGoal("Day2_rookery")
 
 $call Wait(1)
 
-//$call SetWarpActive(WarpBluffBack, true)
 $call SetWarpGroupActive(Rookery, true)
 
 $call ClearGoals()
 
 $call CreateGoal("Day2_warp_middle", Warp to the middle of the Rookery)
-$call CreateGoal("Day2_warp_far", or Warp near the weigh gate of the Rookery)
+$call CreateGoal("Day2_warp_far", Warp near the weigh gate of the Rookery)
 
 :: WarpedToRookeryMiddle2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryMiddle", global:level == 2
+@when       targetObject == "WarpTarget-RookeryMiddle"
 @once
 
 $call CompleteGoal("Day2_warp_middle")
@@ -137,6 +121,12 @@ $call CreateGoal("Day2_mates", ID 5 Penguins and their mates)
 
 $call ClearGoals()
 
+$call Daisy->SetInteractable(true)
+$call Meatball->SetInteractable(true)
+$call Billy->SetInteractable(true)
+$call Benni->SetInteractable(true)
+$call Wendy->SetInteractable(true)
+
 $call Daisy->SetIdentified(false)
 $call Meatball->SetIdentified(false)
 $call Billy->SetIdentified(false)
@@ -151,7 +141,7 @@ $call CreateGoal("id_polo", ID Polo's Mate)
 
 :: OnBillyIdentified
 @trigger	TabletIdentified
-@when		objectId == "Billy", global:level == 2
+@when		objectId == "Billy"
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_millie")
@@ -164,7 +154,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnMeatballIdentified
 @function	TabletIdentified
-@when		objectId == "Meatball", global:level == 2
+@when		objectId == "Meatball"
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_alfredo")
@@ -182,7 +172,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnDaisyIdentified
 @function	TabletIdentified
-@when		objectId == "Daisy", global:level == 2
+@when		objectId == "Daisy"
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_fuzz")
@@ -199,7 +189,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnWendyIdentified
 @function	TabletIdentified
-@when		objectId == "Wendy", global:level == 2
+@when		objectId == "Wendy"
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_winston")
@@ -211,7 +201,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnBenniIdentified
 @function	TabletIdentified
-@when		objectId == "Benni", global:level == 2
+@when		objectId == "Benni"
 $set	chapter:identifiedCount + 1
 
 $call CompleteGoal("id_polo")
@@ -226,8 +216,13 @@ $goto Day2.CheckAllMatesIdentified
 $if chapter:finishedObservations == true, chapter:finishedTrackers == true
 	{@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/Margo_25]
 	{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/Margo_26]
+	$call SetWarpActive(WarpBluffBack, true)
 	$set chapter:finishedAllObservations = true
 	$call CreateGoal("Day2_return", Return to tent)
+$elseif chapter:finishedObservations == true, chapter:finishedTrackers == false
+	$call CreateGoal("Day2_warp_far", Warp near the weigh gate of the Rookery)
+$elseif chapter:finishedObservations == false, chapter:finishedTrackers == true
+	$call CreateGoal("Day2_warp_middle", Warp to the middle of the Rookery)
 $endif
 
 :: CheckAllMatesIdentified
@@ -241,7 +236,7 @@ $endif
 :: WarpedToRookeryGate2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryFar", global:level == 2
+@when       targetObject == "WarpTarget-RookeryFar"
 @once
 
 $call CompleteGoal("Day2_warp_far")
@@ -252,6 +247,10 @@ $call CreateGoal("Day2_trackers", Retrieve 3 trackers from Penguins)
 
 //show the trackers visible on 3 penguins...
 $call FuzzLegTracker->SetMeshEnabled(true)
+$call AlfredoLegTracker->SetMeshEnabled(true)
+$call WinstonLegTracker->SetMeshEnabled(true)
+$call MillieLegTracker->SetMeshEnabled(true)
+$call PoloLegTracker->SetMeshEnabled(true)
 $call AdelieLegTracker1->SetMeshEnabled(true)
 $call AdelieLegTracker2->SetMeshEnabled(true)
 
@@ -299,7 +298,7 @@ $call TriggerResponse(CheckAllComplete)
 :: WarpedBackToTent2
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Bluff-Back", global:level == 2
+@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Bluff-Back"
 @once
 
 $call Wait(1)
@@ -313,7 +312,7 @@ $call CreateGoal("Day2_upload", Upload Margo's data)
 :: WarpedInsideTent2
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Desk", global:level == 2
+@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Desk"
 @interrupt
 
 $call CompleteGoal("Day2_return")
@@ -345,6 +344,7 @@ $call CompleteGoal("Day2_upload")
 {@Margo}    Yeah, ya got that right.    $[Day2/Tent/Margo_19]
 {@Margo}    You better stock up on more candy... I don't think you'll be gettin' much sleep tonight.    $[Day2/Tent/Margo_20]
 
+$call FadeOut(1.0)
 $call Wait(2)
 
-$call TriggerResponse(Day3Start)
+$call LoadNextDay()

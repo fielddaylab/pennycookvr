@@ -1,27 +1,19 @@
 #basePath	Day5
 
-:: Day5Start
-@trigger    Day5Start
-@once
-
+:: Prepare
+@function	ScenePrepare
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-$set global:level = 5
-
-//:: Prepare
-//@function	ScenePrepare
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
-
-//:: StartGame
-//@trigger    SceneReady
-//@who        Player
-//@once
-
+$call ClearGoals()
 $set chapter:legCount = 0
-
 $call DayHeader->SetText(Day 5)
+$call FadeIn(1.0)
 $call Wait(2)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
 
 {@Margo}   Mornin', kiddo!   $[Day5/Tent/Margo_1]
 {@Margo}   This is it. Just think… this time tomorrow you’ll be back in Wisconsin.  $[Day5/Tent/Margo_2]
@@ -52,7 +44,7 @@ $call SetWarpActive(WarpBluff, true)
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff", global:level == 5
+@when       targetObject == "WarpTarget-Bluff"
 @once
 
 $call CompleteGoal("Day5_outside")
@@ -70,7 +62,7 @@ $call CreateGoal("Day5_rookery", Use Warp to enter rookery)
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Rookery", global:level == 5
+@when       targetObject == "WarpTarget-Rookery"
 @once
 
 $call CompleteGoal("Day5_rookery")
@@ -101,7 +93,7 @@ $call CreateGoal("Day5_band", Band 3 Parent Penguins)
 
 :: OnSocketedLegTracker
 @trigger ObjectSocketed
-@when   objectType == "LegTracker", socketType == "LegSocket", global:level == 5
+@when   objectType == "LegTracker", socketType == "LegSocket"
 $set chapter:legCount + 1
 
 $if chapter:legCount >= 3
@@ -110,7 +102,7 @@ $endif
 
 :: OnSocketedLegTrackerPolo
 @trigger ObjectSocketed
-@when   objectType == "LegTracker", socketType == "LegSocketPolo", global:level == 5
+@when   objectType == "LegTracker", socketType == "LegSocketPolo"
 $set chapter:legCount + 1
 
 {@Player}	Ouch!	$[Day5/Rookery/Player_5]
@@ -139,7 +131,7 @@ $call CreateGoal("Day5_bluff_back",  Warp to Bluff)
 :: WarpedBackToBluff
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-Bluff-Back", global:level == 5
+@when       targetObject == "WarpTarget-Bluff-Back"
 @once
 
 $call CompleteGoal("Day5_bluff_back")
@@ -158,7 +150,6 @@ $call PenguinCount->ActivateCount(12)
 :: ScannedFromBluff
 @trigger	TabletCounted
 @who		Player
-@when		global:level == 5
 @interrupt
 @once
 
