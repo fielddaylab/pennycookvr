@@ -1,8 +1,209 @@
-#basePath	Day2
+#basePath	Day1
+
+:: Prepare
+@function	ScenePrepare
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
+
+$set global:level = 1
+
+$call Wait(2)
+
+$call FuzzLegTracker->SetMeshEnabled(true)
+$call AdelieLegTracker1->SetMeshEnabled(true)
+$call AdelieLegTracker2->SetMeshEnabled(true)
+
+{@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
+{@Player}   Brr. Lola was right though... I should've packed an extra sweater.   $[Day1/Tent/Player_2]
+{@Player}   Alright, time to get focused. Those penguins aren’t gonna research themselves. $[Day1/Tent/Player_3]
+{@Player}   Step one: Find research tent. Check.    $[Day1/Tent/Player_4]
+{@Player}   Step two: Report to Margo, penguin expert and senior researcher.    $[Day1/Tent/Player_5]
+{@Player}   Hmmm. But where is she?     $[Day1/Tent/Player_6]
+
+:: PickedUpMargo
+@trigger    TabletLifted
+@who        Player
+@interrupt
+@once
+
+$call Wait(1)
+$set	chapter:hasTalkedToMargo = true
+
+{@Margo}    Oh, hiya! Welcome to the South Pole, kid!   $[Day1/Tent/Margo_1]
+{@Player}   Oh, uh… I’m not a kid. I’m the new junior researcher.  $[Day1/Tent/Player_7]
+{@Margo}    Uh, yah, like I said!   $[Day1/Tent/Margo_2]
+{@Margo}    And just in time, too.   $[Day1/Tent/Margo_3]
+{@Margo}    Spring is in the air… lotsa penguins out there lookin’ for love.   $[Day1/Tent/Margo_4]
+{@Margo}    It’ll be great to have ya on the team.   $[Day1/Tent/Margo_5]
+{@Player}   Your team?  $[Day1/Tent/Player_8]
+{@Margo}    Yep! I’m Margo, senior researcher.  $[Day1/Tent/Margo_6]
+{@Margo}    Nice to meet ya!    $[Day1/Tent/Margo_7]
+{@Player}   You're Margo?  $[Day1/Tent/Player_9]
+{@Margo}    Well, yah, last I checked.  $[Day1/Tent/Margo_8]
+{@Margo}    What’s wrong? Do I got cookies stuck in my teeth or somethin’?  $[Day1/Tent/Margo_9]
+{@Margo}    Aw, relax, kiddo, I’m jokin’. Just a little data humor for ya.  $[Day1/Tent/Margo_10]
+{@Player}   I've heard about you. You’re one of the leading penguin researchers in the world! I had no idea you were a tablet.   $[Day1/Tent/Player_10]
+{@Margo}    Feel free to have yerself a look around! This'll be our den for the season.   $[Day1/Tent/Margo_11]
+{@Margo}    Couldja peek out the front door with me? I can't wait to see who's here! $[Day1/Tent/Margo_12]
+{@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
+
+$call CreateGoal("day1_outside", Use Warp to go outside)
+$call SetWarpActive(WarpBluff, true)
+
+:: WarpedOutsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Bluff"
+@once
+
+$call TentDoor->Close()
+
+$call CompleteGoal("day1_outside")
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluff, false)
+
+$call PenguinCount->ActivateCount(12)
+
+{@Margo}    I can count 'em up for us! Just put me in "Count" mode and give me a good gander at 'em. $[Day1/Bluff/Margo_1]
+
+$call CreateGoal("day1_count", Use Count to count population)
+
+
+:: ScannedFromBluff
+@trigger	TabletCounted
+@who		Player
+@interrupt
+@once
+
+$call CompleteGoal("day1_count")
+
+{@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny.   $[Day1/Bluff/Partner_1]
+{@Margo}    Let's get on down there and say hello! Find a waypoint in the rookery.  $[Day1/Bluff/Margo_2]
+
+$call CreateGoal("day1_rookery", Use Warp to enter rookery)
+$call SetWarpGroupActive(Rookery, true)
+
+:: WarpedToRookery
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Rookery"
+@once
+
+$call CompleteGoal("day1_rookery")
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluffBack, true)
+$call SetWarpGroupActive(Rookery, true)
+
+$call ClearGoals()
+
+$call CreateGoal("band_red", Scan penguin with red band)
+$call CreateGoal("band_yellow", Scan penguin with yellow band)
+$call CreateGoal("band_green", Scan penguin with green band)
+$call CreateGoal("band_blue", Scan penguin with blue band)
+$call CreateGoal("band_purple", Scan penguin with purple band)
+
+{@Player}   Hah! I've never been so close to a penguin before! $[Day1/Rookery/Player_1]
+{@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day1/Rookery/Partner_1]
+
+:: OnPenguinIdentified
+@function	TabletIdentified
+@when		objectType == "BandedPenguin"
+$set	chapter:identifiedCount + 1
+
+$if local:objectId == "RedAdelie"
+	$call CompleteGoal("band_red")
+$elseif local:objectId == "YellowAdelie"
+	$call CompleteGoal("band_yellow")
+$elseif local:objectId == "GreenAdelie"
+	$call CompleteGoal("band_green")
+$elseif local:objectId == "BlueAdelie"
+	$call CompleteGoal("band_blue")
+$elseif local:objectId == "PurpleAdelie"
+	$call CompleteGoal("band_purple")
+$endif
+
+$if chapter:identifiedCount >= 5
+	$set chapter:allIdentified = true
+	$call TriggerResponse(ObjectiveCompleted)
+$endif
+
+:: ObjectiveCompleted
+@trigger	ObjectiveCompleted
+@who		Player
+@once
+@interrupt
+
+$set	chapter:finishedObservations = true
+$call ClearGoals()
+
+$call Wait(0.3)
+{@Partner}  Great! You can head back to the overlook now.   $[Day1/Rookery/Partner_2]
+
+$call CreateGoal("day1_return", Return to tent)
+
+:: WarpedBackToTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
+@once
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpGroupActive(Rookery, false)
+$call SetWarpActive(WarpDesk, true)
+
+{@Margo} Let's get back in the tent and upload that data!   $[Day1/Bluff/Margo_3]
+
+$call CreateGoal("day1_upload", Upload Margo's data)
+
+:: WarpedInsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
+@interrupt
+@once
+
+$call CompleteGoal("day1_return")
+$call Wait(1)
+$call SetWarpActive(WarpDesk, true)
+
+{@Margo}    You can connect me to the uplink at the desk over yonder.  $[Day1/Tent/Margo_14]
+{@Player}   Alright, now to place Margo in the dock.    $[Day1/Tent/Player_11]
+
+$while !IsSocketedBy(DeskDock, Margo)
+$call Wait(0.5)
+$endwhile
+
+{@Player}   And now the big ole button! $[Day1/Tent/Player_12]
+
+$while !ButtonPressed(BigButton)
+$call Wait(0.5)
+$endwhile
+
+$call CompleteGoal("day1_upload")
+
+{@Margo}    Looks like we've got 25 returners! Mostly adults, a few subadults...   $[Day1/Tent/Margo_15]
+{@Margo}    Great first day, kiddo! Get some rest now, why don'tcha?    $[Day1/Tent/Margo_16]
+
+$call Wait(2)
+
+$call TriggerResponse(Day2Start)
 
 :: Day2Start
 @trigger    Day2Start
 @once
+
+$call FadeOutIn(1.0)
 
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
@@ -11,16 +212,6 @@ $set global:level = 2
 $set chapter:identifiedCount = 0
 $set chapter:finishedAllObservations = false
 $set chapter:finishedObservations = false
-
-//:: Prepare
-//@function	ScenePrepare
-//$call PlaceAndRotatePlayerAt(WarpDesk, true)
-//$call SetAllWarpsActive(false)
-
-//:: StartGame
-//@trigger    SceneReady
-//@who        Player
-//@once
 
 $call Wait(2)
 
@@ -160,7 +351,7 @@ $call CompleteGoal("id_millie")
 {@Partner}  Millie and . . . Billy? $[Day2/Rookery/Partner_1]
 {@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Day2/Rookery/Partner_2]
 
-$goto Day2.CheckAllMatesIdentified
+$goto CheckAllMatesIdentified
 
 :: OnMeatballIdentified
 @function	TabletIdentified
@@ -177,7 +368,7 @@ $call CompleteGoal("id_alfredo")
 {@Margo}    Ohhhh kaayyy... $[Day2/Rookery/Margo_6]
 {@Player}   Now I’m getting hungry. Got any candy bars in that case?    $[Day2/Rookery/Player_8]
 
-$goto Day2.CheckAllMatesIdentified
+$goto CheckAllMatesIdentified
 
 
 :: OnDaisyIdentified
@@ -195,7 +386,7 @@ $call CompleteGoal("id_fuzz")
 {@Margo}    You’d be surprised, kid. Not all penguins make good parents.    $[Day2/Rookery/Margo_10]
 {@Player}   We’ll just have to wait and see.    $[Day2/Rookery/Player_11]
 
-$goto Day2.CheckAllMatesIdentified
+$goto CheckAllMatesIdentified
 
 :: OnWendyIdentified
 @function	TabletIdentified
@@ -207,7 +398,7 @@ $call CompleteGoal("id_winston")
 {@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/Margo_11]
 {@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day2/Rookery/Margo_12]
 
-$goto Day2.CheckAllMatesIdentified
+$goto CheckAllMatesIdentified
 
 :: OnBenniIdentified
 @function	TabletIdentified
@@ -219,7 +410,7 @@ $call CompleteGoal("id_polo")
 {@Margo}   Ooh, Benni and Polo! What a good match.  $[Day2/Rookery/Margo_13]
 {@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day2/Rookery/Margo_14]
 
-$goto Day2.CheckAllMatesIdentified
+$goto CheckAllMatesIdentified
 
 ::CheckAllComplete
 @trigger CheckAllComplete

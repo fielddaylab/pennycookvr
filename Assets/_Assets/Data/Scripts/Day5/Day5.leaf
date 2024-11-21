@@ -1,9 +1,9 @@
 #basePath	Day5
 
 :: Day5Start
-@trigger    Day5Ready
-@who        Player
+@trigger    Day5Start
 @once
+
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $set global:level = 5

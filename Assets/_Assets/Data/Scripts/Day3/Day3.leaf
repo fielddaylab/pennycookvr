@@ -2,8 +2,8 @@
 
 :: Day3Start
 @trigger    Day3Start
-@who        Player
 @once
+
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $set global:level = 3

@@ -108,7 +108,7 @@ $call CreateGoal("band_blue", Scan penguin with blue band)
 $call CreateGoal("band_purple", Scan penguin with purple band)
 
 {@Player}   Hah! I've never been so close to a penguin before! $[Day1/Rookery/Player_1]
-{@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day/Rookery/Partner_1]
+{@Partner}  Scan all the penguins with colored wingbands. Let's see how our returning adults are doing. $[Day1/Rookery/Partner_1]
 
 :: OnPenguinIdentified
 @function	TabletIdentified
@@ -192,4 +192,4 @@ $call CompleteGoal("day1_upload")
 
 $call Wait(2)
 
-$call TriggerResponse(Day2Start)
+$call TriggerResponse(Day2.Day2Start)
