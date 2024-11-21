@@ -2,12 +2,12 @@
 
 :: Prepare
 @function	ScenePrepare
-$call ClearGoals()
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
 $set chapter:identifiedCount = 0
 $set chapter:finishedAllObservations = false
 $set chapter:finishedObservations = false
+$call ClearGoals()
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
 $call DayHeader->SetText(Day 2)
 $call FadeIn(1.0)
 $call Wait(2)
@@ -18,6 +18,10 @@ $call Wait(2)
 @once
 
 {@Margo}   Mornin', kiddo!   $[Day2/Tent/Margo_1]
+
+//$call LoadNextDay()
+//$stop
+ 
 {@Margo}   Jeepers... you look exhausted.   $[Day2/Tent/Margo_2]
 {@Player}   Ugh. Is it that obvious?  $[Day2/Tent/Player_1]
 {@Player}   I couldn't sleep. I tried counting sheep, counting penguins, stress-eating candy bars . . .   $[Day2/Tent/Player_2]
@@ -245,7 +249,15 @@ $call Wait(2)
 
 $call CreateGoal("Day2_trackers", Retrieve 3 trackers from Penguins)
 
-//show the trackers visible on 3 penguins...
+//show the trackers visible on several penguins...
+$call SocketObjectTo(FuzzLegTracker, FuzzLegSocket)
+$call SocketObjectTo(AlfredoLegTracker, AlfredoLegSocket)
+$call SocketObjectTo(WinstonLegTracker, WinstonLegSocket)
+$call SocketObjectTo(MillieLegTracker, MillieLegSocket)
+$call SocketObjectTo(PoloLegTracker, PoloLegSocket)
+$call SocketObjectTo(AdelieLegTracker1, AdelieLegSocket1)
+$call SocketObjectTo(AdelieLegTracker2, AdelieLegSocket2)
+
 $call FuzzLegTracker->SetMeshEnabled(true)
 $call AlfredoLegTracker->SetMeshEnabled(true)
 $call WinstonLegTracker->SetMeshEnabled(true)

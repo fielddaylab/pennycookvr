@@ -2,11 +2,11 @@
 
 :: Prepare
 @function	ScenePrepare
+$set chapter:identifiedCount = 0
+$set chapter:finishedObservations = false
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-$set chapter:identifiedCount = 0
-$set chapter:finishedObservations = false
 $call DayHeader->SetText(Day 3)
 $call FadeIn(1.0)
 $call Wait(2)
@@ -19,6 +19,10 @@ $call Wait(2)
 $call Wait(2)
 
 {@Margo}   Mornin’, kiddo! You’re up awfully early.   $[Day3/Tent/Margo_1]
+
+//$call LoadNextDay()
+//$stop
+ 
 {@Player}   I was too excited to sleep.   $[Day3/Tent/Player_1]
 {@Player}   Some of the eggs have probably already hatched!  $[Day3/Tent/Player_2]
 {@Player}   I hope Alfredo’s doing okay. $[Day3/Tent/Player_3]
@@ -298,6 +302,16 @@ $call SetWarpActive(WarpBluffBack, true)
 {@Player}	I can see why you all keep so much candy around here. 	$[Day3/Rookery/Player_22]
 {@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/Partner_12]
 {@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/Partner_13]
+$else
+$if chapter:trackersSocketed == false
+$call CreateGoal("day3_warp_side", Warp to side of Rookery)
+$endif
+$if chapter:regurgDone == false
+$call CreateGoal("day3_warp_far", Warp to back of Rookery)
+$endif
+$if chapter:finishedObservations == false
+$call CreateGoal("day3_warp_middle", Warp to middle of Rookery)
+$endif
 $endif
 
 :: WarpedBackToTent
