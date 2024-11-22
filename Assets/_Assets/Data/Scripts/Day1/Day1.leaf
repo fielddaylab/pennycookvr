@@ -39,18 +39,18 @@ $set	chapter:hasTalkedToMargo = true
 {@Margo}    Uh, yah, like I said!   $[Day1/Tent/Margo_2]
 {@Margo}    And just in time, too.   $[Day1/Tent/Margo_3]
 {@Margo}    Spring is in the air… lotsa penguins out there lookin’ for love.   $[Day1/Tent/Margo_4]
-{@Margo}    It’ll be great to have ya on the team.   $[Day1/Tent/1tm5]
+{@Margo}    It’ll be great to have ya on the team.   $[Day1/Tent/Margo_5]
 {@Player}   Your team?  $[Day1/Tent/Player_8]
-{@Margo}    Yep! I’m Margo, senior researcher.  $[Day1/Tent/1tm06]
+{@Margo}    I’m Margo, the penguin research coordinator.  $[Day1/Tent/1tm06]
 {@Margo}    Nice to meet ya!    $[Day1/Tent/Margo_7]
 {@Player}   You're Margo?  $[Day1/Tent/Player_9]
 {@Margo}    Well, yah, last I checked.  $[Day1/Tent/Margo_8]
 {@Margo}    What’s wrong? Do I got cookies stuck in my teeth or somethin’?  $[Day1/Tent/Margo_9]
 {@Margo}    Aw, relax, kiddo, I’m jokin’. Just a little data humor for ya.  $[Day1/Tent/Margo_10]
-{@Player}   Sorry.  It's just... I've heard about you. I had no idea you were a computer.   $[Day1/Tent/Player_10]
+{@Player}   I've heard about you. You're one of the leading penguin researchers in the world... I had no idea you were a tablet.   $[Day1/Tent/Player_10]
 {@Margo}	Aw, that's okay, kiddo. Lotsa people make that mistake. $[Day1/Tent/1tm10a]
 {@Margo}	I've been told I'm pretty social, for a tablet. And a great cook, too.  $[Day1/Tent/1tm10b]
-{@Margo}    Feel free to have yerself a look around! This'll be our home base for the season.   $[Day1/Tent/Margo_11]
+{@Margo}    Feel free to have yerself a look around! This'll be our home den for the season.   $[Day1/Tent/Margo_11]
 {@Margo}    Couldja peek out the front door with me? I can't wait to see who's here! $[Day1/Tent/Margo_12]
 {@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
 
@@ -99,9 +99,8 @@ $call CompleteGoal("day1_count")
 
 {@Margo}	Nice work, kiddo! We've got our initial population count. $[Day1/Bluff/1bm08]
 {@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny.   $[Day1/Bluff/Partner_1]
-{@Player}	On wow! This is such an honor. I've read all your research on climate change and penguin migration. [$Day1/Bluff/1bs06]
-{@Player}	I remember when you talked to my 5th grade class at Gompers Elementary. [$Day1/Bluff/1bs07]
-{@Margo}    Let's get on down there and say hello! Find a waypoint in the rookery.  $[Day1/Bluff/Margo_2]
+{@Player}	On wow! This is such an honor. I've read all your research on climate change and penguin migration. $[Day1/Bluff/1bs06]
+{@Player}	I remember when you talked to my 5th grade class at Gompers Elementary. $[Day1/Bluff/1bs07]
 {@Partner}	Hmm. That would've been, what, 12 or 13 years ago?	$[Day1/Bluff/Partner_2]
 {@Partner}	15, I think.	$[Day1/Bluff/Partner_3]
 {@Margo}	Okay, kiddo, enough yammerin'. Time for your next task. 	$[Day1/Bluff/1bm09]
@@ -131,13 +130,13 @@ $call CreateGoal("band_green", Scan penguin with green band)
 $call CreateGoal("band_blue", Scan penguin with blue band)
 $call CreateGoal("band_purple", Scan penguin with purple band)
 
-$call Daisy->SetInteractable(false)
-$call Meatball->SetInteractable(false)
-$call Billy->SetInteractable(false)
-$call Benni->SetInteractable(false)
-$call Wendy->SetInteractable(false)
+//$call Daisy->SetInteractable(false)
+//$call Meatball->SetInteractable(false)
+//$call Billy->SetInteractable(false)
+//$call Benni->SetInteractable(false)
+//$call Wendy->SetInteractable(false)
 
-{@Player}	Hah! I can't wait to meet them. I wish Lola was here to see this.	%[Day1/Rookery/1rs01]
+{@Player}	Hah! I can't wait to meet them. I wish Lola was here to see this.	$[Day1/Rookery/1rs01]
 {@Margo}	Who's that now?	$[Day1/Rookery/1rm01]
 {@Player}	Oh, Lola is my girlfriend. She loves birds too!	$[Day1/Rookery/1rs02]
 {@Player}	But I think she’s happier staying where the sun sets every night like it’s supposed to.	$[Day1/Rookery/1rs03]
@@ -162,8 +161,8 @@ $if local:objectId == "RedAdelie"
 $elseif local:objectId == "YellowAdelie"
 	$call CompleteGoal("band_yellow")
 	{@Margo}	Oh, I'm so glad Polo made it back! He is my favorite. Such a cutie.	$[Day1/Rookery/1rm15]
-	{@Player}	Are you sure we should be picking favorites?	$[Day1/Rookery/lrs05]
-	{@Player}	I thought scientists were supposed to be objective.	$[Day1/Rookery/lrs06]
+	{@Player}	Are you sure we should be picking favorites?	$[Day1/Rookery/1rs05]
+	{@Player}	I thought scientists were supposed to be objective.	$[Day1/Rookery/1rs06]
 	{@Margo}	Oh, don’t worry. I’m totally objective.	$[Day1/Rookery/1rm16]
 	{@Margo}	Polo is objectively the cutest penguin you’ll ever meet.	$[Day1/Rookery/1rm17]
 $elseif local:objectId == "GreenAdelie"
@@ -173,10 +172,10 @@ $elseif local:objectId == "GreenAdelie"
 $elseif local:objectId == "BlueAdelie"
 	$call CompleteGoal("band_blue")
 	{@Margo}	Ooh, Alfredo’s back! I haven’t seen her since she was a chick.	$[Day1/Rookery/1rm11]
-	{@Player}	Alfredo? Why does that sound familiar?	$[Day1/Rookery/lrs08]
+	{@Player}	Alfredo? Why does that sound familiar?	$[Day1/Rookery/1rs08]
 	{@Margo}	Oh, I’m sure you know her. She’s internet famous.	$[Day1/Rookery/1rm12]
 	{@Margo}	Penny used to keep her page updated. Alfredo’s baby videos got two billion views!	$[Day1/Rookery/1rm13]
-	{@Player}	Billion?? Like, with a B?	$[Day1/Rookery/lrs09]
+	{@Player}	Billion?? Like, with a B?	$[Day1/Rookery/1rs09]
 $elseif local:objectId == "PurpleAdelie"
 	$call CompleteGoal("band_purple")
 	{@Margo}	Aw, it’s Fuzz! I remember him. His hair was crazy when he was growing. 	$[Day1/Rookery/1rm14]
@@ -185,10 +184,10 @@ $endif
 $if chapter:identifiedCount >= 5
 	$set chapter:allIdentified = true
 	{@Margo}	Great work kid! You've got your 5 penguins, $[Day1/Rookery/1rm20]
-	{@Player}	Awesome. The Fantastic Five!	$[Day1/Rookery/lrs10]
-	{@Player}	Or . . . the Fintastic Five. Los Cinco Fintasticos?	$[Day1/Rookery/lrs11]
+	{@Player}	Awesome. The Fantastic Five!	$[Day1/Rookery/1rs10]
+	{@Player}	Or . . . the Fintastic Five. Los Cinco Fintasticos?	$[Day1/Rookery/1rs11]
 	{@Margo}	Yikes. You are new, huh? Penguins have flippers, not fins.	$[Day1/Rookery/1rm21]
-	{@Player}	Let's head back. It's freezing out here! 	$[Day1/Rookery/lrs12]
+	{@Player}	Let's head back. It's freezing out here! 	$[Day1/Rookery/1rs12]
 	$call TriggerResponse(ObjectiveCompleted)
 $endif
 
