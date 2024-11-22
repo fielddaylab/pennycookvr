@@ -43,6 +43,11 @@ namespace Pennycook {
             return Routine.Start(GameLoop.Host, LoadDayRoutine(dayIndex)).Wait();
         }
 
+        static public IEnumerator LoadNextDay() {
+            var state = Find.State<PlayerProgressState>();
+            return LoadDay(state.DayIndex + 1);
+        }
+
         static private IEnumerator LoadDayRoutine(int dayIndex) {
             DayConfigAsset config = GetConfigForDay(dayIndex);
             Log.Msg("[UniverseUtility] Loading day '{0}'", config.name);

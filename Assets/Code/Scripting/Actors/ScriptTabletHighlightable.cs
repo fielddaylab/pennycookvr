@@ -53,6 +53,12 @@ namespace Pennycook {
 		}
 
         #endregion // Leaf
-		
+
+#if UNITY_EDITOR
+        private void Reset() {
+            Interactable = GetComponent<TabletInteractable>();
+        }
+#endif // UNITY_EDITOR
+
     }
 }

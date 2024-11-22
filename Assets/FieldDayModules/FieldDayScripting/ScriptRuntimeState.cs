@@ -449,6 +449,22 @@ namespace FieldDay.Scripting {
         }
 
         /// <summary>
+        /// Kills all running threads.
+        /// </summary>
+        static public int KillAllThreads() {
+            int killed = 0;
+            var table = Runtime.ActiveThreads;
+            for (int i = table.Count - 1; i >= 0; i--) {
+                var thread = table[i].GetThread();
+                if (thread != null) {
+                    table[i].Kill();
+                    killed++;
+                }
+            }
+            return killed;
+        }
+
+        /// <summary>
         /// Kills all running threads with a lower priority than the given priority.
         /// </summary>
         static public int KillLowPriorityThreads(ScriptNodePriority threshold = ScriptNodePriority.Cutscene, bool killFunctions = false) {
