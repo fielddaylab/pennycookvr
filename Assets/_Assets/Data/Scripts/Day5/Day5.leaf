@@ -15,28 +15,28 @@ $call Wait(2)
 @who        Player
 @once
 
-{@Margo}   Mornin', kiddo!   $[Day5/Tent/Margo_1]
-{@Margo}   This is it. Just think… this time tomorrow you’ll be back in Wisconsin.  $[Day5/Tent/Margo_2]
-{@Margo}   Aw, what’s the matter? I thought you’d be happy.  $[Day5/Tent/Margo_3]
+{@Margo}   Mornin', kiddo!   $[Day5/Tent/5tm01]
+{@Margo}   This is it. Just think… this time tomorrow you’ll be back in Wisconsin.  $[Day5/Tent/5tm02]
+{@Margo}   Aw, what’s the matter? I thought you’d be happy.  $[Day5/Tent/5tm03]
 {@Player}   Well, yes . . . and no.   $[Day5/Tent/Player_1]
 {@Player}   I can't wait to see Lola and my family. But I’m really gonna miss this place.     $[Day5/Tent/Player_2]
-{@Margo}   Well, if it makes you feel any better, the penguins are movin’ on out, too. They’ll spend the next few months out on the open sea.   $[Day5/Tent/Margo_4]
-{@Margo}	This place is about to get real dark, and real quiet.	$[Day5/Tent/Margo_5]
+{@Margo}   Well, if it makes you feel any better, the penguins are movin’ on out, too. They’ll spend the next few months out on the open sea.   $[Day5/Tent/5tm04]
+{@Margo}	This place is about to get real dark, and real quiet.	$[Day5/Tent/5tm05]
 {@Player}	Good point. We’d better get started.	$[Day5/Tent/Player_3]
 {@Player}	What’s on the list today?	$[Day5/Tent/Player_4]
-{@Margo}	Welp, since the season’s just about over, we’ll start by lookin’ over all the data we collected.	$[Day5/Tent/Margo_6]
-{@Margo}	We followed our five breeding pairs over the season. 	$[Day5/Tent/Margo_7]
-{@Margo}	The parents worked hard to hatch their eggs and keep their chicks safe.	$[Day5/Tent/Margo_8]
-{@Margo}	Some of them succeeded . . . 	$[Day5/Tent/Margo_9]
-{@Margo}	The ones who didnt hung around the empty nest for a few days, and then got back to the business of bein' penguins. 	$[Day5/Tent/Margo_10]
-{@Margo}	The other three chicks are lookin' good, too.	$[Day5/Tent/Margo_11]
-{@Margo}	The parents' jobs are over until next year. 	$[Day5/Tent/Margo_12]
-{@Margo}	It's almost time for the chicks to head out over the sea ice and fend for themselves. 	$[Day5/Tent/Margo_13]
+{@Margo}	Welp, since the season’s just about over, we’ll start by lookin’ over all the data we collected.	$[Day5/Tent/5tm06]
+{@Margo}	We followed our five breeding pairs over the season. 	$[Day5/Tent/5tm07]
+{@Margo}	The parents worked hard to hatch their eggs and keep their chicks safe.	$[Day5/Tent/5tm08]
+{@Margo}	Some of them succeeded . . . 	$[Day5/Tent/5tm09]
+{@Margo}	The ones who didnt hung around the empty nest for a few days, and then got back to the business of bein' penguins. 	$[Day5/Tent/5tm10]
+{@Margo}	The other three chicks are lookin' good, too.	$[Day5/Tent/5tm11]
+{@Margo}	The parents' jobs are over until next year. 	$[Day5/Tent/5tm12]
+{@Margo}	It's almost time for the chicks to head out over the sea ice and fend for themselves. 	$[Day5/Tent/5tm13]
 {@Player}	Awesome. Thanks, Margo.	$[Day5/Tent/Player_5]
 {@Player}	Not a bad season for the penguins.	$[Day5/Tent/Player_6]
-{@Margo}	Yep. And not a bad first season for you, either. 	$[Day5/Tent/Margo_14]
-{@Margo}	We’ve still got a few more tasks left to wrap things up. 	$[Day5/Tent/Margo_15]
-{@Margo}	Whenever you’re ready, let’s head out to the Bluff. 	$[Day5/Tent/Margo_16]
+{@Margo}	Yep. And not a bad first season for you, either. 	$[Day5/Tent/5tm14]
+{@Margo}	We’ve still got a few more tasks left to wrap things up. 	$[Day5/Tent/5tm15]
+{@Margo}	Whenever you’re ready, let’s head out to the Bluff. 	$[Day5/Tent/5tm16]
 
 $call CreateGoal("Day5_outside", Use Warp to go outside)
 $call SetWarpActive(WarpBluff, true)
@@ -53,8 +53,8 @@ $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
 
-{@Margo}   Okay, kiddo. Just one task down at the Rookery today. $[Day5/Bluff/Margo_1]
-{@Margo}   We need to put trackers on the penguins who had chicks this year. $[Day5/Bluff/Margo_2]
+{@Margo}   Okay, kiddo. Just one task down at the Rookery today. $[Day5/Bluff/5bm01]
+{@Margo}   We need to put trackers on the penguins who had chicks this year. $[Day5/Bluff/5bm02]
 
 $call SetWarpGroupActive(Rookery, true)
 $call CreateGoal("Day5_rookery", Use Warp to enter rookery)
@@ -70,17 +70,17 @@ $call CompleteGoal("Day5_rookery")
 $call Wait(1)
 
 {@Player}	Wow… it’s so quiet here.	$[Day5/Rookery/Player_1]
-{@Margo}	Looks like some of our Adelie colony has already headed out to sea.	$[Day5/Rookery/Margo_1]
-{@Margo}	Luckily, your Fliptastic Five is still here!	$[Day5/Rookery/Margo_2]
-{@Margo}	Though technically we’re just lookin’ for the Fliptastic Four.	$[Day5/Rookery/Margo_3]
-{@Margo}	Since Fuzz didn’t have any successful chicks this year, he won’t get a tracker.	$[Day5/Rookery/Margo_4]
+{@Margo}	Looks like some of our Adelie colony has already headed out to sea.	$[Day5/Rookery/5rm01]
+{@Margo}	Luckily, your Fliptastic Five is still here!	$[Day5/Rookery/5rm02]
+{@Margo}	Though technically we’re just lookin’ for the Fliptastic Four.	$[Day5/Rookery/5rm03]
+{@Margo}	Since Fuzz didn’t have any successful chicks this year, he won’t get a tracker.	$[Day5/Rookery/5rm04]
 {@Player}	Oh, yeah. Poor Fuzz and Daisy.	$[Day5/Rookery/Player_2]
 {@Player}	Do you think it’ll go better for them next season?	$[Day5/Rookery/Player_3]
-{@Margo}	I sure hope so, kiddo.	$[Day5/Rookery/Margo_5]
-{@Margo}	Either way, we’ll be here to cheer ‘em on.	$[Day5/Rookery/Margo_6]
-{@Margo}	Time to band those penguin parents.	$[Day5/Rookery/Margo_7]
-{@Margo}	You should be an expert at this by now!	$[Day5/Rookery/Margo_8]
-{@Margo}	Hold the penguin still with one hand. Then snap the trackers onto their legs.	$[Day5/Rookery/Margo_9]
+{@Margo}	I sure hope so, kiddo.	$[Day5/Rookery/5rm05]
+{@Margo}	Either way, we’ll be here to cheer ‘em on.	$[Day5/Rookery/5rm06]
+{@Margo}	Time to band those penguin parents.	$[Day5/Rookery/5rm07]
+{@Margo}	You should be an expert at this by now!	$[Day5/Rookery/5rm08]
+{@Margo}	Hold the penguin still with one hand. Then snap the trackers onto their legs.	$[Day5/Rookery/5rm09]
 {@Player}	Got it.	$[Day5/Rookery/Player_4]
 
 $call LegTracker1->Activate()
@@ -118,11 +118,11 @@ $endif
 
 $call CompleteGoal("Day5_band")
 
-{@Margo}	Great work, kiddo.	$[Day5/Rookery/Margo_10]
-{@Margo}	Your penguins are all ready to head out into the world.	$[Day5/Rookery/Margo_11]
+{@Margo}	Great work, kiddo.	$[Day5/Rookery/5rm10]
+{@Margo}	Your penguins are all ready to head out into the world.	$[Day5/Rookery/5rm11]
 {@Player}	Yeah. So are we, I guess.	$[Day5/Rookery/Player_7]
-{@Margo}	Not so fast. Just one more job.	$[Day5/Rookery/Margo_12]
-{@Margo}	Let’s head back up to the Bluff.	$[Day5/Rookery/Margo_13]
+{@Margo}	Not so fast. Just one more job.	$[Day5/Rookery/5rm12]
+{@Margo}	Let’s head back up to the Bluff.	$[Day5/Rookery/5rm13]
 
 $call SetWarpActive(WarpBluffBack, true)
 
@@ -141,7 +141,7 @@ $call Wait(1)
 $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 
-{@Margo}	Almost done. Your last task of the season is to do one more scan of the chicks and adults in the Rookery.	$[Day5/Bluff/Margo_3]
+{@Margo}	Almost done. Your last task of the season is to do one more scan of the chicks and adults in the Rookery.	$[Day5/Bluff/5bm03]
 
 $call CreateGoal("Day5_count",  Count Penguins)
 
@@ -155,15 +155,15 @@ $call PenguinCount->ActivateCount(12)
 
 $call CompleteGoal("day5_count")
 
-{@Margo}	Nice work, kiddo. There they go.	$[Day5/Bluff/Margo_4]
-{@Margo}	They’ll be back next year, around the same time you are.	$[Day5/Bluff/Margo_5]
+{@Margo}	Nice work, kiddo. There they go.	$[Day5/Bluff/5bm04]
+{@Margo}	They’ll be back next year, around the same time you are.	$[Day5/Bluff/5bm05]
 {@Partner}	Hey, kid. You ready? The plane’s waiting.	$[Day5/Bluff/Partner_1]
 {@Player}	Yeah. I’m ready.	$[Day5/Bluff/Player_1]
 {@Player}	Margo, you coming?	$[Day5/Bluff/Player_2]
-{@Margo}	Nah. Somebody’s gotta watch over this place while you’re gone.	$[Day5/Bluff/Margo_6]
+{@Margo}	Nah. Somebody’s gotta watch over this place while you’re gone.	$[Day5/Bluff/5bm06]
 {@Player}	You’re staying here? All winter??	$[Day5/Bluff/Player_3]
-{@Margo}	Aw, don’t worry, kiddo. I’m literally built for this.	$[Day5/Bluff/Margo_7]
-{@Margo}	That’s what Hibernate Mode is for!	$[Day5/Bluff/Margo_8]
-{@Margo}	Besides, I’ve always loved watchin’ the sunset. It should be any day now.	$[Day5/Bluff/Margo_9]
+{@Margo}	Aw, don’t worry, kiddo. I’m literally built for this.	$[Day5/Bluff/5bm07]
+{@Margo}	That’s what Hibernate Mode is for!	$[Day5/Bluff/5bm08]
+{@Margo}	Besides, I’ve always loved watchin’ the sunset. It should be any day now.	$[Day5/Bluff/5bm09]
 {@Player}	Okay. See you next year, Margo.	$[Day5/Bluff/Player_4]
-{@Margo}	You too, kiddo.	$[Day5/Bluff/Margo_10]
+{@Margo}	You too, kiddo.	$[Day5/Bluff/5bm10]
