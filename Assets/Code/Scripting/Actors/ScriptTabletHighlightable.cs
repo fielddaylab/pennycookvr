@@ -18,15 +18,17 @@ namespace Pennycook {
     public class ScriptTabletHighlightable : ScriptActorComponent {
 		
         #region Inspector
-		public TabletInteractable Interactable;
+		
 		
 		#endregion // Inspector
 		
         #region Leaf
 		private TabletHighlightable m_Highlight=null;
+        private TabletInteractable Interactable=null;
         
         private void Awake() {
             m_Highlight = GetComponent<TabletHighlightable>();
+            Interactable = GetComponent<TabletInteractable>();
         }
 		
 		public bool IsIdentified() { return m_Highlight.Identified; }

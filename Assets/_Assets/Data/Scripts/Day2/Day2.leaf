@@ -39,7 +39,7 @@ $call Wait(1)
 {@Player}    Sounds good to me. Let's get out there!   $[Day2/Tent/Player_3]
 {@Margo}   Whoa, slow your roll, kiddo. Last time you almost froze your fingers off, and I've heard those are pretty important for humans.  $[Day2/Tent/2tm05]
 {@Margo}    Got your cold weather gear on?   $[Day2/Tent/2tm06]
-{@Player}    All five layers. Plus some extra hand warmers.    $[Day2/Tent/Player_4]
+{@Player}    All five layers of it. Plus some extra hand warmers.    $[Day2/Tent/Player_4]
 {@Margo}    Did you make sure to eat a filling breakfast?   $[Day2/Tent/2tm07]
 {@Player}   Margo, I've literally been eating Halloween candy all night.    $[Day2/Tent/Player_5]
 {@Margo}    Well, okey dokey, then. Looks like somebody's learnin'.  $[Day2/Tent/2tm08]
@@ -331,7 +331,7 @@ $call CompleteGoal("Day2_return")
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
-{@Margo}    Okay dokey! Just dock me in the port there, and I’ll take a look at our data. $[Day2/Tent/2tm10]
+{@Margo}    Okay dokey! Just dock me in the port there, and I’ll take a look at our data. $[Day2/Tent/2tm9]
 
 $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
@@ -343,15 +343,15 @@ $endwhile
 
 $call CompleteGoal("Day2_upload")
 
-{@Margo}    Looks like the population has increased as more penguins show up for mating season.    $[Day2/Tent/2tm11]
-{@Margo}    All five of your penguins have formed breeding pairs!    $[Day2/Tent/2tm12]
-{@Margo}    Most penguin parents lay two eggs each season . . . but not all of them end up hatching.    $[Day2/Tent/2tm13]
-{@Margo}    We'll have to wait and see what happens.    $[Day2/Tent/2tm14]
-{@Margo}    Nice job, kid. Another excellent day's work.    $[Day2/Tent/2tm15]
-{@Margo}    And you've still got plenty of time for trick or treating!  $[Day2/Tent/2tm16]
-{@Margo}    There's a costume parade at McMurdo Station. I'm going as a vintage TV. Penny got me an antenna and everything! $[Day2/Tent/2tm17]
+{@Margo}    Looks like the population has increased as more penguins show up for mating season.    $[Day2/Tent/2tm10]
+{@Margo}    All five of your penguins have formed breeding pairs!    $[Day2/Tent/2tm11]
+{@Margo}    Most penguin parents lay two eggs each season . . . but not all of them end up hatching.    $[Day2/Tent/2tm12]
+{@Margo}    We'll have to wait and see what happens.    $[Day2/Tent/2tm13]
+{@Margo}    Nice job, kid. Another excellent day's work.    $[Day2/Tent/2tm14]
+{@Margo}    And you've still got plenty of time for trick or treating!  $[Day2/Tent/2tm15]
+{@Margo}    There's a costume parade at McMurdo Station. I'm going as a vintage TV. Penny got me an antenna and everything! $[Day2/Tent/2tm16]
 {@Player}   I think I'll stay here. I checked out a copy of The Thing from the library. $[Day2/Tent/Player_6]
-{@Margo}    Yikes. Do you, uh... know what it's about? $[Day2/Tent/2tm18]
+{@Margo}    Yikes. Do you, uh... know what it's about? $[Day2/Tent/2tm17]
 {@Player}   Not really, but I've heard it's pretty spooky.  $[Day2/Tent/Player_7]
 {@Margo}    Yeah, ya got that right.    $[Day2/Tent/2tm18]
 {@Margo}    You better stock up on more candy... I don't think you'll be gettin' much sleep tonight.    $[Day2/Tent/2tm19]
