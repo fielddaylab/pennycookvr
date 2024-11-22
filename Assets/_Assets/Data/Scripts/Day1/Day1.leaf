@@ -50,7 +50,7 @@ $set	chapter:hasTalkedToMargo = true
 {@Player}   I've heard about you. You're one of the leading penguin researchers in the world... I had no idea you were a tablet.   $[Day1/Tent/Player_10]
 {@Margo}	Aw, that's okay, kiddo. Lotsa people make that mistake. $[Day1/Tent/1tm10a]
 {@Margo}	I've been told I'm pretty social, for a tablet. And a great cook, too.  $[Day1/Tent/1tm10b]
-{@Margo}    Feel free to have yerself a look around! This'll be our home den for the season.   $[Day1/Tent/Margo_11]
+{@Margo}    Feel free to have yerself a look around! This'll be our den for the season.   $[Day1/Tent/Margo_11]
 {@Margo}    Couldja peek out the front door with me? I can't wait to see who's here! $[Day1/Tent/Margo_12]
 {@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
 
@@ -201,7 +201,7 @@ $set	chapter:finishedObservations = true
 $call ClearGoals()
 
 $call Wait(0.3)
-{@Partner}  Great! You can head back to the overlook now.   $[Day1/Rookery/Partner_2]
+$call SetWarpActive(WarpBluffBack, true)
 
 $call CreateGoal("day1_return", Return to tent)
 
@@ -217,8 +217,6 @@ $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)
 
-{@Margo} Let's get back in the tent and upload that data!   $[Day1/Bluff/Margo_3]
-
 $call CreateGoal("day1_upload", Upload Margo's data)
 
 :: WarpedInsideTent
@@ -233,12 +231,12 @@ $call SetWarpActive(WarpDesk, true)
 
 {@Margo}    Okay, let's have a look at that data!  $[Day1/Tent/1tm14]
 {@Margo}    Dock me in the port by the computer over yonder.   $[Day1/Tent/1tm15]
-{@Player}   There ya go. Safe and sound.   $[Day1/Tent/1ts01]
 
 $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
 $endwhile
 
+{@Player}   There ya go. Safe and sound.   $[Day1/Tent/1ts01]
 {@Player}   And now the big ole button! $[Day1/Tent/Player_12]
 
 $while !ButtonPressed(BigButton)
@@ -257,7 +255,7 @@ $call CompleteGoal("day1_upload")
 {@Margo}	He's gettin' on in years, but still in good health. A great dad, too.   	$[Day1/Tent/1tm23]
 {@Margo}	Great first day, kiddo! Get some rest now, why don'tcha?  	$[Day1/Tent/Margo_16]
 {@Margo}	We'll get back at it bright and early tomorrow.  	$[Day1/Tent/1tm25]
-{@Player}	Isn't it always bright here? 	$[Day1/Tent/lts02]
+{@Player}	Isn't it always bright here? 	$[Day1/Tent/1ts02]
 {@Margo}	Yep. Pro tip: invest in a good sleep mask.   	$[Day1/Tent/1tm26]
 {@Margo}	See ya tomorrow, kid!   	$[Day1/Tent/1tm27]
 
