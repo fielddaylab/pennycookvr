@@ -474,6 +474,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5116856630524091801}
   - component: {fileID: 1658703068732986560}
+  - component: {fileID: 4820899217300723273}
+  - component: {fileID: 7663017302643128273}
   m_Layer: 0
   m_Name: LegSocket
   m_TagString: Untagged
@@ -520,6 +522,36 @@ MonoBehaviour:
   ReleaseForce: {x: 0, y: 0, z: 0}
   Location: {fileID: 6129722569293967429}
   Detector: {fileID: 340833325528977104}
+--- !u!114 &4820899217300723273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2249990480591384902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: 
+    m_HashValue: 0
+  m_ClassName:
+    m_Source: LegSocket
+    m_HashValue: 537059950
+--- !u!114 &7663017302643128273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2249990480591384902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360f5c3b055cd421d86a2264e5ddd8dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2254975769069779583
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,8 +1218,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25328028, y: 0.38319147, z: 0.22097126}
-  m_Center: {x: -0.00070424785, y: -0.08965709, z: 0.031121245}
+  m_Size: {x: 0.39027226, y: 0.30132148, z: 0.5522601}
+  m_Center: {x: -0.06920048, y: -0.048722215, z: -0.1345241}
 --- !u!114 &6555041138393002075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1464,8 +1496,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5598418002204217080}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.8433915, y: 0, z: 0, w: 0.53729963}
+  m_LocalPosition: {x: -0.028, y: -0.122, z: 0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1490,8 +1522,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25328028, y: 0.38319147, z: 0.22097126}
-  m_Center: {x: -0.00070424785, y: -0.08965709, z: 0.031121245}
+  m_Size: {x: 0.38308716, y: 0.773886, z: 0.3377558}
+  m_Center: {x: 0.06419918, y: -0.2850042, z: 0.08951351}
 --- !u!114 &340833325528977104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3443,7 +3475,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b6ff410ae1af9f4db705e308b9d6fbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Interactable: {fileID: 0}
 --- !u!4 &6641921480938123477 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}

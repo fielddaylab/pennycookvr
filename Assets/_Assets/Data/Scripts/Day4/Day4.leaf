@@ -17,10 +17,6 @@ $call Wait(2)
 @once
 
 {@Margo}   Mornin', kiddo.   $[Day4/Tent/4tm01]
-
-//$call LoadNextDay()
-//$stop
- 
 {@Player}   Whoa… what’s all this?   $[Day4/Tent/Player_1]
 {@Margo}   Penny got up early to decorate. It’s one week til Christmas!  $[Day4/Tent/4tm02]
 {@Margo}    Sorry, no presents yet…. Santa usually shows up a little late here. $[Day4/Tent/4tm03]
@@ -204,6 +200,8 @@ $elseif chapter:wingCount == 2
 {@Margo}    No sweat, huh, kiddo?   $[Day4/Rookery/4rm21]
 {@Player}   Okay, okay . . . maybe a little sweat.  $[Day4/Rookery/Player_17]
 $elseif chapter:wingCount == 3
+$call CompleteGoal("day4_band")
+$set chapter:finishedBands = true
 {@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/4rm22]
 {@Partner}  Nice work, new kid. $[Day4/Rookery/Partner_5]
 {@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/Partner_6]
@@ -227,8 +225,6 @@ $elseif chapter:wingCount == 3
 {@Player}   Yeah. You’re right. $[Day4/Rookery/Player_24]
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
 {@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/Partner_19]
-$call CompleteGoal("day4_band")
-$set chapter:finishedBands = true
 $goto Day4.CheckCompletedTasks
 $endif
 
@@ -241,6 +237,7 @@ $set chapter:finishedObservations = true
 $call ClearGoals()
 $call Wait(0.3)
 $call CreateGoal("Day4_return", Return to tent)
+$call SetWarpActive(WarpBluffBack, true)
 {@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/Partner_20]
 {@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/Partner_21]
 $else
