@@ -32,7 +32,7 @@ namespace FieldDay.UI.Animation {
             if (!CurrentState) {
                 CurrentState = true;
                 Game.Animation.CancelAnimation(ref CurrentHandle);
-                Game.Animation.AddLiteAnimator(FadeInAnimator, this, 0);
+                CurrentHandle = Game.Animation.AddLiteAnimator(FadeInAnimator, this, 0);
             }
         }
 
@@ -40,7 +40,7 @@ namespace FieldDay.UI.Animation {
             if (CurrentState) {
                 CurrentState = false;
                 Game.Animation.CancelAnimation(ref CurrentHandle);
-                Game.Animation.AddLiteAnimator(FadeOutAnimator, this, 0);
+                CurrentHandle = Game.Animation.AddLiteAnimator(FadeOutAnimator, this, 0);
             }
         }
 

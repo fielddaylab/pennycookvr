@@ -241,6 +241,8 @@ namespace FieldDay.Animation {
                 LiteAnimatorRecord animRecord = liteAnimators.PopFront();
                 if (animRecord.Animator.UpdateAnimation(animRecord.Target, ref animRecord.State, deltaTime)) {
                     liteAnimators.PushBack(animRecord);
+                } else {
+                    m_HandleIdGenerator.Free(animRecord.Handle);
                 }
             }
         }
