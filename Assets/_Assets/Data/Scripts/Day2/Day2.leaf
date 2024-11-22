@@ -246,6 +246,14 @@ $call Wait(2)
 
 $call CreateGoal("Day2_trackers", Retrieve 3 trackers from Penguins)
 
+$call FuzzLegTracker->Activate()
+$call AlfredoLegTracker->Activate()
+$call WinstonLegTracker->Activate()
+$call MillieLegTracker->Activate()
+$call PoloLegTracker->Activate()
+$call AdelieLegTracker1->Activate()
+$call AdelieLegTracker2->Activate()
+
 //show the trackers visible on several penguins...
 $call SocketObjectTo(FuzzLegTracker, FuzzLegSocket)
 $call SocketObjectTo(AlfredoLegTracker, AlfredoLegSocket)
@@ -255,13 +263,6 @@ $call SocketObjectTo(PoloLegTracker, PoloLegSocket)
 $call SocketObjectTo(AdelieLegTracker1, AdelieLegSocket1)
 $call SocketObjectTo(AdelieLegTracker2, AdelieLegSocket2)
 
-$call FuzzLegTracker->SetMeshEnabled(true)
-$call AlfredoLegTracker->SetMeshEnabled(true)
-$call WinstonLegTracker->SetMeshEnabled(true)
-$call MillieLegTracker->SetMeshEnabled(true)
-$call PoloLegTracker->SetMeshEnabled(true)
-$call AdelieLegTracker1->SetMeshEnabled(true)
-$call AdelieLegTracker2->SetMeshEnabled(true)
 
 {@Margo}    Okay, kid. This is the tricky part. You’ll need to remove each penguin’s GPS tracker. $[Day2/Rookery/2rm15]
 {@Margo}    Place one hand on a penguin to hold it still.    $[Day2/Rookery/2rm16]
