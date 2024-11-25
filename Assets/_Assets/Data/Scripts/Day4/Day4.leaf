@@ -2,11 +2,11 @@
 
 :: Prepare
 @function	ScenePrepare
+$set chapter:finishedObservations = false
+$set chapter:identifiedCount = 0
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-$set chapter:identifiedCount = 0
-$set chapter:finishedObservations = false
 $call DayHeader->SetText(Day 4)
 $call FadeIn(1.0)
 $call Wait(2)
@@ -16,21 +16,21 @@ $call Wait(2)
 @who        Player
 @once
 
-{@Margo}   Mornin', kiddo.   $[Day4/Tent/Margo_1]
+{@Margo}   Mornin', kiddo.   $[Day4/Tent/4tm01]
 {@Player}   Whoa… what’s all this?   $[Day4/Tent/Player_1]
-{@Margo}   Penny got up early to decorate. It’s one week til Christmas!  $[Day4/Tent/Margo_2]
-{@Margo}    Sorry, no presents yet…. Santa usually shows up a little late here. $[Day4/Tent/Margo_3]
+{@Margo}   Penny got up early to decorate. It’s one week til Christmas!  $[Day4/Tent/4tm02]
+{@Margo}    Sorry, no presents yet…. Santa usually shows up a little late here. $[Day4/Tent/4tm03]
 {@Player}   Yeah. I guess we’re about as far from the North Pole as you can get.  $[Day4/Tent/Player_2]
 {@Player}   I wish Lola could meet the Fliptastic Five for Christmas. She’d love them!     $[Day4/Tent/Player_3]
 {@Player}   Especially Polo.    $[Day4/Tent/Player_4]
-{@Margo}   Aw, cheer up, kiddo. You’ll see Lola again before ya know it!     $[Day4/Tent/Margo_4]
-{@Margo}    What’s she doin’ today, do ya think?    $[Day4/Tent/Margo_5]
+{@Margo}   Aw, cheer up, kiddo. You’ll see Lola again before ya know it!     $[Day4/Tent/4tm04]
+{@Margo}    What’s she doin’ today, do ya think?    $[Day4/Tent/4tm05]
 {@Player}   She’s a sixth-grade teacher and it’s the last day before winter break.  $[Day4/Tent/Player_5]
 {@Player}   So they’re probably… I don’t know. Eating cookies and making ornaments out of noodles?  $[Day4/Tent/Player_6]
-{@Margo}    For a human, you don’t know too much about human kids, do ya?   $[Day4/Tent/Margo_6]
+{@Margo}    For a human, you don’t know too much about human kids, do ya?   $[Day4/Tent/4tm06]
 {@Player}   Guess not.  $[Day4/Tent/Player_7]
-{@Margo}    Well, at least you’re becomin’ an expert on penguin kids.   $[Day4/Tent/Margo_7]
-{@Margo}    Come on. Let’s get out there and check on those penguins.   $[Day4/Tent/Margo_8]
+{@Margo}    Well, at least you’re becomin’ an expert on penguin kids.   $[Day4/Tent/4tm07]
+{@Margo}    Come on. Let’s get out there and check on those penguins.   $[Day4/Tent/4tm08]
 
 $call SetWarpActive(WarpBluff, true)
 $call Wait(1)
@@ -79,16 +79,16 @@ $call ClearGoals()
 {@Player}   At the South Pole?? How?    $[Day4/Rookery/Player_5]
 {@Partner}  I won most of it in a cribbage game at McMurdo. $[Day4/Rookery/Partner_4]
 {@Player}   Oh. Yeah… that tracks.  $[Day4/Rookery/Player_6]
-{@Margo}    Okay, enough chatter. Lots to do today. $[Day4/Rookery/Margo_1]
-{@Margo}    You’ll need to collect data from the weigh bridge—that’s that gate doohickey over there. $[Day4/Rookery/Margo_2]
-{@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/Margo_3]
-{@Margo}    And we’ll need to band 3 of the chicks. $[Day4/Rookery/Margo_4]
+{@Margo}    Okay, enough chatter. Lots to do today. $[Day4/Rookery/4rm01]
+{@Margo}    You’ll need to collect data from the weigh bridge—that’s that gate doohickey over there. $[Day4/Rookery/4rm02]
+{@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/4rm03]
+{@Margo}    And we’ll need to band 3 of the chicks. $[Day4/Rookery/4rm04]
 {@Player}   Got it. Let’s get to work.  $[Day4/Rookery/Player_7]
 
 $call ClearGoals()
-$call CreateGoal("day4_gate", Scan the Weigh Gate)
-$call CreateGoal("day4_loggers", Collect Data Loggers)
-$call CreateGoal("day4_band", Band 3 Chicks)
+$call CreateGoal("day4_warp_gate", Warp to the Weigh Gate)
+$call CreateGoal("day4_warp_loggers", Warp to the Middle)
+$call CreateGoal("day4_warp_band", Warp to the Corral)
 
 :: WarpedToRookeryGate
 @trigger    AtWarpPoint
@@ -96,14 +96,18 @@ $call CreateGoal("day4_band", Band 3 Chicks)
 @when       targetObject == "WarpTarget-RookeryFar"
 @once
 
+$set chapter:visitedGate = true
+$call ClearGoals()
+$call CreateGoal("day4_gate", Scan the Weigh Gate)
+
 $call WeighGate->SetInteractable(true)
 
 {@Player}    Okay, Margo. How does this weigh bridge thing work, exactly? $[Day4/Rookery/Player_8]
-{@Margo}    Oh, it’s easy as pie!    $[Day4/Rookery/Margo_5]
-{@Margo}    The weigh bridge gathers data on what the penguins were up to when they were away from the colony.   $[Day4/Rookery/Margo_6]
-{@Margo}    You know . . . where they went, what they were eatin’, stuff like that.   $[Day4/Rookery/Margo_7]
-{@Margo}   Just make sure Scan Mode is on, and then point me at the gate. $[Day4/Rookery/Margo_8]
-{@Margo}    I’ll scan each penguin’s data as it passes through. $[Day4/Rookery/Margo_9]
+{@Margo}    Oh, it’s easy as pie!    $[Day4/Rookery/4rm05]
+{@Margo}    The weigh bridge gathers data on what the penguins were up to when they were away from the colony.   $[Day4/Rookery/4rm06]
+{@Margo}    You know . . . where they went, what they were eatin’, stuff like that.   $[Day4/Rookery/4rm07]
+{@Margo}   Just make sure Scan Mode is on, and then point me at the gate. $[Day4/Rookery/4rm08]
+{@Margo}    I’ll scan each penguin’s data as it passes through. $[Day4/Rookery/4rm09]
 
 :: OnWeighGateIdentified
 @function	TabletIdentified
@@ -119,17 +123,26 @@ $goto Day4.CheckCompletedTasks
 @when       targetObject == "WarpTarget-RookeryMiddle"
 @once
 
-//these activates are just for testing - these will normally already be enabled.
+$set chapter:visitedLoggers = true
+$call ClearGoals()
+$call CreateGoal("day4_loggers", Collect 3 Data Loggers)
+
+$call SocketObjectTo(DataTrackerBack1, DataSocketBack1)
+$call SocketObjectTo(DataTrackerBack2, DataSocketBack2)
+$call SocketObjectTo(DataTrackerBack3, DataSocketBack3)
+$call SocketObjectTo(DataTrackerBack4, DataSocketBack4)
+$call SocketObjectTo(DataTrackerBack5, DataSocketBack5)
+
 $call DataTrackerBack1->SetMeshEnabled(true)
 $call DataTrackerBack2->SetMeshEnabled(true)
 $call DataTrackerBack3->SetMeshEnabled(true)
 $call DataTrackerBack4->SetMeshEnabled(true)
 $call DataTrackerBack5->SetMeshEnabled(true)
 
-{@Margo}    Wahoo! Looks like all the penguins with data loggers have come back.    $[Day4/Rookery/Margo_10]
-{@Margo}    Now we’ll be able to get the stats on their swimming behaviors!     $[Day4/Rookery/Margo_11]
-{@Margo}    Just hold the penguin still with one hand and remove their trackers.    $[Day4/Rookery/Margo_12]
-{@Margo}    Then drop the tracker into the Pelican Case.    $[Day4/Rookery/Margo_13]
+{@Margo}    Wahoo! Looks like all the penguins with data loggers have come back.    $[Day4/Rookery/4rm10]
+{@Margo}    Now we’ll be able to get the stats on their swimming behaviors!     $[Day4/Rookery/4rm11]
+{@Margo}    Just hold the penguin still with one hand and remove their trackers.    $[Day4/Rookery/4rm12]
+{@Margo}    Then drop the tracker into the Pelican Case.    $[Day4/Rookery/4rm13]
 
 :: OnSocketedTracker
 @trigger    ObjectSocketed
@@ -153,20 +166,24 @@ $endif
 @when       targetObject == "WarpTarget-RookeryCorral"
 @once
 
+$set chapter:visitedBands = true
+$call ClearGoals()
+$call CreateGoal("day4_band", Band 3 Chicks)
+
 $call WingBand1->Activate()
 $call WingBand2->Activate()
 $call WingBand3->Activate()
 
-{@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/Margo_14]
-{@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/Margo_15]
+{@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/4rm14]
+{@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/4rm15]
 {@Player}    Oh, come on. They're, like, half the size of the grown-ups. How hard can it be?    $[Day4/Rookery/Player_9]
-{@Margo}    Haven’t you been paying attention for the last three months??   $[Day4/Rookery/Margo_16]
-{@Margo}    They’re cuties, but they’re tougher than they look. $[Day4/Rookery/Margo_17]
-{@Margo}    “Though she be but little . . . ”   $[Day4/Rookery/Margo_18]
+{@Margo}    Haven’t you been paying attention for the last three months??   $[Day4/Rookery/4rm16]
+{@Margo}    They’re cuties, but they’re tougher than they look. $[Day4/Rookery/4rm17]
+{@Margo}    “Though she be but little . . . ”   $[Day4/Rookery/4rm18]
 {@Player}   Okay, okay, I get it. I'll be careful.  $[Day4/Rookery/Player_10]
 {@Player}   What do I need to do?   $[Day4/Rookery/Player_11]
-{@Margo}    First you’ll need to hold the penguin in place. $[Day4/Rookery/Margo_19]
-{@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/Margo_20]
+{@Margo}    First you’ll need to hold the penguin in place. $[Day4/Rookery/4rm19]
+{@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/4rm20]
 {@Player}   Cool, no sweat. $[Day4/Rookery/Player_12]  
 
 :: OnSocketedWingBand
@@ -180,10 +197,12 @@ $elseif chapter:wingCount == 2
 {@Player}   Yikes. This little guy is not happy.    $[Day4/Rookery/Player_14]
 {@Player}   I promise, I’m not gonna hurt you! It’s just like a hair clip. Totally harmless.    $[Day4/Rookery/Player_15]
 {@Player}   Ouch!    $[Day4/Rookery/Player_16]
-{@Margo}    No sweat, huh, kiddo?   $[Day4/Rookery/Margo_21]
+{@Margo}    No sweat, huh, kiddo?   $[Day4/Rookery/4rm21]
 {@Player}   Okay, okay . . . maybe a little sweat.  $[Day4/Rookery/Player_17]
 $elseif chapter:wingCount == 3
-{@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/Margo_22]
+$call CompleteGoal("day4_band")
+$set chapter:finishedBands = true
+{@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/4rm22]
 {@Partner}  Nice work, new kid. $[Day4/Rookery/Partner_5]
 {@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/Partner_6]
 {@Player}   Whoa. What do you mean, if they come back?  $[Day4/Rookery/Player_18]
@@ -194,7 +213,7 @@ $elseif chapter:wingCount == 3
 {@Player}   Oookay. I just lost my Christmas spirit.    $[Day4/Rookery/Player_20]
 {@Player}   I guess that’s why you and Margo have such a thick skin. You’re used to it by now.  $[Day4/Rookery/Player_21]
 {@Partner}  Me?? A thick skin?  $[Day4/Rookery/Partner_11]
-{@Player}   I mean… none of it seems to bother you. $[Day49/Rookery/Player_22]
+{@Player}   I mean… none of it seems to bother you. $[Day4/Rookery/Player_22]
 {@Partner}  Oh, trust me, it bothers me. Those skua drive me crazy. $[Day4/Rookery/Partner_12]
 {@Partner}  And some of the parents just can’t seem to figure out how to feed their chicks. $[Day4/Rookery/Partner_13]
 {@Partner}  I’ve been here twenty years, and it’s still hard to watch sometimes.    $[Day4/Rookery/Partner_14]
@@ -206,8 +225,6 @@ $elseif chapter:wingCount == 3
 {@Player}   Yeah. You’re right. $[Day4/Rookery/Player_24]
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
 {@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/Partner_19]
-$call CompleteGoal("day4_bands")
-$set chapter:finishedBands = true
 $goto Day4.CheckCompletedTasks
 $endif
 
@@ -220,8 +237,34 @@ $set chapter:finishedObservations = true
 $call ClearGoals()
 $call Wait(0.3)
 $call CreateGoal("Day4_return", Return to tent)
+$call SetWarpActive(WarpBluffBack, true)
 {@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/Partner_20]
 {@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/Partner_21]
+$else
+$if chapter:finishedBands == false
+$if chapter:visitedBands == false
+$call CreateGoal("day4_warp_band", Warp to the Corral)
+$endif
+$else
+$call CreateGoal("day4_band", Band 3 chicks)
+$call CompleteGoal("day4_band")
+$endif
+$if chapter:dataTrackersDone == false
+$if chapter:visitedLoggers == false
+$call CreateGoal("day4_warp_loggers", Warp to the Middle)
+$endif
+$else
+$call CreateGoal("day4_loggers", Collect 3 Data Loggers)
+$call CompleteGoal("day4_loggers")
+$endif
+$if chapter:weighGate == false
+$if chapter:visitedGate == false
+$call CreateGoal("day4_warp_gate", Warp to the Weigh Gate)
+$endif
+$else
+$call CreateGoal("day4_gate", Scan the Weigh Gate)
+$call CompleteGoal("day4_gate")
+$endif
 $endif
 
 
@@ -248,7 +291,7 @@ $call CompleteGoal("Day4_return")
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
-{@Margo}    Okey dokey, let’s have a look at that data! $[Day4/Tent/Margo_9]
+{@Margo}    Okey dokey, let’s have a look at that data! $[Day4/Tent/4tm09]
 
 $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
@@ -261,13 +304,13 @@ $endwhile
 $call CompleteGoal("Day4_upload")
 
 {@Player}   Awesome! Thanks, Margo. $[Day4/Tent/Player_8]
-{@Margo}    Hang on a sec, kiddo.   $[Day4/Tent/Margo_13]
-{@Margo}    There’s still one more thing. Did you forget about the surprise?    $[Day4/Tent/Margo_14]
+{@Margo}    Hang on a sec, kiddo.   $[Day4/Tent/4tm13]
+{@Margo}    There’s still one more thing. Did you forget about the surprise?    $[Day4/Tent/4tm14]
 {@Player}   Yikes… it’s not a pumpkin pie to the face, is it?   $[Day4/Tent/Player_9]
 {@Player}   Because I already told Penny I was sorry back at Thanksgiving $[Day4/Tent/Player_10]
-{@Margo}  Nope. It’s not a pie, in your face or otherwise.  $[Day4/Tent/Margo_15]
-{@Margo}    Penny and I made a couple phone calls while you were sleepin’.  $[Day4/Tent/Margo_16]
-{@Margo}    Let’s see if we can get connected…. $[Day4/Tent/Margo_17]
+{@Margo}  Nope. It’s not a pie, in your face or otherwise.  $[Day4/Tent/4tm15]
+{@Margo}    Penny and I made a couple phone calls while you were sleepin’.  $[Day4/Tent/4tm16]
+{@Margo}    Let’s see if we can get connected…. $[Day4/Tent/4tm17]
 {@Player}   Lola!   $[Day4/Tent/Player_11]
 {@Lola}     Hola, mi amor. How’s Christmas at the South Pole?   $[Day4/Tent/Lola_1]
 {@Player}   A lot better now! What are you doing here?  $[Day4/Tent/Player_12]

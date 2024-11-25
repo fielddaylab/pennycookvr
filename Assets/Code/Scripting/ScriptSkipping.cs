@@ -16,6 +16,10 @@ namespace Pennycook {
                         t.SkipSingle();
                     });
                 }
+                if (DebugInput.IsPressed(XRHandIndex.Left, XRHandButtons.PrimaryAxisClick) || DebugInput.IsPressed(UnityEngine.KeyCode.L)) {
+                    UniverseUtility.LoadNextDay();
+                    ScriptUtility.KillAllThreads();
+                }
             });
         }
     }

@@ -22,7 +22,7 @@ namespace Pennycook {
             SocketUtility.OnObjectRemovedFromSocket.Register(OnUnsocketed);
         }
 
-        static private void OnGrabbed(Grabbable grabbable, Grabber grabber) {
+        static private void OnGrabbed(Grabbable grabbable, Grabber grabber, int snapIndex) {
             using(var table = TempVarTable.Alloc()) {
                 table.ActorInfo(ScriptUtility.Actor(grabbable));
                 table.Set("hand", ChiralityToSymbol[(int) grabber.Chirality]);
@@ -31,7 +31,7 @@ namespace Pennycook {
             }
         }
 
-        static private void OnDropped(Grabbable grabbable, Grabber grabber) {
+        static private void OnDropped(Grabbable grabbable, Grabber grabber, int snapIndex) {
             if (grabbable.CurrentGrabberCount == 0) {
                 using (var table = TempVarTable.Alloc()) {
                     table.ActorInfo(ScriptUtility.Actor(grabbable));

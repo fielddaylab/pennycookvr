@@ -36,9 +36,9 @@ namespace FieldDay.VRHands {
         #region Events
 
         public GrabberPredicate CanGrab = CanGrabPassThrough;
-        public readonly CastableEvent<Grabbable> OnGrab = new CastableEvent<Grabbable>();
+        public readonly CastableEvent<Grabbable, int> OnGrab = new CastableEvent<Grabbable, int>();
         public readonly ActionEvent OnGrabFailed = new ActionEvent();
-        public readonly CastableEvent<Grabbable> OnRelease = new CastableEvent<Grabbable>();
+        public readonly CastableEvent<Grabbable, int> OnRelease = new CastableEvent<Grabbable, int>();
 
         #endregion // Events
 

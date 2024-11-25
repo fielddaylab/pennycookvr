@@ -73,6 +73,8 @@ namespace Pennycook {
 
                 if (level != element.LastAppliedLevel) {
                     element.LastAppliedLevel = level;
+                    element.HighDetailGroup.SetActive(level == LODLevel.Close);
+                    element.LowDetailGroup.SetActive(level != LODLevel.Close);
 
                     if (element.SkinnedMesh) {
                         element.SkinnedMesh.quality = levelConfig.Skinning;

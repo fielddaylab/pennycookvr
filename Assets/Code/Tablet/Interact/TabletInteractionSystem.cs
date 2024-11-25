@@ -49,26 +49,18 @@ namespace Pennycook.Tablet {
 
                 switch (desiredState) {
                     case TabletInteractionState.State.Disabled:
-                    case TabletInteractionState.State.Unavailable: {
-                        m_StateA.InteractionGroup.gameObject.SetActive(false);
-                        break;
-                    }
-
+                    case TabletInteractionState.State.Unavailable:
                     case TabletInteractionState.State.Waiting: {
-                        string verb = m_StateC.CurrentToolDef.GetVerb?.Invoke(m_StateB.HighlightedObject, desiredState) ?? m_StateC.CurrentToolDef.DefaultVerb;
-                        m_StateA.InteractionGroup.gameObject.SetActive(true);
-                        m_StateA.InteractionGroup.alpha = 0.5f;
-
-                        m_StateA.InteractionLabel.SetText(verb);
+                        m_StateA.InteractionGroup.Hide();
                         break;
                     }
 
                     case TabletInteractionState.State.Available: {
                         string verb = m_StateC.CurrentToolDef.GetVerb?.Invoke(m_StateB.HighlightedObject, desiredState) ?? m_StateC.CurrentToolDef.DefaultVerb;
-                        m_StateA.InteractionGroup.gameObject.SetActive(true);
-                        m_StateA.InteractionGroup.alpha = 1;
-
                         m_StateA.InteractionLabel.SetText(verb);
+                        if (!m_StateA.DetailsGroup.IsShowing()) {
+                            m_StateA.InteractionGroup.Show();
+                        }
                         break;
                     }
                 }

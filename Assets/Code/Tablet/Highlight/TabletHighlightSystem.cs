@@ -14,7 +14,7 @@ namespace Pennycook.Tablet {
 
             if (!ReferenceEquals(m_StateA.HighlightedObject, null)) {
                 if (!m_StateA.HighlightedObject || !m_StateA.HighlightedObject.isActiveAndEnabled || !isGripping || m_StateB.CurrentTool == TabletTool.None || searchMask == 0) {
-                    ClearSelection(m_StateA, m_StateB.CurrentTool == TabletTool.Count);
+                    ClearSelection(m_StateA, m_StateB, m_StateC, m_StateB.CurrentTool == TabletTool.Count);
                     return;
                 }
             }
@@ -24,7 +24,7 @@ namespace Pennycook.Tablet {
                     if (searchMask != 0) {
                         TabletZoomState zoomState = Find.State<TabletZoomState>();
                         float coneRadius = zoomState.ZoomMultiplier;
-                        float coneDistance = 20 * zoomState.ZoomMultiplier;
+                        float coneDistance = 25 * zoomState.ZoomMultiplier;
 
                         m_StateA.CachedLookCameraTransform.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
                         m_StateA.RaycastJob = RaycastJobs.SmoothConeCast(cameraPos, Geom.Forward(cameraRot), coneRadius, coneDistance, 5, searchMask);
@@ -43,13 +43,13 @@ namespace Pennycook.Tablet {
 
                 if (!scannable) {
                     if (m_StateA.HighlightedObject != null) {
-                        ClearSelection(m_StateA, m_StateB.CurrentTool == TabletTool.Count);
+                        ClearSelection(m_StateA, m_StateB, m_StateC, m_StateB.CurrentTool == TabletTool.Count);
                     }
                 } else {
                     Rect viewportRect = TabletUtility.CalculateViewportAlignedBoundingBox(scannable.HighlightCollider.bounds, m_StateA.LookCamera, m_StateA.CachedHighlightCornerScale);
 
                     if (m_StateA.HighlightedObject != scannable) {
-                        SetSelection(m_StateA, scannable, viewportRect, m_StateB.CurrentTool == TabletTool.Count);
+                        SetSelection(m_StateA, m_StateB, m_StateC, scannable, viewportRect, m_StateB.CurrentTool == TabletTool.Count);
 
                         float vibAmp = Mathf.Clamp(1 - hit.distance / 60, 0.4f, 1) * 0.3f;
                         TabletUtility.PlayHaptics(vibAmp, 0.02f);
@@ -80,11 +80,12 @@ namespace Pennycook.Tablet {
             }
         }
 
-        static private void SetSelection(TabletHighlightState highlight, TabletHighlightable scannable, Rect rect, bool isCounting=false) {
+        static private void SetSelection(TabletHighlightState highlight, TabletToolState toolState, TabletControlState ctrl, TabletHighlightable scannable, Rect rect, bool isCounting=false) {
             bool wasNotSelected = !highlight.HighlightedObject;
 
             if (!wasNotSelected) {
                 VRGame.Events.Queue(GameEvents.ObjectUnhighlighted, EvtArgs.Ref(highlight.HighlightedObject));
+                toolState.CurrentToolDef.OnUnhighlighted?.Invoke(highlight.HighlightedObject, ctrl);
             }
 
             VRGame.Events.Queue(GameEvents.ObjectHighlighted, EvtArgs.Ref(scannable));
@@ -99,30 +100,17 @@ namespace Pennycook.Tablet {
                 highlight.BoxTransitionRoutine.Replace(highlight, FadeBoxIn(highlight));
             }
 
-            if(!isCounting) {
-                TabletUtility.UpdateHighlightLabels(highlight, TabletUtility.GetLabelsForHighlightable(scannable));
-            }
+            toolState.CurrentToolDef.OnHighlighted?.Invoke(highlight.HighlightedObject, ctrl);
         }
 
-        static private void ClearSelection(TabletHighlightState highlight, bool isCounting=false) {
-            
-            if(!isCounting) {
-                ClearObjectDetails(highlight);
-            }
-
+        static private void ClearSelection(TabletHighlightState highlight, TabletToolState toolState, TabletControlState ctrl, bool isCounting=false) {
             VRGame.Events.Queue(GameEvents.ObjectUnhighlighted, EvtArgs.Ref(highlight.HighlightedObject));
+            toolState.CurrentToolDef.OnUnhighlighted?.Invoke(highlight.HighlightedObject, ctrl);
             highlight.HighlightedObject = null;
             highlight.TargetHighlightCorners = highlight.HighlightBox.rect;
             if (highlight.IsBoxVisible) {
                 highlight.BoxTransitionRoutine.Replace(highlight, ScaleBoxDown(highlight));
             }
-        }
-
-        static private void ClearObjectDetails(TabletHighlightState highlight) {
-            highlight.DetailsText.gameObject.SetActive(false);
-            highlight.DetailsHeader.gameObject.SetActive(false);
-            highlight.DetailsGroup.SetActive(false);
-            highlight.GoalsGroup.SetActive(true);
         }
 
         static private IEnumerator ScaleBoxDown(TabletHighlightState highlight) {

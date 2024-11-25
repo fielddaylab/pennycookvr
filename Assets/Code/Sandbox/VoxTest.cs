@@ -10,7 +10,7 @@ public class VoxTest : MonoBehaviour {
     public string Subtitle;
 
     public void Start() {
-        Grabbable.OnGrabbed.Register((a) => {
+        Grabbable.OnGrabbed.Register((a, i) => {
             VoxUtility.Speak(Vox, Line, Subtitle);
         });
 

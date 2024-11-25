@@ -47,6 +47,16 @@ namespace Pennycook {
 			return false;
 		}
 		
+		[LeafMember("SocketObjectTo"), Preserve]
+		static public bool SocketObjectTo(ScriptActor actor, ScriptActor socket) {
+            ScriptSocket ss = socket.GetComponent<ScriptSocket>();
+            Socketable s = actor.GetComponent<Socketable>();
+            if(ss != null && s != null) {
+                return SocketUtility.TryAddToSocket(s, ss.GetComponent<ObjectSocket>(), false);
+            }
+			return false;
+		}
+		
         #endregion // Leaf
 		
     }

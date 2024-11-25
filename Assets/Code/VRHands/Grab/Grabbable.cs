@@ -8,6 +8,7 @@ using FieldDay.Sockets;
 using FieldDay.HID.XR;
 using ScriptableBake;
 using UnityEngine;
+using Pennycook;
 
 
 namespace FieldDay.VRHands {
@@ -21,6 +22,7 @@ namespace FieldDay.VRHands {
         [Header("Configuration")]
         [Range(1, 2)] public int MaxGrabbers = 2;
         public bool IsHeavy = false;
+        public bool IsAnchored = false;
         public bool MustGrabAtSnap = false;
         public GrabbablePoseAnim GrabberAnim;
 
@@ -47,9 +49,9 @@ namespace FieldDay.VRHands {
 
         #region Events
 
-        public readonly CastableEvent<Grabber> OnGrabbed = new CastableEvent<Grabber>();
-        public readonly CastableEvent<Grabber> OnGrabUpdate = new CastableEvent<Grabber>();
-        public readonly CastableEvent<Grabber> OnReleased = new CastableEvent<Grabber>();
+        public readonly CastableEvent<Grabber, int> OnGrabbed = new CastableEvent<Grabber, int>();
+        public readonly CastableEvent<Grabber, int> OnGrabUpdate = new CastableEvent<Grabber, int>();
+        public readonly CastableEvent<Grabber, int> OnReleased = new CastableEvent<Grabber, int>();
 
         #endregion // Events
 
@@ -88,12 +90,13 @@ namespace FieldDay.VRHands {
             // gather locations
 
             foreach(var node in snapNodes) {
-                if (!node.isActiveAndEnabled) {
+                if (!node.enabled || !node.gameObject.activeSelf) {
                     continue;
                 }
 
                 GrabbableSnapNodeData data = default;
                 data.Name = node.gameObject.name;
+                data.Label = node.Label;
 
                 switch (node.ValidHandType) {
                     case XRHandIndex.Any: {
@@ -108,6 +111,10 @@ namespace FieldDay.VRHands {
                         data.Flags |= GrabbableSnapFlags.AllowRightHand;
                         break;
                     }
+                }
+
+                if (node.AnyOrientation) {
+                    data.Flags |= GrabbableSnapFlags.DoNotReorient;
                 }
 
                 if (node.IsDynamic) {
@@ -138,6 +145,8 @@ namespace FieldDay.VRHands {
             AppendToNodeList(dataNodes, ref writeHead, ref DynamicBothSnapNodeRange, dynamicLocations, GrabbableSnapFlags.BothHands);
             AppendToNodeList(dataNodes, ref writeHead, ref DynamicLeftSnapNodeRange, dynamicLocations, GrabbableSnapFlags.AllowLeftHand);
             AppendToNodeList(dataNodes, ref writeHead, ref DynamicRightSnapNodeRange, dynamicLocations, GrabbableSnapFlags.AllowRightHand);
+
+            Array.Resize(ref dataNodes, writeHead);
 
             SnapNodes = dataNodes;
 
@@ -189,6 +198,7 @@ namespace FieldDay.VRHands {
         [AutoEnum] public GrabbableSnapFlags Flags;
         public Transform DynamicPose;
         public StringHash32 Name;
+        public StringHash32 Label;
     }
 
     [Serializable]
@@ -202,6 +212,7 @@ namespace FieldDay.VRHands {
         AllowLeftHand = 0x01,
         AllowRightHand = 0x02,
         IsDynamic = 0x04,
+        DoNotReorient = 0x08,
 
         [Hidden] BothHands = AllowLeftHand | AllowRightHand,
     }

@@ -32,7 +32,7 @@ namespace Pennycook {
             GrabComponent.OnReleased.Deregister(OnGrabReleased);
         }
 
-        private void OnGrabbed(Grabber grabber) {
+        private void OnGrabbed(Grabber grabber, int snapIndex) {
             if(TrackedPenguin != null) {
                 if(TrackedPenguin.name == "Fuzz") {
                     var actor = ScriptUtility.Actor(this);
@@ -46,7 +46,7 @@ namespace Pennycook {
             }
         }
 
-        private void OnGrabReleased(Grabber grabber) {
+        private void OnGrabReleased(Grabber grabber, int snapIndex) {
 
         }
     }

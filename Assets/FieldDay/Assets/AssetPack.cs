@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using BeauUtil.Debugger;
+using FieldDay.Asset;
+
 
 
 #if UNITY_EDITOR
@@ -17,7 +19,7 @@ namespace FieldDay.Assets {
     public sealed class AssetPack : ScriptableObject, IAssetPackage {
         [SerializeField] private GlobalAsset[] m_GlobalAssets = Array.Empty<GlobalAsset>();
         [SerializeField] private NamedAsset[] m_NamedAssets = Array.Empty<NamedAsset>();
-        // TODO: lite asset groups
+        [SerializeField] private LiteAssetGroup[] m_LiteAssets = Array.Empty<LiteAssetGroup>();
 
         [NonSerialized] private int m_RefCount;
 
@@ -31,6 +33,10 @@ namespace FieldDay.Assets {
             foreach (var named in m_NamedAssets) {
                 mgr.AddNamed(named.name, named);
             }
+
+            foreach(var lite in m_LiteAssets) {
+                lite.RegisterAssets(mgr);
+            }
         }
 
         void IAssetPackage.Unmount(AssetMgr mgr) {
@@ -40,6 +46,10 @@ namespace FieldDay.Assets {
 
             foreach(var named in m_NamedAssets) {
                 mgr.RemoveNamed(named.name, named);
+            }
+
+            foreach (var lite in m_LiteAssets) {
+                lite.DeregisterAssets(mgr);
             }
         }
 
@@ -68,6 +78,7 @@ namespace FieldDay.Assets {
             string myDir = Baking.GetAssetDirectory(pack);
             pack.m_GlobalAssets = Baking.FindAssets<GlobalAsset>(myDir);
             pack.m_NamedAssets = Baking.FindAssets<NamedAsset>(myDir);
+            pack.m_LiteAssets = Baking.FindAssets<LiteAssetGroup>(myDir);
 
             Array.Sort(pack.m_NamedAssets, (a, b) => a.GetType().FullName.CompareTo(b.GetType().FullName));
         }

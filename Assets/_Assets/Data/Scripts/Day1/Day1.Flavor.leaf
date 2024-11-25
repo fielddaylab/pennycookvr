@@ -23,7 +23,7 @@
 :: LookAtMargo.2
 @trigger    PlayerLookAt
 @who        Player
-@when       objectType == "Margo", chapter:hasTalkedToMargo
+@when       objectType == "Margo", chapter:hasTalkedToMargo, chapter:allIdentified
 @priority	Low
 @once
 
