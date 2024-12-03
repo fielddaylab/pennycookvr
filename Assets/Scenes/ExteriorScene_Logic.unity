@@ -157,6 +157,37 @@ MonoBehaviour:
   m_ClassName:
     m_Source: Text
     m_HashValue: 1041509726
+--- !u!1 &92640865
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 92640866}
+  m_Layer: 0
+  m_Name: Margo_LightProbe_Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &92640866
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92640865}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.8597254, z: -0, w: 0.51075655}
+  m_LocalPosition: {x: 60.952, y: 13.881, z: -1.579}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 118.572, z: 0}
 --- !u!1 &746480324
 GameObject:
   m_ObjectHideFlags: 17
@@ -1150,6 +1181,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2999462979890499551, guid: 6c11317d292faae45b59be04e75893d2, type: 3}
+      propertyPath: m_ProbeAnchor
+      value: 
+      objectReference: {fileID: 92640866}
     - target: {fileID: 3101976699521437877, guid: 6c11317d292faae45b59be04e75893d2, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -3496,3 +3531,4 @@ SceneRoots:
   - {fileID: 1182753175}
   - {fileID: 1168461127}
   - {fileID: 746480326}
+  - {fileID: 92640866}
