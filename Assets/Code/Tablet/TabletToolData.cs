@@ -8,6 +8,8 @@ using UnityEngine;
 namespace Pennycook.Tablet {
     public class TabletToolDefinition {
         public LayerMask RaycastMask;
+        public float RaycastUnitConeRadius;
+        public bool ShowReticle = true;
 
         public Predicate<TabletHighlightable, TabletHighlightState> HighlightPredicate;
         public TabletToolHighlightEventDelegate OnHighlighted;
@@ -45,6 +47,7 @@ namespace Pennycook.Tablet {
 
         static public readonly TabletToolDefinition Scan = new TabletToolDefinition() {
             RaycastMask = TabletUtility.DefaultSearchMask,
+            RaycastUnitConeRadius = 0.05f,
 
             HighlightPredicate = (h, hc) => {
                 return h.CachedInteraction && TabletInteractionUtility.HasInteractions(h, h.CachedInteraction);
@@ -91,6 +94,8 @@ namespace Pennycook.Tablet {
 
         static public readonly TabletToolDefinition Count = new TabletToolDefinition() {
             RaycastMask = TabletUtility.CountSearchMask,
+            RaycastUnitConeRadius = 0.65f,
+            ShowReticle = false,
 
             HighlightPredicate = (h, hc) => {
                 return h.CachedCountable && TabletUtility.IsButtonHeld(XRHandButtons.TriggerButton) && TabletCountUtility.IsCountable(h.CachedCountable);
@@ -117,6 +122,7 @@ namespace Pennycook.Tablet {
 
         static public readonly TabletToolDefinition Warp = new TabletToolDefinition() {
             RaycastMask = TabletUtility.TravelSearchMask,
+            RaycastUnitConeRadius = 0.05f,
 
             HighlightPredicate = (h, hc) => {
                 return h.CachedWarp && h.CachedWarp.CanWarp;

@@ -1,4 +1,6 @@
 using FieldDay;
+using FieldDay.Animation;
+using FieldDay.UI.Animation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,22 +11,14 @@ namespace Pennycook {
 
         [Header("Selected State")]
         public GameObject ExpandedContent;
-        public Vector4 SelectedBGSize;
-
-        [Header("Unselected State")]
-        public Vector4 UnselectedBGSize;
 
         public void SetState(bool selected) {
             ExpandedContent.SetActive(selected);
+            BG.gameObject.SetActive(selected);
 
-            Vector2 offsetMin, offsetMax;
-            Vector4 offsets = selected ? SelectedBGSize : UnselectedBGSize;
-
-            offsetMin = new Vector2(offsets.x, offsets.y);
-            offsetMax = new Vector2(offsets.z, offsets.w);
-
-            BG.offsetMin = offsetMin;
-            BG.offsetMax = offsetMax;
+            if (selected) {
+                PopAnim.Play(Offset, PopAnim.Default);
+            }
         }
     }
 }

@@ -99,6 +99,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ValidHandType: 2
   IsDynamic: 0
+  AnyOrientation: 0
+  Label:
+    m_Source: 
+    m_HashValue: 0
 --- !u!1001 &9202817388072257415
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -185,6 +189,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b9c9d666ee135014bb22ee7255728d51, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4395976031941673818}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b9c9d666ee135014bb22ee7255728d51, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 148943753472702277}
   m_SourcePrefab: {fileID: 100100000, guid: b9c9d666ee135014bb22ee7255728d51, type: 3}
 --- !u!1 &8320277673085041366 stripped
 GameObject:
@@ -233,6 +240,7 @@ MonoBehaviour:
   GrabEnabled: 1
   MaxGrabbers: 2
   IsHeavy: 0
+  IsAnchored: 0
   MustGrabAtSnap: 0
   GrabberAnim:
     GripAnimIndex: 0
@@ -287,6 +295,19 @@ MonoBehaviour:
   m_ClassName:
     m_Source: DataTracker
     m_HashValue: 1158538475
+--- !u!114 &148943753472702277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8320277673085041366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86853eccc07779346b558043a0ccc6b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NewParent: {fileID: 0}
 --- !u!4 &8663871090791587948 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b9c9d666ee135014bb22ee7255728d51, type: 3}

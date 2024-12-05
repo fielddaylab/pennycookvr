@@ -6,6 +6,8 @@ using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
+using FieldDay.UI;
+using FieldDay.UI.Animation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,6 +26,7 @@ namespace Pennycook.Tablet {
         public ToolConfig[] Configs;
         public ShapeGraphic Outline;
         public Graphic[] ToolColorTinted;
+        public FadeGroup Reticle;
 
         [Header("State")]
         public TabletTool CurrentTool;
@@ -98,6 +101,8 @@ namespace Pennycook.Tablet {
             if (highlights.HighlightedObject) {
                 toolState.CurrentToolDef.OnHighlighted?.Invoke(highlights.HighlightedObject, ctrl);
             }
+
+            toolState.Reticle.SetVisible(toolState.CurrentToolDef.ShowReticle);
 
             if (playFeedback) {
                 TabletUtility.PlaySfx("Tablet.ModeChanged");

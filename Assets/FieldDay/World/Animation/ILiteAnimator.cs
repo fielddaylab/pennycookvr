@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using BeauRoutine;
 using BeauUtil;
 using UnityEngine;
 
@@ -38,7 +39,8 @@ namespace FieldDay.Animation {
     public struct LiteAnimatorState {
         public float TimeRemaining;
         public float Duration;
-        public BitSet32 Flags;
+        public Curve Easing;
+        public ushort Flags;
         public int StateId;
         public LiteAnimatorStateParam InitParamA;
         public LiteAnimatorStateParam InitParamB;
@@ -46,6 +48,11 @@ namespace FieldDay.Animation {
 
         public void ResetTime(float duration) {
             TimeRemaining = Duration = duration;
+        }
+
+        public void ResetTimeWithDelay(float duration, float delay) {
+            Duration = duration;
+            TimeRemaining = duration + delay;
         }
 
         public void ScaleTime(float scale) {

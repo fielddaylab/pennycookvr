@@ -1547,6 +1547,18 @@ namespace FieldDay.Scenes {
             return component.TryGetComponent(out Persist _);
         }
 
+        /// <summary>
+        /// Returns if any scenes are baking.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool IsBaking() {
+#if UNITY_EDITOR
+            return Editor.AreDelayedSceneProcessorsRunning();
+#else
+            return false;
+#endif // UNITY_EDITOR
+        }
+
         static public class Editor {
 #if UNITY_EDITOR
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

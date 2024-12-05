@@ -23,8 +23,8 @@ namespace Pennycook.Tablet {
                 if (Frame.Interval(3) && isGripping && m_StateB.CurrentTool != TabletTool.None && !m_StateA.RaycastJob.IsValid()) {
                     if (searchMask != 0) {
                         TabletZoomState zoomState = Find.State<TabletZoomState>();
-                        float coneRadius = zoomState.ZoomMultiplier;
                         float coneDistance = 25 * zoomState.ZoomMultiplier;
+                        float coneRadius = coneDistance * m_StateB.CurrentToolDef.RaycastUnitConeRadius * CameraHelper.UnitHeightForFOV(m_StateA.LookCamera.fieldOfView) / 2;
 
                         m_StateA.CachedLookCameraTransform.GetPositionAndRotation(out Vector3 cameraPos, out Quaternion cameraRot);
                         m_StateA.RaycastJob = RaycastJobs.SmoothConeCast(cameraPos, Geom.Forward(cameraRot), coneRadius, coneDistance, 5, searchMask);
@@ -35,6 +35,8 @@ namespace Pennycook.Tablet {
             }
 
             if (m_StateA.RaycastJob.IsValid()) {
+                m_StateA.RaycastJob.Complete();
+
                 TabletHighlightable scannable;
                 RaycastHit hit;
                 scannable = RaycastJobs.Analyze(ref m_StateA.RaycastJob, m_StateB.CurrentToolDef.HighlightPredicate, m_StateA, out hit);
