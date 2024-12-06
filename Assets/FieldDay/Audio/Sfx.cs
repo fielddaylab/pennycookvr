@@ -145,6 +145,12 @@ namespace FieldDay.Audio {
             });
         }
 
+        static public void StopAll() {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.StopAll
+            });
+        }
+
         #endregion // Stop
 
         #region Queries

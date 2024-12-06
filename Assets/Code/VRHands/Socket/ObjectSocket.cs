@@ -2,11 +2,12 @@ using System;
 using BeauUtil;
 using FieldDay.Components;
 using FieldDay.Physics;
+using FieldDay.Scenes;
 using UnityEngine;
 
 namespace FieldDay.Sockets {
     [DefaultExecutionOrder(1)]
-    public class ObjectSocket : BatchedComponent {
+    public class ObjectSocket : BatchedComponent, ISceneLoadHandler {
         #region Inspector
 
         public bool Locked = false;
@@ -53,7 +54,7 @@ namespace FieldDay.Sockets {
             Detector.onTriggerExit.AddListener(OnDetectorExited);
         }
 
-        private void Start() {
+        void ISceneLoadHandler.OnSceneLoad(SceneBinding inScene, object inContext) {
             if (Current != null && Current.CurrentSocket == null) {
                 SocketUtility.TryAddToSocket(Current, this, true);
             } else {

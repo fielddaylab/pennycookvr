@@ -1,4 +1,7 @@
+using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using BeauRoutine;
 using BeauUtil;
 using UnityEngine;
 
@@ -38,19 +41,43 @@ namespace FieldDay.Animation {
     public struct LiteAnimatorState {
         public float TimeRemaining;
         public float Duration;
-        public BitSet32 Flags;
+        public Curve Easing;
+        public ushort Flags;
         public int StateId;
         public LiteAnimatorStateParam InitParamA;
         public LiteAnimatorStateParam InitParamB;
         public LiteAnimatorStateParam StateParam;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ResetTime(float duration) {
             TimeRemaining = Duration = duration;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ResetTimeWithDelay(float duration, float delay) {
+            Duration = duration;
+            TimeRemaining = duration + delay;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ScaleTime(float scale) {
             TimeRemaining *= scale;
             Duration *= scale;
+        }
+
+        public float PercentRemaining {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return Math.Max(0, TimeRemaining / Duration); }
+        }
+
+        public float PercentProgress {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return 1f - Math.Max(0, TimeRemaining / Duration); }
+        }
+
+        public bool IsStarted {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return TimeRemaining < Duration; }
         }
     }
 

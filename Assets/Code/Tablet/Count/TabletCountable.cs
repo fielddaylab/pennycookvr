@@ -1,3 +1,4 @@
+using System;
 using BeauRoutine;
 using BeauUtil;
 using FieldDay;
@@ -10,11 +11,15 @@ namespace Pennycook.Tablet {
     public sealed class TabletCountable : BatchedComponent {
         public TabletCountingGroup Group;
 
-        
+        [NonSerialized] public bool IsCounted;
     }
 
     static public class TabletCountUtility {
         static public bool IsCountable(TabletCountable countable) {
+            if (countable.IsCounted) {
+                return false;
+            }
+
             var group = countable.Group;
             if (group.State == TabletCountingGroupState.Inactive || group.State == TabletCountingGroupState.Completed) {
                 return false;
@@ -33,6 +38,7 @@ namespace Pennycook.Tablet {
                 });*/
 
                 countable.Group.CurrentlyCounted.Add(countable);
+                countable.IsCounted = true;
 
                 //bool identified = Ref.Replace(ref highlightable.Identified, true);
                 //if (identified) {

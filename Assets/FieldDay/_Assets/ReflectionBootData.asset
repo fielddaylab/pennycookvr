@@ -18,13 +18,21 @@ MonoBehaviour:
     LookupInherit: 0
     Assemblies:
     - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 1
+      TypeCount: 3
     - AssemblyName: FieldDay.Vox, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 2
     - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 1
     Types:
-    - TypeName: Astro.AstroGame
+    - TypeName: Pennycook.NavMemory
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Pennycook.VRGame
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Pennycook.ScriptPatcher
       Self: 0
       MemberCount: 1
       OverloadCount: 0
@@ -41,7 +49,11 @@ MonoBehaviour:
       MemberCount: 1
       OverloadCount: 0
     Members:
-    - MemberName: OnPreBoot
+    - MemberName: Initialize
+      Type: 8
+    - MemberName: PreBoot
+      Type: 8
+    - MemberName: Initialize
       Type: 8
     - MemberName: Initialize
       Type: 8
@@ -57,14 +69,38 @@ MonoBehaviour:
     LookupInherit: 0
     Assemblies:
     - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 1
+      TypeCount: 5
     Types:
-    - TypeName: Astro.AstroGame
+    - TypeName: Pennycook.VRGame
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Pennycook.GrabTriggers
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Pennycook.ScriptMemory
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Pennycook.ScriptSkipping
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Pennycook.TabletTriggers
       Self: 0
       MemberCount: 1
       OverloadCount: 0
     Members:
     - MemberName: OnBoot
+      Type: 8
+    - MemberName: Initialize
+      Type: 8
+    - MemberName: Initialize
+      Type: 8
+    - MemberName: Initialize
+      Type: 8
+    - MemberName: Initialize
       Type: 8
     OverloadedMethods: []
     TypeReferences: []
@@ -72,9 +108,17 @@ MonoBehaviour:
     AttributeTypeName: FieldDay.Data.ConfigVar
     LookupFlags: 58
     LookupInherit: 0
-    Assemblies: []
-    Types: []
-    Members: []
+    Assemblies:
+    - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 1
+    Types:
+    - TypeName: FieldDay.VRHands.GrabConfig
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    Members:
+    - MemberName: MinAlignmentForSnap
+      Type: 4
     OverloadedMethods: []
     TypeReferences: []
   DebugMenu:

@@ -24,6 +24,10 @@ namespace FieldDay.UI.Animation {
         [NonSerialized] public AnimHandle CurrentHandle;
         [NonSerialized] public bool CurrentState;
 
+        private void Awake() {
+            CurrentState = isActiveAndEnabled;
+        }
+
         #region IGuiPanel
 
         public Transform Root { get { return this.CacheComponent(ref CachedTransform); } }
@@ -121,6 +125,8 @@ namespace FieldDay.UI.Animation {
 
         static private readonly FadeInAnim FadeInAnimator = new FadeInAnim();
         static private readonly FadeOutAnim FadeOutAnimator = new FadeOutAnim();
+
+        // TODO: bounce anims
 
         #endregion // Anims
     }

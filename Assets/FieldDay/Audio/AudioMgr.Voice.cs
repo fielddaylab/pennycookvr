@@ -90,6 +90,10 @@ namespace FieldDay.Audio {
         }
 
         static private void ForceSyncEmitterLocation(PositionSyncData data) {
+            if (!data.Reference) {
+                return;
+            }
+
             data.Reference.GetPositionAndRotation(out Vector3 pos, out Quaternion rot);
             if (IsNonDefault(data.RefOffset)) {
                 switch (data.RefOffsetSpace) {

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using BeauUtil;
 using UnityEngine;
 
@@ -22,4 +23,18 @@ namespace FieldDay.UI {
     /// Singleton interface panel.
     /// </summary>
     public interface ISharedGuiPanel : IGuiPanel {  }
+
+    /// <summary>
+    /// Interface panel extensions.
+    /// </summary>
+    static public class GuiPanelExtensions {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public void SetVisible(this IGuiPanel panel, bool visible) {
+            if (visible) {
+                panel.Show();
+            } else {
+                panel.Hide();
+            }
+        }
+    }
 }

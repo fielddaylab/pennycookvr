@@ -25,9 +25,8 @@ namespace Pennycook.Tablet {
         public RectTransform HighlightBox;
         public CanvasGroup HighlightBoxGroup;
 
-        [Header("Raycast Configuration")]
-        public float RaycastSize = 0.4f;
-        public float RaycastMinDistance = 1;
+        [Header("Additional Elements")]
+        public GameObject WarpGroup;
 
         [NonSerialized] public Transform CachedLookCameraTransform;
         [NonSerialized] public Vector2 CachedHighlightCornerScale;
@@ -72,7 +71,7 @@ namespace Pennycook.Tablet {
 
         [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
         [Il2CppSetOption(Option.NullChecks, false)]
-        static public unsafe Rect CalculateViewportAlignedBoundingBox(Bounds bounds, Camera referenceCamera, Vector2 scale) {
+        static public unsafe Rect CalculateViewportAlignedClampedBoundingBox(Bounds bounds, Camera referenceCamera, Vector2 scale) {
             Vector3* corners = stackalloc Vector3[8];
             Vector3 min = bounds.min, max = bounds.max;
             corners[0] = min;
@@ -98,8 +97,37 @@ namespace Pennycook.Tablet {
             r.height *= scale.y;
             return r;
         }
-		
-		static private Vector2 ClampTo01Space(Vector3 input) {
+
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        static public unsafe Rect CalculateViewportAlignedBoundingBox(Bounds bounds, Camera referenceCamera, Vector2 scale) {
+            Vector3* corners = stackalloc Vector3[8];
+            Vector3 min = bounds.min, max = bounds.max;
+            corners[0] = min;
+            corners[1] = new Vector3(min.x, min.y, max.z);
+            corners[2] = new Vector3(min.x, max.y, min.z);
+            corners[3] = new Vector3(min.x, max.y, max.z);
+            corners[4] = new Vector3(max.x, min.y, min.z);
+            corners[5] = new Vector3(max.x, min.y, max.z);
+            corners[6] = new Vector3(max.x, max.y, min.z);
+            corners[7] = max;
+
+            //DebugDraw.AddBounds(bounds, Color.blue.WithAlpha(0.2f), 0.2f, 0.1f);
+
+            Vector2* viewCorners = stackalloc Vector2[8];
+            for (int i = 0; i < 8; i++) {
+                viewCorners[i] = referenceCamera.WorldToViewportPoint(corners[i], Camera.MonoOrStereoscopicEye.Mono);
+            }
+
+            Rect r = Geom.MinRect(new UnsafeSpan<Vector2>(viewCorners, 8));
+            r.x *= scale.x;
+            r.y *= scale.y;
+            r.width *= scale.x;
+            r.height *= scale.y;
+            return r;
+        }
+
+        static private Vector2 ClampTo01Space(Vector3 input) {
 			Vector2 output;
 			output.x = Mathf.Clamp01(input.x);
 			output.y = Mathf.Clamp01(input.y);
