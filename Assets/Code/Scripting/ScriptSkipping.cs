@@ -1,5 +1,6 @@
 using BeauUtil;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.Debugging;
 using FieldDay.HID.XR;
 using FieldDay.Scripting;
@@ -11,14 +12,15 @@ namespace Pennycook {
         [InvokeOnBoot]
         static private void Initialize() {
             GameLoop.OnDebugUpdate.Register(() => {
-                if (DebugInput.IsPressed(XRHandIndex.Right, XRHandButtons.PrimaryAxisClick) || DebugInput.IsPressed(UnityEngine.KeyCode.K)) {
+                if (DebugInput.ConsumePress(XRHandIndex.Right, XRHandButtons.PrimaryAxisClick) || DebugInput.IsPressed(UnityEngine.KeyCode.K)) {
                     ScriptUtility.ForEachThread((t) => {
                         t.SkipSingle();
                     });
                 }
-                if (DebugInput.IsPressed(XRHandIndex.Left, XRHandButtons.PrimaryAxisClick) || DebugInput.IsPressed(UnityEngine.KeyCode.L)) {
+                if (DebugInput.ConsumePress(XRHandIndex.Left, XRHandButtons.PrimaryAxisClick) || DebugInput.IsPressed(UnityEngine.KeyCode.L)) {
                     UniverseUtility.LoadNextDay();
                     ScriptUtility.KillAllThreads();
+                    Sfx.StopAll();
                 }
             });
         }

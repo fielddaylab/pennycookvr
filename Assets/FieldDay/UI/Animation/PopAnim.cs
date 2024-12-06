@@ -26,19 +26,19 @@ namespace FieldDay.UI.Animation {
 
         public override void InitAnimation(LayoutOffset target, ref LiteAnimatorState state) {
             if (state.TimeRemaining <= state.Duration) {
-                target.Offset1 = state.InitParamA.Float2;
+                target.Offset3 = state.InitParamA.Float2;
             }
         }
 
         public override void ResetAnimation(LayoutOffset target, ref LiteAnimatorState state) {
-            target.Offset1 = default;
+            target.Offset3 = default;
         }
 
         public override bool UpdateAnimation(LayoutOffset target, ref LiteAnimatorState state, float deltaTime) {
             state.TimeRemaining -= deltaTime;
             float percent = state.Easing.Evaluate(1 - Math.Max(0, state.TimeRemaining / state.Duration));
             if (percent >= 0) {
-                target.Offset1 = state.InitParamA.Float2 * (1f - percent);
+                target.Offset3 = state.InitParamA.Float2 * (1f - percent);
             }
             return state.TimeRemaining > 0;
         }

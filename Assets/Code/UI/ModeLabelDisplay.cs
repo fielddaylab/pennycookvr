@@ -8,6 +8,7 @@ namespace Pennycook {
     public class ModeLabelDisplay : MonoBehaviour {
         public LayoutOffset Offset;
         public RectTransform BG;
+        public BaseMeshEffect IconShadow;
 
         [Header("Selected State")]
         public GameObject ExpandedContent;
@@ -15,6 +16,7 @@ namespace Pennycook {
         public void SetState(bool selected) {
             ExpandedContent.SetActive(selected);
             BG.gameObject.SetActive(selected);
+            IconShadow.enabled = !selected;
 
             if (selected) {
                 PopAnim.Play(Offset, PopAnim.Default);

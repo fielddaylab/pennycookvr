@@ -27,6 +27,9 @@ namespace Pennycook.Tablet {
                     case TabletToolInteractionMode.Hold:
                         isPressing = TabletUtility.IsButtonHeld(XRHandButtons.TriggerButton);
                         break;
+                    case TabletToolInteractionMode.Always:
+                        isPressing = true;
+                        break;
                 }
 
                 if (isPressing) {
@@ -56,10 +59,14 @@ namespace Pennycook.Tablet {
                     }
 
                     case TabletInteractionState.State.Available: {
-                        string verb = m_StateC.CurrentToolDef.GetVerb?.Invoke(m_StateB.HighlightedObject, desiredState) ?? m_StateC.CurrentToolDef.DefaultVerb;
-                        m_StateA.InteractionLabel.SetText(verb);
-                        if (!m_StateA.DetailsGroup.IsShowing()) {
-                            m_StateA.InteractionGroup.Show();
+                        if ((m_StateC.CurrentToolDef.Flags & TabletToolFlags.NoPrompt) != 0) {
+                            m_StateA.InteractionGroup.Hide();
+                        } else {
+                            string verb = m_StateC.CurrentToolDef.GetVerb?.Invoke(m_StateB.HighlightedObject, desiredState) ?? m_StateC.CurrentToolDef.DefaultVerb;
+                            m_StateA.InteractionLabel.SetText(verb);
+                            if (!m_StateA.DetailsGroup.IsShowing()) {
+                                m_StateA.InteractionGroup.Show();
+                            }
                         }
                         break;
                     }

@@ -3,6 +3,7 @@ using BeauUtil;
 using BeauUtil.UI;
 using BeauUtil.Variants;
 using FieldDay;
+using FieldDay.Animation;
 using FieldDay.Audio;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
@@ -26,7 +27,12 @@ namespace Pennycook.Tablet {
         public ToolConfig[] Configs;
         public ShapeGraphic Outline;
         public Graphic[] ToolColorTinted;
+
+        [Header("Interface")]
         public FadeGroup Reticle;
+        public RectTransform TabLayout;
+        public LayoutListener TabLayoutListener;
+        public FadeGroup CountGroup;
 
         [Header("State")]
         public TabletTool CurrentTool;
@@ -43,6 +49,19 @@ namespace Pennycook.Tablet {
             TabletUtility.SetTool(this, TabletUtility.IndexOfTool(this, CurrentTool), false);
 
             ScriptUtility.BindVariable(Var_CurrentTool, () => TabletUtility.TabletToolToStringHash[(int) CurrentTool]);
+
+            TabLayoutListener.OnPostLayout.Register(OnTabLayoutAdjusted);
+        }
+
+        private void OnTabLayoutAdjusted() {
+            if (CurrentToolIndex < 0) {
+                TabLayout.anchoredPosition = default;
+            } else {
+                float adjust = TabLayout.sizeDelta.x / 2;
+                RectTransform buttonTransform = (RectTransform) Configs[CurrentToolIndex].Label.transform;
+                adjust -= buttonTransform.anchoredPosition.x;
+                TabLayout.anchoredPosition = new Vector2(adjust, 0);
+            }
         }
     }
 
@@ -106,7 +125,7 @@ namespace Pennycook.Tablet {
 
             if (playFeedback) {
                 TabletUtility.PlaySfx("Tablet.ModeChanged");
-                TabletUtility.PlayHaptics(0.1f, 0.01f);
+                TabletUtility.PlayHaptics(0.15f, 0.01f);
                 using (var t = TempVarTable.Alloc()) {
                     t.Set("toolId", TabletToolToStringHash[(int) tool]);
                     ScriptUtility.Trigger(TabletTriggers.ChangedTabletTool, t);

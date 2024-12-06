@@ -2,6 +2,7 @@ using System;
 using BeauUtil;
 using FieldDay;
 using FieldDay.HID.XR;
+using FieldDay.UI;
 using FieldDay.XR;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ namespace Pennycook.Tablet {
         public LayerMask RaycastMask;
         public float RaycastUnitConeRadius;
         public bool ShowReticle = true;
+
+        public TabletToolFlags Flags;
 
         public Predicate<TabletHighlightable, TabletHighlightState> HighlightPredicate;
         public TabletToolHighlightEventDelegate OnHighlighted;
@@ -39,7 +42,14 @@ namespace Pennycook.Tablet {
     public enum TabletToolInteractionMode {
         None,
         Press,
-        Hold
+        Hold,
+        Always
+    }
+
+    [Flags]
+    public enum TabletToolFlags {
+        DoNotSetHighlight = 0x01,
+        NoPrompt = 0x02,
     }
 
     static public class TabletToolDefinitions {
@@ -47,7 +57,7 @@ namespace Pennycook.Tablet {
 
         static public readonly TabletToolDefinition Scan = new TabletToolDefinition() {
             RaycastMask = TabletUtility.DefaultSearchMask,
-            RaycastUnitConeRadius = 0.05f,
+            RaycastUnitConeRadius = 0.07f,
 
             HighlightPredicate = (h, hc) => {
                 return h.CachedInteraction && TabletInteractionUtility.HasInteractions(h, h.CachedInteraction);
@@ -97,8 +107,10 @@ namespace Pennycook.Tablet {
             RaycastUnitConeRadius = 0.65f,
             ShowReticle = false,
 
+            Flags = TabletToolFlags.DoNotSetHighlight | TabletToolFlags.NoPrompt,
+
             HighlightPredicate = (h, hc) => {
-                return h.CachedCountable && TabletUtility.IsButtonHeld(XRHandButtons.TriggerButton) && TabletCountUtility.IsCountable(h.CachedCountable);
+                return h.CachedCountable && TabletCountUtility.IsCountable(h.CachedCountable);
             },
 
             GetState = (h, c, t) => {
@@ -109,20 +121,26 @@ namespace Pennycook.Tablet {
                 return TabletInteractionState.State.Available;
             },
 
-            DefaultVerb = "Count",
-
-            InteractMode = TabletToolInteractionMode.Hold,
+            InteractMode = TabletToolInteractionMode.Always,
             Interact = (h, c, t) => {
-                // TODO: count
                 if(TabletCountUtility.TryCount(h, h.CachedCountable, t)) {
+                    // TODO: visual effect
                     TabletUtility.PlayHaptics(0.3f, 0.05f);
                 }
+            },
+
+            OnOpen = (c) => {
+                Find.State<TabletToolState>().CountGroup.Show();
+            },
+
+            OnClose = (c) => {
+                Find.State<TabletToolState>().CountGroup.Hide();
             }
         };
 
         static public readonly TabletToolDefinition Warp = new TabletToolDefinition() {
             RaycastMask = TabletUtility.TravelSearchMask,
-            RaycastUnitConeRadius = 0.05f,
+            RaycastUnitConeRadius = 0.07f,
 
             HighlightPredicate = (h, hc) => {
                 return h.CachedWarp && h.CachedWarp.CanWarp;
@@ -144,6 +162,14 @@ namespace Pennycook.Tablet {
                 if (PlayerMovementUtility.WarpTo(moveState, h.CachedWarp)) {
                     TabletUtility.PlayHaptics(0.3f, 0.05f);
                 }
+            },
+
+            OnHighlighted = (h, c) => {
+                Find.State<TabletHighlightState>().WarpGroup.SetActive(true);
+            },
+
+            OnUnhighlighted = (h, c) => {
+                Find.State<TabletHighlightState>().WarpGroup.SetActive(false);
             }
         };
 
