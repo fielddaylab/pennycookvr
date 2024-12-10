@@ -49,5 +49,12 @@ namespace Pennycook {
         private void OnGrabReleased(Grabber grabber, int snapIndex) {
 
         }
+		
+		private void Awake() {
+			Grabbable g = GetComponent<Grabbable>();
+			if(g != null) {
+				g.DefaultRBKinematic = false;
+			}
+		}
     }
 }

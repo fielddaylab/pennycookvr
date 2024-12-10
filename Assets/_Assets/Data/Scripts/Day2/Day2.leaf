@@ -285,7 +285,7 @@ $call SocketObjectTo(AdelieLegTracker2, AdelieLegSocket2)
 
 :: OnPenguinLegTrackerSocketed
 @trigger	ObjectSocketed
-@when		objectType == "LegTracker", socketType == "TrackerSocket"
+@when		objectType == "LegTracker", socketType == "CaseLegSocket"
 $set	chapter:removedCount + 1
 
 $if chapter:removedCount >= 3
