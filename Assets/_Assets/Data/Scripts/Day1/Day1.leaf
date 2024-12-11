@@ -83,8 +83,7 @@ $call PenguinCount->ActivateCount(12)
 {@Player} Uh, obviously.  I knew that. $[Day1/Bluff/1bs05]
 {@Margo}    Uh huh. Sure ya did. $[Day1/Bluff/1bm07]
 
-$call CreateGoal("day1_count", Use Count to count population)
-
+$call CreateGoal("day1_count", Count the penguin population)
 
 :: ScannedFromBluff
 @trigger	TabletCounted
@@ -214,7 +213,7 @@ $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)
 
-$call CreateGoal("day1_upload", Upload Margo's data)
+$call CreateGoal("day1_upload", Dock Margo to upload data)
 
 :: WarpedInsideTent
 @trigger    AtWarpPoint

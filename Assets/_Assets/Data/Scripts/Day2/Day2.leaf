@@ -44,7 +44,7 @@ $call Wait(1)
 
 $call SetWarpActive(WarpBluff, true)
 
-$call CreateGoal("Day2_outside", Use Warp to go outside)
+$call CreateGoal("Day2_outside", Warp outside)
 $call SetWarpActive(WarpBluff, true)
 
 :: WarpedOutsideTent2
@@ -70,7 +70,7 @@ $call TentDoor->Close()
 
 $call PenguinCount->ActivateCount(12)
 
-$call CreateGoal("Day2_count", Use Count to count population)
+$call CreateGoal("Day2_count", Count the penguin population)
 
 :: ScannedFromBluff2
 @trigger	TabletCounted
@@ -82,7 +82,7 @@ $call CompleteGoal("Day2_count")
 
 {@Margo}  Great job, kid! We’ve got a new population count.  $[Day2/Bluff/2bm04]
 $call SetWarpGroupActive(Rookery, true)
-$call CreateGoal("Day2_rookery", Use Warp to enter rookery)
+$call CreateGoal("Day2_rookery", Warp inside rookery)
 
 :: WarpedToRookery2
 @trigger    AtWarpPoint
@@ -93,8 +93,6 @@ $call CreateGoal("Day2_rookery", Use Warp to enter rookery)
 $call CompleteGoal("Day2_rookery")
 
 $call Wait(1)
-
-$call SetWarpGroupActive(Rookery, true)
 
 $call ClearGoals()
 
@@ -317,7 +315,7 @@ $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)
 
-$call CreateGoal("Day2_upload", Upload Margo's data)
+$call CreateGoal("Day2_upload", Dock Margo to upload data)
 
 :: WarpedInsideTent2
 @trigger    AtWarpPoint

@@ -38,7 +38,7 @@ $call Wait(2)
 {@Margo}	We’ve still got a few more tasks left to wrap things up. 	$[Day5/Tent/5tm15]
 {@Margo}	Whenever you’re ready, let’s head out to the Bluff. 	$[Day5/Tent/5tm16]
 
-$call CreateGoal("Day5_outside", Use Warp to go outside)
+$call CreateGoal("Day5_outside", Warp outside)
 $call SetWarpActive(WarpBluff, true)
 
 :: WarpedOutsideTent
@@ -57,7 +57,7 @@ $call SetWarpActive(WarpBluff, false)
 {@Margo}   We need to put trackers on the penguins who had chicks this year. $[Day5/Bluff/5bm02]
 
 $call SetWarpGroupActive(Rookery, true)
-$call CreateGoal("Day5_rookery", Use Warp to enter rookery)
+$call CreateGoal("Day5_rookery", Warp inside rookery)
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
@@ -89,7 +89,7 @@ $call LegTracker3->Activate()
 
 $call ClearGoals()
 
-$call CreateGoal("Day5_band", Place 3 Leg Trackers on Banded Penguins)
+$call CreateGoal("Day5_band", Put leg trackers on 3 parent penguins)
 
 :: OnSocketedLegTracker
 @trigger ObjectSocketed
@@ -143,7 +143,7 @@ $call SetWarpGroupActive(Rookery, false)
 
 {@Margo}	Almost done. Your last task of the season is to do one more scan of the chicks and adults in the Rookery.	$[Day5/Bluff/5bm03]
 
-$call CreateGoal("day5_count",  Count Penguins)
+$call CreateGoal("day5_count", Count the penguin population)
 
 $call PenguinCount->ActivateCount(12)
 

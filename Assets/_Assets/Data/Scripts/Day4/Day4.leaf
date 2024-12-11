@@ -35,7 +35,7 @@ $call Wait(2)
 $call SetWarpActive(WarpBluff, true)
 $call Wait(1)
 
-$call CreateGoal("Day4_outside", Use Warp to go outside)
+$call CreateGoal("Day4_outside", Warp outside)
 $call SetWarpActive(WarpBluff, true)
 
 :: WarpedOutsideTent
@@ -65,7 +65,7 @@ $call CompleteGoal("Day4_rookery")
 $call Wait(1)
 
 //$call SetWarpActive(WarpBluffBack, true)
-$call SetWarpGroupActive(Rookery, true)
+$call SetWarpGroupActive(Rookery, false)
 
 $call ClearGoals()
 
@@ -84,6 +84,8 @@ $call ClearGoals()
 {@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/4rm03]
 {@Margo}    And we’ll need to band 3 of the chicks. $[Day4/Rookery/4rm04]
 {@Player}   Got it. Let’s get to work.  $[Day4/Rookery/Player_7]
+
+$call SetWarpGroupActive(Rookery, true)
 
 $call ClearGoals()
 $call CreateGoal("day4_warp_gate", Warp to the Weigh Gate)
@@ -236,7 +238,7 @@ $if chapter:finishedBands == true, chapter:dataTrackersDone == true, chapter:wei
 $set chapter:finishedObservations = true
 $call ClearGoals()
 $call Wait(0.3)
-$call CreateGoal("Day4_return", Return to tent)
+$call CreateGoal("Day4_return", Warp inside)
 $call SetWarpActive(WarpBluffBack, true)
 {@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/Partner_20]
 {@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/Partner_21]
@@ -254,7 +256,7 @@ $if chapter:visitedLoggers == false
 $call CreateGoal("day4_warp_loggers", Warp to the Middle)
 $endif
 $else
-$call CreateGoal("day4_loggers", Collect 3 Data Loggers)
+$call CreateGoal("day4_loggers", Collect 3 data loggers from banded penguins)
 $call CompleteGoal("day4_loggers")
 $endif
 $if chapter:weighGate == false
@@ -286,7 +288,7 @@ $call SetWarpActive(WarpDesk, true)
 @when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
 @interrupt
 
-$call CreateGoal("Day4_upload", Upload Margo's data)
+$call CreateGoal("Day4_upload", Dock Margo to upload data)
 $call CompleteGoal("Day4_return")
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
