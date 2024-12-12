@@ -9,5 +9,7 @@ namespace Pennycook.Tablet {
 
         public Material DefaultMaterial;
         public Material FailureMaterial;
+
+        public ParticleSystem SuccessParticles;
     }
 }

@@ -52,6 +52,7 @@ namespace Pennycook.Tablet {
             PhotoPool = new FixedPool<TabletPhoto>(4, (p) => {
                 Texture2D tex = new Texture2D(PhotoRT.width, PhotoRT.height, TextureFormat.RGB24, false);
                 tex.name = "TabletPhoto";
+                tex.filterMode = FilterMode.Bilinear;
                 return new TabletPhoto() {
                     Texture = tex
                 };
