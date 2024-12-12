@@ -164,5 +164,57 @@ namespace FieldDay.Audio {
         }
 
         #endregion // Queries
+
+        #region Properties
+
+        static public void SetVolume(AudioHandle handle, float volume, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetVoiceFloatParameter,
+                FloatParam = new FloatParamChangeCommandData() {
+                    Handle = handle.m_Id,
+                    Property = AudioFloatPropertyType.Volume,
+                    Target = volume,
+                    Duration = transitionTime,
+                    Easing = transitionCurve,
+                }
+            });
+        }
+
+        static public void SetPitch(AudioHandle handle, float pitch, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetVoiceFloatParameter,
+                FloatParam = new FloatParamChangeCommandData() {
+                    Handle = handle.m_Id,
+                    Property = AudioFloatPropertyType.Pitch,
+                    Target = pitch,
+                    Duration = transitionTime,
+                    Easing = transitionCurve,
+                }
+            });
+        }
+
+        static public void SetPaused(AudioHandle handle, bool paused) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetVoiceBoolParameter,
+                BoolParam = new BoolParamChangeCommandData() {
+                    Handle = handle.m_Id,
+                    Property = AudioBoolPropertyType.Pause,
+                    Target = paused
+                }
+            });
+        }
+
+        static public void SetMute(AudioHandle handle, bool mute) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetVoiceBoolParameter,
+                BoolParam = new BoolParamChangeCommandData() {
+                    Handle = handle.m_Id,
+                    Property = AudioBoolPropertyType.Mute,
+                    Target = mute
+                }
+            });
+        }
+
+        #endregion // Properties
     }
 }

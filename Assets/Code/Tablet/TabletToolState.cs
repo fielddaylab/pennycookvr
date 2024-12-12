@@ -33,6 +33,7 @@ namespace Pennycook.Tablet {
         public RectTransform TabLayout;
         public LayoutListener TabLayoutListener;
         public FadeGroup CountGroup;
+        public FadeGroup CaptureGroup;
 
         [Header("State")]
         public TabletTool CurrentTool;

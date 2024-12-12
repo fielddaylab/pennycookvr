@@ -12,7 +12,7 @@ namespace Pennycook.Tablet {
         public override void ProcessWork(float deltaTime) {
 			bool isGripping = !m_StateC.GrippedHandMask.IsEmpty;
             LayerMask searchMask = m_StateB.CurrentToolDef.RaycastMask;
-            bool allowVisualHighlights = (m_StateB.CurrentToolDef.Flags & TabletToolFlags.DoNotSetHighlight) == 0;
+            bool allowVisualHighlights = (m_StateB.CurrentToolDef.Flags & TabletToolFlags.DoNotUseHighlightBox) == 0;
 
             if (!ReferenceEquals(m_StateA.HighlightedObject, null)) {
                 if (!m_StateA.HighlightedObject || !m_StateA.HighlightedObject.isActiveAndEnabled || !isGripping || m_StateB.CurrentTool == TabletTool.None || searchMask == 0) {

@@ -11,6 +11,7 @@ namespace Pennycook {
     [RequireComponent(typeof(Camera))]
     public sealed class LODReferenceCamera : BatchedComponent {
         public FixedCameraRefreshRate RefreshRate;
+        public bool ForceHighLOD;
 
         [NonSerialized] public Camera CachedCamera;
         [NonSerialized] public Transform CachedTransform;

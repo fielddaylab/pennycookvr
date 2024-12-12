@@ -22,6 +22,7 @@ namespace Pennycook {
 
             ReferenceData* refData = stackalloc ReferenceData[references.Count];
             int activeCameras = 0;
+            bool forceHighLOD = false;
 
             foreach (var refCam in references) {
                 bool cameraEnabled = refCam.CachedCamera.enabled || (refCam.RefreshRate && !refCam.RefreshRate.Paused);
@@ -31,6 +32,7 @@ namespace Pennycook {
                     refDatum.Forward = Geom.Forward(rot);
                     refDatum.UnitFrustum = 2f * Mathf.Tan(refCam.CachedCamera.fieldOfView / 2 * Mathf.Deg2Rad);
                     refDatum.Aspect = refCam.CachedCamera.aspect;
+                    forceHighLOD |= refCam.ForceHighLOD;
                     activeCameras++;
                 }
             }
@@ -49,7 +51,12 @@ namespace Pennycook {
                     continue;
                 }
 
-                GetHeightAndLook(element, refData, activeCameras, out float bestHeight, out float bestLook);
+                float bestHeight, bestLook;
+
+                GetHeightAndLook(element, refData, activeCameras, out bestHeight, out bestLook);
+                if (forceHighLOD) {
+                    bestHeight = 1;
+                }
 
                 LODLevel level;
                 if (bestHeight >= element.Close.ScreenProportion) {

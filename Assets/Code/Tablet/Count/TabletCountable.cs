@@ -44,7 +44,7 @@ namespace Pennycook.Tablet {
                 //if (identified) {
                     TabletUtility.UpdateCountLabel(Find.State<TabletHighlightState>(), countable.Group);
                     TabletUtility.PlayHaptics(0.3f, 0.08f);
-                    TabletUtility.PlaySfx("Tablet.Identified");
+                    TabletUtility.PlaySfx("Tablet.Counted");
                 //}
 
                 if(countable.Group.IsCountFinished()) {

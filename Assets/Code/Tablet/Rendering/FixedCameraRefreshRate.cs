@@ -8,6 +8,7 @@ namespace Pennycook.Tablet {
         public float RefreshRate = 30;
         
         [NonSerialized] public bool Paused = false;
+        [NonSerialized] public bool Passthrough = false;
         [NonSerialized] public float TimeBeforeNextRefresh;
     }
 }

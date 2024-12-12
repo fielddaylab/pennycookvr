@@ -248,6 +248,7 @@ namespace FieldDay.Animation {
         }
 
         internal void Shutdown() {
+            m_FixedUpdateLiteAnimators.Clear();
             m_UpdateLiteAnimators.Clear();
             m_UnscaledUpdateLiteAnimators.Clear();
         }
