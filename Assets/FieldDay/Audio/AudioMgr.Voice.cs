@@ -23,6 +23,7 @@ namespace FieldDay.Audio {
             public StringHash32 EventId;
             public float PlaybackDelay;
             public VoiceState State;
+            public int BusIndex;
             public AudioPropertyBlock* EventProperties;
             public AudioPropertyBlock* VoiceProperties;
             public AudioPropertyBlock LastKnownProperties;
@@ -226,10 +227,15 @@ namespace FieldDay.Audio {
             return culled;
         }
 
-        private void UpdateVoices(float deltaTime, double currentTime) {
+        private unsafe void UpdateVoices(float deltaTime, double currentTime) {
+            AudioPropertyBlock* busValues = stackalloc AudioPropertyBlock[m_BusCount];
+            for(int i = 0; i < m_BusCount; i++) {
+                busValues[i] = m_BusData[i].LastKnownProperties;
+            }
+
             for(int i = m_ActiveVoices.Count - 1; i >= 0; i--) {
                 VoiceData voice = m_ActiveVoices[i];
-                UpdateVoicePropertyBlock(voice, AudioPropertyBlock.Default); // TODO: Retrieve bus state
+                UpdateVoicePropertyBlock(voice, busValues[voice.BusIndex]);
 
                 switch (voice.State) {
                     case VoiceState.Idle: {

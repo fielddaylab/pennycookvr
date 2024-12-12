@@ -28,7 +28,7 @@ namespace FieldDay.Audio {
         public SerializedHash32 Tag;
 
         [NonSerialized] internal StringHash32 CachedId;
-        [NonSerialized] internal int CachedBusIndex;
+        [NonSerialized] internal int CachedBusIndex = -1;
         [NonSerialized] internal AudioEmitterProfile CachedEmitterProfile;
         [NonSerialized] internal RandomDeck<AudioClip> SampleSelector;
         

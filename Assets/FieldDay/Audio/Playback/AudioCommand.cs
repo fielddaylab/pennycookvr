@@ -68,7 +68,7 @@ namespace FieldDay.Audio {
         [FieldOffset(0)] public UniqueId16 Handle;
 
         static public implicit operator AudioIdOrBusRef(StringHash32 id) {
-            return new AudioIdOrBusRef() { Id = id };
+            return new AudioIdOrBusRef() { BusId = id };
         }
 
         static public implicit operator AudioIdOrBusRef(UniqueId16 handle) {

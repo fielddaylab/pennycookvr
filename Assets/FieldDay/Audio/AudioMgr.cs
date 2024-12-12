@@ -57,6 +57,8 @@ namespace FieldDay.Audio {
 
         private RingBuffer<VoiceData> m_ActiveVoices = new RingBuffer<VoiceData>(MaxVoices);
         private RingBuffer<AudioClip> m_PreloadQueue = new RingBuffer<AudioClip>(32, RingBufferMode.Expand);
+        private RingBuffer<AudioEvent> m_EventLateBindQueue = new RingBuffer<AudioEvent>(128, RingBufferMode.Expand);
+        private RingBuffer<AudioBus> m_BusLateBindQueue = new RingBuffer<AudioBus>(MaxBuses);
 
         private readonly Dictionary<uint, int> m_BusNameToIndex = new Dictionary<uint, int>(MaxBuses);
 
@@ -120,6 +122,7 @@ namespace FieldDay.Audio {
             m_HasSpatializationPlugin = !string.IsNullOrEmpty(AudioSettings.GetSpatializerPluginName());
 
             Game.Assets.SetNamedAssetLoadCallbacks<AudioEvent>(OnAudioEventLoaded, OnAudioEventUnloaded);
+            Game.Assets.SetNamedAssetLoadCallbacks<AudioBus>(OnAudioBusLoaded, OnAudioBusUnloaded);
 
             m_BusNameToIndex.Add(0, 0);
             CreateBus(AudioBus.Master);
@@ -129,6 +132,7 @@ namespace FieldDay.Audio {
 
         internal void PreUpdate(float deltaTime) {
             using (Profiling.Sample("AudioMgr::PreUpdate")) {
+                ProcessLateBindings();
                 CullFinishedVoices();
                 FlushCommandPipe();
             }
@@ -136,6 +140,8 @@ namespace FieldDay.Audio {
 
         internal void Update(float deltaTime) {
             using (Profiling.Sample("AudioMgr::Update")) {
+                ProcessLateBindings();
+
                 FlushCommandPipe();
 
                 if (m_PreloadQueue.Count > 0) {
@@ -146,6 +152,8 @@ namespace FieldDay.Audio {
 
         internal void LateUpdate(float deltaTime) {
             using (Profiling.Sample("AudioMgr::LateUpdate")) {
+                ProcessLateBindings();
+
                 FlushCommandPipe();
 
                 if (m_PreloadQueue.Count > 0) {
@@ -154,6 +162,7 @@ namespace FieldDay.Audio {
 
                 SyncEmitterLocations();
                 UpdateTweens(deltaTime);
+                UpdateBuses();
                 UpdateVoices(deltaTime, Time.realtimeSinceStartupAsDouble);
 
                 switch (Frame.Index % 60) {
@@ -205,10 +214,27 @@ namespace FieldDay.Audio {
                     m_PreloadQueue.PushBack(clip);
                 }
             }
+
+            if (evt.CachedBusIndex < 0) {
+                m_EventLateBindQueue.PushBack(evt);
+            }
         }
 
         private void OnAudioEventUnloaded(AudioEvent evt) {
+            // nothing
+        }
 
+        private void OnAudioBusLoaded(AudioBus bus) {
+            if (m_BusNameToIndex.ContainsKey(bus.AssetId.HashValue)) {
+                Log.Error("Bus '{0}' already loaded!", bus.AssetId);
+                return;
+            }
+
+            m_BusLateBindQueue.PushBack(bus);
+        }
+
+        private void OnAudioBusUnloaded(AudioBus bus) {
+            // should never be unloaded whyyyyyy
         }
 
         #endregion // Asset Handlers

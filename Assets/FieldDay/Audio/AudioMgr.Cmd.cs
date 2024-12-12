@@ -366,6 +366,7 @@ namespace FieldDay.Audio {
             voice.VoiceProperties->Pitch = cmd.Pitch;
 
             voice.EventId = evt ? evt.CachedId : default;
+            voice.BusIndex = evt ? evt.CachedBusIndex : 0;
 
             if ((cmd.Flags & AudioPlaybackFlags.UseProvidedSource) == 0) {
                 if (playbackPos) {
