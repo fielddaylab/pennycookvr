@@ -1,0 +1,11 @@
+#basePath	Day2.Flavor
+
+:: LookAtDoor
+@trigger TabletLookAt
+@who     Margo
+@when    objectId == "TentDoor"
+@priority High
+
+$if !IsOpen(TentDoor)
+$call TentDoor->Open()
+$endif
