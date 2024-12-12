@@ -109,7 +109,7 @@ $call CompleteGoal("Day2_warp_middle")
 
 $call Wait(2)
 
-$call CreateGoal("Day2_mates", ID 5 Penguins and their mates)
+$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 
 {@Margo}   Okey dokey. Time to track down the Funtastic Five $[Day2/Rookery/2rm01]
 {@Player}  The Fliptastic Five. $[Day2/Rookery/Player_1]
@@ -242,7 +242,7 @@ $call CompleteGoal("Day2_warp_far")
 
 $call Wait(2)
 
-$call CreateGoal("Day2_trackers", Retrieve 3 trackers from Penguins)
+$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
 
 $call FuzzLegTracker->Activate()
 $call AlfredoLegTracker->Activate()
@@ -289,6 +289,11 @@ $set	chapter:removedCount + 1
 $if chapter:removedCount >= 3
 	$call TriggerResponse(TrackersCompleted)
 $endif
+
+:: OnPenguinLegTrackerUnsocketed
+@trigger	ObjectUnsocketed
+@when		objectType == "LegTracker", socketType == "CaseLegSocket"
+$set	chapter:removedCount - 1
 
 :: TrackersCompleted
 @trigger	TrackersCompleted

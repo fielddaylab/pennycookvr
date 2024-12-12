@@ -73,6 +73,10 @@ $call LegTracker1->Activate()
 $call LegTracker2->Activate()
 $call LegTracker3->Activate()
 
+$call SocketObjectTo(LegTracker1, CaseLegSocketRight)
+$call SocketObjectTo(LegTracker2, CaseLegSocketMiddle)
+$call SocketObjectTo(LegTracker3, CaseLegSocketLeft)
+
 {@Player}	Wow… it’s so quiet here.	$[Day5/Rookery/Player_1]
 {@Margo}	Looks like some of our Adelie colony has already headed out to sea.	$[Day5/Rookery/5rm01]
 {@Margo}	Luckily, your Fliptastic Five is still here!	$[Day5/Rookery/5rm02]
@@ -100,6 +104,11 @@ $if chapter:legCount >= 3
 $goto Day5.LegTrackersComplete
 $endif
 
+:: OnUnsocketedLegTracker
+@trigger ObjectUnsocketed
+@when   objectType == "LegTracker", socketType == "LegSocket"
+$set chapter:legCount - 1
+
 :: OnSocketedLegTrackerPolo
 @trigger ObjectSocketed
 @when   objectType == "LegTracker", socketType == "LegSocketPolo"
@@ -111,6 +120,11 @@ $set chapter:legCount + 1
 $if chapter:legCount >= 3
 $goto Day5.LegTrackersComplete
 $endif
+
+:: OnUnsocketedLegTrackerPolo
+@trigger ObjectUnsocketed
+@when   objectType == "LegTracker", socketType == "LegSocketPolo"
+$set chapter:legCount - 1
 
 :: LegTrackersComplete
 @trigger LegTrackersComplete
@@ -126,7 +140,7 @@ $call CompleteGoal("Day5_band")
 
 $call SetWarpActive(WarpBluffBack, true)
 
-$call CreateGoal("Day5_bluff_back",  Warp to Bluff)
+$call CreateGoal("Day5_bluff_back",  Warp inside)
 
 :: WarpedBackToBluff
 @trigger    AtWarpPoint

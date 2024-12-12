@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.Components;
 using UnityEngine;
+using BeauUtil;
 
 using Random = UnityEngine.Random;
 
@@ -24,11 +26,11 @@ namespace Pennycook {
 		bool _flier = false;
 
 		[SerializeField]
-		AudioSource _sounds;
+		Transform AudioLocation;
 
-		//[SerializeField]
-		//SFXAsset _hitSound;
-		
+		[AudioEventRef]
+		public StringHash32 MoveSound;
+
 		Vector3 _startingPosition;
 
 		private SkuaState _currentState;
@@ -39,8 +41,7 @@ namespace Pennycook {
 			Moving
 		}
 
-		// Start is called before the first frame update
-		void Start()
+		void Awake()
 		{
 			_startingPosition = transform.position;
 			StartCoroutine(StartIdle(NewIdleTime()));
@@ -123,6 +124,8 @@ namespace Pennycook {
 			}
 			newLoc.x += Random.Range(-_wanderRadius, _wanderRadius);
 			newLoc.z += Random.Range(-_wanderRadius, _wanderRadius);
+
+			Sfx.Play(MoveSound, AudioLocation);
 			
 			return newLoc;
 		}

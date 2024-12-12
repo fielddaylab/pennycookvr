@@ -10,6 +10,7 @@ $call SetAllWarpsActive(false)
 $call DayHeader->SetText(Dec 20)
 $call CorralChicks->Activate()
 $call Clouds->Activate()
+$call Skuas->Activate()
 $call FadeIn(1.0)
 $call Wait(2)
 
@@ -267,6 +268,10 @@ $call DataTracker1->Activate()
 $call DataTracker2->Activate()
 $call DataTracker3->Activate()
 
+$call SocketObjectTo(DataTracker1, GPSSocketRight)
+$call SocketObjectTo(DataTracker2, GPSSocketMiddle)
+$call SocketObjectTo(DataTracker3, GPSSocketLeft)
+
 {@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/3rm18]
 {@Margo}	You’ll need to attach a data logger to their backs.	$[Day3/Rookery/3rm19]
 
@@ -290,6 +295,12 @@ $call CompleteGoal("day3_back_trackers");
 $goto Day3.CheckAllComplete
 $endif
 
+::	TrackerUnsocketed
+@trigger ObjectUnsocketed
+@who	Player
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin"
+$set chapter:trackerSocketedCount - 1
+
 :: CheckAllComplete
 @trigger	CheckAllComplete
 @who		Player
@@ -307,6 +318,7 @@ $call SetWarpActive(WarpBluffBack, true)
 {@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/Partner_12]
 {@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/Partner_13]
 $else
+$call ClearGoals()
 $if chapter:trackersSocketed == false
 $call CreateGoal("day3_warp_side", Warp to side of Rookery)
 $endif

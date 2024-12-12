@@ -51,7 +51,7 @@ $set	chapter:hasTalkedToMargo = true
 {@Margo}    Couldja peek out the front door with me? I can't wait to see who's here! $[Day1/Tent/Margo_12]
 {@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
 
-$call CreateGoal("day1_outside", Use Warp to go outside)
+$call CreateGoal("day1_outside", Warp outside)
 $call SetWarpActive(WarpBluff, true)
 
 :: WarpedOutsideTent
@@ -103,7 +103,7 @@ $call CompleteGoal("day1_count")
 {@Margo}	You’ve been assigned five penguins to keep a special eye on this season. 	$[Day1/Bluff/1bm10]
 {@Margo}	Let's get on down there and say hello! Find a waypoint in the rookery. 	$[Day1/Bluff/1bm11]
 
-$call CreateGoal("day1_rookery", Use Warp to enter rookery)
+$call CreateGoal("day1_rookery", Warp inside rookery)
 $call SetWarpGroupActive(Rookery, true)
 
 :: WarpedToRookery
