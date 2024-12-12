@@ -22,11 +22,13 @@ namespace Pennycook.Tablet {
         public Canvas[] UICanvases;
         public Material TabletMaterial;
         public CanvasGroup Flash;
+        public TabletPhotoAnimation Animation;
 
         [NonSerialized] public Stage CurrentStage;
         [NonSerialized] public double NextAllowedPhotoTS;
         [NonSerialized] public float Cooldown;
 
+        [NonSerialized] public TabletPhoto QueuedPhoto;
         [NonSerialized] public FixedPool<TabletPhoto> PhotoPool;
         [NonSerialized] public RingBuffer<TabletPhoto> ActivePhotos;
 
@@ -75,6 +77,7 @@ namespace Pennycook.Tablet {
             TabletPhotoState photoState = Find.State<TabletPhotoState>();
             RequestPhoto(photoState);
             photoState.NextAllowedPhotoTS = ts + 2;
+            photoState.QueuedPhoto = photoState.PhotoPool.Alloc();
             TabletUtility.PlaySfx("Tablet.Photo.Snap");
         }
 

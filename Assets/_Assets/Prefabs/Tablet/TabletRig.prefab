@@ -99,6 +99,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ValidHandType: 0
   IsDynamic: 0
+  AnyOrientation: 0
+  Label:
+    m_Source: 
+    m_HashValue: 0
 --- !u!1 &4103669404016107651
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,7 +252,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.015
-  far clip plane: 120
+  far clip plane: 800
   field of view: 65
   orthographic: 0
   orthographic size: 5
@@ -324,6 +328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RefreshRate: {fileID: 0}
+  ForceHighLOD: 0
 --- !u!1 &4759487714777851869
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,6 +375,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ValidHandType: 2
   IsDynamic: 0
+  AnyOrientation: 0
+  Label:
+    m_Source: 
+    m_HashValue: 0
 --- !u!1 &6471475439971284886
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,6 +470,7 @@ MonoBehaviour:
   GrabEnabled: 1
   MaxGrabbers: 2
   IsHeavy: 0
+  IsAnchored: 0
   MustGrabAtSnap: 1
   GrabberAnim:
     GripAnimIndex: 0
@@ -918,6 +928,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ValidHandType: 1
   IsDynamic: 0
+  AnyOrientation: 0
+  Label:
+    m_Source: 
+    m_HashValue: 0
 --- !u!1001 &7541019604517166366
 PrefabInstance:
   m_ObjectHideFlags: 0

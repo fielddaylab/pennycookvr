@@ -1,13 +1,15 @@
 using System;
 using BeauPools;
 using BeauRoutine;
+using BeauUtil;
 using BeauUtil.Debugger;
+using FieldDay.Assets;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
 namespace Pennycook.Tablet {
-    public class TabletPhoto {
+    public class TabletPhoto : IPoolConstructHandler {
         public Texture2D Texture;
         public AsyncHandle UploadHandle;
         public string Tag;
@@ -16,6 +18,15 @@ namespace Pennycook.Tablet {
         public Vector2Int CachedSize;
         public GraphicsFormat CachedFormat;
         public NativeArray<byte> CachedCPUData;
+
+        void IPoolConstructHandler.OnConstruct() {
+        }
+
+        void IPoolConstructHandler.OnDestruct() {
+            UploadHandle.Cancel();
+            UnityHelper.SafeDestroy(ref Texture);
+            CachedCPUData = default;
+        }
     }
 
     static public partial class PhotoUtility {

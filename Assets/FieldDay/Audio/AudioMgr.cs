@@ -84,11 +84,14 @@ namespace FieldDay.Audio {
                 *bus.ScriptProperties = AudioPropertyBlock.Default;
                 bus.LastKnownProperties = AudioPropertyBlock.Default;
 
+                bus.ConfigVolume = 1;
+
                 bus.Handle = m_VoiceIdAllocator.Alloc();
                 bus.FloatTweens.Reset();
             }
 
 #if DEVELOPMENT
+            m_DebugBusProperties = new AudioPropertyBlock[MaxBuses];
             for(int i = 0; i < MaxBuses; i++) {
                 m_DebugBusProperties[i] = AudioPropertyBlock.Default;
             }
@@ -125,7 +128,7 @@ namespace FieldDay.Audio {
             Game.Assets.SetNamedAssetLoadCallbacks<AudioBus>(OnAudioBusLoaded, OnAudioBusUnloaded);
 
             m_BusNameToIndex.Add(0, 0);
-            CreateBus(AudioBus.Master);
+            CreateBus(AudioBus.Master, AudioPropertyBlock.Default, default);
         }
 
         #region Events
@@ -226,7 +229,12 @@ namespace FieldDay.Audio {
 
         private void OnAudioBusLoaded(AudioBus bus) {
             if (m_BusNameToIndex.ContainsKey(bus.AssetId.HashValue)) {
-                Log.Error("Bus '{0}' already loaded!", bus.AssetId);
+                Log.Error("[AudioMgr] Bus '{0}' already loaded!", bus.AssetId);
+                return;
+            }
+
+            if (m_BusCount > 1) {
+                Log.Error("[AudioMgr] Buses must all be registered at startup.");
                 return;
             }
 

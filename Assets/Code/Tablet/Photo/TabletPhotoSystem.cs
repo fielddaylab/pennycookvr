@@ -17,7 +17,7 @@ namespace Pennycook.Tablet {
         public override void ProcessWork(float deltaTime) {
             if (GameLoop.IsPhase(GameLoopPhase.PreUpdate)) {
                 if (m_State.CurrentStage == TabletPhotoState.Stage.PhotoReady) {
-                    TabletPhoto photo = m_State.PhotoPool.Alloc();
+                    TabletPhoto photo = m_State.QueuedPhoto;
                     PhotoUtility.CopyRTToTextureCentered(m_State.PhotoRT, photo.Texture);
                     photo.Texture.Apply();
                     UploadPhoto(photo, DateTime.Now);
@@ -26,6 +26,7 @@ namespace Pennycook.Tablet {
                     m_State.Flash.alpha = 1;
                     m_State.CurrentStage = TabletPhotoState.Stage.Cooldown;
                     m_State.Cooldown = 1f;
+                    m_State.QueuedPhoto = null;
                 }
                 return;
             }
@@ -65,7 +66,7 @@ namespace Pennycook.Tablet {
 #if UNITY_EDITOR
             directory = "DebugPhotos/";
 #else
-            directory = Path.Combine(Application.persistentDataPath, "/Photos/");
+            directory = Path.Combine(Application.persistentDataPath, "Photos/");
 #endif // UNITY_EDITOR
 
             Directory.CreateDirectory(directory);
