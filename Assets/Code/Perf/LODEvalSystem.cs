@@ -111,7 +111,7 @@ namespace Pennycook {
                         }
                     }
 
-                    Log.Msg("[LODEvalSystem] Element '{0}' transitioned to lod{1}", element.gameObject.name, (int) level);
+                    Log.Debug("[LODEvalSystem] Element '{0}' transitioned to lod{1}", element.gameObject.name, (int) level);
 
                     element.OnLevelChanged.Invoke(level);
                 }

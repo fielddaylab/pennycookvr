@@ -99,10 +99,10 @@ half PrceduralCrossHatching(float2 uv, OtoonPBRSurfaceData surface, half ndotl)
     float currentScale = 1.0;
     half sizeUpper = ndotl * surface.hatchingDrawStrength * 0.1;
 
-    const int count = 15;
-    for (int i = 0; i < count; i++)
+    const uint count = 15;
+    for (uint i = 0; i < count; i++)
     {
-        currentUV = lerp(uv1, uv2, i % 2);
+        currentUV = lerp(uv1, uv2, i & 0x1);
         float g = SAMPLE_TEXTURE2D_LOD(_HatchingNoiseMap, sampler_HatchingNoiseMap, _HatchingNoiseMap_ST.xy * currentUV * currentScale, 0).r;
         g = 1.0 - smoothstep(0.5 - surface.hatchingSmoothness, 0.5 + surface.hatchingSmoothness + 0.1, sizeUpper - g);
         hatching = min(g, hatching);

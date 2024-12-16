@@ -55,8 +55,10 @@ namespace Pennycook.Tablet {
                     if (m_StateA.HighlightedObject != scannable) {
                         SetSelection(m_StateA, m_StateB, m_StateC, scannable, viewportRect, allowVisualHighlights);
 
-                        float vibAmp = Mathf.Clamp(1 - hit.distance / 60, 0.4f, 1) * 0.3f;
-                        TabletUtility.PlayHaptics(vibAmp, 0.02f);
+                        if ((m_StateB.CurrentToolDef.Flags & TabletToolFlags.SkipHapticHighlightFeedback) == 0) {
+                            float vibAmp = Mathf.Clamp(1 - hit.distance / 60, 0.4f, 1) * 0.3f;
+                            TabletUtility.PlayHaptics(vibAmp, 0.02f);
+                        }
                     } else {
                         m_StateA.TargetHighlightCorners = viewportRect;
                     }

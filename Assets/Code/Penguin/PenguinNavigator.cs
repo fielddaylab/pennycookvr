@@ -17,13 +17,14 @@ namespace Pennycook {
 
         [NonSerialized] public PenguinNavState State;
         [NonSerialized] public NavPath CurrentPath;
+        [NonSerialized] public Vector3 CurrentPathNodeStart;
         [NonSerialized] public UniqueId16 CurrentPathRequest;
         [NonSerialized] public Transform DynamicPathTarget;
         [NonSerialized] public float PanicCounter;
 
         [NonSerialized] public PenguinBrain Brain;
-        [NonSerialized] public float TargetPosTolerance = 0.1f;
-        [NonSerialized] public float MidpointPosTolerance = 0.3f;
+        [NonSerialized] public float TargetPosTolerance = 0.05f;
+        [NonSerialized] public float MidpointPosTolerance = 0.15f;
 
 
         private void Awake() {

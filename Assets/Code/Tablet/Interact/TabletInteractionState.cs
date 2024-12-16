@@ -23,6 +23,9 @@ namespace Pennycook.Tablet {
         public TMP_Text DetailsHeader;
         public GameObject DetailsDescriptionGroup;
         public TMP_Text DetailsDescription;
+        [Space]
+        public FadeGroup IdentifiedGroup;
+        public TMP_Text IdentifiedLabel;
         
         [NonSerialized] public State CurrentState = State.Disabled;
 

@@ -5,6 +5,7 @@ using BeauUtil;
 using BeauRoutine;
 using BeauUtil.Debugger;
 using FieldDay.Debugging;
+using System;
 
 namespace Pennycook {
     [SysUpdate(GameLoopPhase.FixedUpdate, 100)]
@@ -24,18 +25,22 @@ namespace Pennycook {
                 return;
             }
 
+            Vector3 currentPos = nav.MoveRoot.position;
+
             if (nav.State == PenguinNavState.Found) {
                 nav.PanicCounter = 0;
                 nav.State = PenguinNavState.Moving;
+                nav.CurrentPathNodeStart = currentPos;
             }
 
-            Vector3 currentPos = nav.MoveRoot.position;
+            Vector3 navStartPos = nav.CurrentPathNodeStart;
             nextTarget.y = currentPos.y;
+            navStartPos.y = currentPos.y;
 
             DebugDraw.AddSphere(nextTarget, 0.4f, Color.green.WithAlpha(0.5f));
             DebugDraw.AddLine(nextTarget, currentPos, Color.green.WithAlpha(0.5f), 0.2f);
 
-            Vector3 targetVector = ComputeTargetVector(nav, currentPos, nextTarget);
+            Vector3 targetVector = ComputeTargetVector(nav, currentPos, navStartPos, nextTarget);
             targetVector.y = 0;
 
             Vector3 currentForward = nav.RotationRoot.forward;
@@ -54,8 +59,8 @@ namespace Pennycook {
                 float normalizedAngleOffset = angleDelta / nav.MaxAngleDeltaToMove;
                 float terrainNormal = PenguinNav.GetApproximateNormalAt(currentPos);
 
-                float angleMultiplier = Curve.CubeInOut.Evaluate(1 - normalizedAngleOffset);
-                float moveDistance = nav.MovementSpeed * deltaTime * (terrainNormal * terrainNormal) * angleMultiplier;
+                float angleMultiplier = 1 - normalizedAngleOffset;
+                float moveDistance = nav.MovementSpeed * deltaTime * terrainNormal * angleMultiplier;
 
                 Vector3 newPos = currentPos + newFlatForward * moveDistance;
                 if (PenguinNav.IsWalkable(newPos)) {
@@ -72,17 +77,20 @@ namespace Pennycook {
                     }
 
                     if (Vector2.Distance(Geom.SwizzleYZ(newPos), Geom.SwizzleYZ(nextTarget)) <= posTolerance) {
-                        nav.CurrentPath.Positions.PopFront();
+                        nav.CurrentPathNodeStart = nav.CurrentPath.Positions.PopFront();
                         if (nav.CurrentPath.Positions.Count == 0) {
                             HandleOutOfNodes(nav);
                         }
                     }
                 } else {
                     DebugDraw.AddSphere(newPos, 0.3f, Color.red);
-                    nav.PanicCounter += deltaTime;
-                    Log.Warn("[PenguinNavigatorSystem] Unable to move forward");
+                    if (nav.PanicCounter <= 0) {
+                        Log.Warn("[PenguinNavigatorSystem] Unable to move forward");
+                    }
+                    nav.PanicCounter += deltaTime * angleMultiplier;
                     if (nav.PanicCounter > 1f) {
                         DebugDraw.AddSphere(newPos, 1, Color.red, 3f);
+                        Log.Error("[PenguinNavigatorSystem] Navigation failed");
                         HandlePanic(nav);
                     }
                 }
@@ -107,25 +115,58 @@ namespace Pennycook {
             }
         }
 
-        private const float LocalAvoidanceLookAhead = 0.5f;
+        private const float LocalAvoidanceLookAhead = 0.6f;
 
-        static private Vector3 ComputeTargetVector(PenguinNavigator nav, Vector3 currentPos, Vector3 nextTarget) {
+        static private Vector3 ComputeTargetVector(PenguinNavigator nav, Vector3 currentPos, Vector3 targetVectorStart, Vector3 nextTarget) {
+            Vector3 outputVector;
+            float maxForwardDist = Vector3.Distance(nextTarget, currentPos);
+            if (!ComputeTargetVectorWithWhiskers(nav, currentPos, nextTarget, maxForwardDist, out outputVector)) {
+                //Vector2 closestPointAlongPath = GetClosestPointAlongVector(Geom.SwizzleYZ(targetVectorStart), Geom.SwizzleYZ(nextTarget), Geom.SwizzleYZ(currentPos));
+                //Vector3 newTarget = Geom.SwizzleYZ(closestPointAlongPath);
+                //newTarget.y = currentPos.y;
+                //DebugDraw.AddLine(nextTarget, targetVectorStart, Color.yellow.WithAlpha(0.5f), 0.2f);
+                //DebugDraw.AddPoint(newTarget, 0.3f, Color.yellow, 0.2f);
+                //if (!ComputeTargetVectorWithWhiskers(nav, currentPos, newTarget, maxForwardDist, out outputVector)) {
+                    outputVector = Vector3.Normalize(nextTarget - currentPos);
+                //}
+            }
+            return outputVector;
+        }
+
+        static private bool ComputeTargetVectorWithWhiskers(PenguinNavigator nav, Vector3 currentPos, Vector3 nextTarget, float maxForwardDist, out Vector3 outputVector) {
+            float travelDist = Math.Min(LocalAvoidanceLookAhead, maxForwardDist);
             Vector3 forward = Vector3.Normalize(nextTarget - currentPos);
-            if (!PenguinNav.IsWalkable(currentPos + forward * LocalAvoidanceLookAhead)) {
+            if (!PenguinNav.IsWalkableRaycast(currentPos, currentPos + forward * travelDist)) {
                 Vector3 cross = new Vector3(-forward.z, 0, forward.x);
                 Vector3 leftNav = Vector3.Normalize(forward + cross);
-                if (PenguinNav.IsWalkable(currentPos + leftNav * LocalAvoidanceLookAhead)) {
-                    return leftNav;
+                if (PenguinNav.IsWalkableRaycast(currentPos, currentPos + leftNav * travelDist)) {
+                    outputVector = leftNav;
+                    return true;
                 }
                 Vector3 rightNav = Vector3.Normalize(forward - cross);
-                if (PenguinNav.IsWalkable(currentPos + rightNav * LocalAvoidanceLookAhead)) {
-                    return rightNav;
+                if (PenguinNav.IsWalkableRaycast(currentPos, currentPos + rightNav * travelDist)) {
+                    outputVector = rightNav;
+                    return true;
                 } else {
-                    return forward;
+                    outputVector = forward;
+                    return false;
                 }
             } else {
-                return forward;
+                outputVector = forward;
+                return true;
             }
+        }
+
+        static private Vector2 GetClosestPointAlongVector(Vector2 a, Vector2 b, Vector2 t) {
+            Vector2 at = t - a;
+
+            Vector2 ab = b - a;
+            float abMag = ab.magnitude;
+            Vector2 abDir = ab.normalized;
+
+            float dot = Vector2.Dot(abDir, at);
+            dot /= abMag;
+            return a + ab * Mathf.Clamp01(dot);
         }
     }
 }

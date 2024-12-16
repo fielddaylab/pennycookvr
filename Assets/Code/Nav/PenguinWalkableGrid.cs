@@ -54,15 +54,15 @@ namespace Pennycook {
                 bool insideRookery = InsideRookeryGrid[i];
                 if (walkable) {
                     if (insideRookery) {
-                        DebugDraw.AddSphere(pos, 0.02f, Color.yellow, duration);
+                        DebugDraw.AddSphere(pos, 0.02f, Color.yellow, duration, false);
                     } else {
-                        DebugDraw.AddSphere(pos, 0.02f, ColorBank.DarkOrange, duration);
+                        DebugDraw.AddSphere(pos, 0.02f, ColorBank.DarkOrange, duration, false);
                     }
                 } else {
                     if (insideRookery) {
-                        DebugDraw.AddSphere(pos, 0.02f, Color.red, duration);
+                        DebugDraw.AddSphere(pos, 0.02f, Color.red, duration, false);
                     } else {
-                        DebugDraw.AddSphere(pos, 0.02f, Color.black, duration);
+                        DebugDraw.AddSphere(pos, 0.02f, Color.black, duration, false);
                     }
                 }
             }
@@ -72,10 +72,18 @@ namespace Pennycook {
             LoadHandle = Async.Schedule(PenguinWalkableGridGenerator.GenerateGridJob(this), AsyncFlags.MainThreadOnly | AsyncFlags.HighPriority);
 
             Game.Scenes.RegisterLoadDependency(LoadHandle);
+
+            GameLoop.OnDebugUpdate.Register(DebugUpdate);
+        }
+
+        private void DebugUpdate() {
+            if (DebugInput.IsPressed(KeyCode.Alpha0)) {
+                RenderGraph(4);
+            }
         }
 
         void IRegistrationCallbacks.OnDeregister() {
-
+            GameLoop.OnDebugUpdate.Deregister(DebugUpdate);
         }
 
 #if UNITY_EDITOR

@@ -14,6 +14,8 @@ namespace Pennycook.Tablet {
         [Inline(InlineAttribute.DisplayType.HeaderLabel)]
         public TabletDetailsContent Contents;
 
+        public string PhotoTag;
+
         [Header("State")]
         public bool Identified;
 
@@ -47,6 +49,7 @@ namespace Pennycook.Tablet {
 
     [Serializable]
     public struct TabletDetailsContent {
+        public string SimpleHeader;
         public string DetailedHeader;
         [Multiline] public string DetailedText;
     }

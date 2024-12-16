@@ -9,15 +9,19 @@ using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
 namespace Pennycook.Tablet {
-    public class TabletPhoto : IPoolConstructHandler {
+    public class TabletPhoto : IPoolConstructHandler, IPoolAllocHandler {
         public Texture2D Texture;
         public AsyncHandle UploadHandle;
         public string Tag;
         public DateTime Timestamp;
+        public TabletPhotoResult Result;
 
         public Vector2Int CachedSize;
         public GraphicsFormat CachedFormat;
         public NativeArray<byte> CachedCPUData;
+
+        void IPoolAllocHandler.OnAlloc() {
+        }
 
         void IPoolConstructHandler.OnConstruct() {
         }
@@ -27,6 +31,17 @@ namespace Pennycook.Tablet {
             UnityHelper.SafeDestroy(ref Texture);
             CachedCPUData = default;
         }
+
+        void IPoolAllocHandler.OnFree() {
+            Result = TabletPhotoResult.Nothing;
+        }
+    }
+
+    public enum TabletPhotoResult {
+        Nothing,
+        BadPhoto,
+        GoodPhoto,
+        NewBehavior,
     }
 
     static public partial class PhotoUtility {

@@ -21,6 +21,7 @@ namespace ScriptableBake {
         }
 
         bool IBaked.Bake(BakeFlags flags, BakeContext context) {
+            Baking.UnpackPrefabIfNecessary(transform);
             transform.SetParent(NewParent);
             Baking.Destroy(this);
             return true;

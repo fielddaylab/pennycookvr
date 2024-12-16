@@ -50,7 +50,8 @@ namespace Pennycook.Tablet {
     public enum TabletToolFlags {
         DoNotUseHighlightBox = 0x01,
         NoPrompt = 0x02,
-        InteractionDoesNotRequireHighlight = 0x04
+        InteractionDoesNotRequireHighlight = 0x04,
+        SkipHapticHighlightFeedback = 0x08
     }
 
     static public class TabletToolDefinitions {
@@ -90,12 +91,26 @@ namespace Pennycook.Tablet {
             Interact = (h, c, t) => {
                 if (TabletInteractionUtility.TryInteract(h, h.CachedInteraction, t)) {
                     TabletUtility.PlayHaptics(0.3f, 0.05f);
+                    if (h.Identified && !string.IsNullOrEmpty(h.Contents.SimpleHeader)) {
+                        TabletInteractionState iState = Find.State<TabletInteractionState>();
+                        iState.IdentifiedLabel.SetText(h.Contents.SimpleHeader);
+                        iState.IdentifiedGroup.Show();
+                    }
+                }
+            },
+
+            OnHighlighted = (h, c) => {
+                if (h.Identified && !string.IsNullOrEmpty(h.Contents.SimpleHeader)) {
+                    TabletInteractionState iState = Find.State<TabletInteractionState>();
+                    iState.IdentifiedLabel.SetText(h.Contents.SimpleHeader);
+                    iState.IdentifiedGroup.Show();
                 }
             },
 
             OnUnhighlighted = (h, c) => {
                 TabletInteractionState iState = Find.State<TabletInteractionState>();
                 iState.DetailsGroup.Hide();
+                iState.IdentifiedGroup.Hide();
             }
         };
 
@@ -103,10 +118,11 @@ namespace Pennycook.Tablet {
             RaycastMask = TabletUtility.DefaultSearchMask,
             RaycastUnitConeRadius = 0.4f,
 
-            Flags = TabletToolFlags.DoNotUseHighlightBox | TabletToolFlags.InteractionDoesNotRequireHighlight,
+            Flags = TabletToolFlags.DoNotUseHighlightBox | TabletToolFlags.InteractionDoesNotRequireHighlight
+                | TabletToolFlags.SkipHapticHighlightFeedback,
 
             HighlightPredicate = (h, hc) => {
-                return h.CachedCapture;
+                return h;
             },
 
             GetState = (h, c, t) => {
@@ -124,7 +140,7 @@ namespace Pennycook.Tablet {
 
             InteractMode = TabletToolInteractionMode.Press,
             Interact = (h, c, t) => {
-                PhotoUtility.TakePhoto(t);
+                PhotoUtility.TakePhoto(h, t);
             },
 
             OnOpen = (c) => {

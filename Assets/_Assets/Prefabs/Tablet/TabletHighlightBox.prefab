@@ -379,8 +379,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3cce1025f282c247b38ed00ee6ddc0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 1976b8a974799cb42a6d2a75363ad9fc, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.6}
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.6}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
@@ -490,10 +490,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5450687788369737003}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 32.725, y: -17.619999}
+  m_SizeDelta: {x: 57.45, y: 27.239998}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8644802651886025695
 CanvasRenderer:
@@ -1054,13 +1054,15 @@ GameObject:
   - component: {fileID: 3031681696692883607}
   - component: {fileID: 2700290310456122642}
   - component: {fileID: 8861591063051650342}
+  - component: {fileID: 5142481175104197429}
+  - component: {fileID: 7939678236982787125}
   m_Layer: 31
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5450687788369737003
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1080,7 +1082,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 4}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 65.45, y: 35.239998}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &3031681696692883607
 MonoBehaviour:
@@ -1138,3 +1140,38 @@ MonoBehaviour:
   m_Offset1: {x: 0, y: 0}
   m_Offset2: {x: 0, y: 0}
   m_Offset3: {x: 0, y: 0}
+--- !u!225 &5142481175104197429
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8780212795524186719}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &7939678236982787125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8780212795524186719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4095508ef49db8548bf7f0badc7b0602, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Group: {fileID: 5142481175104197429}
+  Offset: {fileID: 8861591063051650342}
+  ToOnTween:
+    Time: 0.05
+    Curve: 0
+  ToOffTween:
+    Time: 0.05
+    Curve: 0
+  ToOnStartOffset: {x: 0, y: 0}
+  DefaultOffset: {x: 0, y: 0}
+  ToOffEndOffset: {x: 0, y: 0}

@@ -31,6 +31,31 @@ namespace Pennycook.Tablet {
                 return;
             }
 
+            switch (m_State.Animation.CurrentState) {
+                case TabletPhotoAnimation.State.Ready: {
+                    if (m_State.ActivePhotos.TryPeekFront(out TabletPhoto photo)) {
+                        m_State.Animation.PlayPhotoAnimation(photo);
+                    }
+                    break;
+                }
+
+                case TabletPhotoAnimation.State.Finished: {
+                    if (m_State.ActivePhotos.TryPopFront(out TabletPhoto photo)) {
+                        m_State.PhotosPendingCleanup.PushBack(photo);
+                    }
+                    m_State.Animation.CurrentState = TabletPhotoAnimation.State.Ready;
+                    break;
+                }
+            }
+
+            for(int i = m_State.PhotosPendingCleanup.Count - 1; i >= 0; i--) {
+                TabletPhoto pendingPhoto = m_State.PhotosPendingCleanup[i];
+                if (!pendingPhoto.UploadHandle.IsRunning()) {
+                    m_State.PhotosPendingCleanup.FastRemoveAt(i);
+                    m_State.PhotoPool.Free(pendingPhoto);
+                }
+            }
+
             switch (m_State.CurrentStage) {
                 case TabletPhotoState.Stage.Cooldown: {
                     m_State.Cooldown -= deltaTime;

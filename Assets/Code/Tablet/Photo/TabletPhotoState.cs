@@ -3,6 +3,7 @@ using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -31,6 +32,7 @@ namespace Pennycook.Tablet {
         [NonSerialized] public TabletPhoto QueuedPhoto;
         [NonSerialized] public FixedPool<TabletPhoto> PhotoPool;
         [NonSerialized] public RingBuffer<TabletPhoto> ActivePhotos;
+        [NonSerialized] public RingBuffer<TabletPhoto> PhotosPendingCleanup;
 
         public enum Stage {
             Idle,
@@ -60,6 +62,7 @@ namespace Pennycook.Tablet {
             PhotoPool.Prewarm();
 
             ActivePhotos = new RingBuffer<TabletPhoto>(PhotoPool.Capacity);
+            PhotosPendingCleanup = new RingBuffer<TabletPhoto>(PhotoPool.Capacity);
         }
 
         void IRegistrationCallbacks.OnDeregister() {
@@ -74,11 +77,12 @@ namespace Pennycook.Tablet {
     }
 
     static public partial class PhotoUtility {
-        static public void TakePhoto(double ts) {
+        static public void TakePhoto(TabletHighlightable highlighted, double ts) {
             TabletPhotoState photoState = Find.State<TabletPhotoState>();
             RequestPhoto(photoState);
             photoState.NextAllowedPhotoTS = ts + 2;
             photoState.QueuedPhoto = photoState.PhotoPool.Alloc();
+            photoState.QueuedPhoto.Tag = GetPhotoTag(highlighted);
             TabletUtility.PlaySfx("Tablet.Photo.Snap");
         }
 
@@ -109,6 +113,24 @@ namespace Pennycook.Tablet {
             }
 
             photoState.CurrentStage = TabletPhotoState.Stage.PhotoReady;
+        }
+
+        static public string GetPhotoTag(TabletHighlightable highlightable) {
+            if (!highlightable) {
+                return null;
+            }
+            if (highlightable.CachedCapture && !highlightable.CachedCapture.CaptureId.IsEmpty) {
+                return highlightable.CachedCapture.CaptureId.Source();
+            }
+            if (!string.IsNullOrEmpty(highlightable.PhotoTag)) {
+                return highlightable.PhotoTag;
+            }
+            ScriptActor actor = ScriptUtility.Actor(highlightable);
+            if (actor) {
+                return actor.gameObject.name;
+            }
+
+            return highlightable.gameObject.name;
         }
     }
 }
