@@ -8,7 +8,9 @@ $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call CorralChicks->Activate()
-$call DayHeader->SetText(Jan 8)
+$call DataLoggerPlate->Activate()
+$call ChickBandPlate->Activate()
+$call DayHeader->SetText(Dec 18)
 $call FadeIn(1.0)
 $call Wait(2)
 
@@ -177,9 +179,9 @@ $call WingBand1->Activate()
 $call WingBand2->Activate()
 $call WingBand3->Activate()
 
-$call SocketObjectTo(WingBand1, GPSSocketRight)
-$call SocketObjectTo(WingBand2, GPSSocketMiddle)
-$call SocketObjectTo(WingBand3, GPSSocketLeft)
+$call SocketObjectTo(WingBand1, BandSocketRight)
+$call SocketObjectTo(WingBand2, BandSocketMiddle)
+$call SocketObjectTo(WingBand3, BandSocketLeft)
 
 {@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/4rm14]
 {@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/4rm15]
@@ -192,6 +194,11 @@ $call SocketObjectTo(WingBand3, GPSSocketLeft)
 {@Margo}    First you’ll need to hold the penguin in place. $[Day4/Rookery/4rm19]
 {@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/4rm20]
 {@Player}   Cool, no sweat. $[Day4/Rookery/Player_12]  
+
+:: OnUnsocketedWingBand
+@trigger ObjectSocketed
+@when   objectType == "WingBand", socketType == "BandSocket"
+$set chapter:wingCount - 1
 
 :: OnSocketedWingBand
 @trigger ObjectSocketed

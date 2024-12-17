@@ -9,6 +9,7 @@ $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call DayHeader->SetText(Nov 16)
+$call GPSTrackerPlate->Activate()
 $call FadeIn(1.0)
 $call Wait(2)
 
@@ -96,8 +97,7 @@ $call Wait(1)
 
 $call ClearGoals()
 
-$call CreateGoal("Day2_warp_middle", Warp to the middle of the Rookery)
-$call CreateGoal("Day2_warp_far", Warp near the weigh gate of the Rookery)
+$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 
 :: WarpedToRookeryMiddle2
 @trigger    AtWarpPoint
@@ -105,11 +105,7 @@ $call CreateGoal("Day2_warp_far", Warp near the weigh gate of the Rookery)
 @when       targetObject == "WarpTarget-RookeryMiddle"
 @once
 
-$call CompleteGoal("Day2_warp_middle")
-
 $call Wait(2)
-
-$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 
 {@Margo}   Okey dokey. Time to track down the Funtastic Five $[Day2/Rookery/2rm01]
 {@Player}  The Fliptastic Five. $[Day2/Rookery/Player_1]
@@ -217,11 +213,19 @@ $if chapter:finishedObservations == true, chapter:finishedTrackers == true
 	{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/2rm26]
 	$call SetWarpActive(WarpBluffBack, true)
 	$set chapter:finishedAllObservations = true
+	$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
+	$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
+	$call CompleteGoal("Day2_mates")
+	$call CompleteGoal("Day2_trackers")
 	$call CreateGoal("Day2_return", Return to tent)
 $elseif chapter:finishedObservations == true, chapter:finishedTrackers == false
-	$call CreateGoal("Day2_warp_far", Warp near the weigh gate of the Rookery)
+	$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
+	$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
+	$call CompleteGoal("Day2_mates")
 $elseif chapter:finishedObservations == false, chapter:finishedTrackers == true
-	$call CreateGoal("Day2_warp_middle", Warp to the middle of the Rookery)
+	$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
+	$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
+	$call CompleteGoal("Day2_trackers")
 $endif
 
 :: CheckAllMatesIdentified

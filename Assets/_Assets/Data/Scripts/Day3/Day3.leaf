@@ -7,8 +7,10 @@ $set chapter:finishedObservations = false
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-$call DayHeader->SetText(Dec 20)
+$call DayHeader->SetText(Dec 1)
 $call CorralChicks->Activate()
+$call GPSTrackerPlate->Deactivate()
+$call DataLoggerPlate->Activate()
 $call Clouds->Activate()
 $call Skuas->Activate()
 $call FadeIn(1.0)
@@ -97,17 +99,15 @@ $call ClearGoals()
 
 $call SetWarpGroupActive(Rookery, true)
 
-$call CreateGoal("day3_warp_middle", Warp to middle of Rookery)
-$call CreateGoal("day3_warp_far", Warp to back of Rookery)
-$call CreateGoal("day3_warp_side", Warp to side of Rookery)
+$call CreateGoal("day3_regurg", Observe a penguin feeding their chick for diet data)
+$call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
+$call CreateGoal("day3_scan", Scan nests, eggs, and chicks)
 
 :: WarpedToRookeryMiddle
 @trigger    AtWarpPoint
 @who        Player
 @when       targetId == "WarpRookeryMiddle"
 @once
-
-$call CompleteGoal("day3_warp_middle");
 
 $call AlfredoEgg->Activate()
 $call FuzzEgg->Activate()
@@ -211,8 +211,6 @@ $goto Day3.CheckAllNestsIdentified
 $if chapter:identifiedCount >= 5 
     $set	chapter:finishedObservations = true
 	$call ClearGoals()
-	$call CreateGoal("id_nests", ID Chicks Eggs and Nest)
-	$call CompleteGoal("id_nests")
 	$goto Day3.CheckAllComplete
 $endif
 
@@ -222,12 +220,7 @@ $endif
 @when       targetId == "WarpRookeryBack"
 @once
 
-$call CompleteGoal("day3_warp_far");
-
 {@Margo}	We need to get some data on what the parents are feeding their young.	$[Day3/Rookery/3rm14]
-
-$call CreateGoal("day3_regurg", Observe a penguin feeding their chick for diet data)
-
 {@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/3rm15]
 
 //$start Day3.StartRegurgitation
@@ -262,8 +255,6 @@ $goto Day3.CheckAllComplete
 @when       targetId == "WarpRookerySide"
 @once
 
-$call CompleteGoal("day3_warp_side");
-
 $call DataTracker1->Activate()
 $call DataTracker2->Activate()
 $call DataTracker3->Activate()
@@ -274,9 +265,6 @@ $call SocketObjectTo(DataTracker3, GPSSocketLeft)
 
 {@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/3rm18]
 {@Margo}	You’ll need to attach a data logger to their backs.	$[Day3/Rookery/3rm19]
-
-$call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
-
 {@Margo}	Grab a data logger from the Pelican Case.	$[Day3/Rookery/3rm20]
 {@Margo}	Place one hand on the penguin to stop them, and then attach the logger to their back.	$[Day3/Rookery/3rm21]
 
@@ -309,6 +297,12 @@ $if chapter:trackersSocketed == true, chapter:regurgDone == true, chapter:finish
 $set chapter:day3AllComplete = true
 $call ClearGoals()
 $call Wait(0.3)
+$call CreateGoal("day3_regurg", Observe a penguin feeding their chick for diet data)
+$call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
+$call CreateGoal("day3_scan", Scan nests, eggs, and chicks)
+$call CompleteGoal("day3_regurg")
+$call CompleteGoal("day3_back_trackers")
+$call CompleteGoal("day3_scan")
 $call CreateGoal("Day3_return", Return to tent)
 $call SetWarpActive(WarpBluffBack, true)
 {@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]
@@ -320,13 +314,13 @@ $call SetWarpActive(WarpBluffBack, true)
 $else
 $call ClearGoals()
 $if chapter:trackersSocketed == false
-$call CreateGoal("day3_warp_side", Warp to side of Rookery)
+
 $endif
 $if chapter:regurgDone == false
-$call CreateGoal("day3_warp_far", Warp to back of Rookery)
+
 $endif
 $if chapter:finishedObservations == false
-$call CreateGoal("day3_warp_middle", Warp to middle of Rookery)
+
 $endif
 $endif
 

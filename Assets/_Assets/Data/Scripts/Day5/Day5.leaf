@@ -7,6 +7,9 @@ $call SetAllWarpsActive(false)
 $call ClearGoals()
 $set chapter:legCount = 0
 $call DayHeader->SetText(Feb 22)
+$call GPSTrackerPlate->Activate()
+$call DataLoggerPlate->Deactivate()
+$call ChickBandPlate->Deactivate()
 $call FadeIn(1.0)
 $call Wait(2)
 

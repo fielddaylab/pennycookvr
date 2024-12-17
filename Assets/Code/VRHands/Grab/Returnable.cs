@@ -37,7 +37,7 @@ namespace FieldDay.VRHands {
         public void OnCollisionEnter(Collision c) {
             int l = c.GetContact(0).otherCollider.gameObject.layer;
 
-			if((l == LayerMasks.ExcludeDLight_Index || l == LayerMasks.Terrain_Index) && !CachedRB.isKinematic && ((GrabbableComponent == null) || 
+			if((l == LayerMasks.ExcludeDLight_Index || l == LayerMasks.Terrain_Index || l == LayerMasks.Nest_Index) && !CachedRB.isKinematic && ((GrabbableComponent == null) || 
                     (GrabbableComponent != null && GrabbableComponent.CurrentGrabberCount == 0))) {
                 if (!ReturnProcess.Exists()) {
                     ReturnProcess = Routine.Start(this, ReturnToStart());

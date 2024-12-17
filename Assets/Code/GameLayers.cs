@@ -63,6 +63,13 @@ static public class LayerMasks {
     // Layer 19: SocketVolume
     public const int SocketVolume_Index = 19;
     public const int SocketVolume_Mask = 524288;
+
+    public const int ParticleAvoid_Index = 20;
+    public const int ParticleAvoid_Mask = 1048576;
+
+    public const int Nest_Index = 21;
+    public const int Nest_Mask = 2097152;
+
     // Layer 30: RestrictWalk
     public const int RestrictWalk_Index = 30;
     public const int RestrictWalk_Mask = 1073741824;
