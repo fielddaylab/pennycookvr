@@ -36,9 +36,12 @@ namespace Pennycook.Tablet {
         [NonSerialized] public ConnectionState IsConnected;
         [NonSerialized] public BitSet32 AllowedConnections = new BitSet32(Bits.AllU32);
 
+        [NonSerialized] public GameObject Visuals;
+
         private void Awake() {
             this.CacheComponent(ref Highlightable);
             Highlightable.HighlightCollider.enabled = false;
+            Visuals = transform.GetChild(0).gameObject;
         }
 
         [LeafMember("SetWarpActive")]
@@ -95,6 +98,7 @@ namespace Pennycook.Tablet {
     static public class TabletWarpUtility {
         static public void UpdateWarpActivation(TabletWarpPoint warpPoint) {
             warpPoint.Highlightable.HighlightCollider.enabled = warpPoint.CanWarp && warpPoint.IsConnected == TabletWarpPoint.ConnectionState.Connected;
+            warpPoint.Visuals.SetActive(warpPoint.Highlightable.HighlightCollider.enabled);
         }
     }
 }

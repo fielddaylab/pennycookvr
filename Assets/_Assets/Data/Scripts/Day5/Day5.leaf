@@ -10,13 +10,16 @@ $call DayHeader->SetText(Feb 22)
 $call GPSTrackerPlate->Activate()
 $call DataLoggerPlate->Deactivate()
 $call ChickBandPlate->Deactivate()
-$call FadeIn(1.0)
+$call FadeIn(2.0)
 $call Wait(2)
 
 :: StartGame
 @trigger    SceneReady
 @who        Player
 @once
+
+$call CreateGoal("Day5_outside", Warp outside)
+$call SetWarpActive(WarpBluff, true)
 
 {@Margo}   Mornin', kiddo!   $[Day5/Tent/5tm01]
 {@Margo}   This is it. Just think… this time tomorrow you’ll be back in Wisconsin.  $[Day5/Tent/5tm02]
@@ -41,33 +44,31 @@ $call Wait(2)
 {@Margo}	We’ve still got a few more tasks left to wrap things up. 	$[Day5/Tent/5tm15]
 {@Margo}	Whenever you’re ready, let’s head out to the Bluff. 	$[Day5/Tent/5tm16]
 
-$call CreateGoal("Day5_outside", Warp outside)
-$call SetWarpActive(WarpBluff, true)
 
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-Bluff"
 @once
+@interrupt
 
 $call TentDoor->Close()
 $call CompleteGoal("Day5_outside")
 
 $call Wait(1)
 
-$call SetWarpActive(WarpBluff, false)
+$call SetWarpGroupActive(Rookery, true)
+$call CreateGoal("Day5_rookery", Warp inside rookery)
 
 {@Margo}   Okay, kiddo. Just one task down at the Rookery today. $[Day5/Bluff/5bm01]
 {@Margo}   We need to put trackers on the penguins who had chicks this year. $[Day5/Bluff/5bm02]
-
-$call SetWarpGroupActive(Rookery, true)
-$call CreateGoal("Day5_rookery", Warp inside rookery)
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-Rookery"
 @once
+@interrupt
 
 $call CompleteGoal("Day5_rookery")
 
@@ -142,7 +143,6 @@ $call CompleteGoal("Day5_band")
 {@Margo}	Not so fast. Just one more job.	$[Day5/Rookery/5rm12]
 {@Margo}	Let’s head back up to the Bluff.	$[Day5/Rookery/5rm13]
 
-$call WarpBluffBack->Activate()
 $call SetWarpActive(WarpBluffBack, true)
 
 $call CreateGoal("Day5_bluff_back",  Warp inside)

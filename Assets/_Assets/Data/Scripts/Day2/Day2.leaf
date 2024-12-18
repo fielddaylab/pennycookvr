@@ -10,13 +10,16 @@ $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call DayHeader->SetText(Nov 16)
 $call GPSTrackerPlate->Activate()
-$call FadeIn(1.0)
+$call FadeIn(2.0)
 $call Wait(2)
 
 :: StartGame
 @trigger    SceneReady
 @who        Player
 @once
+
+$call CreateGoal("Day2_outside", Warp outside)
+$call SetWarpActive(WarpBluff, true)
 
 {@Margo}   Mornin', kiddo!   $[Day2/Tent/2tm01]
 {@Margo}   Jeepers... you look exhausted.   $[Day2/Tent/2tm02]
@@ -31,16 +34,12 @@ $call Wait(2)
 
 $call Wait(1)
 
-$call SetWarpActive(WarpBluff, true)
-
 {@Player}    Sounds good to me. Let's get out there!   $[Day2/Tent/Player_3]
 {@Margo}    Got your cold weather gear on?   $[Day2/Tent/2tm06]
 {@Player}    All five layers of it. Plus some extra hand warmers.    $[Day2/Tent/Player_4]
 {@Margo}    Well, okey dokey, then. Looks like somebody's learnin'.  $[Day2/Tent/2tm08]
 {@Margo}    Whenever you're ready, point me at the door, and we'll head out to the Bluff!     $[Day2/Tent/2tm09]
 
-$call CreateGoal("Day2_outside", Warp outside)
-$call SetWarpActive(WarpBluff, true)
 
 :: WarpedOutsideTent2
 @trigger    AtWarpPoint
@@ -57,12 +56,12 @@ $call SetWarpActive(WarpBluff, false)
 
 $call TentDoor->Close()
 
+$call PenguinCount->ActivateCount(12)
+
 {@Player}    Wow, look at them all! $[Day2/Bluff/Player_1]
 {@Margo}    Yep, seems we've got some new arrivals. We'll need a new population count. $[Day2/Bluff/2bm01]
 {@Margo}    You’ll also have two tasks down at the Rookery: retrieve your penguins’ GPS trackers, and see if they’ve paired up with a mate. $[Day2/Bluff/2bm02]
 {@Player}   Hmmm, Maybe we should get a head count. $[Day2/Bluff/Player_3]
-
-$call PenguinCount->ActivateCount(12)
 
 $call CreateGoal("Day2_count", Count the penguin population)
 
@@ -75,6 +74,7 @@ $call CreateGoal("Day2_count", Count the penguin population)
 $call CompleteGoal("Day2_count")
 
 {@Margo}  Great job, kid! We’ve got a new population count.  $[Day2/Bluff/2bm04]
+
 $call SetWarpGroupActive(Rookery, true)
 $call CreateGoal("Day2_rookery", Warp inside rookery)
 
@@ -84,13 +84,11 @@ $call CreateGoal("Day2_rookery", Warp inside rookery)
 @when       targetObject == "WarpTarget-Rookery"
 @once
 
-$call CompleteGoal("Day2_rookery")
+$call ClearGoals()
+$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
+$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 
 $call Wait(1)
-
-$call ClearGoals()
-
-$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 
 :: WarpedToRookeryMiddle2
 @trigger    AtWarpPoint
@@ -99,13 +97,6 @@ $call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 @once
 
 $call Wait(2)
-
-{@Margo}   Okey dokey. Time to track down the Funtastic Five $[Day2/Rookery/2rm01]
-{@Player}  The Fliptastic Five. $[Day2/Rookery/Player_1]
-{@Margo}    And get an ID on their mates. $[Day2/Rookery/2rm02]
-{@Player}   How can I tell who their mates are? $[Day2/Rookery/Player_2]
-{@Margo}    You will need to look for the mating dances.    $[Day2/Rookery/2rm03]
-{@Player}   Oh. Right. Got it.  $[Day2/Rookery/Player_3]
 
 $call ClearGoals()
 
@@ -127,11 +118,20 @@ $call CreateGoal("id_fuzz", ID Fuzz's Mate)
 $call CreateGoal("id_winston", ID Winston's Mate)
 $call CreateGoal("id_polo", ID Polo's Mate)
 
+{@Margo}   Okey dokey. Time to track down the Funtastic Five $[Day2/Rookery/2rm01]
+{@Player}  The Fliptastic Five. $[Day2/Rookery/Player_1]
+{@Margo}    And get an ID on their mates. $[Day2/Rookery/2rm02]
+{@Player}   How can I tell who their mates are? $[Day2/Rookery/Player_2]
+{@Margo}    You will need to look for the mating dances.    $[Day2/Rookery/2rm03]
+{@Player}   Oh. Right. Got it.  $[Day2/Rookery/Player_3]
+
 :: OnBillyIdentified
 @trigger	TabletIdentified
 @when		objectId == "Billy"
-$set	chapter:identifiedCount + 1
+@once
+@interrupt
 
+$set	chapter:identifiedCount + 1
 $call CompleteGoal("id_millie")
 
 {@Player}   Looks like Millie paired up with her same mate from last year!  $[Day2/Rookery/Player_4]
@@ -143,8 +143,10 @@ $goto Day2.CheckAllMatesIdentified
 :: OnMeatballIdentified
 @function	TabletIdentified
 @when		objectId == "Meatball"
-$set	chapter:identifiedCount + 1
+@once
+@interrupt
 
+$set	chapter:identifiedCount + 1
 $call CompleteGoal("id_alfredo")
 
 {@Margo}    Hmmm. Alfredo’s mate doesn’t have a tag. Looks like a newbie.   $[Day2/Rookery/2rm04]
@@ -155,12 +157,13 @@ $call CompleteGoal("id_alfredo")
 
 $goto Day2.CheckAllMatesIdentified
 
-
 :: OnDaisyIdentified
 @function	TabletIdentified
 @when		objectId == "Daisy"
-$set	chapter:identifiedCount + 1
+@once
+@interrupt
 
+$set	chapter:identifiedCount + 1
 $call CompleteGoal("id_fuzz")
 
 {@Margo}    Hmm. Fuzz and Daisy. Interesting.   $[Day2/Rookery/2rm07]
@@ -176,8 +179,10 @@ $goto Day2.CheckAllMatesIdentified
 :: OnWendyIdentified
 @function	TabletIdentified
 @when		objectId == "Wendy"
-$set	chapter:identifiedCount + 1
+@once
+@interrupt
 
+$set	chapter:identifiedCount + 1
 $call CompleteGoal("id_winston")
 
 {@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/2rm11]
@@ -188,8 +193,10 @@ $goto Day2.CheckAllMatesIdentified
 :: OnBenniIdentified
 @function	TabletIdentified
 @when		objectId == "Benni"
-$set	chapter:identifiedCount + 1
+@once
+@interrupt
 
+$set	chapter:identifiedCount + 1
 $call CompleteGoal("id_polo")
 
 {@Margo}   Ooh, Benni and Polo! What a good match.  $[Day2/Rookery/2rm13]
@@ -202,22 +209,17 @@ $goto Day2.CheckAllMatesIdentified
 $if chapter:finishedObservations == true, chapter:finishedTrackers == true
 	{@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/2rm25]
 	{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/2rm26]
-	$call WarpBluffBack->Activate()
 	$call SetWarpActive(WarpBluffBack, true)
 	$set chapter:finishedAllObservations = true
-	$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
-	$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
-	$call CompleteGoal("Day2_mates")
-	$call CompleteGoal("Day2_trackers")
 	$call CreateGoal("Day2_return", Return to tent)
 $elseif chapter:finishedObservations == true, chapter:finishedTrackers == false
 	$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
 	$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 	$call CompleteGoal("Day2_mates")
 $elseif chapter:finishedObservations == false, chapter:finishedTrackers == true
-	$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 	$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
 	$call CompleteGoal("Day2_trackers")
+	$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 $endif
 
 :: CheckAllMatesIdentified
@@ -234,11 +236,7 @@ $endif
 @when       targetObject == "WarpTarget-RookeryFar"
 @once
 
-$call CompleteGoal("Day2_warp_far")
-
 $call Wait(2)
-
-$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
 
 $call FuzzLegTracker->Activate()
 $call AlfredoLegTracker->Activate()
@@ -321,6 +319,7 @@ $call CreateGoal("Day2_upload", Dock Margo to upload data)
 @when       chapter:finishedAllObservations, targetObject == "WarpTarget-Desk"
 @interrupt
 
+$call TentDoor->Close()
 $call CompleteGoal("Day2_return")
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
@@ -350,7 +349,7 @@ $call CompleteGoal("Day2_upload")
 {@Margo}    Yeah, ya got that right.    $[Day2/Tent/2tm18]
 {@Margo}    You better stock up on more candy... I don't think you'll be gettin' much sleep tonight.    $[Day2/Tent/2tm19]
 
-$call FadeOut(1.0)
+//$call FadeOut(1.0)
 $call Wait(2)
 
 $call LoadNextDay()

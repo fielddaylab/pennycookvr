@@ -8,10 +8,10 @@ $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call CorralChicks->Activate()
-$call DataLoggerPlate->Activate()
-$call ChickBandPlate->Activate()
+
+
 $call DayHeader->SetText(Dec 18)
-$call FadeIn(1.0)
+$call FadeIn(2.0)
 $call Wait(2)
 
 :: StartGame
@@ -20,6 +20,7 @@ $call Wait(2)
 @once
 
 $call SetWarpActive(WarpBluff, true)
+$call CreateGoal("Day4_outside", Warp outside)
 
 {@Margo}   Mornin', kiddo.   $[Day4/Tent/4tm01]
 {@Player}   Whoa… what’s all this?   $[Day4/Tent/Player_1]
@@ -38,8 +39,6 @@ $call SetWarpActive(WarpBluff, true)
 {@Margo}    Come on. Let’s get out there and check on those penguins.   $[Day4/Tent/4tm08]
 
 $call Wait(1)
-
-$call CreateGoal("Day4_outside", Warp outside)
 
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
@@ -68,9 +67,12 @@ $call CompleteGoal("Day4_rookery")
 
 $call Wait(1)
 
-$call SetWarpGroupActive(Rookery, false)
+$call SetWarpGroupActive(Rookery, true)
 
 $call ClearGoals()
+$call CreateGoal("day4_gate", Scan the Weigh Gate)
+$call CreateGoal("day4_loggers", Collect 3 Data Loggers)
+$call CreateGoal("day4_band", Band 3 Chicks)
 
 {@Player}   Whoa… look at them! I keep forgetting how funny the chicks look these days. $[Day4/Rookery/Player_1]
 {@Partner}   Isn’t it great? We call this their awkward-teenager stage. $[Day4/Rookery/Partner_1]
@@ -88,18 +90,12 @@ $call ClearGoals()
 {@Margo}    And we’ll need to band 3 of the chicks. $[Day4/Rookery/4rm04]
 {@Player}   Got it. Let’s get to work.  $[Day4/Rookery/Player_7]
 
-$call SetWarpGroupActive(Rookery, true)
-
-$call ClearGoals()
-$call CreateGoal("day4_gate", Scan the Weigh Gate)
-$call CreateGoal("day4_loggers", Collect 3 Data Loggers)
-$call CreateGoal("day4_band", Band 3 Chicks)
-
 :: WarpedToRookeryGate
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-RookeryFar"
 @once
+@interrupt
 
 $call WeighGate->SetInteractable(true)
 
@@ -122,7 +118,19 @@ $goto Day4.CheckCompletedTasks
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-RookeryMiddle"
-@once
+@interrupt
+
+$call DataLoggerPlate->Activate()
+$call GPSSocketRight->Activate()
+$call GPSSocketMiddle->Activate()
+$call GPSSocketLeft->Activate()
+$call ChickBandPlate->Deactivate()
+$call BandSocketRight->Deactivate()
+$call BandSocketMiddle->Deactivate()
+$call BandSocketLeft->Deactivate()
+$call WingBand1->Deactivate()
+$call WingBand2->Deactivate()
+$call WingBand3->Deactivate()
 
 $call SocketObjectTo(DataTrackerBack1, DataSocketBack1)
 $call SocketObjectTo(DataTrackerBack2, DataSocketBack2)
@@ -161,7 +169,22 @@ $endif
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-RookeryCorral"
-@once
+@interrupt
+
+$call DataLoggerPlate->Deactivate()
+$call GPSSocketRight->Deactivate()
+$call GPSSocketMiddle->Deactivate()
+$call GPSSocketLeft->Deactivate()
+$call DataTrackerBack1->SetMeshEnabled(false)
+$call DataTrackerBack2->SetMeshEnabled(false)
+$call DataTrackerBack3->SetMeshEnabled(false)
+$call DataTrackerBack4->SetMeshEnabled(false)
+$call DataTrackerBack5->SetMeshEnabled(false)
+
+$call ChickBandPlate->Activate()
+$call BandSocketRight->Activate()
+$call BandSocketMiddle->Activate()
+$call BandSocketLeft->Activate()
 
 $call WingBand1->Activate()
 $call WingBand2->Activate()
@@ -170,6 +193,8 @@ $call WingBand3->Activate()
 $call SocketObjectTo(WingBand1, BandSocketRight)
 $call SocketObjectTo(WingBand2, BandSocketMiddle)
 $call SocketObjectTo(WingBand3, BandSocketLeft)
+
+$set chapter:wingCount = 0
 
 {@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/4rm14]
 {@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/4rm15]
@@ -239,7 +264,7 @@ $set chapter:finishedObservations = true
 $call ClearGoals()
 $call Wait(0.3)
 $call CreateGoal("Day4_return", Warp inside)
-$call WarpBluffBack->Activate()
+
 $call SetWarpActive(WarpBluffBack, true)
 {@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/Partner_20]
 {@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/Partner_21]
@@ -264,6 +289,7 @@ $endif
 @who        Player
 @when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
 @once
+@interrupt
 
 $call Wait(1)
 $call TentDoor->Open()
@@ -277,6 +303,7 @@ $call SetWarpActive(WarpDesk, true)
 @when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
 @interrupt
 
+$call TentDoor->Close()
 $call CreateGoal("Day4_upload", Dock Margo to upload data)
 $call CompleteGoal("Day4_return")
 $call Wait(1)
@@ -311,7 +338,7 @@ $call CompleteGoal("Day4_upload")
 {@Player}   Claro que si!   $[Day4/Tent/Player_13]
 {@Player}   Are you ready for the grand tour? I’ve got these five new friends I think you’re going to love. $[Day4/Tent/Player_14]
 
-$call FadeOut(1.0)
+//$call FadeOut(1.0)
 $call Wait(2)
 
 $call LoadNextDay()

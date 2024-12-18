@@ -4,18 +4,19 @@
 @function	ScenePrepare
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
+$call FadeIn(2.0)
 
 :: StartGame
 @trigger    SceneReady
 @who        Player
 @once
 
-$set global:level = 1
-
 $call Wait(2)
 
-{@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
+$call SetWarpActive(WarpBluff, true)
+$call CreateGoal("day1_outside", Warp outside)
 
+{@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
 {@Player}   Brr. Lola was right though... I should've packed an extra sweater.   $[Day1/Tent/Player_2]
 {@Player}   Alright, time to get focused. Those penguins aren’t gonna research themselves. $[Day1/Tent/Player_3]
 {@Player}   Step one: Find research tent. Check.    $[Day1/Tent/Player_4]
@@ -47,13 +48,12 @@ $set	chapter:hasTalkedToMargo = true
 {@Margo}    Couldja peek out the front door with me? I can't wait to see who's here! $[Day1/Tent/Margo_12]
 {@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
 
-$call CreateGoal("day1_outside", Warp outside)
-$call SetWarpActive(WarpBluff, true)
 
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-Bluff"
+@interrupt
 @once
 
 $call TentDoor->Close()
@@ -89,7 +89,6 @@ $call SetWarpGroupActive(Rookery, true)
 {@Margo}	Let's get on down there and say hello! Find a waypoint in the rookery. 	$[Day1/Bluff/1bm11]
 
 $call CreateGoal("day1_rookery", Warp inside rookery)
-
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
@@ -130,7 +129,16 @@ $call CreateGoal("band_purple", Scan penguin with purple band)
 :: OnPenguinIdentified
 @function	TabletIdentified
 @when		objectType == "BandedPenguin"
+@interrupt
+
 $set	chapter:identifiedCount + 1
+$if chapter:identifiedCount >= 5
+	$set chapter:allIdentified = true
+	$call SetWarpActive(WarpBluffBack, true)
+	$set chapter:finishedObservations = true
+	$call ClearGoals()
+	$call CreateGoal("day1_return", Return to tent)
+$endif
 
 $if local:objectId == "RedAdelie"
 	$call CompleteGoal("band_red")
@@ -158,35 +166,19 @@ $elseif local:objectId == "PurpleAdelie"
 $endif
 
 $if chapter:identifiedCount >= 5
-	$set chapter:allIdentified = true
 	{@Margo}	Great work kid! You've got your 5 penguins, $[Day1/Rookery/1rm20]
 	{@Player}	Awesome. The Fantastic Five!	$[Day1/Rookery/1rs10]
 	{@Player}	Or . . . the Fintastic Five. Los Cinco Fintasticos?	$[Day1/Rookery/1rs11]
 	{@Margo}	Yikes. You are new, huh? Penguins have flippers, not fins.	$[Day1/Rookery/1rm21]
 	{@Player}	Let's head back. It's freezing out here! 	$[Day1/Rookery/1rs12]
-	$call TriggerResponse(ObjectiveCompleted)
 $endif
-
-:: ObjectiveCompleted
-@trigger	ObjectiveCompleted
-@who		Player
-@once
-@interrupt
-
-$set	chapter:finishedObservations = true
-$call ClearGoals()
-
-$call Wait(0.3)
-$call WarpBluffBack->Activate()
-$call SetWarpActive(WarpBluffBack, true)
-
-$call CreateGoal("day1_return", Return to tent)
 
 :: WarpedBackToTent
 @trigger    AtWarpPoint
 @who        Player
 @when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
 @once
+@interrupt
 
 $call Wait(1)
 $call TentDoor->Open()
@@ -202,6 +194,7 @@ $call CreateGoal("day1_upload", Dock Margo to upload data)
 @when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
 @interrupt
 
+$call TentDoor->Close()
 $call CompleteGoal("day1_return")
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
@@ -231,7 +224,7 @@ $call CompleteGoal("day1_upload")
 {@Margo}	Yep. Pro tip: invest in a good sleep mask.   	$[Day1/Tent/1tm26]
 {@Margo}	See ya tomorrow, kid!   	$[Day1/Tent/1tm27]
 
-$call FadeOut(1.0)
+//$call FadeOut(1.0)
 $call Wait(2)
 
 $call LoadNextDay()
