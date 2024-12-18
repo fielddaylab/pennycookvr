@@ -19,11 +19,8 @@ $call Wait(2)
 @once
 
 {@Margo}   Mornin', kiddo!   $[Day2/Tent/2tm01]
-
 {@Margo}   Jeepers... you look exhausted.   $[Day2/Tent/2tm02]
-{@Player}   Ugh. Is it that obvious?  $[Day2/Tent/Player_1]
 {@Player}   I couldn't sleep. I tried counting sheep, counting penguins, stress-eating candy bars . . .   $[Day2/Tent/Player_2]
-{@Margo}   Aw, don't worry, kid. The midnight sun takes some gettin' used to.     $[Day2/Tent/2tm03]
 {@Margo}   Just wait til you spend a few days runnin' around after penguins. You'll be so tired you won't know what hit ya.     $[Day2/Tent/2tm04]
 
 :: PickedUpMargo2
@@ -34,16 +31,13 @@ $call Wait(2)
 
 $call Wait(1)
 
+$call SetWarpActive(WarpBluff, true)
+
 {@Player}    Sounds good to me. Let's get out there!   $[Day2/Tent/Player_3]
-{@Margo}   Whoa, slow your roll, kiddo. Last time you almost froze your fingers off, and I've heard those are pretty important for humans.  $[Day2/Tent/2tm05]
 {@Margo}    Got your cold weather gear on?   $[Day2/Tent/2tm06]
 {@Player}    All five layers of it. Plus some extra hand warmers.    $[Day2/Tent/Player_4]
-{@Margo}    Did you make sure to eat a filling breakfast?   $[Day2/Tent/2tm07]
-{@Player}   Margo, I've literally been eating Halloween candy all night.    $[Day2/Tent/Player_5]
 {@Margo}    Well, okey dokey, then. Looks like somebody's learnin'.  $[Day2/Tent/2tm08]
 {@Margo}    Whenever you're ready, point me at the door, and we'll head out to the Bluff!     $[Day2/Tent/2tm09]
-
-$call SetWarpActive(WarpBluff, true)
 
 $call CreateGoal("Day2_outside", Warp outside)
 $call SetWarpActive(WarpBluff, true)
@@ -52,6 +46,7 @@ $call SetWarpActive(WarpBluff, true)
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-Bluff"
+@interrupt
 @once
 
 $call CompleteGoal("Day2_outside")
@@ -65,8 +60,6 @@ $call TentDoor->Close()
 {@Player}    Wow, look at them all! $[Day2/Bluff/Player_1]
 {@Margo}    Yep, seems we've got some new arrivals. We'll need a new population count. $[Day2/Bluff/2bm01]
 {@Margo}    You’ll also have two tasks down at the Rookery: retrieve your penguins’ GPS trackers, and see if they’ve paired up with a mate. $[Day2/Bluff/2bm02]
-{@Player}   No sweat. I’ve got this. What should we do first? $[Day2/Bluff/Player_2]
-{@Margo}   You’re the scientist, kiddo. You tell me. $[Day2/Bluff/2bm03]
 {@Player}   Hmmm, Maybe we should get a head count. $[Day2/Bluff/Player_3]
 
 $call PenguinCount->ActivateCount(12)
@@ -156,10 +149,8 @@ $call CompleteGoal("id_alfredo")
 
 {@Margo}    Hmmm. Alfredo’s mate doesn’t have a tag. Looks like a newbie.   $[Day2/Rookery/2rm04]
 {@Margo}    Why don’t you go ahead and name him?    $[Day2/Rookery/2rm05]
-{@Player}   Oh… me? $[Day2/Rookery/Player_5]
 {@Player}   Okay, let’s see. Alfredo and…. um….how about . . . $[Day2/Rookery/Player_6]
 {@Player}    . . Meatball?  $[Day2/Rookery/Player_7]
-{@Margo}    Ohhhh kaayyy... $[Day2/Rookery/2rm06]
 {@Player}   Now I’m getting hungry. Got any candy bars in that case?    $[Day2/Rookery/Player_8]
 
 $goto Day2.CheckAllMatesIdentified
@@ -211,6 +202,7 @@ $goto Day2.CheckAllMatesIdentified
 $if chapter:finishedObservations == true, chapter:finishedTrackers == true
 	{@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/2rm25]
 	{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/2rm26]
+	$call WarpBluffBack->Activate()
 	$call SetWarpActive(WarpBluffBack, true)
 	$set chapter:finishedAllObservations = true
 	$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
@@ -274,8 +266,6 @@ $call SocketObjectTo(AdelieLegTracker2, AdelieLegSocket2)
 {@Margo}    Just watch out for their beaks. $[Day2/Rookery/2rm19]
 {@Margo}    These little sweeties might look harmless, but they'll nip ya when they feel threatened.    $[Day2/Rookery/2rm20]
 {@Margo}    And they've got a mean bite.    $[Day2/Rookery/2rm21]
-{@Player}   Ha. Very funny. You’re just trying to scare me, right? I mean, they don’t even have teeth!  $[Day2/Rookery/Player_13]
-{@Margo}    Oh, you sweet summer child. $[Day2/Rookery/2rm22]
 
 ::OnFuzzTrackerRemoved
 @trigger TrackerRemoved
@@ -283,7 +273,6 @@ $call SocketObjectTo(AdelieLegTracker2, AdelieLegSocket2)
 @once
 
 {@Player}   Ouch! Fuzz, just hold still!    $[Day2/Rookery/Player_14]
-{@Margo}    Told ya. Those beaks are sharper than they look.    $[Day2/Rookery/2rm23]
 
 :: OnPenguinLegTrackerSocketed
 @trigger	ObjectSocketed
@@ -319,7 +308,7 @@ $call TriggerResponse(CheckAllComplete)
 @once
 
 $call Wait(1)
-
+$call TentDoor->Open()
 $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)

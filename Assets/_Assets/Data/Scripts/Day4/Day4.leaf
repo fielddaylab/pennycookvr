@@ -19,6 +19,8 @@ $call Wait(2)
 @who        Player
 @once
 
+$call SetWarpActive(WarpBluff, true)
+
 {@Margo}   Mornin', kiddo.   $[Day4/Tent/4tm01]
 {@Player}   Whoa… what’s all this?   $[Day4/Tent/Player_1]
 {@Margo}   Penny got up early to decorate. It’s one week til Christmas!  $[Day4/Tent/4tm02]
@@ -35,18 +37,18 @@ $call Wait(2)
 {@Margo}    Well, at least you’re becomin’ an expert on penguin kids.   $[Day4/Tent/4tm07]
 {@Margo}    Come on. Let’s get out there and check on those penguins.   $[Day4/Tent/4tm08]
 
-$call SetWarpActive(WarpBluff, true)
 $call Wait(1)
 
 $call CreateGoal("Day4_outside", Warp outside)
-$call SetWarpActive(WarpBluff, true)
 
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-Bluff"
+@interrupt
 @once
 
+$call TentDoor->Close()
 $call CompleteGoal("Day4_outside")
 
 $call Wait(1)
@@ -55,7 +57,6 @@ $call SetWarpActive(WarpBluff, false)
 
 $call SetWarpGroupActive(Rookery, true)
 $call CreateGoal("Day4_rookery", Warp inside rookery)
-
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
@@ -67,7 +68,6 @@ $call CompleteGoal("Day4_rookery")
 
 $call Wait(1)
 
-//$call SetWarpActive(WarpBluffBack, true)
 $call SetWarpGroupActive(Rookery, false)
 
 $call ClearGoals()
@@ -91,19 +91,15 @@ $call ClearGoals()
 $call SetWarpGroupActive(Rookery, true)
 
 $call ClearGoals()
-$call CreateGoal("day4_warp_gate", Warp to the Weigh Gate)
-$call CreateGoal("day4_warp_loggers", Warp to the Middle)
-$call CreateGoal("day4_warp_band", Warp to the Corral)
+$call CreateGoal("day4_gate", Scan the Weigh Gate)
+$call CreateGoal("day4_loggers", Collect 3 Data Loggers)
+$call CreateGoal("day4_band", Band 3 Chicks)
 
 :: WarpedToRookeryGate
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-RookeryFar"
 @once
-
-$set chapter:visitedGate = true
-$call ClearGoals()
-$call CreateGoal("day4_gate", Scan the Weigh Gate)
 
 $call WeighGate->SetInteractable(true)
 
@@ -127,10 +123,6 @@ $goto Day4.CheckCompletedTasks
 @who        Player
 @when       targetObject == "WarpTarget-RookeryMiddle"
 @once
-
-$set chapter:visitedLoggers = true
-$call ClearGoals()
-$call CreateGoal("day4_loggers", Collect 3 Data Loggers)
 
 $call SocketObjectTo(DataTrackerBack1, DataSocketBack1)
 $call SocketObjectTo(DataTrackerBack2, DataSocketBack2)
@@ -170,10 +162,6 @@ $endif
 @who        Player
 @when       targetObject == "WarpTarget-RookeryCorral"
 @once
-
-$set chapter:visitedBands = true
-$call ClearGoals()
-$call CreateGoal("day4_band", Band 3 Chicks)
 
 $call WingBand1->Activate()
 $call WingBand2->Activate()
@@ -251,36 +239,25 @@ $set chapter:finishedObservations = true
 $call ClearGoals()
 $call Wait(0.3)
 $call CreateGoal("Day4_return", Warp inside)
+$call WarpBluffBack->Activate()
 $call SetWarpActive(WarpBluffBack, true)
 {@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/Partner_20]
 {@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/Partner_21]
 $else
-$if chapter:finishedBands == false
-$if chapter:visitedBands == false
-$call CreateGoal("day4_warp_band", Warp to the Corral)
-$endif
-$else
+$call ClearGoals()
 $call CreateGoal("day4_band", Band 3 chicks)
+$call CreateGoal("day4_loggers", Collect 3 data loggers from banded penguins)
+$call CreateGoal("day4_gate", Scan the weigh gate)
+$if chapter:finishedBands == true
 $call CompleteGoal("day4_band")
 $endif
-$if chapter:dataTrackersDone == false
-$if chapter:visitedLoggers == false
-$call CreateGoal("day4_warp_loggers", Warp to the Middle)
-$endif
-$else
-$call CreateGoal("day4_loggers", Collect 3 data loggers from banded penguins)
+$if chapter:dataTrackersDone == true
 $call CompleteGoal("day4_loggers")
 $endif
-$if chapter:weighGate == false
-$if chapter:visitedGate == false
-$call CreateGoal("day4_warp_gate", Warp to the Weigh Gate)
-$endif
-$else
-$call CreateGoal("day4_gate", Scan the weigh gate)
+$if chapter:weighGate == true
 $call CompleteGoal("day4_gate")
 $endif
 $endif
-
 
 :: WarpedBackToTent
 @trigger    AtWarpPoint
@@ -289,7 +266,7 @@ $endif
 @once
 
 $call Wait(1)
-
+$call TentDoor->Open()
 $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)

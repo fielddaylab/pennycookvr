@@ -45,6 +45,7 @@ $call SetWarpActive(WarpBluff, true)
 @when       targetId == "WarpBluff"
 @once
 
+$call TentDoor->Close()
 $call CompleteGoal("Day3_outside")
 
 $call Wait(1)
@@ -304,6 +305,7 @@ $call CompleteGoal("day3_regurg")
 $call CompleteGoal("day3_back_trackers")
 $call CompleteGoal("day3_scan")
 $call CreateGoal("Day3_return", Return to tent)
+$call WarpBluffBack->Activate()
 $call SetWarpActive(WarpBluffBack, true)
 {@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]
 {@Margo}	Yep, looks like we've got all the data we need!	$[Day3/Rookery/3rm24]
@@ -313,14 +315,17 @@ $call SetWarpActive(WarpBluffBack, true)
 {@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/Partner_13]
 $else
 $call ClearGoals()
-$if chapter:trackersSocketed == false
-
+$call CreateGoal("day3_regurg", Observe a penguin feeding their chick for diet data)
+$call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
+$call CreateGoal("day3_scan", Scan nests, eggs, and chicks)
+$if chapter:trackersSocketed == true
+$call CompleteGoal("day3_back_trackers")
 $endif
 $if chapter:regurgDone == false
-
+$call CompleteGoal("day3_regurg")
 $endif
-$if chapter:finishedObservations == false
-
+$if chapter:finishedObservations == true
+$call CompleteGoal("day3_scan")
 $endif
 $endif
 
@@ -331,7 +336,7 @@ $endif
 @once
 
 $call Wait(1)
-
+$call TentDoor->Open()
 $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)

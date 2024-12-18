@@ -42,12 +42,8 @@ $set	chapter:hasTalkedToMargo = true
 {@Margo}    Nice to meet ya!    $[Day1/Tent/Margo_7]
 {@Player}   You're Margo?  $[Day1/Tent/Player_9]
 {@Margo}    Well, yah, last I checked.  $[Day1/Tent/Margo_8]
-{@Margo}    What’s wrong? Do I got cookies stuck in my teeth or somethin’?  $[Day1/Tent/Margo_9]
-{@Margo}    Aw, relax, kiddo, I’m jokin’. Just a little data humor for ya.  $[Day1/Tent/Margo_10]
 {@Player}   I've heard about you. You're one of the leading penguin researchers in the world... I had no idea you were a tablet.   $[Day1/Tent/Player_10]
 {@Margo}	Aw, that's okay, kiddo. Lotsa people make that mistake. $[Day1/Tent/1tm10a]
-{@Margo}	I've been told I'm pretty social, for a tablet. And a great cook, too.  $[Day1/Tent/1tm10b]
-{@Margo}    Feel free to have yerself a look around! This'll be our den for the season.   $[Day1/Tent/Margo_11]
 {@Margo}    Couldja peek out the front door with me? I can't wait to see who's here! $[Day1/Tent/Margo_12]
 {@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
 
@@ -72,16 +68,8 @@ $call PenguinCount->ActivateCount(12)
 
 {@Margo}    Let's get started. Your first job is pretty simple. $[Day1/Bluff/1bm01]
 {@Margo}    We need a population count from up here on the Bluff. $[Day1/Bluff/1bm02]
-{@Player}	A population count? $[Day1/Bluff/1bs01]
-{@Player} Okay. No problem. I can handle this. $[Day1/Bluff/1bs02]
-{@Player} Uno, dos, tres, cuatro... $[Day1/bluff/1bs03]
-{@Margo}    Hold up kiddo.  You don't have to count them. $[Day1/Bluff/1bm03]
-{@Margo}    That's what I'm here for. $[Day1/Bluff/1bm04]
 {@Margo}    Just turn on Count Mode and point me at the colony. $[Day1/Bluff/1bm05]
 {@Margo}    I'll collect all the data! $[Day1/Bluff/1bm06]
-{@Player}	Oh! $[Day1/Bluff/1bs04]
-{@Player} Uh, obviously.  I knew that. $[Day1/Bluff/1bs05]
-{@Margo}    Uh huh. Sure ya did. $[Day1/Bluff/1bm07]
 
 $call CreateGoal("day1_count", Count the penguin population)
 
@@ -92,25 +80,23 @@ $call CreateGoal("day1_count", Count the penguin population)
 @once
 
 $call CompleteGoal("day1_count")
+$call SetWarpGroupActive(Rookery, true)
 
 {@Margo}	Nice work, kiddo! We've got our initial population count. $[Day1/Bluff/1bm08]
 {@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny.   $[Day1/Bluff/Partner_1]
-{@Player}	On wow! This is such an honor. I've read all your research on climate change and penguin migration. $[Day1/Bluff/1bs06]
-{@Player}	I remember when you talked to my 5th grade class at Gompers Elementary. $[Day1/Bluff/1bs07]
-{@Partner}	Hmm. That would've been, what, 12 or 13 years ago?	$[Day1/Bluff/Partner_2]
-{@Partner}	15, I think.	$[Day1/Bluff/Partner_3]
-{@Margo}	Okay, kiddo, enough yammerin'. Time for your next task. 	$[Day1/Bluff/1bm09]
-{@Margo}	You’ve been assigned five penguins to keep a special eye on this season. 	$[Day1/Bluff/1bm10]
+{@Player}	Wow! I remember when you talked to my 5th grade class at Gompers Elementary. $[Day1/Bluff/1bs07]
+{@Margo}	Okay, enough chit chat. Time for your next task. 	$[Day1/Bluff/1bm09]
 {@Margo}	Let's get on down there and say hello! Find a waypoint in the rookery. 	$[Day1/Bluff/1bm11]
 
 $call CreateGoal("day1_rookery", Warp inside rookery)
-$call SetWarpGroupActive(Rookery, true)
+
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-Rookery"
 @once
+@interrupt
 
 $call CompleteGoal("day1_rookery")
 
@@ -135,14 +121,10 @@ $call CreateGoal("band_purple", Scan penguin with purple band)
 {@Player}	Hah! I can't wait to meet them. I wish Lola was here to see this.	$[Day1/Rookery/1rs01]
 {@Margo}	Who's that now?	$[Day1/Rookery/1rm01]
 {@Player}	Oh, Lola is my girlfriend. She loves birds too!	$[Day1/Rookery/1rs02]
-{@Player}	But I think she’s happier staying where the sun sets every night like it’s supposed to.	$[Day1/Rookery/1rs03]
-{@Margo}	Wow. Every night! That must really be somethin.	$[Day1/Rookery/1rm02]
-{@Margo}	Doown here, we only get one sunrise and one sunset every year.	$[Day1/Rookery/1rm03]
-{@Margo}	Anywho, let's get to work.	$[Day1/Rookery/1rm04]
 {@Margo}	Remember, you're just looking for five adult penguins with trackers on their wings.	$[Day1/Rookery/1rm05]
 {@Player}	How do I scan them?	$[Day1/Rookery/1rs04]
 {@Margo}	Just hold me up in front of each penguin.	$[Day1/Rookery/1rm06]
-{@Margo}	Then use "Interact" to scan!	$[Day1/Rookery/1rm07]
+{@Margo}	Then use "Scan" to scan!	$[Day1/Rookery/1rm07]
 {@Margo}	I’ll ID them and collect their data.	$[Day1/Rookery/1rm08]
 			
 :: OnPenguinIdentified
@@ -159,7 +141,6 @@ $elseif local:objectId == "YellowAdelie"
 	{@Margo}	Oh, I'm so glad Polo made it back! He is my favorite. Such a cutie.	$[Day1/Rookery/1rm15]
 	{@Player}	Are you sure we should be picking favorites?	$[Day1/Rookery/1rs05]
 	{@Player}	I thought scientists were supposed to be objective.	$[Day1/Rookery/1rs06]
-	{@Margo}	Oh, don’t worry. I’m totally objective.	$[Day1/Rookery/1rm16]
 	{@Margo}	Polo is objectively the cutest penguin you’ll ever meet.	$[Day1/Rookery/1rm17]
 $elseif local:objectId == "GreenAdelie"
 	$call CompleteGoal("band_green")
@@ -171,7 +152,6 @@ $elseif local:objectId == "BlueAdelie"
 	{@Player}	Alfredo? Why does that sound familiar?	$[Day1/Rookery/1rs08]
 	{@Margo}	Oh, I’m sure you know her. She’s internet famous.	$[Day1/Rookery/1rm12]
 	{@Margo}	Penny used to keep her page updated. Alfredo’s baby videos got two billion views!	$[Day1/Rookery/1rm13]
-	{@Player}	Billion?? Like, with a B?	$[Day1/Rookery/1rs09]
 $elseif local:objectId == "PurpleAdelie"
 	$call CompleteGoal("band_purple")
 	{@Margo}	Aw, it’s Fuzz! I remember him. His hair was crazy when he was growing. 	$[Day1/Rookery/1rm14]
@@ -197,6 +177,7 @@ $set	chapter:finishedObservations = true
 $call ClearGoals()
 
 $call Wait(0.3)
+$call WarpBluffBack->Activate()
 $call SetWarpActive(WarpBluffBack, true)
 
 $call CreateGoal("day1_return", Return to tent)
@@ -208,7 +189,7 @@ $call CreateGoal("day1_return", Return to tent)
 @once
 
 $call Wait(1)
-
+$call TentDoor->Open()
 $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)
@@ -241,14 +222,9 @@ $endwhile
 
 $call CompleteGoal("day1_upload")
 
-{@Margo}    Looks like we've got 1527 returners! Mostly adults, and a few subadults.    $[Day1/Tent/1tm16]
-{@Margo}    Your cohort includes five penguins, two females and three males.    $[Day1/Tent/1tm17]
-{@Margo}	Alfredo, Fuzz, and Polo are all back for the first time since they were chicks.	$[Day1/Tent/1tm18]
-{@Margo}	They look healthy, though Fuzz is a little small for his age... hopefully he'll pack on a few pounds now that he's back home. 	$[Day1/Tent/1tm19]
-{@Margo}	This is the first mating season for all three of them.	$[Day1/Tent/1tm20]
-{@Margo}	Millie's back for the second time. No signs of illness or malnutrition. 	$[Day1/Tent/1tm21]
-{@Margo}	And there's Winston, back for his sixth mating season!  	$[Day1/Tent/1tm22]
-{@Margo}	He's gettin' on in years, but still in good health. A great dad, too.   	$[Day1/Tent/1tm23]
+{@Margo}    There are 25 penguins who have returned to the colony, most are adults, but a few are juveniles.    $[Day1/Tent/1tm16]
+{@Margo}    Penny counted the rest of the rookery, and in total there are 1527 returners!    $[Day1/Tent/1tm17]
+{@Margo}	Your cohort includes five penguins, two females and three males. Alfredo, Fuzz, Polo, Millie, and Winston.	$[Day1/Tent/1tm18]
 {@Margo}	Great first day, kiddo! Get some rest now, why don'tcha?  	$[Day1/Tent/Margo_16]
 {@Margo}	We'll get back at it bright and early tomorrow.  	$[Day1/Tent/1tm25]
 {@Player}	Isn't it always bright here? 	$[Day1/Tent/1ts02]
