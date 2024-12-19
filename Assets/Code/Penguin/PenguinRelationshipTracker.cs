@@ -15,15 +15,6 @@ namespace Pennycook {
         public PenguinBrain Mate;
         public PenguinBrain Child;
 
-        [NonSerialized] public RingBuffer<PenguinBrain> Children = new RingBuffer<PenguinBrain>(4, RingBufferMode.Expand);
-        [NonSerialized] public AnalogSignal FamilyAnxiety;
-
-        // player
-        [NonSerialized] public AnalogSignal PlayerAnxiety;
-
-        // social
-        [NonSerialized] public AnalogSignal SocialAnxiety;
-
         #region Leaf
 
         

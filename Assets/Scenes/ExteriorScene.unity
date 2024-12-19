@@ -25928,6 +25928,7 @@ GameObject:
   - component: {fileID: 1525585685}
   - component: {fileID: 1525585684}
   - component: {fileID: 1525585683}
+  - component: {fileID: 1525585686}
   m_Layer: 0
   m_Name: PenguinAnim
   m_TagString: Untagged
@@ -25959,7 +25960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e83cf121e9fc02c4bbb6bea73af76241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InitialCapacity: 16
+  m_InitialCapacity: 64
 --- !u!4 &1525585682
 Transform:
   m_ObjectHideFlags: 0
@@ -26009,6 +26010,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea3e8a4cf3960c2419a856ce0e28bc7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 64
+--- !u!114 &1525585686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1525585679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff3644827a75ff4fbba3c61e6fef0fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InitialCapacity: 64

@@ -7,6 +7,7 @@ namespace Pennycook.Animation {
         public Animator Animator;
         public Transform LookFrom;
         public float LookLerpSpeed;
+        public float LookBlend = 1;
 
         [NonSerialized] public LookTargetMode Mode;
         [NonSerialized] public Vector3 LookVector;

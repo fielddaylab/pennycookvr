@@ -4,13 +4,14 @@ using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Components;
+using FieldDay.Filters;
 using FieldDay.Processes;
 using FieldDay.Scripting;
 using Leaf.Runtime;
 using UnityEngine;
 
 namespace Pennycook {
-    public sealed class PenguinBrain : ProcessBehaviour, IScriptActorComponent {
+    public sealed class PenguinBrain : ProcessBehaviour, IScriptActorComponent, IComponentData {
         [Header("Components")]
         public Transform Position;
         [Required] public PenguinAnimator Animator;
@@ -23,6 +24,8 @@ namespace Pennycook {
         public PenguinPersonality Personality;
         public PenguinType Type;
         public NavPost Nest;
+
+        [NonSerialized] public PenguinMentalState MentalState;
 
         private ProcessId m_ActionProcess;
         private ProcessId m_LookProcess;
@@ -44,9 +47,9 @@ namespace Pennycook {
         #region Signal
 
         public override void Signal(StringHash32 signalId, object signalArgs = null) {
-            base.Signal(signalId, signalArgs);
             m_ActionProcess.Signal(signalId, signalArgs);
             m_LookProcess.Signal(signalId, signalArgs);
+            base.Signal(signalId, signalArgs);
         }
 
         #endregion // Signal
@@ -56,9 +59,11 @@ namespace Pennycook {
         public ScriptActor Actor { get { return m_Actor; } }
 
         void IScriptActorComponent.OnScriptDeregister(ScriptActor actor) {
+            Game.Components.Deregister(this);
         }
 
         void IScriptActorComponent.OnScriptRegister(ScriptActor actor) {
+            Game.Components.Register(this);
         }
 
         void IScriptActorComponent.OnScriptSceneReady(ScriptActor actor) {
@@ -107,6 +112,13 @@ namespace Pennycook {
         Subadult,
         Chick,
         Banded
+    }
+
+    public struct PenguinMentalState {
+        public AnalogSignal FamilyAnxiety;
+        public AnalogSignal PlayerAnxiety;
+        public AnalogSignal SocialAnxiety;
+        public float WanderRestlessness;
     }
 
     static public partial class PenguinUtility {

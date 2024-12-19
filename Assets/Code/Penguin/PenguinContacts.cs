@@ -28,16 +28,20 @@ namespace Pennycook {
             PlayerGrip.OnGrabbed.Register(OnGrabbed);
             PlayerGrip.OnReleased.Register(OnReleased);
 
-            Proximity.onTriggerEnter.Register(OnProximityEnter);
-            Proximity.onTriggerExit.Register(OnProximityExit);
+            if (Proximity) {
+                Proximity.onTriggerEnter.Register(OnProximityEnter);
+                Proximity.onTriggerExit.Register(OnProximityExit);
+            }
         }
 
         private void OnDestroy() {
             PlayerGrip.OnGrabbed.Deregister(OnGrabbed);
             PlayerGrip.OnReleased.Deregister(OnReleased);
 
-            Proximity.onTriggerEnter.Deregister(OnProximityEnter);
-            Proximity.onTriggerExit.Deregister(OnProximityExit);
+            if (Proximity) {
+                Proximity.onTriggerEnter.Deregister(OnProximityEnter);
+                Proximity.onTriggerExit.Deregister(OnProximityExit);
+            }
         }
 
         private void OnGrabbed(Grabber hand, int snapIndex) {
@@ -82,6 +86,10 @@ namespace Pennycook {
         }
 
         private void OnProximityExit(Collider collider) {
+            if (!collider) {
+                return;
+            }
+
             if (collider.gameObject.layer == LayerMasks.PenguinBody_Index) {
                 // was penguin
             } else {
@@ -122,5 +130,9 @@ namespace Pennycook {
         static public implicit operator T(SensedObject<T> sensed) {
             return sensed.Object;
         }
+    }
+
+    public struct SensedObjectCollection<T> where T : class {
+        
     }
 }

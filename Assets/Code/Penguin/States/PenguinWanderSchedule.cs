@@ -9,8 +9,8 @@ namespace Pennycook {
             PenguinBrain brain = Brain(process);
             while (true) {
 
-                // TODO: change idle params based on player
-                yield return brain.Personality.Wander.IdleWaitDuration + RNG.Instance.NextFloat(brain.Personality.Wander.IdleWaitDurationRandom);
+                float newWanderRestlessness = brain.Personality.Wander.IdleWaitDuration + RNG.Instance.NextFloat(brain.Personality.Wander.IdleWaitDurationRandom);
+                brain.MentalState.WanderRestlessness = newWanderRestlessness;
 
                 Vector3 targetWalkPos;
                 while(!TryFindGoodWanderPosition(brain, brain.Personality.Wander, brain.Type == PenguinType.Adult, out targetWalkPos)) {

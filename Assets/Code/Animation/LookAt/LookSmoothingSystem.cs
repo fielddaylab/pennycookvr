@@ -55,6 +55,9 @@ namespace Pennycook.Animation {
 
                 float lerpAmt = TweenUtil.Lerp(comp.LookLerpSpeed, 1, deltaTime);
 
+                targetX *= comp.LookBlend;
+                targetY *= comp.LookBlend;
+
                 newX = Mathf.Lerp(comp.LastAppliedLook.x, targetX, lerpAmt);
                 newY = Mathf.Lerp(comp.LastAppliedLook.y, targetY, lerpAmt);
 
@@ -65,11 +68,6 @@ namespace Pennycook.Animation {
                 if (!Mathf.Approximately(targetY, comp.LastAppliedLook.y)) {
                     comp.Animator.SetFloat(LookYParam, newY);
                     comp.LastAppliedLook.y = newY;
-                }
-
-                bool wasConstant = comp.Mode == LookTargetMode.Forward || comp.Mode == LookTargetMode.ConstantLocal;
-                if (wasConstant && Mathf.Approximately(targetX, newX) && Mathf.Approximately(targetY, newY)) {
-                    comp.Mode = LookTargetMode.Disabled;
                 }
             }
         }
