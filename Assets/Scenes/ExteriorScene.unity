@@ -720,6 +720,14 @@ PrefabInstance:
       propertyPath: m_Id.m_HashValue
       value: 560231581
       objectReference: {fileID: 0}
+    - target: {fileID: 6188216526419917979, guid: 95015386dccfd4804bb06c2288be50b2, type: 3}
+      propertyPath: m_Anim
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6188216526419917979, guid: 95015386dccfd4804bb06c2288be50b2, type: 3}
+      propertyPath: m_ShellParent
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 8473645721846133742, guid: 95015386dccfd4804bb06c2288be50b2, type: 3}
@@ -16242,6 +16250,10 @@ PrefabInstance:
       value: Fuzz's Mate
       objectReference: {fileID: 0}
     - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: Contents.SimpleHeader
+      value: Daisy
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: Contents.DetailedHeader
       value: Daisy
       objectReference: {fileID: 0}
@@ -17538,8 +17550,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightCollider: {fileID: 0}
   Contents:
+    SimpleHeader: 
     DetailedHeader: 
     DetailedText: 
+  PhotoTag: 
   Identified: 0
 --- !u!1 &900418676
 GameObject:
@@ -20178,6 +20192,10 @@ PrefabInstance:
       value: Millie's Mate
       objectReference: {fileID: 0}
     - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: Contents.SimpleHeader
+      value: Billy
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: Contents.DetailedHeader
       value: Billy
       objectReference: {fileID: 0}
@@ -21299,8 +21317,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightCollider: {fileID: 1973278200}
   Contents:
+    SimpleHeader: 
     DetailedHeader: Polo's Nest
     DetailedText: The nest of Polo
+  PhotoTag: 
   Identified: 0
 --- !u!114 &1165171627
 MonoBehaviour:
@@ -21704,6 +21724,10 @@ PrefabInstance:
     - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: Contents.DetailedText
       value: Winston's Mate
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: Contents.SimpleHeader
+      value: Wendy
       objectReference: {fileID: 0}
     - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: Contents.DetailedHeader
@@ -23122,6 +23146,10 @@ PrefabInstance:
     - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: Contents.DetailedText
       value: Alfredo's mate.
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: Contents.SimpleHeader
+      value: Meatball
       objectReference: {fileID: 0}
     - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: Contents.DetailedHeader
@@ -24842,8 +24870,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightCollider: {fileID: 0}
   Contents:
+    SimpleHeader: 
     DetailedHeader: 
     DetailedText: 
+  PhotoTag: 
   Identified: 0
 --- !u!1 &1409341829
 GameObject:
@@ -26026,6 +26056,10 @@ PrefabInstance:
       value: Polo's mate
       objectReference: {fileID: 0}
     - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: Contents.SimpleHeader
+      value: Benni
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: Contents.DetailedHeader
       value: Benni
       objectReference: {fileID: 0}
@@ -26134,6 +26168,7 @@ GameObject:
   - component: {fileID: 1525585685}
   - component: {fileID: 1525585684}
   - component: {fileID: 1525585683}
+  - component: {fileID: 1525585686}
   m_Layer: 0
   m_Name: PenguinAnim
   m_TagString: Untagged
@@ -26165,7 +26200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e83cf121e9fc02c4bbb6bea73af76241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InitialCapacity: 16
+  m_InitialCapacity: 64
 --- !u!4 &1525585682
 Transform:
   m_ObjectHideFlags: 0
@@ -26215,6 +26250,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea3e8a4cf3960c2419a856ce0e28bc7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 64
+--- !u!114 &1525585686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1525585679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff3644827a75ff4fbba3c61e6fef0fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InitialCapacity: 64
@@ -27501,8 +27549,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightCollider: {fileID: 0}
   Contents:
+    SimpleHeader: 
     DetailedHeader: 
     DetailedText: 
+  PhotoTag: 
   Identified: 0
 --- !u!1 &1624708331
 GameObject:
@@ -29129,8 +29179,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightCollider: {fileID: 0}
   Contents:
+    SimpleHeader: 
     DetailedHeader: 
     DetailedText: 
+  PhotoTag: 
   Identified: 0
 --- !u!1001 &1786222042
 PrefabInstance:
@@ -31353,8 +31405,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightCollider: {fileID: 0}
   Contents:
+    SimpleHeader: 
     DetailedHeader: 
     DetailedText: 
+  PhotoTag: 
   Identified: 0
 --- !u!1 &2098868604
 GameObject:
@@ -34316,10 +34370,6 @@ PrefabInstance:
       propertyPath: Identified
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3468356960433270448, guid: 6e919503cfc8ac640bf61796ee8be69b, type: 3}
-      propertyPath: Contents.DetailedHeader
-      value: Millie
-      objectReference: {fileID: 0}
     - target: {fileID: 4114492817016247606, guid: 6e919503cfc8ac640bf61796ee8be69b, type: 3}
       propertyPath: Mate
       value: 
@@ -35564,10 +35614,6 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.002355959
       objectReference: {fileID: 0}
-    - target: {fileID: 2434561609910847082, guid: a89c8dfdd21a94344ae5eb6f314a1685, type: 3}
-      propertyPath: Contents.DetailedHeader
-      value: Winston
-      objectReference: {fileID: 0}
     - target: {fileID: 2950638202073693676, guid: a89c8dfdd21a94344ae5eb6f314a1685, type: 3}
       propertyPath: Mate
       value: 
@@ -36022,8 +36068,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightCollider: {fileID: 1138162944}
   Contents:
+    SimpleHeader: Weigh Gate
     DetailedHeader: Weigh Gate
     DetailedText: Adelie Penguin Weigh Gate
+  PhotoTag: 
   Identified: 0
 --- !u!114 &4437052948603429536
 MonoBehaviour:
@@ -39341,10 +39389,6 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.58800876
       objectReference: {fileID: 0}
-    - target: {fileID: 7131318805233546370, guid: a6f24c04e572af542ad0e8ff5723fce3, type: 3}
-      propertyPath: Contents.DetailedHeader
-      value: Polo
-      objectReference: {fileID: 0}
     - target: {fileID: 7767585136232926980, guid: a6f24c04e572af542ad0e8ff5723fce3, type: 3}
       propertyPath: Mate
       value: 
@@ -39412,10 +39456,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 654570715}
     m_Modifications:
-    - target: {fileID: 570017534320365460, guid: acdc837baafe7fe43b724a46199e72dd, type: 3}
-      propertyPath: Contents.DetailedHeader
-      value: Fuzz
-      objectReference: {fileID: 0}
     - target: {fileID: 849932623526063390, guid: acdc837baafe7fe43b724a46199e72dd, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.097012244
@@ -41328,10 +41368,6 @@ PrefabInstance:
     - target: {fileID: 2616468499476742403, guid: f5dcd8a3a32e6d944aee725f65882c59, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.44376913
-      objectReference: {fileID: 0}
-    - target: {fileID: 2913014111034811273, guid: f5dcd8a3a32e6d944aee725f65882c59, type: 3}
-      propertyPath: Contents.DetailedHeader
-      value: Alfredo
       objectReference: {fileID: 0}
     - target: {fileID: 3228110090326776420, guid: f5dcd8a3a32e6d944aee725f65882c59, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

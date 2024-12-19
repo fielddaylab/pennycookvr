@@ -1,10 +1,11 @@
 using System;
 using BeauUtil;
+using FieldDay.Components;
 using FieldDay.Processes;
 using UnityEngine;
 
 namespace Pennycook {
-    public sealed class PenguinAnimator : MonoBehaviour {
+    public sealed class PenguinAnimator : BatchedComponent {
         public Animator Animator;
 
         [NonSerialized] public PenguinAnimFlags Flags;

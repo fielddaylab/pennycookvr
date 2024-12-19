@@ -65,6 +65,7 @@ namespace Pennycook.Tablet {
 
         // uncomment the default and solid masks to allow for other objects to occlude the target type
         public const int DefaultSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask;
+        public const int CaptureSearchMask = LayerMasks.Solid_Mask | LayerMasks.Grabbable_Mask | LayerMasks.Highlightable_Mask | LayerMasks.CaptureOnly_Mask;
         public const int TravelSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Warpable_Mask;
 
         public const int CountSearchMask = /* LayerMasks.Default_Mask | LayerMasks.Solid_Mask | */ LayerMasks.Highlightable_Mask | LayerMasks.Countable_Mask;

@@ -77,7 +77,11 @@ namespace Pennycook.Tablet {
 
         private TabletInteractionState.State GetDesiredState(double timestamp) {
             var func = m_StateC.CurrentToolDef.GetState;
-            if (m_StateD.GrippedHandMask.IsEmpty || !m_StateB.HighlightedObject || func == null) {
+            if (m_StateD.GrippedHandMask.IsEmpty || func == null) {
+                return TabletInteractionState.State.Disabled;
+            }
+
+            if ((m_StateC.CurrentToolDef.Flags & TabletToolFlags.InteractionDoesNotRequireHighlight) == 0 && !m_StateB.HighlightedObject) {
                 return TabletInteractionState.State.Disabled;
             }
 

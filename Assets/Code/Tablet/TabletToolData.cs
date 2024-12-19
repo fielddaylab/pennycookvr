@@ -9,6 +9,7 @@ using UnityEngine;
 namespace Pennycook.Tablet {
     public class TabletToolDefinition {
         public LayerMask RaycastMask;
+        public float RaycastBaseDistance = 25;
         public float RaycastUnitConeRadius;
         public bool ShowReticle = true;
 
@@ -48,8 +49,10 @@ namespace Pennycook.Tablet {
 
     [Flags]
     public enum TabletToolFlags {
-        DoNotSetHighlight = 0x01,
+        DoNotUseHighlightBox = 0x01,
         NoPrompt = 0x02,
+        InteractionDoesNotRequireHighlight = 0x04,
+        SkipHapticHighlightFeedback = 0x08
     }
 
     static public class TabletToolDefinitions {
@@ -89,17 +92,65 @@ namespace Pennycook.Tablet {
             Interact = (h, c, t) => {
                 if (TabletInteractionUtility.TryInteract(h, h.CachedInteraction, t)) {
                     TabletUtility.PlayHaptics(0.3f, 0.05f);
+                    if (h.Identified && !string.IsNullOrEmpty(h.Contents.SimpleHeader)) {
+                        TabletInteractionState iState = Find.State<TabletInteractionState>();
+                        iState.IdentifiedLabel.SetText(h.Contents.SimpleHeader);
+                        iState.IdentifiedGroup.Show();
+                    }
+                }
+            },
+
+            OnHighlighted = (h, c) => {
+                if (h.Identified && !string.IsNullOrEmpty(h.Contents.SimpleHeader)) {
+                    TabletInteractionState iState = Find.State<TabletInteractionState>();
+                    iState.IdentifiedLabel.SetText(h.Contents.SimpleHeader);
+                    iState.IdentifiedGroup.Show();
                 }
             },
 
             OnUnhighlighted = (h, c) => {
                 TabletInteractionState iState = Find.State<TabletInteractionState>();
                 iState.DetailsGroup.Hide();
+                iState.IdentifiedGroup.Hide();
             }
         };
 
         static public readonly TabletToolDefinition Capture = new TabletToolDefinition() {
-            // TODO: Implement
+            RaycastMask = TabletUtility.CaptureSearchMask,
+            RaycastUnitConeRadius = 0.4f,
+
+            Flags = TabletToolFlags.DoNotUseHighlightBox | TabletToolFlags.InteractionDoesNotRequireHighlight
+                | TabletToolFlags.SkipHapticHighlightFeedback,
+
+            HighlightPredicate = (h, hc) => {
+                return h;
+            },
+
+            GetState = (h, c, t) => {
+                TabletPhotoState photoState = Find.State<TabletPhotoState>();
+                if (t < photoState.NextAllowedPhotoTS || photoState.CurrentStage != TabletPhotoState.Stage.Idle) {
+                    return TabletInteractionState.State.Unavailable;
+                }
+                if (photoState.PhotoPool.Count == 0) {
+                    return TabletInteractionState.State.Waiting;
+                }
+                return TabletInteractionState.State.Available;
+            },
+
+            DefaultVerb = "Capture",
+
+            InteractMode = TabletToolInteractionMode.Press,
+            Interact = (h, c, t) => {
+                PhotoUtility.TakePhoto(h, t);
+            },
+
+            OnOpen = (c) => {
+                Find.State<TabletToolState>().CaptureGroup.Show();
+            },
+
+            OnClose = (c) => {
+                Find.State<TabletToolState>().CaptureGroup.Hide();
+            }
         };
 
         static public readonly TabletToolDefinition Count = new TabletToolDefinition() {
@@ -107,7 +158,7 @@ namespace Pennycook.Tablet {
             RaycastUnitConeRadius = 0.65f,
             ShowReticle = false,
 
-            Flags = TabletToolFlags.DoNotSetHighlight | TabletToolFlags.NoPrompt,
+            Flags = TabletToolFlags.DoNotUseHighlightBox | TabletToolFlags.NoPrompt,
 
             HighlightPredicate = (h, hc) => {
                 return h.CachedCountable && TabletCountUtility.IsCountable(h.CachedCountable);
@@ -174,7 +225,7 @@ namespace Pennycook.Tablet {
         };
 
         static private TabletToolDefinition[] s_ToolMap = new TabletToolDefinition[] {
-            None, Scan, None, Count, Warp
+            None, Scan, Capture, Count, Warp
         };
 
         static public TabletToolDefinition Get(TabletTool tool) {

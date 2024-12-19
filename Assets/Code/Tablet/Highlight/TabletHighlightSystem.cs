@@ -12,7 +12,7 @@ namespace Pennycook.Tablet {
         public override void ProcessWork(float deltaTime) {
 			bool isGripping = !m_StateC.GrippedHandMask.IsEmpty;
             LayerMask searchMask = m_StateB.CurrentToolDef.RaycastMask;
-            bool allowVisualHighlights = (m_StateB.CurrentToolDef.Flags & TabletToolFlags.DoNotSetHighlight) == 0;
+            bool allowVisualHighlights = (m_StateB.CurrentToolDef.Flags & TabletToolFlags.DoNotUseHighlightBox) == 0;
 
             if (!ReferenceEquals(m_StateA.HighlightedObject, null)) {
                 if (!m_StateA.HighlightedObject || !m_StateA.HighlightedObject.isActiveAndEnabled || !isGripping || m_StateB.CurrentTool == TabletTool.None || searchMask == 0) {
@@ -25,7 +25,7 @@ namespace Pennycook.Tablet {
                 if (Frame.Interval(3) && isGripping && m_StateB.CurrentTool != TabletTool.None && !m_StateA.RaycastJob.IsValid()) {
                     if (searchMask != 0) {
                         TabletZoomState zoomState = Find.State<TabletZoomState>();
-                        float coneDistance = 25 * zoomState.ZoomMultiplier;
+                        float coneDistance = m_StateB.CurrentToolDef.RaycastBaseDistance * zoomState.ZoomMultiplier;
                         float coneRadius = coneDistance * m_StateB.CurrentToolDef.RaycastUnitConeRadius * CameraHelper.UnitHeightForFOV(m_StateA.LookCamera.fieldOfView) / 2;
 
                         Log.Trace("cone radius = {0}", coneRadius);
@@ -55,8 +55,10 @@ namespace Pennycook.Tablet {
                     if (m_StateA.HighlightedObject != scannable) {
                         SetSelection(m_StateA, m_StateB, m_StateC, scannable, viewportRect, allowVisualHighlights);
 
-                        float vibAmp = Mathf.Clamp(1 - hit.distance / 60, 0.4f, 1) * 0.3f;
-                        TabletUtility.PlayHaptics(vibAmp, 0.02f);
+                        if ((m_StateB.CurrentToolDef.Flags & TabletToolFlags.SkipHapticHighlightFeedback) == 0) {
+                            float vibAmp = Mathf.Clamp(1 - hit.distance / 60, 0.4f, 1) * 0.3f;
+                            TabletUtility.PlayHaptics(vibAmp, 0.02f);
+                        }
                     } else {
                         m_StateA.TargetHighlightCorners = viewportRect;
                     }

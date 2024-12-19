@@ -12,6 +12,8 @@ namespace Pennycook {
             } else if (signalId == PenguinUtility.Signals.PathFound) {
                 PenguinBrain brain = Brain(p);
                 brain.Animator.Animator.SetBool("Waddle", true);
+            } else if (signalId == PenguinContacts.Signal_PlayerGripped) {
+                p.TransitionToDefault();
             }
         }
 

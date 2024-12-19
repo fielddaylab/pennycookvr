@@ -1,5 +1,6 @@
 using System;
 using BeauUtil.Debugger;
+using FieldDay;
 using FieldDay.Physics;
 using FieldDay.SharedState;
 using FieldDay.VRHands;
@@ -19,6 +20,10 @@ namespace Pennycook {
 
         private void Awake() {
             Log.Msg("[PlayerRig] Initial position is {0}", MoveRoot.position);
+
+            Game.Scenes.OnMainSceneReady.Register(() => {
+                PlayerRigUtils.SyncPhysicsHands(this, true);
+            });
         }
     }
 

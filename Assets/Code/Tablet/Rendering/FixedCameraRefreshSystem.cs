@@ -22,7 +22,7 @@ namespace Pennycook.Tablet {
                     continue;
                 }
 
-                if ((c.TimeBeforeNextRefresh -= deltaTime) <= 0) {
+                if (c.Passthrough || (c.TimeBeforeNextRefresh -= deltaTime) <= 0) {
                     foreach (var camera in c.Cameras) {
                         camera.enabled = true;
                     }
@@ -36,7 +36,7 @@ namespace Pennycook.Tablet {
             }
 
             foreach (var c in m_Components) {
-                if (c.TimeBeforeNextRefresh <= 0) {
+                if (!c.Passthrough && c.TimeBeforeNextRefresh <= 0) {
                     c.TimeBeforeNextRefresh += 1f / c.RefreshRate;
                     foreach (var camera in c.Cameras) {
                         camera.enabled = false;
