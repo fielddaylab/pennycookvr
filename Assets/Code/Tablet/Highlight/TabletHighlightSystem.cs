@@ -25,7 +25,7 @@ namespace Pennycook.Tablet {
                 if (Frame.Interval(3) && isGripping && m_StateB.CurrentTool != TabletTool.None && !m_StateA.RaycastJob.IsValid()) {
                     if (searchMask != 0) {
                         TabletZoomState zoomState = Find.State<TabletZoomState>();
-                        float coneDistance = 25 * zoomState.ZoomMultiplier;
+                        float coneDistance = m_StateB.CurrentToolDef.RaycastBaseDistance * zoomState.ZoomMultiplier;
                         float coneRadius = coneDistance * m_StateB.CurrentToolDef.RaycastUnitConeRadius * CameraHelper.UnitHeightForFOV(m_StateA.LookCamera.fieldOfView) / 2;
 
                         Log.Trace("cone radius = {0}", coneRadius);

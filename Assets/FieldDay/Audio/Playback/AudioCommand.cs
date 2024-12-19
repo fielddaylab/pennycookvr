@@ -139,9 +139,9 @@ namespace FieldDay.Audio {
     internal struct FloatParamChangeCommandData {
         public AudioIdOrBusRef Handle;
         public AudioFloatPropertyType Property;
+        public Curve Easing;
         public float Target;
         public float Duration;
-        public Curve Easing;
     }
 
     /// <summary>
@@ -166,7 +166,7 @@ namespace FieldDay.Audio {
     [StructLayout(LayoutKind.Explicit)]
     internal struct AudioCommand {
         [FieldOffset(0)] public AudioCommandType Type;
-        [FieldOffset(4)] public PlayCommandData Play;
+        //[FieldOffset(4)] public PlayCommandData Play;
         [FieldOffset(4)] public PlayExistingCommandData Resume;
         [FieldOffset(4)] public StopCommandData Stop;
         [FieldOffset(4)] public FloatParamChangeCommandData FloatParam;

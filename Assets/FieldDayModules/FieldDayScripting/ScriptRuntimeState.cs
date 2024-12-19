@@ -5,6 +5,7 @@ using System.Threading;
 using BeauPools;
 using BeauRoutine;
 using BeauUtil;
+using BeauUtil.Debugger;
 using BeauUtil.Tags;
 using BeauUtil.Variants;
 using FieldDay.SharedState;
@@ -385,6 +386,7 @@ namespace FieldDay.Scripting {
                 foreach (var node in funcNodes) {
                     Runtime.Plugin.Run(node, targetId, actor, vars, "Function Invokation", true);
                 }
+                Log.Msg("[ScriptUtility] Invoked '{0}', {1} response(s)", functionId.ToDebugString(), funcNodes.Count.ToStringLookup());
             }
         }
 
@@ -414,9 +416,11 @@ namespace FieldDay.Scripting {
 
             ScriptNode node = ScriptDBUtility.FindRandomTrigger(DB, triggerId, lookup);
             if (node != null) {
+                Log.Msg("[ScriptUtility] Triggered '{0}', found response '{1}'", triggerId.ToDebugString(), node.FullName);
                 return Runtime.Plugin.Run(node, targetId, actor, vars, "Trigger Invokation", true);
             }
 
+            Log.Msg("[ScriptUtility] Triggered '{0}', no response", triggerId.ToDebugString());
             return default;
         }
 

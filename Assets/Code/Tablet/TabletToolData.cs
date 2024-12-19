@@ -9,6 +9,7 @@ using UnityEngine;
 namespace Pennycook.Tablet {
     public class TabletToolDefinition {
         public LayerMask RaycastMask;
+        public float RaycastBaseDistance = 25;
         public float RaycastUnitConeRadius;
         public bool ShowReticle = true;
 
@@ -115,7 +116,7 @@ namespace Pennycook.Tablet {
         };
 
         static public readonly TabletToolDefinition Capture = new TabletToolDefinition() {
-            RaycastMask = TabletUtility.DefaultSearchMask,
+            RaycastMask = TabletUtility.CaptureSearchMask,
             RaycastUnitConeRadius = 0.4f,
 
             Flags = TabletToolFlags.DoNotUseHighlightBox | TabletToolFlags.InteractionDoesNotRequireHighlight

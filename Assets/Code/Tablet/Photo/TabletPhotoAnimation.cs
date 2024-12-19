@@ -48,9 +48,13 @@ namespace Pennycook.Tablet {
             yield return null;
             yield return Offset.Offset0To(default, 0.3f).Ease(Curve.BackOut);
 
-            SuccessParticles.Play();
-
-            yield return 0.8f;
+            if (result == TabletPhotoResult.NewBehavior) {
+                SuccessParticles.Play();
+                yield return 0.8f;
+            } else if (result == TabletPhotoResult.BadPhoto) {
+                yield return Offset.Offset1To(new Vector2(8, 0), 0.3f).Wave(Wave.Function.Cos, 4);
+                yield return 0.1f;
+            }
 
             yield return Offset.Offset0To(new Vector2(0, -400), 0.3f).Ease(Curve.QuadIn);
 

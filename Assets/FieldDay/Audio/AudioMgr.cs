@@ -34,6 +34,7 @@ namespace FieldDay.Audio {
         private float m_PreloadWorkerTimeSlice;
 
         private Pipe<AudioCommand> m_CommandPipe = new Pipe<AudioCommand>(128, true);
+        private Pipe<PlayCommandData> m_PlayCommandPipe = new Pipe<PlayCommandData>(64, true);
         private UniqueIdAllocator16 m_VoiceIdAllocator = new UniqueIdAllocator16(MaxVoices + MaxBuses);
 
         private Unsafe.ArenaHandle m_Arena;
@@ -253,10 +254,13 @@ namespace FieldDay.Audio {
             m_CommandPipe.Write(cmd);
         }
 
-        internal AudioHandle QueuePlayAudioCommand(AudioCommand cmd) {
+        internal AudioHandle QueuePlayAudioCommand(AudioCommandType cmdType, PlayCommandData cmdData) {
             UniqueId16 id = m_VoiceIdAllocator.Alloc();
-            cmd.Play.Handle = id;
-            m_CommandPipe.Write(cmd);
+            cmdData.Handle = id;
+            m_CommandPipe.Write(new AudioCommand() {
+                Type = cmdType
+            });
+            m_PlayCommandPipe.Write(cmdData);
             return new AudioHandle(id);
         }
 

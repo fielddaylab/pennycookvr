@@ -54,12 +54,12 @@ namespace FieldDay.Audio {
                     }
 
                     case AudioCommandType.PlayClipFromName: {
-                        Cmd_PlayFromName(cmd.Play);
+                        Cmd_PlayFromName(m_PlayCommandPipe.Read());
                         break;
                     }
 
                     case AudioCommandType.PlayClipFromAssetRef: {
-                        Cmd_PlayFromAsset(cmd.Play);
+                        Cmd_PlayFromAsset(m_PlayCommandPipe.Read());
                         break;
                     }
 

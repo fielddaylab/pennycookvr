@@ -66,6 +66,12 @@ static public class LayerMasks {
     // Layer 20: ParticleAvoid
     public const int ParticleAvoid_Index = 20;
     public const int ParticleAvoid_Mask = 1048576;
+    // Layer 21: CaptureOnly
+    public const int CaptureOnly_Index = 21;
+    public const int CaptureOnly_Mask = 2097152;
+    // Layer 22: PenguinSensor
+    public const int PenguinSensor_Index = 22;
+    public const int PenguinSensor_Mask = 4194304;
     // Layer 29: VisibleOnlyThroughTablet
     public const int VisibleOnlyThroughTablet_Index = 29;
     public const int VisibleOnlyThroughTablet_Mask = 536870912;

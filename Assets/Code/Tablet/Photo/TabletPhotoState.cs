@@ -5,6 +5,7 @@ using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -83,6 +84,7 @@ namespace Pennycook.Tablet {
             photoState.NextAllowedPhotoTS = ts + 2;
             photoState.QueuedPhoto = photoState.PhotoPool.Alloc();
             photoState.QueuedPhoto.Tag = GetPhotoTag(highlighted);
+            HandleBehaviorCapture(highlighted);
             TabletUtility.PlaySfx("Tablet.Photo.Snap");
         }
 
@@ -131,6 +133,91 @@ namespace Pennycook.Tablet {
             }
 
             return highlightable.gameObject.name;
+        }
+
+        static private Rect CalculatePhotoSubjectRect(TabletHighlightState highlightState, TabletHighlightable highlightable) {
+            return TabletUtility.CalculateViewportAlignedBoundingBox(highlightable.HighlightCollider.bounds, highlightState.LookCamera, Vector2.one);
+        }
+
+        static private bool DetermineGoodFraming(Rect rect, TabletHighlightState highlightState, TabletCapturable capturable) {
+            if (rect.width < 0.2f || rect.height < 0.2f) {
+                Log.Msg("Subject width/height too small");
+                return false;
+            }
+
+            if ((rect.width * rect.height) < (0.25f * 0.25f)) {
+                Log.Msg("Subject area too small");
+                return false;
+            }
+
+            if (capturable && capturable.CanCapture) {
+                float threshold = capturable.ViewAlignmentThreshold * 2 - 1;
+                float dot = Vector3.Dot(highlightState.CachedLookCameraTransform.forward, capturable.transform.forward);
+                if (dot < threshold) {
+                    Log.Msg("Subject not facing camera");
+                    return false;
+                }
+            }
+
+            Log.Msg("Subject is framed well");
+            return true;
+        }
+
+        static private TabletPhotoResult HandleBehaviorCapture(TabletHighlightable highlightable) {
+            if (!highlightable) {
+                return TabletPhotoResult.Nothing;
+            }
+            
+            TabletCapturable cap = highlightable.CachedCapture;
+            TabletHighlightState highlightState = Find.State<TabletHighlightState>();
+            Rect framing = CalculatePhotoSubjectRect(highlightState, highlightable);
+
+            bool isBadFraming = !DetermineGoodFraming(framing, highlightState, cap);
+
+            bool newGlobalBehavior, newUniqueBehavior, wasPerformingBehavior;
+
+            if (!isBadFraming && cap && cap.CanCapture && !cap.CaptureId.IsEmpty) {
+                TabletInventory inv = Find.State<TabletInventory>();
+                CaptureRecord rec = new CaptureRecord(cap, cap.CaptureId);
+                newGlobalBehavior = inv.GlobalCapturedBehaviors.Add(cap.CaptureId);
+                newUniqueBehavior = inv.CaptureRecords.Add(rec);
+                wasPerformingBehavior = true;
+            } else {
+                newGlobalBehavior = newUniqueBehavior = wasPerformingBehavior = false;
+            }
+
+            LeafThreadHandle thread = default;
+
+            using (var t = TempVarTable.Alloc()) {
+                t.ActorInfo(ScriptUtility.Actor(highlightable));
+                t.Set("behaviorId", cap ? cap.CaptureId : StringHash32.Null);
+                t.Set("isBadFraming", isBadFraming);
+                t.Set("wasPerformingBehavior", wasPerformingBehavior);
+
+                if (newGlobalBehavior) {
+                    thread = ScriptUtility.Trigger(GameTriggers.TabletNewBehaviorCaptured, t);
+                }
+
+                if (newUniqueBehavior && !thread.IsRunning()) {
+                    thread = ScriptUtility.Trigger(GameTriggers.TabletNewBehaviorInstanceCaptured, t);
+                } else {
+                    ScriptUtility.Invoke(GameTriggers.TabletNewBehaviorInstanceCaptured, t);
+                }
+
+                if (!thread.IsRunning()) {
+                    thread = ScriptUtility.Trigger(GameTriggers.TabletPhotoTaken, t);
+                } else {
+                    ScriptUtility.Invoke(GameTriggers.TabletPhotoTaken, t);
+                }
+            }
+
+            if (newGlobalBehavior) {
+                return TabletPhotoResult.NewBehavior;
+            } else if (isBadFraming && wasPerformingBehavior) {
+                return TabletPhotoResult.BadPhoto;
+            } else {
+                return TabletPhotoResult.GoodPhoto;
+            }
         }
     }
 }
