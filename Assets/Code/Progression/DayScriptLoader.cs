@@ -7,7 +7,7 @@ using FieldDay.Scripting;
 using UnityEngine;
 
 namespace Pennycook {
-    public sealed class DayScriptLoader : MonoBehaviour, IScenePreload, ISceneUnloadHandler {
+    public sealed class DayScriptLoader : MonoBehaviour, IScenePreload, ISceneUnloadHandler, IDynamicSceneImport {
         [NonSerialized] private UniqueId16[] m_LoadHandles;
 
         void ISceneUnloadHandler.OnSceneUnload(SceneBinding inScene, object inContext) {
@@ -27,5 +27,15 @@ namespace Pennycook {
             }
             return null;
         }
+
+        IEnumerable<SceneImportSettings> IDynamicSceneImport.GetSubscenes()
+        {
+            DayConfigAsset config = UniverseUtility.GetConfigForCurrentState();
+
+            for(int i = 0; i < config.AuxScenes.Length; i++) {
+                 yield return new SceneImportSettings(config.AuxScenes[i], SceneImportFlags.Auxillary);
+            }
+        }
+
     }
 }
