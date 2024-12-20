@@ -52,6 +52,8 @@ namespace FieldDay.Audio {
         private BusData[] m_BusData;
         private int m_BusCount;
 
+        private AudioListener m_ListenerReference;
+
 #if DEVELOPMENT
         private AudioPropertyBlock[] m_DebugBusProperties;
 #endif // DEVELOPMENT
@@ -247,6 +249,39 @@ namespace FieldDay.Audio {
         }
 
         #endregion // Asset Handlers
+
+        #region Listener
+
+        /// <summary>
+        /// Sets the global AudioListener reference.
+        /// </summary>
+        public void SetListener(AudioListener listener) {
+            m_ListenerReference = listener;
+        }
+
+        /// <summary>
+        /// Sets the global AudioListener reference.
+        /// </summary>
+        public void RemoveListener(AudioListener listener) {
+            if (m_ListenerReference == listener) {
+                m_ListenerReference = null;
+            }
+        }
+
+        /// <summary>
+        /// Global audio listener.
+        /// </summary>
+        public AudioListener Listener {
+            get {
+                if (!m_ListenerReference) {
+                    Log.Error("[AudioMgr] AudioListener reference not assigned - make sure to attach an 'AudioListenerReference' component!");
+                    m_ListenerReference = Find.Any<AudioListener>();
+                }
+                return m_ListenerReference;
+            }
+        }
+
+        #endregion // Listener
 
         #region Command Pipe
 

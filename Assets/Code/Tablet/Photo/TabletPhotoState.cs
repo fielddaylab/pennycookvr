@@ -168,15 +168,17 @@ namespace Pennycook.Tablet {
                 return TabletPhotoResult.Nothing;
             }
             
-            TabletCapturable cap = highlightable.CachedCapture;
             TabletHighlightState highlightState = Find.State<TabletHighlightState>();
+            TabletGoalState goals = Find.State<TabletGoalState>();
+
+            TabletCapturable cap = highlightable.CachedCapture;
             Rect framing = CalculatePhotoSubjectRect(highlightState, highlightable);
 
             bool isBadFraming = !DetermineGoodFraming(framing, highlightState, cap);
 
             bool newGlobalBehavior, newUniqueBehavior, wasPerformingBehavior;
 
-            if (!isBadFraming && cap && cap.CanCapture && !cap.CaptureId.IsEmpty) {
+            if (!isBadFraming && cap && cap.CanCapture && !cap.CaptureId.IsEmpty && goals.RelevantCaptureIds.Contains(cap.CaptureId)) {
                 TabletInventory inv = Find.State<TabletInventory>();
                 CaptureRecord rec = new CaptureRecord(cap, cap.CaptureId);
                 newGlobalBehavior = inv.GlobalCapturedBehaviors.Add(cap.CaptureId);

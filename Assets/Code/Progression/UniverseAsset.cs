@@ -52,7 +52,7 @@ namespace Pennycook {
             DayConfigAsset config = GetConfigForDay(dayIndex);
             Log.Msg("[UniverseUtility] Loading day '{0}'", config.name);
             Game.Scenes.LoadMainScene(config.Scene, true);
-            while(Game.Scenes.IsMainLoading()) {
+            while(GameLoop.IsLoading) {
                 yield return null;
             }
         }

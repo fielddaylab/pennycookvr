@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using BeauRoutine;
 using BeauUtil;
+using FieldDay;
 using FieldDay.SharedState;
 using Leaf.Runtime;
 
@@ -17,6 +18,8 @@ namespace Pennycook.Tablet {
 
         [NonSerialized] public List<StringHash32> ActiveGoalIds = new List<StringHash32>();
         [NonSerialized] public BitSet32 GoalsComplete = new BitSet32();
+
+        [NonSerialized] public HashSet<StringHash32> RelevantCaptureIds = SetUtils.Create<StringHash32>(4);
     }
 
     public struct TabletGoal {
@@ -27,7 +30,7 @@ namespace Pennycook.Tablet {
 
     static public partial class TabletUtility {
         [SharedStateReference]
-        static public TabletGoalState Goals { get; private set; }
+        static private TabletGoalState Goals { get; set; }
 
         [LeafMember("CreateGoal")]
         static private void LeafCreateGoal(StringHash32 id, string text) {
@@ -75,6 +78,16 @@ namespace Pennycook.Tablet {
                 Goals.GoalItems[i].Check.SetAlpha(0);
                 Goals.GoalItems[i].gameObject.SetActive(false);
             }
+        }
+
+        [LeafMember("WatchForBehavior")]
+        static private void LeafWatchBehavior(StringHash32 id) {
+            Goals.RelevantCaptureIds.Add(id);
+        }
+
+        [LeafMember("StopWatchingBehavior")]
+        static private void LeafStopWatchingBehavior(StringHash32 id) {
+            Goals.RelevantCaptureIds.Remove(id);
         }
     }
 }

@@ -86,7 +86,7 @@ namespace FieldDay.Audio {
                 return;
             }
 
-            Game.Audio.QueueAudioCommand(new AudioCommand() {
+            Game.Audio?.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.StopWithHandle,
                 Stop = new StopCommandData() {
                     Id = new AudioIdRef() {
@@ -101,7 +101,7 @@ namespace FieldDay.Audio {
                 return;
             }
 
-            Game.Audio.QueueAudioCommand(new AudioCommand() {
+            Game.Audio?.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.StopWithHandle,
                 Stop = new StopCommandData() {
                     Id = new AudioIdRef() {
@@ -114,7 +114,7 @@ namespace FieldDay.Audio {
         }
 
         static public void Stop(AudioSource source) {
-            Game.Audio.QueueAudioCommand(new AudioCommand() {
+            Game.Audio?.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.StopWithAudioSource,
                 Stop = new StopCommandData() {
                     Id = source,
@@ -123,7 +123,7 @@ namespace FieldDay.Audio {
         }
 
         static public void Stop(AudioSource source, float fadeDuration) {
-            Game.Audio.QueueAudioCommand(new AudioCommand() {
+            Game.Audio?.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.StopWithAudioSource,
                 Stop = new StopCommandData() {
                     Id = source,
@@ -134,7 +134,7 @@ namespace FieldDay.Audio {
         }
 
         static public void StopAll() {
-            Game.Audio.QueueAudioCommand(new AudioCommand() {
+            Game.Audio?.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.StopAll
             });
         }

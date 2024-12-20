@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using FieldDay.Processes;
 using BeauUtil;
+using FieldDay;
 
 namespace Pennycook {
     public sealed class PenguinWanderSchedule : PenguinSchedule {
@@ -11,6 +12,13 @@ namespace Pennycook {
 
                 float newWanderRestlessness = brain.Personality.Wander.IdleWaitDuration + RNG.Instance.NextFloat(brain.Personality.Wander.IdleWaitDurationRandom);
                 brain.MentalState.WanderRestlessness = newWanderRestlessness;
+
+                while(brain.MentalState.WanderRestlessness > 0) {
+                    if (brain.Contacts.GrippedShoulders.IsEmpty) {
+                        brain.MentalState.WanderRestlessness -= Frame.DeltaTime;
+                    }
+                    yield return null;
+                }
 
                 Vector3 targetWalkPos;
                 while(!TryFindGoodWanderPosition(brain, brain.Personality.Wander, brain.Type == PenguinType.Adult, out targetWalkPos)) {

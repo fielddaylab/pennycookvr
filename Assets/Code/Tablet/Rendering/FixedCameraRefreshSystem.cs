@@ -8,7 +8,7 @@ namespace Pennycook.Tablet {
     [SysUpdate(GameLoopPhase.UnscaledLateUpdate, 10000)]
     public class FixedCameraRefreshSystem : ComponentSystemBehaviour<FixedCameraRefreshRate> {
         public override void ProcessWork(float deltaTime) {
-            if (Game.Scenes.IsMainLoading()) {
+            if (GameLoop.IsLoading) {
                 foreach (var c in m_Components) {
                     foreach(var camera in c.Cameras) {
                         camera.enabled = false;
@@ -31,7 +31,7 @@ namespace Pennycook.Tablet {
         }
 
         private void OnFrameAdvance() {
-            if (Game.Scenes.IsMainLoading()) {
+            if (GameLoop.IsLoading) {
                 return;
             }
 

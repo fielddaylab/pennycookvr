@@ -9,9 +9,11 @@ namespace Pennycook.Animation {
         public float LookLerpSpeed;
         public float LookBlend = 1;
 
-        [NonSerialized] public LookTargetMode Mode;
-        [NonSerialized] public Vector3 LookVector;
-        [NonSerialized] public Transform LookTowards;
+        [Header("Live")]
+        public LookTargetMode Mode;
+        public Vector3 LookVector;
+        public Transform LookTowards;
+        
         [NonSerialized] public Vector2 LastAppliedLook;
 
         public Vector2 WorldLookDirectionToLocal(Vector3 worldVec) {
