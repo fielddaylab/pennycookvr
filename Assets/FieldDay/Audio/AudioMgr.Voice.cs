@@ -449,7 +449,9 @@ namespace FieldDay.Audio {
         }
 
         private unsafe void KillVoice(VoiceData voice) {
-            voice.Components.Source.Stop();
+            if (voice.Components && voice.Components.Source) {
+                voice.Components.Source.Stop();
+            }
             voice.Components.PlayingHandle = default;
 
             FreeHandle(ref voice.Handle);
