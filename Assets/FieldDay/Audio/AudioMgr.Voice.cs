@@ -14,6 +14,10 @@ namespace FieldDay.Audio {
     public sealed partial class AudioMgr {
         private const int FloatPropertyCount = 5;
 
+        private const float MinLowHighPassCutoff = 17;
+        private const float MaxLowHighPassCutoff = 20000;
+        private const float LowHighPassCutoffRange = MaxLowHighPassCutoff - MinLowHighPassCutoff;
+
         #region Voice Data
 
         private sealed unsafe class VoiceData {
@@ -325,12 +329,16 @@ namespace FieldDay.Audio {
 
             if (components.LowPass != null) {
                 components.LowPass.enabled = block.LoPass > 0;
-                components.LowPass.lowpassResonanceQ = block.LoPass;
+                if (block.LoPass > 0) {
+                    components.LowPass.cutoffFrequency = CalculateCutoffFrequency(1f - block.LoPass);
+                }
             }
 
             if (components.HighPass != null) {
                 components.HighPass.enabled = block.HiPass > 0;
-                components.HighPass.highpassResonanceQ = block.HiPass;
+                if (block.HiPass > 0) {
+                    components.HighPass.cutoffFrequency = CalculateCutoffFrequency(block.HiPass);
+                }
             }
 
 #endif // SUPPORTS_AUDIOEFFECTS
@@ -342,13 +350,20 @@ namespace FieldDay.Audio {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static private void RequestImmediateStop(VoiceData voice) {
             voice.Components.Source.Stop();
             voice.State = VoiceState.Stopped;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static private bool IsVoiceLoaded(VoiceData voice) {
             return voice.Components.Source.clip.loadState == AudioDataLoadState.Loaded;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static private float CalculateCutoffFrequency(float value) {
+            return MinLowHighPassCutoff + LowHighPassCutoffRange * (value * value * value);
         }
 
         #endregion // Voice Update

@@ -203,6 +203,58 @@ namespace FieldDay.Audio {
             });
         }
 
+        static public void SetBusVolume(StringHash32 busId, float volume, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetBusFloatParameter,
+                FloatParam = new FloatParamChangeCommandData() {
+                    Handle = busId,
+                    Property = AudioFloatPropertyType.Volume,
+                    Target = volume,
+                    Duration = transitionTime,
+                    Easing = transitionCurve,
+                }
+            });
+        }
+
+        static public void SetBusPitch(StringHash32 busId, float pitch, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetBusFloatParameter,
+                FloatParam = new FloatParamChangeCommandData() {
+                    Handle = busId,
+                    Property = AudioFloatPropertyType.Pitch,
+                    Target = pitch,
+                    Duration = transitionTime,
+                    Easing = transitionCurve,
+                }
+            });
+        }
+
+        static public void SetBusLoPass(StringHash32 busId, float loPass, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetBusFloatParameter,
+                FloatParam = new FloatParamChangeCommandData() {
+                    Handle = busId,
+                    Property = AudioFloatPropertyType.LoPass,
+                    Target = loPass,
+                    Duration = transitionTime,
+                    Easing = transitionCurve,
+                }
+            });
+        }
+
+        static public void SetBusHiPass(StringHash32 busId, float hiPass, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetBusFloatParameter,
+                FloatParam = new FloatParamChangeCommandData() {
+                    Handle = busId,
+                    Property = AudioFloatPropertyType.HiPass,
+                    Target = hiPass,
+                    Duration = transitionTime,
+                    Easing = transitionCurve,
+                }
+            });
+        }
+
         #endregion // Properties
     }
 }

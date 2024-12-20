@@ -87,20 +87,45 @@ namespace Pennycook.Tablet {
             byte[] nativeByteArr = nativeBytes.ToArray();
             nativeBytes.Dispose();
             yield return null;
-            string directory;
+            string directory, fileName, uploadPath = null;
+            fileName = string.Format("Photo_{0}_{1}.jpg", photo.Tag, photo.Timestamp.ToString("dd-MM-yyyy-HHmmss"));
+            bool success = false;
+
 #if UNITY_EDITOR
             directory = "DebugPhotos/";
-#else
-            directory = Path.Combine(Application.persistentDataPath, "Photos/");
-#endif // UNITY_EDITOR
-
+            uploadPath = Path.Combine(directory, fileName);
             Directory.CreateDirectory(directory);
             yield return null;
 
-            string fileName = string.Format("Photo_{0}_{1}.jpg", photo.Tag, photo.Timestamp.ToString("dd-MM-yyyy-HHmmss"));
-            File.WriteAllBytes(Path.Combine(directory, fileName), nativeByteArr);
+            try {
+                File.WriteAllBytes(uploadPath, nativeByteArr);
+                success = true;
+            } catch {
+                success = false;
+            }
+#else
+            bool nativeFinished = false;
+            var permission = NativeGallery.SaveImageToGallery(nativeByteArr, "Pennycook", fileName, (s, u) => {
+                success = s;
+                uploadPath = u;
+                nativeFinished = true;
+            });
 
-            Log.Msg("[TabletPhotoSystem] Uploaded photo '{0}'", fileName);
+            if (permission != NativeGallery.Permission.Granted) {
+                nativeFinished = true;
+                success = false;
+            }
+
+            while(!nativeFinished) {
+                yield return new AsyncSleep(500);
+            }
+#endif // UNITY_EDITOR
+
+            if (success) {
+                Log.Msg("[TabletPhotoSystem] Uploaded photo '{0}'", uploadPath);
+            } else {
+                Log.Warn("[TabletPhotoSystem] Failed to upload photo '{0}'", fileName);
+            }
         }
     }
 }
