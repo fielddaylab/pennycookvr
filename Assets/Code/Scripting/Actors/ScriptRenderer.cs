@@ -18,6 +18,8 @@ namespace Pennycook {
         #region Inspector
 		private MeshRenderer m_MeshRenderer = null;
         
+        [SerializeField]
+        private List<Material> m_Materials = new List<Material>();
 		#endregion // Inspector
 		
         #region Leaf
@@ -31,6 +33,13 @@ namespace Pennycook {
         [LeafMember("SetMeshEnabled"), Preserve]
         public void SetMeshEnabled(bool lockParam) {
 			m_MeshRenderer.enabled = lockParam;
+        }
+
+        [LeafMember("SetMaterial"), Preserve]
+        public void SetMaterial(int index) {
+            if(index < m_Materials.Count) {
+                m_MeshRenderer.material = m_Materials[index];
+            }
         }
 		
         #endregion // Leaf

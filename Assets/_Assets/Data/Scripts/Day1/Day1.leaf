@@ -4,6 +4,8 @@
 @function	ScenePrepare
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
+$call Sky1>Activate()
+
 $call FadeIn(2.0)
 
 :: StartGame

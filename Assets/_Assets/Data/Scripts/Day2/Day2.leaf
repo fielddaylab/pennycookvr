@@ -10,6 +10,11 @@ $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call DayHeader->SetText(Nov 16)
 $call GPSTrackerPlate->Activate()
+$call Sky1->Deactivate()
+$call Sky2->Activate()
+$call Sky2->SetSkybox()
+$call Ocean->SetMaterial(1);
+
 $call FadeIn(2.0)
 $call Wait(2)
 

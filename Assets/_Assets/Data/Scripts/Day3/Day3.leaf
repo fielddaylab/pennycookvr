@@ -13,6 +13,12 @@ $call DataLoggerPlate->Activate()
 $call Clouds->Activate()
 $call PebNestsWhite->Deactivate()
 $call PebNestsPink->Activate()
+$call Sky2->Deactivate()
+$call Sky3->Activate()
+$call Sky3->SetSkybox()
+$call Ocean->SetMaterial(2);
+
+
 $call FadeIn(2.0)
 $call Wait(2)
 

@@ -10,6 +10,11 @@ $call DayHeader->SetText(Feb 22)
 $call GPSTrackerPlate->Activate()
 $call DataLoggerPlate->Deactivate()
 $call ChickBandPlate->Deactivate()
+$call Sky4->Deactivate()
+$call Sky5->Activate()
+$call Sky5->SetSkybox()
+$call Ocean->SetMaterial(4);
+
 $call FadeIn(2.0)
 $call Wait(2)
 
