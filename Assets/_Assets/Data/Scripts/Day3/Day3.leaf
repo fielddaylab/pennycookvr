@@ -137,7 +137,7 @@ $call CreateGoal("id_polo_nest", Scan Polo's Nest)
 {@Margo}    We need to see how many eggs are hatched and if any are missing.    $[Day3/Rookery/3rm02]
 
 :: OnMillieBillyIdentified
-@function	TabletIdentified
+@trigger	TabletIdentified
 @when		objectId == "MillieBillyChick"
 @once
 @interrupt
@@ -151,7 +151,7 @@ $call CompleteGoal("id_millie_nest")
 $goto Day3.CheckAllNestsIdentified
 
 :: OnAlfredoEggIdentified
-@function	TabletIdentified
+@trigger	TabletIdentified
 @when		objectId == "AlfredoEgg"
 @once
 @interrupt
@@ -168,7 +168,7 @@ $call CompleteGoal("id_alfredo_nest")
 $goto Day3.CheckAllNestsIdentified
 
 :: OnFuzzEggIdentified
-@function	TabletIdentified
+@trigger	TabletIdentified
 @when		objectId == "FuzzEgg"
 @once
 @interrupt
@@ -187,7 +187,7 @@ $call CompleteGoal("id_fuzz_nest")
 $goto Day3.CheckAllNestsIdentified
 
 :: OnWinstonWendyIdentified
-@function	TabletIdentified
+@trigger	TabletIdentified
 @when		objectId == "WinstonWendyChick"
 @once
 @interrupt
@@ -203,7 +203,7 @@ $call CompleteGoal("id_winston_nest")
 $goto Day3.CheckAllNestsIdentified
 
 :: OnPoloNestIdentified
-@function	TabletIdentified
+@trigger	TabletIdentified
 @when		objectId == "PoloNest"
 @once
 @interrupt

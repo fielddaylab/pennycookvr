@@ -146,7 +146,7 @@ $call CompleteGoal("id_millie")
 $goto Day2.CheckAllMatesIdentified
 
 :: OnMeatballIdentified
-@function	TabletIdentified
+@trigger	TabletIdentified
 @when		objectId == "Meatball"
 @once
 @interrupt
@@ -163,7 +163,7 @@ $call CompleteGoal("id_alfredo")
 $goto Day2.CheckAllMatesIdentified
 
 :: OnDaisyIdentified
-@function	TabletIdentified
+@trigger	TabletIdentified
 @when		objectId == "Daisy"
 @once
 @interrupt
@@ -182,7 +182,7 @@ $call CompleteGoal("id_fuzz")
 $goto Day2.CheckAllMatesIdentified
 
 :: OnWendyIdentified
-@function	TabletIdentified
+@trigger	TabletIdentified
 @when		objectId == "Wendy"
 @once
 @interrupt
@@ -196,7 +196,7 @@ $call CompleteGoal("id_winston")
 $goto Day2.CheckAllMatesIdentified
 
 :: OnBenniIdentified
-@function	TabletIdentified
+@trigger	TabletIdentified
 @when		objectId == "Benni"
 @once
 @interrupt
