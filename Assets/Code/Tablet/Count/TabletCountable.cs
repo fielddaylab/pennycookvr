@@ -12,6 +12,8 @@ namespace Pennycook.Tablet {
         public TabletCountingGroup Group;
 
         [NonSerialized] public bool IsCounted;
+
+        static public readonly CastableEvent<int,int> OnCounted = new CastableEvent<int,int>();
     }
 
     static public class TabletCountUtility {
@@ -39,6 +41,8 @@ namespace Pennycook.Tablet {
 
                 countable.Group.CurrentlyCounted.Add(countable);
                 countable.IsCounted = true;
+                
+                TabletCountable.OnCounted.Invoke(countable.Group.CurrentlyCounted.Count, countable.Group.TotalInGroup);
 
                 //bool identified = Ref.Replace(ref highlightable.Identified, true);
                 //if (identified) {

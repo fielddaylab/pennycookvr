@@ -14,5 +14,6 @@ namespace Pennycook {
 
     static public class PenguinSchedules {
         static public readonly ProcessStateDefinition Wander = ProcessStateDefinition.FromCallbacks("Wander", new PenguinWanderSchedule());
+        //static public readonly ProcessStateDefinition MatingDance = ProcessStateDefinition.FromCallbacks("MatingDance", new PenguinWanderSchedule());
     }
 }

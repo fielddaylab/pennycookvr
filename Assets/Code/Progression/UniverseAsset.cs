@@ -63,12 +63,14 @@ namespace Pennycook {
                 newGoal.Completed = false;
                 newGoal.Current = false;
                 newGoal.Loaded = false;
-                newGoal.SubGoals = new Tablet.TabletSubGoal[config.Goals[i].SubGoals.Length];
-                for(int j = 0; j < config.Goals[i].SubGoals.Length; ++j) {
-                    newGoal.SubGoals[j] = new Tablet.TabletSubGoal();
-                    newGoal.SubGoals[j].Id = config.Goals[i].SubGoals[j].ID;
-                    newGoal.SubGoals[j].Text = config.Goals[i].SubGoals[j].Description;
-                    newGoal.SubGoals[j].Color = config.Goals[i].SubGoals[j].Color;
+                if(config.Goals[i].SubGoals.Length > 0) {
+                    newGoal.SubGoals = new Tablet.TabletSubGoal[config.Goals[i].SubGoals.Length];
+                    for(int j = 0; j < config.Goals[i].SubGoals.Length; ++j) {
+                        newGoal.SubGoals[j] = new Tablet.TabletSubGoal();
+                        newGoal.SubGoals[j].Id = config.Goals[i].SubGoals[j].ID;
+                        newGoal.SubGoals[j].Text = config.Goals[i].SubGoals[j].Description;
+                        newGoal.SubGoals[j].Color = config.Goals[i].SubGoals[j].Color;
+                    }
                 }
                 Tablet.TabletUtility.Goals.DayGoals.Add(newGoal);
             }

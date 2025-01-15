@@ -88,6 +88,7 @@ namespace Pennycook.Tablet {
                 if(Goals.DayGoals[i].Type == (TabletGoalType)currTool.CurrentToolIndex) {
                     for(int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
                         if(Goals.DayGoals[i].SubGoals[j].Id == id) {
+                            Goals.DayGoals[i].SubGoals[j].Completed = true;
                             Goals.SidePanels[currTool.CurrentToolIndex].UIElements[j].Check.SetAlpha(1);
                             return true;
                         }
@@ -100,11 +101,18 @@ namespace Pennycook.Tablet {
 
         [LeafMember("ClearGoals")]
         static private void LeafClearGoals() {
+            TabletToolState currTool = Find.State<TabletToolState>();
             for(int i = 0; i < Goals.SidePanels.Count; ++i) {
                 for(int j = 0; j < Goals.SidePanels[i].UIElements.Length; ++j) {
-                    Goals.SidePanels[i].UIElements[j].Check.SetAlpha(0);
-                    Goals.SidePanels[i].UIElements[j].gameObject.SetActive(false);
-                    Goals.SidePanels[i].SetState(false, false);
+                    
+                    if(Goals.SidePanels[i].Type == TabletGoalType.Scan || Goals.SidePanels[i].Type == TabletGoalType.Capture) {
+                        Goals.SidePanels[i].UIElements[j].Check.SetAlpha(0);
+                        Goals.SidePanels[i].UIElements[j].gameObject.SetActive(false);
+                    }
+
+                    if(Goals.SidePanels[i].Type != (TabletGoalType)currTool.CurrentToolIndex) {
+                        Goals.SidePanels[i].SetState(false, false);
+                    }
                 }
             }
         }
