@@ -52,23 +52,28 @@ namespace Pennycook.Tablet {
         //this should load the UI elements relevant to the goal, but not necessarily show them yet
         //unless the current tablet mode matches...
         static public void LoadGoals(TabletWarpPointGroup warpPointType) {
-            for(int i = 0; i < Goals.DayGoals.Count; ++i) {
-                if(!Goals.DayGoals[i].Loaded) {
+            //Debug.Log("IN LOAD GOALS");
+            //Debug.Log("warpPointType: " + warpPointType);
+            for (int i = 0; i < Goals.DayGoals.Count; ++i) {
+                //Debug.Log("Loaded: " + Goals.DayGoals[i].Loaded);
+                //Debug.Log("Warp Point: " + Goals.DayGoals[i].WarpPoint);
+                if (!Goals.DayGoals[i].Loaded) {
                     if(Goals.DayGoals[i].WarpPoint == warpPointType) {
-
                         SidePanelDisplay s = Goals.SidePanels[(int)Goals.DayGoals[i].Type];
-                        for(int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++ j) {
-                            s.UIElements[j].gameObject.SetActive(true);
-                            s.UIElements[j].Text.text = Goals.DayGoals[i].SubGoals[j].Text;
-                            //s.UIElements[j].Circle.Color = Goals.DayGoals[i].SubGoals[j].Color;
+                        if (Goals.DayGoals[i].SubGoals != null) {
+                            for (int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
+                                s.UIElements[j].gameObject.SetActive(true);
+                                s.UIElements[j].Text.text = Goals.DayGoals[i].SubGoals[j].Text;
+                                //s.UIElements[j].Circle.Color = Goals.DayGoals[i].SubGoals[j].Color;
+                            }
                         }
                     }
-                } else {
+                } /*else {
                     //already has been loaded, so if the warp point is the Rookery, 
                     if(warpPointType == TabletWarpPointGroup.Rookery) {
 
                     }
-                }
+                }*/
             }
         }
 
@@ -89,7 +94,9 @@ namespace Pennycook.Tablet {
                     for(int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
                         if(Goals.DayGoals[i].SubGoals[j].Id == id) {
                             Goals.DayGoals[i].SubGoals[j].Completed = true;
-                            Goals.SidePanels[currTool.CurrentToolIndex].UIElements[j].Check.SetAlpha(1);
+                            if (Goals.SidePanels[currTool.CurrentToolIndex].UIElements[j].Check != null) {
+                                Goals.SidePanels[currTool.CurrentToolIndex].UIElements[j].Check.SetAlpha(1);
+                            }
                             return true;
                         }
                     }
@@ -106,7 +113,9 @@ namespace Pennycook.Tablet {
                 for(int j = 0; j < Goals.SidePanels[i].UIElements.Length; ++j) {
                     
                     if(Goals.SidePanels[i].Type == TabletGoalType.Scan || Goals.SidePanels[i].Type == TabletGoalType.Capture) {
-                        Goals.SidePanels[i].UIElements[j].Check.SetAlpha(0);
+                        if (Goals.SidePanels[i].UIElements[j].Check != null) {
+                            Goals.SidePanels[i].UIElements[j].Check.SetAlpha(0);
+                        }
                         Goals.SidePanels[i].UIElements[j].gameObject.SetActive(false);
                     }
 

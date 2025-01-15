@@ -41,9 +41,11 @@ namespace Pennycook {
                     BeauUtil.UI.RectGraphic bg = UIElements[0].Background;
                     RectTransform rt = bg.gameObject.GetComponent<RectTransform>();
                     if(currCount < totalCount) {
-                        rt.offsetMax = new Vector2(COUNT_METER_START - (((float)currCount/(float)totalCount) * (COUNT_METER_END-COUNT_METER_START)), rt.offsetMax.y);
+                        rt.offsetMax = new Vector2(-(COUNT_METER_START + (((float)currCount/(float)totalCount) * (COUNT_METER_END-COUNT_METER_START))), rt.offsetMax.y);
+                        countMeter.Text.text = ((int)(((float)currCount / (float)totalCount) * 100f)).ToString() + "%";
                     } else {
-                        rt.offsetMax = new Vector2(COUNT_METER_END, rt.offsetMax.y);
+                        rt.offsetMax = new Vector2(-COUNT_METER_END, rt.offsetMax.y);
+                        countMeter.Text.text = "100%";
                     }
                 }
             }

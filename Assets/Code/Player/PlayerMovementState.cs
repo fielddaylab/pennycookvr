@@ -140,8 +140,10 @@ namespace Pennycook {
                     TabletWarpUtility.UpdateWarpActivation(affected);
                 }
 
-                TabletUtility.LoadGoals(warpPoint.Group);
+                
             }
+
+            TabletUtility.LoadGoals(warpPoint.Group);
 
             VRGame.Events.Dispatch(GameEvents.WarpPointUpdated, EvtArgs.Ref(warpPoint));
         }

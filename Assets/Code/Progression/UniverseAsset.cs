@@ -52,20 +52,26 @@ namespace Pennycook {
             DayConfigAsset config = GetConfigForDay(dayIndex);
             Log.Msg("[UniverseUtility] Loading day '{0}'", config.name);
             Game.Scenes.LoadMainScene(config.Scene, true);
+            LoadGoals(config);
             while(GameLoop.IsLoading) {
                 yield return null;
             }
+        }
 
-            for(int i = 0; i < config.Goals.Length; ++i) {
+        static public void LoadGoals(DayConfigAsset config) {
+            for (int i = 0; i < config.Goals.Length; ++i)
+            {
                 Tablet.TabletGoal newGoal = new Tablet.TabletGoal();
                 newGoal.Type = config.Goals[i].Type;
                 newGoal.WarpPoint = config.Goals[i].WarpPoint;
                 newGoal.Completed = false;
                 newGoal.Current = false;
                 newGoal.Loaded = false;
-                if(config.Goals[i].SubGoals.Length > 0) {
+                if (config.Goals[i].SubGoals.Length > 0)
+                {
                     newGoal.SubGoals = new Tablet.TabletSubGoal[config.Goals[i].SubGoals.Length];
-                    for(int j = 0; j < config.Goals[i].SubGoals.Length; ++j) {
+                    for (int j = 0; j < config.Goals[i].SubGoals.Length; ++j)
+                    {
                         newGoal.SubGoals[j] = new Tablet.TabletSubGoal();
                         newGoal.SubGoals[j].Id = config.Goals[i].SubGoals[j].ID;
                         newGoal.SubGoals[j].Text = config.Goals[i].SubGoals[j].Description;

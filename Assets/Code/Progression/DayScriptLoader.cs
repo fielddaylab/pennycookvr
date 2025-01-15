@@ -25,6 +25,9 @@ namespace Pennycook {
             for (int i = 0; i < config.Scripts.Length; i++) {
                 m_LoadHandles[i] = ScriptDBUtility.Load(config.Scripts[i]);
             }
+
+            UniverseUtility.LoadGoals(config);
+
             return null;
         }
 
