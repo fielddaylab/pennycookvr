@@ -29,7 +29,6 @@ $call Wait(2)
 
 $call Wait(2)
 
-$call CreateGoal("Day3_outside", Warp outside)
 $call SetWarpActive(WarpBluff, true)
 
 {@Margo}   Mornin’, kiddo! You’re up awfully early.   $[Day3/Tent/3tm01]
@@ -50,13 +49,11 @@ $call SetWarpActive(WarpBluff, true)
 @interrupt
 
 $call TentDoor->Close()
-$call CompleteGoal("Day3_outside")
 
 $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
 
-$call CreateGoal("Day3_rookery", Warp inside rookery)
 $call SetWarpGroupActive(Rookery, true)
 
 {@Player}   What’s on our list for today?  $[Day3/Bluff/Player_1]
@@ -76,16 +73,9 @@ $call PoloNest->Activate()
 $call WinstonWendyChick->Activate()
 $call MillieBillyChick->Activate()
 
-$call CompleteGoal("Day3_rookery")
-
 $call Wait(1)
 
-$call ClearGoals()
 $call SetWarpGroupActive(Rookery, true)
-
-$call CreateGoal("day3_regurg", Observe a penguin feeding their chick for diet data)
-$call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
-$call CreateGoal("day3_scan", Scan nests eggs and chicks)
 
 {@Player}   Oh. My. God. They’re amazing! $[Day3/Rookery/Player_1]
 {@Partner}   Hey there, new kid. $[Day3/Rookery/Partner_1]
@@ -124,14 +114,6 @@ $call FuzzEgg->SetIdentified(false)
 $call WinstonWendyChick->SetIdentified(false)
 $call PoloNest->SetIdentified(false)
 $call PoloNest->SetInteractable(true)
-
-$call ClearGoals()
-
-$call CreateGoal("id_millie_nest", Scan Millie and Billy's Chick)
-$call CreateGoal("id_alfredo_nest", Scan Alfredo's Egg)
-$call CreateGoal("id_fuzz_nest", Scan Fuzz's Egg)
-$call CreateGoal("id_winston_nest", Scan Winston and Wendy's Chick)
-$call CreateGoal("id_polo_nest", Scan Polo's Nest)
 
 {@Margo}    Use my Scan mode to take a look at the nests.   $[Day3/Rookery/3rm01-scan]
 {@Margo}    We need to see how many eggs are hatched and if any are missing.    $[Day3/Rookery/3rm02]
@@ -223,7 +205,6 @@ $goto Day3.CheckAllNestsIdentified
 @trigger    CheckAllNestsIdentified
 $if chapter:identifiedCount >= 5 
     $set	chapter:finishedObservations = true
-	$call ClearGoals()
 	$goto Day3.CheckAllComplete
 $endif
 
@@ -296,7 +277,6 @@ $if chapter:trackerSocketedCount == 1
 {@Margo}	Nice work! Let’s do two more. 	$[Day3/Rookery/3rm22]
 $elseif chapter:trackerSocketedCount >= 3
 $set chapter:trackersSocketed = true
-$call CompleteGoal("day3_back_trackers");
 {@Margo}	Great job. That should get us plenty of data.	$[Day3/Rookery/3rm23]
 $goto Day3.CheckAllComplete
 $endif
@@ -313,15 +293,6 @@ $set chapter:trackerSocketedCount - 1
 
 $if chapter:trackersSocketed == true, chapter:regurgDone == true, chapter:finishedObservations == true
 $set chapter:day3AllComplete = true
-$call ClearGoals()
-$call Wait(0.3)
-$call CreateGoal("day3_regurg", Observe a penguin feeding their chick for diet data)
-$call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
-$call CreateGoal("day3_scan", Scan nests eggs and chicks)
-$call CompleteGoal("day3_regurg")
-$call CompleteGoal("day3_back_trackers")
-$call CompleteGoal("day3_scan")
-$call CreateGoal("Day3_return", Return to tent)
 $call SetWarpActive(WarpBluffBack, true)
 {@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]
 {@Margo}	Yep, looks like we've got all the data we need!	$[Day3/Rookery/3rm24]
@@ -329,20 +300,6 @@ $call SetWarpActive(WarpBluffBack, true)
 {@Player}	I can see why you all keep so much candy around here. 	$[Day3/Rookery/Player_22]
 {@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/Partner_12]
 {@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/Partner_13]
-$else
-$call ClearGoals()
-$call CreateGoal("day3_regurg", Observe a penguin feeding their chick for diet data)
-$call CreateGoal("day3_back_trackers", Place trackers on 3 penguin backs)
-$call CreateGoal("day3_scan", Scan nests eggs and chicks)
-$if chapter:trackersSocketed == true
-$call CompleteGoal("day3_back_trackers")
-$endif
-$if chapter:regurgDone == true
-$call CompleteGoal("day3_regurg")
-$endif
-$if chapter:finishedObservations == true
-$call CompleteGoal("day3_scan")
-$endif
 $endif
 
 :: WarpedBackToTent
@@ -357,15 +314,12 @@ $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)
 
-$call CreateGoal("Day3_upload", Dock Margo to upload data)
-
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
 @when       chapter:day3AllComplete, targetId == "WarpDesk"
 @interrupt
 
-$call CompleteGoal("Day3_return")
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
@@ -378,8 +332,6 @@ $endwhile
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
-
-$call CompleteGoal("Day3_upload")
 
 {@Margo}    You've got three successful breeding pairs. $[Day3/Tent/3tm6]
 {@Margo}    Millie and Billy, Alfredo and Meatball, and Winston and Wendy.  $[Day3/Tent/3tm7]

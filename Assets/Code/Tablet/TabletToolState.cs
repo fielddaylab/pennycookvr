@@ -20,7 +20,9 @@ namespace Pennycook.Tablet {
         public struct ToolConfig {
             public TabletTool Tool;
             public ModeLabelDisplay Label;
+            public SidePanelDisplay SidePanel;
             public Color ThemeColor;
+            public Color SecondThemeColor;
         }
 
         [Header("Config")]
@@ -34,6 +36,7 @@ namespace Pennycook.Tablet {
         public LayoutListener TabLayoutListener;
         public FadeGroup CountGroup;
         public FadeGroup CaptureGroup;
+        public Camera DetailCamera;
 
         [Header("State")]
         public TabletTool CurrentTool;
@@ -88,6 +91,10 @@ namespace Pennycook.Tablet {
 
             if (prevIdx >= 0) {
                 toolState.Configs[prevIdx].Label.SetState(false);
+                toolState.Configs[prevIdx].SidePanel.SetState(false);
+                if(toolState.Configs[prevIdx].SidePanel.PairedPanel != null) {
+                    toolState.Configs[prevIdx].SidePanel.PairedPanel.SetState(false);
+                }
 
                 var oldTool = TabletToolDefinitions.Get(toolState.CurrentTool);
                 oldTool.OnUnhighlighted?.Invoke(highlights.HighlightedObject, ctrl);
@@ -102,12 +109,24 @@ namespace Pennycook.Tablet {
             if (index >= 0) {
                 var config = toolState.Configs[index];
                 config.Label.SetState(true);
+                config.SidePanel.SetState(true);
+                if(config.SidePanel.PairedPanel != null) {
+                    if(TabletUtility.GoalOfTypeExists(config.SidePanel.PairedPanel.Type)) {
+                        config.SidePanel.PairedPanel.SetState(true);
+                        config.SidePanel.gameObject.transform.SetAsFirstSibling();
+                    }
+                }
+                
                 tool = config.Tool;
                 toolState.Outline.color = config.ThemeColor;
                 toolState.Outline.enabled = true;
 
                 foreach(var graphic in toolState.ToolColorTinted) {
                     graphic.color = config.ThemeColor;
+                }
+
+                if(toolState.DetailCamera != null) {
+                    toolState.DetailCamera.backgroundColor = config.SecondThemeColor;
                 }
             } else {
                 toolState.Outline.enabled = false;

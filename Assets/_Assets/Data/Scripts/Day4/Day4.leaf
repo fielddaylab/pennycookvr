@@ -24,7 +24,6 @@ $call Wait(2)
 @once
 
 $call SetWarpActive(WarpBluff, true)
-$call CreateGoal("Day4_outside", Warp outside)
 
 {@Margo}   Mornin', kiddo.   $[Day4/Tent/4tm01]
 {@Player}   Whoa… what’s all this?   $[Day4/Tent/Player_1]
@@ -52,14 +51,12 @@ $call Wait(1)
 @once
 
 $call TentDoor->Close()
-$call CompleteGoal("Day4_outside")
 
 $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
 
 $call SetWarpGroupActive(Rookery, true)
-$call CreateGoal("Day4_rookery", Warp inside rookery)
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
@@ -67,16 +64,9 @@ $call CreateGoal("Day4_rookery", Warp inside rookery)
 @when       targetObject == "WarpTarget-Rookery"
 @once
 
-$call CompleteGoal("Day4_rookery")
-
 $call Wait(1)
 
 $call SetWarpGroupActive(Rookery, true)
-
-$call ClearGoals()
-$call CreateGoal("day4_gate", Scan the Weigh Gate)
-$call CreateGoal("day4_loggers", Collect 3 Data Loggers)
-$call CreateGoal("day4_band", Band 3 Chicks)
 
 {@Player}   Whoa… look at them! I keep forgetting how funny the chicks look these days. $[Day4/Rookery/Player_1]
 {@Partner}   Isn’t it great? We call this their awkward-teenager stage. $[Day4/Rookery/Partner_1]
@@ -164,7 +154,6 @@ $goto Day4.CheckDataCount
 @who    Player
 
 $if chapter:dataCount >= 3
-$call CompleteGoal("day4_loggers")
 $set chapter:dataTrackersDone = true
 $goto Day4.CheckCompletedTasks
 $endif
@@ -231,7 +220,6 @@ $elseif chapter:wingCount == 2
 {@Margo}    No sweat, huh, kiddo?   $[Day4/Rookery/4rm21]
 {@Player}   Okay, okay . . . maybe a little sweat.  $[Day4/Rookery/Player_17]
 $elseif chapter:wingCount == 3
-$call CompleteGoal("day4_band")
 $set chapter:finishedBands = true
 {@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/4rm22]
 {@Partner}  Nice work, new kid. $[Day4/Rookery/Partner_5]
@@ -265,27 +253,11 @@ $endif
 
 $if chapter:finishedBands == true, chapter:dataTrackersDone == true, chapter:weighGate == true 
 $set chapter:finishedObservations = true
-$call ClearGoals()
 $call Wait(0.3)
-$call CreateGoal("Day4_return", Warp inside)
-
 $call SetWarpActive(WarpBluffBack, true)
 {@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/Partner_20]
 {@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/Partner_21]
-$else
-$call ClearGoals()
-$call CreateGoal("day4_band", Band 3 chicks)
-$call CreateGoal("day4_loggers", Collect 3 data loggers from banded penguins)
-$call CreateGoal("day4_gate", Scan the weigh gate)
-$if chapter:finishedBands == true
-$call CompleteGoal("day4_band")
-$endif
-$if chapter:dataTrackersDone == true
-$call CompleteGoal("day4_loggers")
-$endif
-$if chapter:weighGate == true
-$call CompleteGoal("day4_gate")
-$endif
+
 $endif
 
 :: WarpedBackToTent
@@ -308,8 +280,6 @@ $call SetWarpActive(WarpDesk, true)
 @interrupt
 
 $call TentDoor->Close()
-$call CreateGoal("Day4_upload", Dock Margo to upload data)
-$call CompleteGoal("Day4_return")
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
@@ -322,8 +292,6 @@ $endwhile
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
-
-$call CompleteGoal("Day4_upload")
 
 {@Player}   Awesome! Thanks, Margo. $[Day4/Tent/Player_8]
 {@Margo}    Hang on a sec, kiddo.   $[Day4/Tent/4tm13]

@@ -6,5 +6,6 @@ namespace Pennycook.Tablet {
     public class TabletCheckboxItem : MonoBehaviour {
         public TMP_Text Text;
         public Graphic Check;
+        public BeauUtil.UI.EllipseGraphic Circle;
     }
 }

@@ -5,89 +5,108 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
 using Leaf.Runtime;
+using UnityEngine;
 
 namespace Pennycook.Tablet {
     public sealed class TabletGoalState : SharedStateComponent {
         #region Inspector
 
-        public TabletCheckboxItem[] GoalItems;
+        public List<SidePanelDisplay> SidePanels = new List<SidePanelDisplay>(4);
+
+        public List<TabletGoal> DayGoals = new List<TabletGoal>();
 
         #endregion // Inspector
 
         static public readonly int MaxGoals = 6;
 
-        [NonSerialized] public List<StringHash32> ActiveGoalIds = new List<StringHash32>();
-        [NonSerialized] public BitSet32 GoalsComplete = new BitSet32();
-
         [NonSerialized] public HashSet<StringHash32> RelevantCaptureIds = SetUtils.Create<StringHash32>(4);
+    }
+
+    public enum TabletGoalType {
+        Scan,
+        Warp,
+        Capture,
+        Count
+    }
+
+    public struct TabletSubGoal {
+        public StringHash32 Id;
+        public string Text;
+        public Color Color;
+        public bool Completed;
     }
 
     public struct TabletGoal {
         public bool Completed;
-        public StringHash32 Id;
-        public string Text;
+        public bool Current;
+        public bool Loaded;
+        public TabletGoalType Type;
+        public TabletWarpPointGroup WarpPoint;
+        public TabletSubGoal[] SubGoals;
     }
 
     static public partial class TabletUtility {
         [SharedStateReference]
-        static private TabletGoalState Goals { get; set; }
+        static public TabletGoalState Goals { get; set; }
+        
+        //this should load the UI elements relevant to the goal, but not necessarily show them yet
+        //unless the current tablet mode matches...
+        static public void LoadGoals(TabletWarpPointGroup warpPointType) {
+            for(int i = 0; i < Goals.DayGoals.Count; ++i) {
+                if(!Goals.DayGoals[i].Loaded) {
+                    if(Goals.DayGoals[i].WarpPoint == warpPointType) {
 
-        [LeafMember("CreateGoal")]
-        static private void LeafCreateGoal(StringHash32 id, string text) {
-            int index = Goals.ActiveGoalIds.Count;
-            if (index >= TabletGoalState.MaxGoals) {
-                throw new IndexOutOfRangeException("[LeafCreateGoal] Error: Goal '" + text + "' exceeded maximum number of " + TabletGoalState.MaxGoals);
+                        SidePanelDisplay s = Goals.SidePanels[(int)Goals.DayGoals[i].Type];
+                        for(int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++ j) {
+                            s.UIElements[j].gameObject.SetActive(true);
+                            s.UIElements[j].Text.text = Goals.DayGoals[i].SubGoals[j].Text;
+                            //s.UIElements[j].Circle.Color = Goals.DayGoals[i].SubGoals[j].Color;
+                        }
+                    }
+                } else {
+                    //already has been loaded, so if the warp point is the Rookery, 
+                    if(warpPointType == TabletWarpPointGroup.Rookery) {
+
+                    }
+                }
             }
-            Goals.ActiveGoalIds.Add(id);
-            Goals.GoalItems[index].Text.SetText(text);
-            Goals.GoalItems[index].Check.SetAlpha(0);
-            Goals.GoalItems[index].gameObject.SetActive(true);
-            Goals.GoalsComplete.Unset(index);
+        }
+
+        static public bool GoalOfTypeExists(TabletGoalType Type) {
+            for(int i = 0; i < Goals.DayGoals.Count; ++i) {
+                if(Goals.DayGoals[i].Type == Type && Goals.DayGoals[i].Loaded) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         [LeafMember("CompleteGoal")]
         static private bool LeafCompleteGoal(StringHash32 id) {
-            return LeafSetGoalComplete(id, true);
-        }
+            TabletToolState currTool = Find.State<TabletToolState>();
+            for(int i = 0; i < Goals.DayGoals.Count; ++i) {
+                if(Goals.DayGoals[i].Type == (TabletGoalType)currTool.CurrentToolIndex) {
+                    for(int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
+                        if(Goals.DayGoals[i].SubGoals[j].Id == id) {
+                            Goals.SidePanels[currTool.CurrentToolIndex].UIElements[j].Check.SetAlpha(1);
+                            return true;
+                        }
+                    }
+                }
+            }
 
-        [LeafMember("SetGoalComplete")]
-        static private bool LeafSetGoalComplete(StringHash32 id, bool complete) {
-            int index = Goals.ActiveGoalIds.IndexOf(id);
-            return SetGoalComplete(index, complete);
-        }
-
-        static public bool SetGoalComplete(int index, bool complete) {
-            if (index < 0 || index >= Goals.GoalItems.Length)
-                return false;
-            Goals.GoalsComplete.Set(index);
-            Goals.GoalItems[index].Check.SetAlpha(complete ? 1 : 0);
-            return true;
-        }
-
-        [LeafMember("IsGoalComplete")]
-        static private bool LeafCheckGoalComplete(StringHash32 id) {
-            return Goals.GoalsComplete[Goals.ActiveGoalIds.IndexOf(id)];
+            return false;
         }
 
         [LeafMember("ClearGoals")]
         static private void LeafClearGoals() {
-            Goals.ActiveGoalIds.Clear();
-            Goals.GoalsComplete.Clear();
-            for (int i = 0; i < Goals.GoalItems.Length; i++) {
-                Goals.GoalItems[i].Text.SetText("Inactive");
-                Goals.GoalItems[i].Check.SetAlpha(0);
-                Goals.GoalItems[i].gameObject.SetActive(false);
+            for(int i = 0; i < Goals.SidePanels.Count; ++i) {
+                for(int j = 0; j < Goals.SidePanels[i].UIElements.Length; ++j) {
+                    Goals.SidePanels[i].UIElements[j].Check.SetAlpha(0);
+                    Goals.SidePanels[i].UIElements[j].gameObject.SetActive(false);
+                    Goals.SidePanels[i].SetState(false, false);
+                }
             }
-        }
-
-        [LeafMember("WatchForBehavior")]
-        static private void LeafWatchBehavior(StringHash32 id) {
-            Goals.RelevantCaptureIds.Add(id);
-        }
-
-        [LeafMember("StopWatchingBehavior")]
-        static private void LeafStopWatchingBehavior(StringHash32 id) {
-            Goals.RelevantCaptureIds.Remove(id);
         }
     }
 }

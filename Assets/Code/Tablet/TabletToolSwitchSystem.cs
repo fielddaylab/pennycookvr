@@ -1,5 +1,7 @@
+using BeauUtil;
 using FieldDay;
 using FieldDay.Audio;
+using FieldDay.Debugging;
 using FieldDay.HID;
 using FieldDay.HID.XR;
 using FieldDay.Systems;
@@ -14,7 +16,7 @@ namespace Pennycook.Tablet {
             }
 
             int shift = 0;
-            if (TabletUtility.ConsumeButtonPress(XRHandButtons.Primary)) {
+            if (TabletUtility.ConsumeButtonPress(XRHandButtons.Primary) || DebugInput.IsPressed(UnityEngine.KeyCode.P)) {
                 shift = 1;
             }
 

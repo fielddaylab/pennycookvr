@@ -23,7 +23,6 @@ $call Wait(2)
 @who        Player
 @once
 
-$call CreateGoal("Day2_outside", Warp outside)
 $call SetWarpActive(WarpBluff, true)
 
 {@Margo}   Mornin', kiddo!   $[Day2/Tent/2tm01]
@@ -53,8 +52,6 @@ $call Wait(1)
 @interrupt
 @once
 
-$call CompleteGoal("Day2_outside")
-
 $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
@@ -68,30 +65,21 @@ $call PenguinCount->ActivateCount(12)
 {@Margo}    You’ll also have two tasks down at the Rookery: retrieve your penguins’ GPS trackers, and see if they’ve paired up with a mate. $[Day2/Bluff/2bm02]
 {@Player}   Hmmm, Maybe we should get a head count. $[Day2/Bluff/Player_3]
 
-$call CreateGoal("Day2_count", Count the penguin population)
-
 :: ScannedFromBluff2
 @trigger	TabletCounted
 @who		Player
 @interrupt
 @once
 
-$call CompleteGoal("Day2_count")
-
 {@Margo}  Great job, kid! We’ve got a new population count.  $[Day2/Bluff/2bm04]
 
 $call SetWarpGroupActive(Rookery, true)
-$call CreateGoal("Day2_rookery", Warp inside rookery)
 
 :: WarpedToRookery2
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-Rookery"
 @once
-
-$call ClearGoals()
-$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
-$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 
 $call Wait(1)
 
@@ -102,8 +90,6 @@ $call Wait(1)
 @once
 
 $call Wait(2)
-
-$call ClearGoals()
 
 $call Daisy->SetInteractable(true)
 $call Meatball->SetInteractable(true)
@@ -116,12 +102,6 @@ $call Meatball->SetIdentified(false)
 $call Billy->SetIdentified(false)
 $call Benni->SetIdentified(false)
 $call Wendy->SetIdentified(false)
-
-$call CreateGoal("id_millie", ID Millie's Mate)
-$call CreateGoal("id_alfredo", ID Alfredo's Mate)
-$call CreateGoal("id_fuzz", ID Fuzz's Mate)
-$call CreateGoal("id_winston", ID Winston's Mate)
-$call CreateGoal("id_polo", ID Polo's Mate)
 
 {@Margo}   Okey dokey. Time to track down the Funtastic Five $[Day2/Rookery/2rm01]
 {@Player}  The Fliptastic Five. $[Day2/Rookery/Player_1]
@@ -216,22 +196,12 @@ $if chapter:finishedObservations == true, chapter:finishedTrackers == true
 	{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/2rm26]
 	$call SetWarpActive(WarpBluffBack, true)
 	$set chapter:finishedAllObservations = true
-	$call CreateGoal("Day2_return", Return to tent)
-$elseif chapter:finishedObservations == true, chapter:finishedTrackers == false
-	$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
-	$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
-	$call CompleteGoal("Day2_mates")
-$elseif chapter:finishedObservations == false, chapter:finishedTrackers == true
-	$call CreateGoal("Day2_trackers", Retrieve 3 gps trackers from penguins)
-	$call CompleteGoal("Day2_trackers")
-	$call CreateGoal("Day2_mates", Identify the mates of the banded penguins)
 $endif
 
 :: CheckAllMatesIdentified
 @trigger    CheckAllMatesIdentified
 $if chapter:identifiedCount >= 5 
     $set	chapter:finishedObservations = true
-    $call ClearGoals()
 	$call TriggerResponse(CheckAllComplete)
 $endif
 
@@ -297,7 +267,6 @@ $set	chapter:removedCount - 1
 @interrupt
 
 $set chapter:finishedTrackers = true
-$call ClearGoals()
 
 $call Wait(0.3)
 {@Margo}  Nice work, kid! That’s all the GPS trackers.   $[Day2/Rookery/2rm24]
@@ -316,8 +285,6 @@ $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)
 
-$call CreateGoal("Day2_upload", Dock Margo to upload data)
-
 :: WarpedInsideTent2
 @trigger    AtWarpPoint
 @who        Player
@@ -325,7 +292,6 @@ $call CreateGoal("Day2_upload", Dock Margo to upload data)
 @interrupt
 
 $call TentDoor->Close()
-$call CompleteGoal("Day2_return")
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
@@ -338,8 +304,6 @@ $endwhile
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
-
-$call CompleteGoal("Day2_upload")
 
 {@Margo}    Looks like the population has increased as more penguins show up for mating season.    $[Day2/Tent/2tm10]
 {@Margo}    All five of your penguins have formed breeding pairs!    $[Day2/Tent/2tm11]

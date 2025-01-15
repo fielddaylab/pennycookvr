@@ -12,5 +12,7 @@ namespace Pennycook {
         public SceneReference Scene;
         public LeafAsset[] Scripts;
         public SceneReference[] AuxScenes;
+
+        public GoalConfigAsset[] Goals;
     }
 }

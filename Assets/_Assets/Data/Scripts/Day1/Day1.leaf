@@ -16,7 +16,6 @@ $call FadeIn(2.0)
 $call Wait(2)
 
 $call SetWarpActive(WarpBluff, true)
-$call CreateGoal("day1_outside", Warp outside)
 
 {@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
 {@Player}   Brr. Lola was right though... I should've packed an extra sweater.   $[Day1/Tent/Player_2]
@@ -60,8 +59,6 @@ $set	chapter:hasTalkedToMargo = true
 
 $call TentDoor->Close()
 
-$call CompleteGoal("day1_outside")
-
 $call Wait(1)
 
 $call SetWarpActive(WarpBluff, false)
@@ -73,15 +70,12 @@ $call PenguinCount->ActivateCount(12)
 {@Margo}    Just turn on Count Mode and point me at the colony. $[Day1/Bluff/1bm05]
 {@Margo}    I'll collect all the data! $[Day1/Bluff/1bm06]
 
-$call CreateGoal("day1_count", Count the penguin population)
-
 :: ScannedFromBluff
 @trigger	TabletCounted
 @who		Player
 @interrupt
 @once
 
-$call CompleteGoal("day1_count")
 $call SetWarpGroupActive(Rookery, true)
 
 {@Margo}	Nice work, kiddo! We've got our initial population count. $[Day1/Bluff/1bm08]
@@ -90,8 +84,6 @@ $call SetWarpGroupActive(Rookery, true)
 {@Margo}	Okay, enough chit chat. Time for your next task. 	$[Day1/Bluff/1bm09]
 {@Margo}	Let's get on down there and say hello! Find a waypoint in the rookery. 	$[Day1/Bluff/1bm11]
 
-$call CreateGoal("day1_rookery", Warp inside rookery)
-
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
@@ -99,19 +91,9 @@ $call CreateGoal("day1_rookery", Warp inside rookery)
 @once
 @interrupt
 
-$call CompleteGoal("day1_rookery")
-
 $call Wait(1)
 
 $call SetWarpGroupActive(Rookery, true)
-
-$call ClearGoals()
-
-$call CreateGoal("band_red", Scan penguin with red band)
-$call CreateGoal("band_yellow", Scan penguin with yellow band)
-$call CreateGoal("band_green", Scan penguin with green band)
-$call CreateGoal("band_blue", Scan penguin with blue band)
-$call CreateGoal("band_purple", Scan penguin with purple band)
 
 //$call Daisy->SetInteractable(false)
 //$call Meatball->SetInteractable(false)
@@ -138,8 +120,6 @@ $if chapter:identifiedCount >= 5
 	$set chapter:allIdentified = true
 	$call SetWarpActive(WarpBluffBack, true)
 	$set chapter:finishedObservations = true
-	$call ClearGoals()
-	$call CreateGoal("day1_return", Return to tent)
 $endif
 
 $if local:objectId == "RedAdelie"
@@ -188,8 +168,6 @@ $call SetWarpActive(WarpBluffBack, false)
 $call SetWarpGroupActive(Rookery, false)
 $call SetWarpActive(WarpDesk, true)
 
-$call CreateGoal("day1_upload", Dock Margo to upload data)
-
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
@@ -197,7 +175,6 @@ $call CreateGoal("day1_upload", Dock Margo to upload data)
 @interrupt
 
 $call TentDoor->Close()
-$call CompleteGoal("day1_return")
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
@@ -214,8 +191,6 @@ $endwhile
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
-
-$call CompleteGoal("day1_upload")
 
 {@Margo}    There are 25 penguins who have returned to the colony, most are adults, but a few are juveniles.    $[Day1/Tent/1tm16]
 {@Margo}    Penny counted the rest of the rookery, and in total there are 1527 returners!    $[Day1/Tent/1tm17]

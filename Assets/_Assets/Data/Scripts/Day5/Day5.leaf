@@ -23,7 +23,6 @@ $call Wait(2)
 @who        Player
 @once
 
-$call CreateGoal("Day5_outside", Warp outside)
 $call SetWarpActive(WarpBluff, true)
 
 {@Margo}   Mornin', kiddo!   $[Day5/Tent/5tm01]
@@ -58,12 +57,10 @@ $call SetWarpActive(WarpBluff, true)
 @interrupt
 
 $call TentDoor->Close()
-$call CompleteGoal("Day5_outside")
 
 $call Wait(1)
 
 $call SetWarpGroupActive(Rookery, true)
-$call CreateGoal("Day5_rookery", Warp inside rookery)
 
 {@Margo}   Okay, kiddo. Just one task down at the Rookery today. $[Day5/Bluff/5bm01]
 {@Margo}   We need to put trackers on the penguins who had chicks this year. $[Day5/Bluff/5bm02]
@@ -74,8 +71,6 @@ $call CreateGoal("Day5_rookery", Warp inside rookery)
 @when       targetObject == "WarpTarget-Rookery"
 @once
 @interrupt
-
-$call CompleteGoal("Day5_rookery")
 
 $call Wait(1)
 
@@ -100,10 +95,6 @@ $call SocketObjectTo(LegTracker3, CaseLegSocketLeft)
 {@Margo}	You should be an expert at this by now!	$[Day5/Rookery/5rm08]
 {@Margo}	Hold the penguin still with one hand. Then snap the trackers onto their legs.	$[Day5/Rookery/5rm09]
 {@Player}	Got it.	$[Day5/Rookery/Player_4]
-
-$call ClearGoals()
-
-$call CreateGoal("Day5_band", Put leg trackers on 3 parent penguins)
 
 :: OnSocketedLegTracker
 @trigger ObjectSocketed
@@ -140,8 +131,6 @@ $set chapter:legCount - 1
 @trigger LegTrackersComplete
 @who	Player
 
-$call CompleteGoal("Day5_band")
-
 {@Margo}	Great work, kiddo.	$[Day5/Rookery/5rm10]
 {@Margo}	Your penguins are all ready to head out into the world.	$[Day5/Rookery/5rm11]
 {@Player}	Yeah. So are we, I guess.	$[Day5/Rookery/Player_7]
@@ -150,15 +139,11 @@ $call CompleteGoal("Day5_band")
 
 $call SetWarpActive(WarpBluffBack, true)
 
-$call CreateGoal("Day5_bluff_back",  Warp inside)
-
 :: WarpedBackToBluff
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-Bluff-Back"
 @once
-
-$call CompleteGoal("Day5_bluff_back")
 
 $call Wait(1)
 
@@ -167,8 +152,6 @@ $call SetWarpGroupActive(Rookery, false)
 
 {@Margo}	Almost done. Your last task of the season is to do one more scan of the chicks and adults in the Rookery.	$[Day5/Bluff/5bm03]
 
-$call CreateGoal("day5_count", Count the penguin population)
-
 $call PenguinCount->ActivateCount(12)
 
 :: ScannedFromBluff
@@ -176,8 +159,6 @@ $call PenguinCount->ActivateCount(12)
 @who		Player
 @interrupt
 @once
-
-$call CompleteGoal("day5_count")
 
 {@Margo}	Nice work, kiddo. There they go.	$[Day5/Bluff/5bm04]
 {@Margo}	They’ll be back next year, around the same time you are.	$[Day5/Bluff/5bm05]
