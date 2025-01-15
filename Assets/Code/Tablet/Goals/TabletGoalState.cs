@@ -65,6 +65,9 @@ namespace Pennycook.Tablet {
                                 s.UIElements[j].gameObject.SetActive(true);
                                 s.UIElements[j].Text.text = Goals.DayGoals[i].SubGoals[j].Text;
                                 //s.UIElements[j].Circle.Color = Goals.DayGoals[i].SubGoals[j].Color;
+                                if(Goals.DayGoals[i].Type == TabletGoalType.Capture) {
+                                    Goals.RelevantCaptureIds.Add(Goals.DayGoals[i].SubGoals[j].Id);
+                                }
                             }
                         }
                     }

@@ -25,9 +25,15 @@ namespace Pennycook {
         }
 
         public void SetState(bool visible, bool highlighted=false) {
+            
+            if(!visible && Type == Tablet.TabletGoalType.Count) {
+                ResetCount();
+            }
+
             gameObject.SetActive(visible);
+
             //todo - dim or brighten the UI elements.
-            if(highlighted) {
+            if (highlighted) {
 
             } else {
 
@@ -48,6 +54,16 @@ namespace Pennycook {
                         countMeter.Text.text = "100%";
                     }
                 }
+            }
+        }
+
+        void ResetCount() {
+            if (UIElements.Length > 0) {
+                Tablet.TabletCheckboxItem countMeter = UIElements[0];
+                BeauUtil.UI.RectGraphic bg = UIElements[0].Background;
+                RectTransform rt = bg.gameObject.GetComponent<RectTransform>();
+                rt.offsetMax = new Vector2(-COUNT_METER_START, rt.offsetMax.y);
+                countMeter.Text.text = "0%";
             }
         }
     }

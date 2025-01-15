@@ -111,7 +111,7 @@ $call Wendy->SetIdentified(false)
 {@Player}   Oh. Right. Got it.  $[Day2/Rookery/Player_3]
 
 :: OnBillyIdentified
-@trigger	TabletIdentified
+@trigger	TabletBehaviorInstanceCaptured
 @when		objectId == "Billy"
 @once
 @interrupt
@@ -126,7 +126,7 @@ $call CompleteGoal("id_millie")
 $goto Day2.CheckAllMatesIdentified
 
 :: OnMeatballIdentified
-@trigger	TabletIdentified
+@trigger	TabletBehaviorInstanceCaptured
 @when		objectId == "Meatball"
 @once
 @interrupt
@@ -143,7 +143,7 @@ $call CompleteGoal("id_alfredo")
 $goto Day2.CheckAllMatesIdentified
 
 :: OnDaisyIdentified
-@trigger	TabletIdentified
+@trigger	TabletBehaviorInstanceCaptured
 @when		objectId == "Daisy"
 @once
 @interrupt
@@ -162,7 +162,7 @@ $call CompleteGoal("id_fuzz")
 $goto Day2.CheckAllMatesIdentified
 
 :: OnWendyIdentified
-@trigger	TabletIdentified
+@trigger	TabletBehaviorInstanceCaptured
 @when		objectId == "Wendy"
 @once
 @interrupt
@@ -176,7 +176,7 @@ $call CompleteGoal("id_winston")
 $goto Day2.CheckAllMatesIdentified
 
 :: OnBenniIdentified
-@trigger	TabletIdentified
+@trigger	TabletBehaviorInstanceCaptured
 @when		objectId == "Benni"
 @once
 @interrupt
