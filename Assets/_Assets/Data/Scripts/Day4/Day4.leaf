@@ -7,12 +7,11 @@ $set chapter:identifiedCount = 0
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-$call PebNestsWhite->Deactivate()
-$call PebNestsPink->Activate()
 $call Sky3->Deactivate()
 $call Sky4->Activate()
 $call Sky4->SetSkybox()
 $call Ocean->SetMaterial(3);
+$call Terrain->SetTerrainMaterial(3);
 
 $call DayHeader->SetText(Dec 18)
 $call FadeIn(2.0)

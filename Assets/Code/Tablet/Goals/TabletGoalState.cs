@@ -81,9 +81,11 @@ namespace Pennycook.Tablet {
         }
 
         static public bool GoalOfTypeExists(TabletGoalType Type) {
-            for(int i = 0; i < Goals.DayGoals.Count; ++i) {
-                if(Goals.DayGoals[i].Type == Type && Goals.DayGoals[i].Loaded) {
-                    return true;
+            if(Goals != null && Goals.DayGoals != null) {
+                for(int i = 0; i < Goals.DayGoals.Count; ++i) {
+                    if(Goals.DayGoals[i].Type == Type && Goals.DayGoals[i].Loaded) {
+                        return true;
+                    }
                 }
             }
             return false;

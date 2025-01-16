@@ -14,6 +14,7 @@ $call Sky1->Deactivate()
 $call Sky2->Activate()
 $call Sky2->SetSkybox()
 $call Ocean->SetMaterial(1);
+$call Terrain->SetTerrainMaterial(1);
 
 $call FadeIn(2.0)
 $call Wait(2)
@@ -112,9 +113,8 @@ $call Wendy->SetIdentified(false)
 
 :: OnBillyIdentified
 @trigger	TabletBehaviorInstanceCaptured
-@when		objectId == "Billy"
+@when		behaviorId == "id_millie"
 @once
-@interrupt
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_millie")
@@ -127,9 +127,8 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnMeatballIdentified
 @trigger	TabletBehaviorInstanceCaptured
-@when		objectId == "Meatball"
+@when		behaviorId == "id_alfredo"
 @once
-@interrupt
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_alfredo")
@@ -144,9 +143,8 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnDaisyIdentified
 @trigger	TabletBehaviorInstanceCaptured
-@when		objectId == "Daisy"
+@when		behaviorId == "id_fuzz"
 @once
-@interrupt
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_fuzz")
@@ -163,9 +161,8 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnWendyIdentified
 @trigger	TabletBehaviorInstanceCaptured
-@when		objectId == "Wendy"
+@when		behaviorId == "id_winston"
 @once
-@interrupt
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_winston")
@@ -177,9 +174,8 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnBenniIdentified
 @trigger	TabletBehaviorInstanceCaptured
-@when		objectId == "Benni"
+@when		behaviorId == "id_polo"
 @once
-@interrupt
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_polo")

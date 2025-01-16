@@ -11,12 +11,11 @@ $call DayHeader->SetText(Dec 1)
 $call GPSTrackerPlate->Deactivate()
 $call DataLoggerPlate->Activate()
 $call Clouds->Activate()
-$call PebNestsWhite->Deactivate()
-$call PebNestsPink->Activate()
 $call Sky2->Deactivate()
 $call Sky3->Activate()
 $call Sky3->SetSkybox()
 $call Ocean->SetMaterial(2);
+$call Terrain->SetTerrainMaterial(2);
 
 
 $call FadeIn(2.0)
@@ -69,7 +68,6 @@ $call SetWarpGroupActive(Rookery, true)
 
 $call FuzzEgg->Activate()
 $call AlfredoEgg->Activate()
-$call PoloNest->Activate()
 $call WinstonWendyChick->Activate()
 $call MillieBillyChick->Activate()
 
@@ -112,8 +110,6 @@ $call AlfredoEgg->SetIdentified(false)
 $call MillieBillyChick->SetIdentified(false)
 $call FuzzEgg->SetIdentified(false)
 $call WinstonWendyChick->SetIdentified(false)
-$call PoloNest->SetIdentified(false)
-$call PoloNest->SetInteractable(true)
 
 {@Margo}    Use my Scan mode to take a look at the nests.   $[Day3/Rookery/3rm01-scan]
 {@Margo}    We need to see how many eggs are hatched and if any are missing.    $[Day3/Rookery/3rm02]
@@ -186,7 +182,7 @@ $goto Day3.CheckAllNestsIdentified
 
 :: OnPoloNestIdentified
 @trigger	TabletIdentified
-@when		objectId == "PoloNest"
+@when		objectType == "PoloNest"
 @once
 @interrupt
 
@@ -230,8 +226,8 @@ $endif
 //$endwhile
 
 ::TabletIdentifiedRegurg
-@trigger TabletIdentified
-@when	objectId == "GreenAdelie"
+@trigger TabletBehaviorInstanceCaptured
+@when	behaviorId == "day3_regurg"
 @once
 @interrupt
 

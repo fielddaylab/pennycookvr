@@ -499,16 +499,40 @@ PrefabInstance:
       propertyPath: Contents.DetailedHeader
       value: Millie and Billy's Chick
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2300885790290680975, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5556736038694281224, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 128890464}
   m_SourcePrefab: {fileID: 100100000, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
 --- !u!4 &128890462 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5068428990202231474, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
   m_PrefabInstance: {fileID: 128890461}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &128890463 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5556736038694281224, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
+  m_PrefabInstance: {fileID: 128890461}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &128890464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128890463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c0bc643dcce1824198e9d5f264a45a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CanInteract: 1
+  InteractionCooldown: 0
+  Verb: 1
 --- !u!1001 &163303858
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7143,6 +7167,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1042745210}
     m_Modifications:
+    - target: {fileID: 1982517054172455056, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
+      propertyPath: Group
+      value: 
+      objectReference: {fileID: 1767987462}
     - target: {fileID: 4586460955345275129, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
       propertyPath: m_Id.m_Source
       value: WinstonWendyChick
@@ -7207,16 +7235,40 @@ PrefabInstance:
       propertyPath: Contents.DetailedHeader
       value: Winston and Wendy's Chick
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2300885790290680975, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5556736038694281224, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2119780324}
   m_SourcePrefab: {fileID: 100100000, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
 --- !u!4 &2119780322 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5068428990202231474, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
   m_PrefabInstance: {fileID: 2119780321}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2119780323 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5556736038694281224, guid: 39adb779c10ec644c8b0d2c33bc515a8, type: 3}
+  m_PrefabInstance: {fileID: 2119780321}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2119780324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119780323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c0bc643dcce1824198e9d5f264a45a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CanInteract: 1
+  InteractionCooldown: 0
+  Verb: 1
 --- !u!1001 &3090829779633900014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7975,13 +8027,17 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.79991025
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -7775243465068823377, guid: a89c8dfdd21a94344ae5eb6f314a1685, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 853218977606860600, guid: a89c8dfdd21a94344ae5eb6f314a1685, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4415494273475617508}
+    - targetCorrespondingSourceObject: {fileID: 853218977606860600, guid: a89c8dfdd21a94344ae5eb6f314a1685, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4415494273475617509}
   m_SourcePrefab: {fileID: 100100000, guid: a89c8dfdd21a94344ae5eb6f314a1685, type: 3}
 --- !u!4 &4415494273475617494 stripped
 Transform:
@@ -8000,6 +8056,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51b8943693c62dd4fb0e401a6770dca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4415494273475617509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890633157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 736bbaf74c77eeb4e991c3e73ee5fe1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CanCapture: 1
+  CaptureId:
+    m_Source: day3_regurg
+    m_HashValue: 4158652261
+  ViewAlignmentThreshold: 0.5
 --- !u!1001 &7733823285128934023
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8457,7 +8530,8 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0.30020007
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -9185585001663864071, guid: a6f24c04e572af542ad0e8ff5723fce3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -8791,7 +8865,8 @@ PrefabInstance:
       propertyPath: Group
       value: 
       objectReference: {fileID: 1767987462}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -7165983637257262605, guid: acdc837baafe7fe43b724a46199e72dd, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -9901,7 +9976,8 @@ PrefabInstance:
       propertyPath: m_Id.m_HashValue
       value: 1345296311
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7334668568295263295, guid: f5dcd8a3a32e6d944aee725f65882c59, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
