@@ -96,14 +96,6 @@ $call SetWarpGroupActive(Rookery, true)
 
 $call Wait(1)
 
-:: WarpedToRookeryMiddle2
-@trigger    AtWarpPoint
-@who        Player
-@when       targetObject == "WarpTarget-RookeryMiddle"
-@once
-
-$call Wait(2)
-
 $call Daisy->SetInteractable(true)
 $call Meatball->SetInteractable(true)
 $call Billy->SetInteractable(true)

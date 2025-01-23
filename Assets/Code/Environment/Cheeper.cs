@@ -15,8 +15,13 @@ public class Cheeper : MonoBehaviour
     [SerializeField] private AudioClip _muffledCheep, _normalCheep; // quality of cheep
     [SerializeField] private float _cheepRate = 0; // rate at which cheeps occur (in cheeps per minute)
     [SerializeField] private float _volMod = 0.75f;
+    
+    [SerializeField] private float _overallCheepTime = 10f;
+
     private float _cheepTimer = 0;
     private float _cheepTime;
+
+    private float _totalTime = 0;
 
     private CheepState _state;
 
@@ -64,7 +69,7 @@ public class Cheeper : MonoBehaviour
     }
 
     private void Update() {
-        if (_state != CheepState.None && _cheepRate > 0 && _cheepTimer >= _cheepTime) {
+        if (_state != CheepState.None && _cheepRate > 0 && _cheepTimer >= _cheepTime && _totalTime < _overallCheepTime) {
             AudioClip clip;
             if (_state == CheepState.Muffled) {
                 clip = _muffledCheep;
@@ -77,7 +82,13 @@ public class Cheeper : MonoBehaviour
             m_audioSrc.PlayOneShot(clip);
             float variance = 0.5f;
             _cheepTimer = Random.Range(0, _cheepTime * variance);
+            
+            _totalTime += Time.deltaTime;
+            if(_totalTime > _overallCheepTime) {
+                _state = CheepState.None;
+            }
         }
         _cheepTimer += Time.deltaTime;
+
     }
 }
