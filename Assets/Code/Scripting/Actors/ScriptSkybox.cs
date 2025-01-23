@@ -29,8 +29,9 @@ namespace Pennycook {
         }
 
         [LeafMember("SetSkybox"), Preserve]
-        public void SetSkybox() {
+        public void SetSkybox(float fFog) {
             RenderSettings.skybox = m_Skybox;
+            RenderSettings.fogDensity = fFog;
         }
 		
         #endregion // Leaf

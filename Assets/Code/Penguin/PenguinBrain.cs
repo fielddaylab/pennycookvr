@@ -104,11 +104,15 @@ namespace Pennycook {
             Log.Msg("[PenguinBrain] Update '{0}' nest to '{1}'", m_Actor.Id, postId);
         }
 
-        [LeafMember("SetSchedule")]
-        private void LeafSetSchedule(StringHash32 scheduleId) {
-            
+        [LeafMember("SetMatingDance")]
+        private void LeafSetMatingDace() {
+            StartMainProcess(PenguinSchedules.MatingDance);
         }
 
+        [LeafMember("SetRegurgitation")]
+        private void LeafSetRegurgitation() {
+            StartMainProcess(PenguinSchedules.Regurgitation);
+        }
         #endregion // Leaf
     }
 

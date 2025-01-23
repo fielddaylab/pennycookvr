@@ -400,7 +400,6 @@ public class MargoFace : MonoBehaviour, IBaked {
 #if UNITY_EDITOR
 
     private void BuildData() {
-        Debug.Log("BUILDING DATA");
         m_PartTransforms = new Transform[m_Parts.Length];
         m_PartOrigins = new Vector2[m_Parts.Length];
 

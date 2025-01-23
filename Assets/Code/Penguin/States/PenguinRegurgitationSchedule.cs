@@ -5,7 +5,7 @@ using BeauUtil;
 using FieldDay;
 
 namespace Pennycook {
-    public sealed class PenguinMatingSchedule : PenguinSchedule {
+    public sealed class PenguinRegurgitationSchedule : PenguinSchedule {
         public override IEnumerator Sequence(Process process) {
             PenguinBrain brain = Brain(process);
             while (true) {
@@ -21,12 +21,8 @@ namespace Pennycook {
                 }
 
                 Vector3 targetWalkPos;
-                if(brain.Relationships != null && brain.Relationships.Mate != null) {
-                    if(brain.Relationships.IsPursued) {
-                        targetWalkPos = brain.transform.position;
-                    } else {
-                        targetWalkPos = brain.Relationships.Mate.transform.position + brain.Relationships.Mate.transform.forward * 2f;
-                    }
+                if(brain.Relationships != null && brain.Relationships.Child != null) {
+                    targetWalkPos = brain.Relationships.Child.transform.position + brain.Relationships.Child.transform.forward;
                 } else {
                     while(!TryFindGoodWanderPosition(brain, brain.Personality.Wander, brain.Type == PenguinType.Adult, out targetWalkPos)) {
                         yield return null;
@@ -37,31 +33,28 @@ namespace Pennycook {
                     yield return null;
                 }
 
-                if(Vector3.Distance(brain.transform.position, brain.Relationships.Mate.transform.position) > 2.1f) {
-
-                    if(!brain.Relationships.IsPursued) {
-                        brain.ChangeActionState(PenguinStates.Walking, new PenguinWalkParams() {
-                            Target = targetWalkPos
-                        });
-
-                        yield return null;
-
-                        while(PenguinUtility.IsNavigating(brain.Navigator)) {
-                            yield return null;
-                        }
-                    }
+                if(!PenguinUtility.IsClose(brain.Relationships)) {
                     
+                    brain.ChangeActionState(PenguinStates.Walking, new PenguinWalkParams() {
+                        Target = targetWalkPos
+                    });
+
+                    yield return null;
+
+                    while(PenguinUtility.IsNavigating(brain.Navigator)) {
+                        yield return null;
+                    }
                 } else {
 
-                    brain.Signal(PenguinUtility.Signals.Dancing);
+                    brain.Signal(PenguinUtility.Signals.Regurgitating);
 
-                    brain.ChangeActionState(PenguinStates.Dancing, new PenguinDanceParams() {
+                    brain.ChangeActionState(PenguinStates.Regurgitating, new PenguinRegurgitationParams() {
                         Target = targetWalkPos
                     });
 
                     yield return 10;
 
-                    brain.Signal(PenguinUtility.Signals.DanceComplete);
+                    brain.Signal(PenguinUtility.Signals.RegurgitatingComplete);
                 }
             }
         }

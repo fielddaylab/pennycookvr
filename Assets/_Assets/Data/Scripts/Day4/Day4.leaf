@@ -9,7 +9,7 @@ $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call Sky3->Deactivate()
 $call Sky4->Activate()
-$call Sky4->SetSkybox()
+$call Sky4->SetSkybox(0.003)
 $call Ocean->SetMaterial(3);
 $call Terrain->SetTerrainMaterial(3);
 

@@ -13,10 +13,9 @@ $call DataLoggerPlate->Activate()
 $call Clouds->Activate()
 $call Sky2->Deactivate()
 $call Sky3->Activate()
-$call Sky3->SetSkybox()
+$call Sky3->SetSkybox(0.003)
 $call Ocean->SetMaterial(2);
 $call Terrain->SetTerrainMaterial(2);
-
 
 $call FadeIn(2.0)
 $call Wait(2)
@@ -27,6 +26,9 @@ $call Wait(2)
 @once
 
 $call Wait(2)
+
+$call Wendy->SetRegurgitation()
+$call Billy->SetRegurgitation()
 
 $call SetWarpActive(WarpBluff, true)
 
@@ -68,8 +70,6 @@ $call SetWarpGroupActive(Rookery, true)
 
 $call FuzzEgg->Activate()
 $call AlfredoEgg->Activate()
-$call WinstonWendyChick->Activate()
-$call MillieBillyChick->Activate()
 
 $call Wait(1)
 
@@ -100,11 +100,6 @@ $call SetWarpGroupActive(Rookery, true)
 @when       targetId == "WarpRookeryMiddle"
 @once
 @interrupt
-
-$call AlfredoEgg->Activate()
-$call FuzzEgg->Activate()
-$call WinstonWendyChick->Activate()
-$call MillieBillyChick->Activate()
 
 $call AlfredoEgg->SetIdentified(false)
 $call MillieBillyChick->SetIdentified(false)
@@ -214,22 +209,27 @@ $endif
 {@Margo}	We need to get some data on what the parents are feeding their young.	$[Day3/Rookery/3rm14]
 {@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/3rm15]
 
-//$start Day3.StartRegurgitation
+//$call Wendy->SetRegurgitation()
+//$call Billy->SetRegurgitation()
 
-//:: StartRegurgitation
-//@trigger StartRegurgitation
-//$set chapter:regurgCount = 0
-//$while chapter:regurgCount < 20
-//$call GreenAdelie->Regurgitate()
-//$call Wait(5)
-//$set chapter:regurgCount + 1
-//$endwhile
-
-::TabletIdentifiedRegurg
+::TabletIdentifiedRegurgWendy
 @trigger TabletBehaviorInstanceCaptured
 @when	behaviorId == "day3_regurg"
 @once
 @interrupt
+
+$goto Day3.RegurgComplete
+
+::TabletIdentifiedRegurgBilly
+@trigger TabletBehaviorInstanceCaptured
+@when	behaviorId == "day3_regurg2"
+@once
+@interrupt
+
+$goto Day3.RegurgComplete
+
+::RegurgComplete
+@trigger RegurgComplete
 
 {@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
 {@Margo}	Says the guy with pumpkin pie on his face.	$[Day3/Rookery/3rm16]
@@ -240,6 +240,7 @@ $set chapter:regurgDone = true
 $call CompleteGoal("day3_regurg")
 
 $goto Day3.CheckAllComplete
+
 
 :: WarpedToRookerySide
 @trigger    AtWarpPoint

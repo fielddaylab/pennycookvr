@@ -21,7 +21,7 @@ namespace Pennycook {
 
         static private void HandleNavigateToNextPath(PenguinNavigator nav, float deltaTime) {
             if (!nav.CurrentPath.Positions.TryPeekFront(out Vector3 nextTarget)) {
-                HandleOutOfNodes(nav);
+                HandleOutOfNodes(nav, deltaTime);
                 return;
             }
 
@@ -49,6 +49,7 @@ namespace Pennycook {
             flattenedCurrentForward.y = 0;
 
             Vector3 newFlatForward = Vector3.RotateTowards(flattenedCurrentForward, targetVector, deltaTime * nav.TurningSpeed * Mathf.Deg2Rad, 1);
+
             Vector3 newForward = newFlatForward;
             newForward.y = currentForward.y;
 
@@ -79,7 +80,7 @@ namespace Pennycook {
                     if (Vector2.Distance(Geom.SwizzleYZ(newPos), Geom.SwizzleYZ(nextTarget)) <= posTolerance) {
                         nav.CurrentPathNodeStart = nav.CurrentPath.Positions.PopFront();
                         if (nav.CurrentPath.Positions.Count == 0) {
-                            HandleOutOfNodes(nav);
+                            HandleOutOfNodes(nav, deltaTime);
                         }
                     }
                 } else {
@@ -97,7 +98,27 @@ namespace Pennycook {
             }
         }
 
-        static private void HandleOutOfNodes(PenguinNavigator nav) {
+        static private void HandleOutOfNodes(PenguinNavigator nav, float deltaTime) {
+            if(nav.Brain.Relationships != null && PenguinUtility.IsPursuing(nav.Brain.Relationships)) {
+                //this turns the penguin towards their Mate after they've reached a spot in front of them.
+                Vector3 currentForward = nav.RotationRoot.forward;
+                Vector3 flattenedCurrentForward = currentForward;
+                flattenedCurrentForward.y = 0;
+                Vector3 mateChickForward = PenguinUtility.GetFacingDirection(nav.Brain.Relationships);
+                mateChickForward.y = 0;
+                Vector3 newFlatForward = Vector3.RotateTowards(flattenedCurrentForward, mateChickForward, deltaTime * nav.TurningSpeed * Mathf.Deg2Rad, 1);
+                nav.RotationRoot.forward = newFlatForward;
+                float angleDelta = Vector3.Dot(newFlatForward, mateChickForward);
+                //Debug.Log("ANGLE: " + angleDelta);
+                if (angleDelta > 0.97f) {
+                    StopPathing(nav);
+                }
+            } else {
+                StopPathing(nav);
+            }
+        }
+
+        static private void StopPathing(PenguinNavigator nav) {
             PenguinNav.FreeNavPath(ref nav.CurrentPath);
             if (nav.State != PenguinNavState.Searching) {
                 nav.Brain.Signal(PenguinUtility.Signals.PathCompleted);
@@ -136,6 +157,7 @@ namespace Pennycook {
         static private bool ComputeTargetVectorWithWhiskers(PenguinNavigator nav, Vector3 currentPos, Vector3 nextTarget, float maxForwardDist, out Vector3 outputVector) {
             float travelDist = Math.Min(LocalAvoidanceLookAhead, maxForwardDist);
             Vector3 forward = Vector3.Normalize(nextTarget - currentPos);
+
             if (!PenguinNav.IsWalkableRaycast(currentPos, currentPos + forward * travelDist)) {
                 Vector3 cross = new Vector3(-forward.z, 0, forward.x);
                 Vector3 leftNav = Vector3.Normalize(forward + cross);

@@ -56,6 +56,11 @@ namespace Pennycook {
             static public readonly StringHash32 PathFound = "path-found";
             static public readonly StringHash32 PathNotFound = "path-not-found";
             static public readonly StringHash32 PathCompleted = "path-completed";
+            static public readonly StringHash32 Dancing = "dancing";
+            static public readonly StringHash32 DanceComplete = "dance-completed";
+            static public readonly StringHash32 Regurgitating = "regurgitating";
+            static public readonly StringHash32 RegurgitatingComplete = "regurgitating-completed";
+
         }
 
         /// <summary>

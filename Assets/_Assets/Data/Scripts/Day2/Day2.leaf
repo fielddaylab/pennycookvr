@@ -12,7 +12,7 @@ $call DayHeader->SetText(Nov 16)
 $call GPSTrackerPlate->Activate()
 $call Sky1->Deactivate()
 $call Sky2->Activate()
-$call Sky2->SetSkybox()
+$call Sky2->SetSkybox(0.008)
 $call Ocean->SetMaterial(1);
 $call Terrain->SetTerrainMaterial(1);
 
@@ -25,6 +25,18 @@ $call Wait(2)
 @once
 
 $call SetWarpActive(WarpBluff, true)
+
+$call Daisy->SetMatingDance()
+$call Meatball->SetMatingDance()
+$call Billy->SetMatingDance()
+$call Benni->SetMatingDance()
+$call Wendy->SetMatingDance()
+
+$call RedAdelie->SetMatingDance()
+$call GreenAdelie->SetMatingDance()
+$call YellowAdelie->SetMatingDance()
+$call PurpleAdelie->SetMatingDance()
+$call BlueAdelie->SetMatingDance()
 
 {@Margo}   Mornin', kiddo!   $[Day2/Tent/2tm01]
 {@Margo}   Jeepers... you look exhausted.   $[Day2/Tent/2tm02]
