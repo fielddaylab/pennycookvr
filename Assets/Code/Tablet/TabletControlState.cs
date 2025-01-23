@@ -17,6 +17,8 @@ namespace Pennycook.Tablet {
         public Socketable Socketable;
         public Transform AudioLocation;
 
+        private Rigidbody CachedRB;
+
         [NonSerialized] public BitSet32 GrippedHandMask;
 
         void IRegistrationCallbacks.OnDeregister() {
@@ -27,6 +29,8 @@ namespace Pennycook.Tablet {
         void IRegistrationCallbacks.OnRegister() {
             Grabbable.OnGrabbed.Register(OnGrabbed);
             Grabbable.OnReleased.Register(OnGrabReleased);
+            CachedRB = GetComponent<Rigidbody>();
+
         }
 
         private void OnGrabbed(Grabber grabber, int snapIndex) {
@@ -48,6 +52,11 @@ namespace Pennycook.Tablet {
 
             if (GrippedHandMask.Count == 1) {
                 ScriptUtility.Trigger(TabletTriggers.LiftedTablet);
+                if(CachedRB != null) {
+                    CachedRB.angularDrag = 70f;
+                    CachedRB.drag = 70f;
+                    CachedRB.mass = 5f;
+                }
             }
         }
 
@@ -56,6 +65,11 @@ namespace Pennycook.Tablet {
                 GrippedHandMask.Unset((int) grabber.Chirality);
 
                 if (GrippedHandMask.IsEmpty) {
+                    if(CachedRB != null) {
+                        CachedRB.angularDrag = 1f;
+                        CachedRB.drag = 1f;
+                        CachedRB.mass = 10f;
+                    }
                     ScriptUtility.Trigger(TabletTriggers.DroppedTablet);
                 }
             }

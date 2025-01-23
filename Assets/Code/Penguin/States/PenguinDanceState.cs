@@ -12,10 +12,6 @@ namespace Pennycook {
                 if (brain.Animator) {
                     brain.Animator.Animator.SetBool("Waddle", false);
                     brain.Animator.Animator.SetBool("Dance", true);
-                    /*if(brain.Relationships != null && brain.Relationships.Mate != null && brain.Relationships.IsPursued) {
-                        brain.Relationships.Mate.Animator.Animator.SetBool("Dance", true);
-                        brain.Relationships.Mate.Relationships.IsPursued = true;
-                    }*/
                 }
             } else if (signalId == PenguinUtility.Signals.PathNotFound) {
                 p.TransitionToDefault();
@@ -35,10 +31,6 @@ namespace Pennycook {
                 PenguinBrain brain = Brain(p);
                 if (brain.Animator) {
                     brain.Animator.Animator.SetBool("Dance", false);
-                    /*if(brain.Relationships != null && brain.Relationships.Mate != null && brain.Relationships.IsPursued) {
-                        brain.Relationships.Mate.Animator.Animator.SetBool("Dance", false);
-                        brain.Relationships.Mate.Relationships.IsPursued = false;
-                    }*/
                 }
                 p.TransitionToDefault();
             }
@@ -46,16 +38,17 @@ namespace Pennycook {
 
         public override void OnEnter(Process p, ref PenguinDanceParams param) {
             PenguinBrain brain = Brain(p);
-            PenguinUtility.TryPathTo(brain.Navigator, param.Target);
+            if(!PenguinUtility.IsClose(brain.Relationships)) {
+                PenguinUtility.TryPathTo(brain.Navigator, param.Target);
+            } else {
+                brain.Signal(PenguinUtility.Signals.Dancing);
+            }
         }
 
         public override void OnExit(Process p) {
             PenguinBrain brain = Brain(p);
             if (brain.Animator) {
                 brain.Animator.Animator.SetBool("Dance", false);
-                if(brain.Relationships != null && brain.Relationships.Mate != null && brain.Relationships.IsPursued) {
-                    brain.Relationships.Mate.Animator.Animator.SetBool("Dance", false);
-                }
             }
             PenguinUtility.StopPathing(brain.Navigator);
         }

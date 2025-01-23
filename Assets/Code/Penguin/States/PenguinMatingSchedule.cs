@@ -37,7 +37,7 @@ namespace Pennycook {
                     yield return null;
                 }
 
-                if(Vector3.Distance(brain.transform.position, brain.Relationships.Mate.transform.position) > 2.1f) {
+                if(!PenguinUtility.IsClose(brain.Relationships)) {
 
                     if(!brain.Relationships.IsPursued) {
                         brain.ChangeActionState(PenguinStates.Walking, new PenguinWalkParams() {
@@ -49,6 +49,17 @@ namespace Pennycook {
                         while(PenguinUtility.IsNavigating(brain.Navigator)) {
                             yield return null;
                         }
+                    } else {
+                        
+                        brain.Signal(PenguinUtility.Signals.Dancing);
+
+                        brain.ChangeActionState(PenguinStates.Dancing, new PenguinDanceParams() {
+                            Target = targetWalkPos
+                        });
+
+                        yield return 10;
+
+                        brain.Signal(PenguinUtility.Signals.DanceComplete);
                     }
                     
                 } else {
