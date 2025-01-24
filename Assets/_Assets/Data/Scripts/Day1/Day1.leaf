@@ -123,26 +123,31 @@ $if chapter:identifiedCount >= 5
 $endif
 
 $if local:objectId == "RedAdelie"
+	$call ScanUI1->SetText("Millie")
 	$call CompleteGoal("band_red")
 	{@Margo}	Aw, Millie’s back! She had chicks for the first time last year. Great mom, too.	$[Day1/Rookery/1rm09]
 	{@Margo}	A little strict, maybe. But neither of her chicks got eaten by skua, so that’s always a good sign.	$[Day1/Rookery/1rm10]
 $elseif local:objectId == "YellowAdelie"
+	$call ScanUI2->SetText("Polo")
 	$call CompleteGoal("band_yellow")
 	{@Margo}	Oh, I'm so glad Polo made it back! He is my favorite. Such a cutie.	$[Day1/Rookery/1rm15]
 	{@Player}	Are you sure we should be picking favorites?	$[Day1/Rookery/1rs05]
 	{@Player}	I thought scientists were supposed to be objective.	$[Day1/Rookery/1rs06]
 	{@Margo}	Polo is objectively the cutest penguin you’ll ever meet.	$[Day1/Rookery/1rm17]
 $elseif local:objectId == "GreenAdelie"
+	$call ScanUI3->SetText("Winston")
 	$call CompleteGoal("band_green")
 	{@Margo}	Aw, good old Winston. $[Day1/Rookery/1rm18]
 	{@Margo}	We can always count on him to make an appearance. $[Day1/Rookery/1rm19]
 $elseif local:objectId == "BlueAdelie"
+	$call ScanUI4->SetText("Alfredo")
 	$call CompleteGoal("band_blue")
 	{@Margo}	Ooh, Alfredo’s back! I haven’t seen her since she was a chick.	$[Day1/Rookery/1rm11]
 	{@Player}	Alfredo? Why does that sound familiar?	$[Day1/Rookery/1rs08]
 	{@Margo}	Oh, I’m sure you know her. She’s internet famous.	$[Day1/Rookery/1rm12]
 	{@Margo}	Penny used to keep her page updated. Alfredo’s baby videos got two billion views!	$[Day1/Rookery/1rm13]
 $elseif local:objectId == "PurpleAdelie"
+	$call ScanUI5->SetText("Fuzz")
 	$call CompleteGoal("band_purple")
 	{@Margo}	Aw, it’s Fuzz! I remember him. His hair was crazy when he was growing. 	$[Day1/Rookery/1rm14]
 $endif
