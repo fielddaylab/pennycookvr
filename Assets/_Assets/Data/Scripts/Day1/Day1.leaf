@@ -6,7 +6,7 @@ $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call Sky1->Activate()
 
-$call FadeIn(2.0)
+$call FadeIn(5.0)
 
 :: StartGame
 @trigger    SceneReady
@@ -79,7 +79,7 @@ $call PenguinCount->ActivateCount(12)
 $call SetWarpGroupActive(Rookery, true)
 
 {@Margo}	Nice work, kiddo! We've got our initial population count. $[Day1/Bluff/1bm08]
-{@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny.   $[Day1/Bluff/Partner_1]
+{@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny.   $[Day1/Bluff/1bp01]
 {@Player}	Wow! I remember when you talked to my 5th grade class at Gompers Elementary. $[Day1/Bluff/1bs07]
 {@Margo}	Okay, enough chit chat. Time for your next task. 	$[Day1/Bluff/1bm09]
 {@Margo}	Let's get on down there and say hello! Find a waypoint in the rookery. 	$[Day1/Bluff/1bm11]
@@ -140,14 +140,14 @@ $elseif local:objectId == "GreenAdelie"
 	{@Margo}	Aw, good old Winston. $[Day1/Rookery/1rm18]
 	{@Margo}	We can always count on him to make an appearance. $[Day1/Rookery/1rm19]
 $elseif local:objectId == "BlueAdelie"
-	$call ScanUI4->SetText("Alfredo")
+	$call ScanUI5->SetText("Alfredo")
 	$call CompleteGoal("band_blue")
 	{@Margo}	Ooh, Alfredo’s back! I haven’t seen her since she was a chick.	$[Day1/Rookery/1rm11]
 	{@Player}	Alfredo? Why does that sound familiar?	$[Day1/Rookery/1rs08]
 	{@Margo}	Oh, I’m sure you know her. She’s internet famous.	$[Day1/Rookery/1rm12]
 	{@Margo}	Penny used to keep her page updated. Alfredo’s baby videos got two billion views!	$[Day1/Rookery/1rm13]
 $elseif local:objectId == "PurpleAdelie"
-	$call ScanUI5->SetText("Fuzz")
+	$call ScanUI4->SetText("Fuzz")
 	$call CompleteGoal("band_purple")
 	{@Margo}	Aw, it’s Fuzz! I remember him. His hair was crazy when he was growing. 	$[Day1/Rookery/1rm14]
 $endif
@@ -206,7 +206,7 @@ $endwhile
 {@Margo}	Yep. Pro tip: invest in a good sleep mask.   	$[Day1/Tent/1tm26]
 {@Margo}	See ya tomorrow, kid!   	$[Day1/Tent/1tm27]
 
-//$call FadeOut(1.0)
+$call FadeOut(1.0)
 $call Wait(2)
 
 $call LoadNextDay()

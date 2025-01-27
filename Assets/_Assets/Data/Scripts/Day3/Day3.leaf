@@ -76,22 +76,22 @@ $call Wait(1)
 $call SetWarpGroupActive(Rookery, true)
 
 {@Player}   Oh. My. God. They’re amazing! $[Day3/Rookery/Player_1]
-{@Partner}   Hey there, new kid. $[Day3/Rookery/Partner_1]
-{@Partner}   Pretty extraordinary, aren’t they?   $[Day3/Rookery/Partner_2]
-{@Partner}  This is our favorite time of year around here.   $[Day3/Rookery/Partner_3]
+{@Partner}   Hey there, new kid. $[Day3/Rookery/3rp01]
+{@Partner}   Pretty extraordinary, aren’t they?   $[Day3/Rookery/3rp02]
+{@Partner}  This is our favorite time of year around here.   $[Day3/Rookery/3rp03]
 {@Player}   The skua are pretty active today   $[Day3/Rookery/Player_2]
-{@Partner}   They drive me crazy. They’re pretty nasty. $[Day3/Rookery/Partner_4]
-{@Partner}  Harmless to adult penguins, but they love a nice breakfast of penguin chicks and eggs.  $[Day3/Rookery/Partner_5]
+{@Partner}   They drive me crazy. They’re pretty nasty. $[Day3/Rookery/3rp04]
+{@Partner}  Harmless to adult penguins, but they love a nice breakfast of penguin chicks and eggs.  $[Day3/Rookery/3rp05]
 {@Player}  They look like they are hunting today. These poor chicks. $[Day3/Rookery/Player_3]
 {@Player}   I want to help them.  $[Day3/Rookery/Player_4]
-{@Partner}    Help the chicks? Yeah, I wish.  $[Day3/Rookery/Partner_6]
-{@Partner}    We cant interfere.  $[Day3/Rookery/Partner_7]
-{@Partner}    You just keep an eye on your—what did you call them? $[Day3/Rookery/Partner_8]
+{@Partner}    Help the chicks? Yeah, I wish.  $[Day3/Rookery/3rp06]
+{@Partner}    We cant interfere.  $[Day3/Rookery/3rp07]
+{@Partner}    You just keep an eye on your—what did you call them? $[Day3/Rookery/3rp08]
 {@Player}    Oh, uh… the Fliptastic Five? $[Day3/Rookery/Player_5]
-{@Partner}   Right. Take a look at which eggs hatched and how the chicks are doing.  $[Day3/Rookery/Partner_9]
-{@Partner}  You’ll also need to document what the parents are feeding their chicks. $[Day3/Rookery/Partner_10]
+{@Partner}   Right. Take a look at which eggs hatched and how the chicks are doing.  $[Day3/Rookery/3rp09]
+{@Partner}  You’ll also need to document what the parents are feeding their chicks. $[Day3/Rookery/3rp10]
 {@Player}   Got it. $[Day3/Rookery/Player_6]
-{@Partner}  Oh… and you don’t know what happened to the last slice of pumpkin pie, do you? $[Day3/Rookery/Partner_11]
+{@Partner}  Oh… and you don’t know what happened to the last slice of pumpkin pie, do you? $[Day3/Rookery/3rp11]
 {@Player}   Oh, uh… sorry. do you want some of my champurrado?  $[Day3/Rookery/Player_7]
 
 :: WarpedToRookeryMiddle
@@ -231,14 +231,14 @@ $goto Day3.RegurgComplete
 ::RegurgComplete
 @trigger RegurgComplete
 
+$call CompleteGoal("day3_regurg")
+
 {@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
 {@Margo}	Says the guy with pumpkin pie on his face.	$[Day3/Rookery/3rm16]
 {@Player}	Seriously?	$[Day3/Rookery/Player_19]
 {@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/3rm17]
 
 $set chapter:regurgDone = true
-$call CompleteGoal("day3_regurg")
-
 $goto Day3.CheckAllComplete
 
 
@@ -295,8 +295,8 @@ $call SetWarpActive(WarpBluffBack, true)
 {@Margo}	Yep, looks like we've got all the data we need!	$[Day3/Rookery/3rm24]
 {@Player}	Phew, good. All this running around in the cold is making me hungry. $[Day3/Rookery/Player_21]
 {@Player}	I can see why you all keep so much candy around here. 	$[Day3/Rookery/Player_22]
-{@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/Partner_12]
-{@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/Partner_13]
+{@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/3rp12]
+{@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/3rp13]
 $endif
 
 :: WarpedBackToTent
@@ -341,7 +341,7 @@ $endwhile
 {@Margo}    Assuming the skua don't get to 'em first.   $[Day3/Tent/3tm14]
 {@Margo}    Nice work, kid. Another good day's work!    $[Day3/Tent/3tm15]
 
-//$call FadeOut(1.0)
+$call FadeOut(1.0)
 $call Wait(2)
 
 $call LoadNextDay()

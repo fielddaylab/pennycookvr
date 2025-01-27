@@ -118,20 +118,22 @@ $call Wendy->SetIdentified(false)
 :: OnBillyIdentified
 @trigger	TabletBehaviorInstanceCaptured
 @when		behaviorId == "id_millie"
+@interrupt
 @once
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_millie")
 
 {@Player}   Looks like Millie paired up with her same mate from last year!  $[Day2/Rookery/Player_4]
-{@Partner}  Millie and . . . Billy? $[Day2/Rookery/Partner_1]
-{@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Day2/Rookery/Partner_2]
+{@Partner}  Millie and . . . Billy? $[Day2/Rookery/2rp01]
+{@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Day2/Rookery/2rp02]
 
 $goto Day2.CheckAllMatesIdentified
 
 :: OnMeatballIdentified
 @trigger	TabletBehaviorInstanceCaptured
 @when		behaviorId == "id_alfredo"
+@interrupt
 @once
 
 $set	chapter:identifiedCount + 1
@@ -148,6 +150,7 @@ $goto Day2.CheckAllMatesIdentified
 :: OnDaisyIdentified
 @trigger	TabletBehaviorInstanceCaptured
 @when		behaviorId == "id_fuzz"
+@interrupt
 @once
 
 $set	chapter:identifiedCount + 1
@@ -166,6 +169,7 @@ $goto Day2.CheckAllMatesIdentified
 :: OnWendyIdentified
 @trigger	TabletBehaviorInstanceCaptured
 @when		behaviorId == "id_winston"
+@interrupt
 @once
 
 $set	chapter:identifiedCount + 1
@@ -179,6 +183,7 @@ $goto Day2.CheckAllMatesIdentified
 :: OnBenniIdentified
 @trigger	TabletBehaviorInstanceCaptured
 @when		behaviorId == "id_polo"
+@interrupt
 @once
 
 $set	chapter:identifiedCount + 1
@@ -209,6 +214,7 @@ $endif
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-RookeryFar"
+@interrupt
 @once
 
 $call Wait(2)
@@ -243,6 +249,7 @@ $call SocketObjectTo(AdelieLegTracker2, AdelieLegSocket2)
 ::OnFuzzTrackerRemoved
 @trigger TrackerRemoved
 @when   objectId == "FuzzLegTracker"
+@interrupt
 @once
 
 {@Player}   Ouch! Fuzz, just hold still!    $[Day2/Rookery/Player_14]
@@ -318,7 +325,7 @@ $endwhile
 {@Margo}    Yeah, ya got that right.    $[Day2/Tent/2tm18]
 {@Margo}    You better stock up on more candy... I don't think you'll be gettin' much sleep tonight.    $[Day2/Tent/2tm19]
 
-//$call FadeOut(1.0)
+$call FadeOut(1.0)
 $call Wait(2)
 
 $call LoadNextDay()
