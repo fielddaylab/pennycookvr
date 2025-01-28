@@ -4,6 +4,9 @@
 @function	ScenePrepare
 $set chapter:finishedObservations = false
 $set chapter:identifiedCount = 0
+$set chapter:wingStarted = false
+$set chapter:trackerStarted = false
+
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
@@ -61,6 +64,7 @@ $call SetWarpGroupActive(Rookery, true)
 @trigger    AtWarpPoint
 @who        Player
 @when       targetObject == "WarpTarget-Rookery"
+@interrupt
 @once
 
 $call Wait(1)
@@ -100,8 +104,11 @@ $call WeighGate->SetInteractable(true)
 {@Margo}    I’ll scan each penguin’s data as it passes through. $[Day4/Rookery/4rm09]
 
 :: OnWeighGateIdentified
-@function	TabletIdentified
+@trigger	TabletIdentified
+@who        Player
 @when		objectId == "WeighGate"
+@interrupt
+@once
 
 $call CompleteGoal("day4_gate")
 $set	chapter:weighGate = true
@@ -138,6 +145,8 @@ $call DataTrackerBack3->SetMeshEnabled(true)
 $call DataTrackerBack4->SetMeshEnabled(true)
 $call DataTrackerBack5->SetMeshEnabled(true)
 
+$set chapter:trackerStarted = true
+
 {@Margo}    Wahoo! Looks like all the penguins with data loggers have come back.    $[Day4/Rookery/4rm10]
 {@Margo}    Now we’ll be able to get the stats on their swimming behaviors!     $[Day4/Rookery/4rm11]
 {@Margo}    Just hold the penguin still with one hand and remove their trackers.    $[Day4/Rookery/4rm12]
@@ -145,9 +154,22 @@ $call DataTrackerBack5->SetMeshEnabled(true)
 
 :: OnSocketedTracker
 @trigger    ObjectSocketed
+@who        Player
 @when   objectType == "DataTracker", socketType == "TrackerSocket"
+
+$if chapter:trackerStarted == true
 $set chapter:dataCount + 1
 $goto Day4.CheckDataCount
+$endif
+
+:: OnUnsocketedTracker
+@trigger    ObjectUnsocketed
+@who        Player
+@when   objectType == "DataTracker", socketType == "TrackerSocket"
+
+$if chapter:trackerStarted == true
+$set chapter:dataCount - 1
+$endif
 
 :: CheckDataCount
 @trigger    CheckDataCount
@@ -163,6 +185,10 @@ $endif
 @who        Player
 @when       targetObject == "WarpTarget-RookeryCorral"
 @interrupt
+@once
+
+$set chapter:wingStarted = true
+$set chapter:wingCount = 0
 
 $call DataLoggerPlate->Deactivate()
 $call GPSSocketRight->Deactivate()
@@ -179,16 +205,6 @@ $call BandSocketRight->Activate()
 $call BandSocketMiddle->Activate()
 $call BandSocketLeft->Activate()
 
-$call WingBand1->Activate()
-$call WingBand2->Activate()
-$call WingBand3->Activate()
-
-$call SocketObjectTo(WingBand1, BandSocketRight)
-$call SocketObjectTo(WingBand2, BandSocketMiddle)
-$call SocketObjectTo(WingBand3, BandSocketLeft)
-
-$set chapter:wingCount = 0
-
 {@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/4rm14]
 {@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/4rm15]
 {@Player}    Oh, come on. They're, like, half the size of the grown-ups. How hard can it be?    $[Day4/Rookery/Player_9]
@@ -201,14 +217,31 @@ $set chapter:wingCount = 0
 {@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/4rm20]
 {@Player}   Cool, no sweat. $[Day4/Rookery/Player_12]  
 
+$call WingBand1->Activate()
+$call WingBand2->Activate()
+$call WingBand3->Activate()
+
+$call SocketObjectTo(WingBand1, BandSocketRight)
+$call SocketObjectTo(WingBand2, BandSocketMiddle)
+$call SocketObjectTo(WingBand3, BandSocketLeft)
+
 :: OnUnsocketedWingBand
-@trigger ObjectSocketed
+@trigger ObjectUnsocketed
+@who        Player
 @when   objectType == "WingBand", socketType == "BandSocket"
+@interrupt
+
+$if chapter:wingStarted == true
 $set chapter:wingCount - 1
+$endif
 
 :: OnSocketedWingBand
 @trigger ObjectSocketed
+@who    Player
 @when   objectType == "WingBand", socketType == "BandSocket"
+@interrupt
+
+$if chapter:wingStarted == true
 $set chapter:wingCount + 1
 
 $if chapter:wingCount == 1
@@ -245,6 +278,7 @@ $set chapter:finishedBands = true
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
 {@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/4rp18]
 $goto Day4.CheckCompletedTasks
+$endif
 $endif
 
 :: CheckCompletedTasks
