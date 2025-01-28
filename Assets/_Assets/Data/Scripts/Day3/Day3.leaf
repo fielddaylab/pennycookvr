@@ -7,7 +7,7 @@ $set chapter:finishedObservations = false
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-$call DayHeader->SetText(Dec 1)
+//$call DayHeader->SetText(Dec 1)
 $call GPSTrackerPlate->Deactivate()
 $call DataLoggerPlate->Activate()
 $call Clouds->Activate()
@@ -111,6 +111,7 @@ $call WinstonWendyChick->SetIdentified(false)
 
 :: OnMillieBillyIdentified
 @trigger	TabletIdentified
+@who        Player
 @when		objectId == "MillieBillyChick"
 @once
 @interrupt
@@ -125,6 +126,7 @@ $goto Day3.CheckAllNestsIdentified
 
 :: OnAlfredoEggIdentified
 @trigger	TabletIdentified
+@who        Player
 @when		objectId == "AlfredoEgg"
 @once
 @interrupt
@@ -142,6 +144,7 @@ $goto Day3.CheckAllNestsIdentified
 
 :: OnFuzzEggIdentified
 @trigger	TabletIdentified
+@who        Player
 @when		objectId == "FuzzEgg"
 @once
 @interrupt
@@ -161,6 +164,7 @@ $goto Day3.CheckAllNestsIdentified
 
 :: OnWinstonWendyIdentified
 @trigger	TabletIdentified
+@who        Player
 @when		objectId == "WinstonWendyChick"
 @once
 @interrupt
@@ -177,6 +181,7 @@ $goto Day3.CheckAllNestsIdentified
 
 :: OnPoloNestIdentified
 @trigger	TabletIdentified
+@who        Player
 @when		objectType == "PoloNest"
 @once
 @interrupt
@@ -214,6 +219,7 @@ $endif
 
 ::TabletIdentifiedRegurgWendy
 @trigger TabletBehaviorInstanceCaptured
+@who        Player
 @when	behaviorId == "day3_regurg"
 @once
 @interrupt
@@ -222,6 +228,7 @@ $goto Day3.RegurgComplete
 
 ::TabletIdentifiedRegurgBilly
 @trigger TabletBehaviorInstanceCaptured
+@who        Player
 @when	behaviorId == "day3_regurg2"
 @once
 @interrupt

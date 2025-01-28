@@ -8,7 +8,7 @@ $set chapter:finishedObservations = false
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-$call DayHeader->SetText(Nov 16)
+//$call DayHeader->SetText(Nov 16)
 $call GPSTrackerPlate->Activate()
 $call Sky1->Deactivate()
 $call Sky2->Activate()
@@ -117,6 +117,7 @@ $call Wendy->SetIdentified(false)
 
 :: OnBillyIdentified
 @trigger	TabletBehaviorInstanceCaptured
+@who        Player
 @when		behaviorId == "id_millie"
 @interrupt
 @once
@@ -132,6 +133,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnMeatballIdentified
 @trigger	TabletBehaviorInstanceCaptured
+@who        Player
 @when		behaviorId == "id_alfredo"
 @interrupt
 @once
@@ -149,6 +151,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnDaisyIdentified
 @trigger	TabletBehaviorInstanceCaptured
+@who        Player
 @when		behaviorId == "id_fuzz"
 @interrupt
 @once
@@ -168,6 +171,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnWendyIdentified
 @trigger	TabletBehaviorInstanceCaptured
+@who        Player
 @when		behaviorId == "id_winston"
 @interrupt
 @once
@@ -182,6 +186,7 @@ $goto Day2.CheckAllMatesIdentified
 
 :: OnBenniIdentified
 @trigger	TabletBehaviorInstanceCaptured
+@who        Player
 @when		behaviorId == "id_polo"
 @interrupt
 @once

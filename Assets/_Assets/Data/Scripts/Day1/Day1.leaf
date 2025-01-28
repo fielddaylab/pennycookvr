@@ -112,6 +112,7 @@ $call SetWarpGroupActive(Rookery, true)
 			
 :: OnPenguinIdentified
 @trigger	TabletIdentified
+@who        Player
 @when		objectType == "BandedPenguin"
 @interrupt
 
