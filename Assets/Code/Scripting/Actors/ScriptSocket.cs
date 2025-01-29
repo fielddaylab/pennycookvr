@@ -36,7 +36,17 @@ namespace Pennycook {
         public void SetLocked(bool lockParam) {
 			m_Socket.Locked = lockParam;
         }
-
+		
+		[LeafMember("ReleaseCurrentSocket"), Preserve]
+		public bool ReleaseCurrentSocket() {
+            if(m_Socket != null) {
+				SocketUtility.ReleaseCurrent(m_Socket, false);
+				return true;
+            }
+			
+			return false;
+		}
+		
 		[LeafMember("IsSocketedBy"), Preserve]
 		static public bool IsSocketedBy(ScriptActor actor, ScriptActor socket) {
             ScriptSocket ss = actor.GetComponent<ScriptSocket>();
@@ -56,6 +66,8 @@ namespace Pennycook {
             }
 			return false;
 		}
+		
+
 		
         #endregion // Leaf
 		

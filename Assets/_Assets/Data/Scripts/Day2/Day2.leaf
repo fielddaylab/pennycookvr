@@ -5,12 +5,13 @@
 $set chapter:identifiedCount = 0
 $set chapter:finishedAllObservations = false
 $set chapter:finishedObservations = false
+$set chapter:trackersStarted = false
+
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 //$call DayHeader->SetText(Nov 16)
-$call GPSTrackerPlate->Activate()
-$call Sky1->Deactivate()
+
 $call Sky2->Activate()
 $call Sky2->SetSkybox(0.008)
 $call Ocean->SetMaterial(1);
@@ -206,6 +207,12 @@ $endif
 @interrupt
 @once
 
+$call GPSTrackerPlate->Activate()
+
+$call CaseLegSocketRight->ReleaseCurrentSocket()
+$call CaseLegSocketLeft->ReleaseCurrentSocket()
+$call CaseLegSocketMiddle->ReleaseCurrentSocket()
+
 $call Wait(2)
 
 $call FuzzLegTracker->Activate()
@@ -225,6 +232,7 @@ $call SocketObjectTo(PoloLegTracker, PoloLegSocket)
 $call SocketObjectTo(AdelieLegTracker1, AdelieLegSocket1)
 $call SocketObjectTo(AdelieLegTracker2, AdelieLegSocket2)
 
+$set chapter:trackersStarted = true
 
 {@Margo}    Okay, kid. This is the tricky part. You’ll need to remove each penguin’s GPS tracker. $[Day2/Rookery/2rm15]
 {@Margo}    Place one hand on a penguin to hold it still.    $[Day2/Rookery/2rm16]
@@ -245,7 +253,7 @@ $call SocketObjectTo(AdelieLegTracker2, AdelieLegSocket2)
 
 :: OnPenguinLegTrackerSocketed
 @trigger	ObjectSocketed
-@when		objectType == "LegTracker", socketType == "CaseLegSocket"
+@when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount + 1
 
 $if chapter:removedCount >= 3
@@ -254,7 +262,7 @@ $endif
 
 :: OnPenguinLegTrackerUnsocketed
 @trigger	ObjectUnsocketed
-@when		objectType == "LegTracker", socketType == "CaseLegSocket"
+@when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount - 1
 
 :: TrackersCompleted

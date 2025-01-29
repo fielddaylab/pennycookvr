@@ -22,13 +22,15 @@ namespace FieldDay.VRHands {
         [NonSerialized] public Transform OriginalParent;
 
         [NonSerialized] private Grabbable GrabbableComponent;
-
+		[NonSerialized] private MeshRenderer CachedMR;
+		
         private Routine ReturnProcess;
 
         private void Awake() {
             this.CacheComponent(ref CachedRB);
             this.CacheComponent(ref GrabbableComponent);
-
+			this.CacheComponent(ref CachedMR);
+			
             OriginalPosition = transform.position;
             OriginalRotation = transform.rotation;
 			OriginalParent = transform.parent;
@@ -40,7 +42,13 @@ namespace FieldDay.VRHands {
 			if((l == LayerMasks.ExcludeDLight_Index || l == LayerMasks.Terrain_Index || l == LayerMasks.Nest_Index) && !CachedRB.isKinematic && ((GrabbableComponent == null) || 
                     (GrabbableComponent != null && GrabbableComponent.CurrentGrabberCount == 0))) {
                 if (!ReturnProcess.Exists()) {
-                    ReturnProcess = Routine.Start(this, ReturnToStart());
+					if(CachedMR != null) {
+						if(CachedMR.enabled) {
+							ReturnProcess = Routine.Start(this, ReturnToStart());
+						}
+					} else {
+						ReturnProcess = Routine.Start(this, ReturnToStart());
+					}
 				}
 			}
 		}

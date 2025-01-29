@@ -10,7 +10,6 @@ $set chapter:trackerStarted = false
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-$call Sky3->Deactivate()
 $call Sky4->Activate()
 $call Sky4->SetSkybox(0.003)
 $call Ocean->SetMaterial(3);
@@ -121,17 +120,12 @@ $goto Day4.CheckCompletedTasks
 @interrupt
 @once
 
-$call DataLoggerPlate->Activate()
-$call GPSSocketRight->Activate()
-$call GPSSocketMiddle->Activate()
-$call GPSSocketLeft->Activate()
 $call ChickBandPlate->Deactivate()
-$call BandSocketRight->Deactivate()
-$call BandSocketMiddle->Deactivate()
-$call BandSocketLeft->Deactivate()
-$call WingBand1->Deactivate()
-$call WingBand2->Deactivate()
-$call WingBand3->Deactivate()
+$call DataLoggerPlate->Activate()
+
+$call GPSSocketRight->ReleaseCurrentSocket()
+$call GPSSocketMiddle->ReleaseCurrentSocket()
+$call GPSSocketLeft->ReleaseCurrentSocket()
 
 $call SocketObjectTo(DataTrackerBack1, DataSocketBack1)
 $call SocketObjectTo(DataTrackerBack2, DataSocketBack2)
@@ -155,7 +149,7 @@ $set chapter:trackerStarted = true
 :: OnSocketedTracker
 @trigger    ObjectSocketed
 @who        Player
-@when   objectType == "DataTracker", socketType == "TrackerSocket"
+@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true
 
 $if chapter:trackerStarted == true
 $set chapter:dataCount + 1
@@ -165,7 +159,7 @@ $endif
 :: OnUnsocketedTracker
 @trigger    ObjectUnsocketed
 @who        Player
-@when   objectType == "DataTracker", socketType == "TrackerSocket"
+@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true
 
 $if chapter:trackerStarted == true
 $set chapter:dataCount - 1
@@ -187,23 +181,15 @@ $endif
 @interrupt
 @once
 
+$call DataLoggerPlate->Deactivate()
+$call ChickBandPlate->Activate()
+
+$call WingBand1->SetMeshEnabled(true)
+$call WingBand2->SetMeshEnabled(true)
+$call WingBand3->SetMeshEnabled(true)
+
 $set chapter:wingStarted = true
 $set chapter:wingCount = 0
-
-$call DataLoggerPlate->Deactivate()
-$call GPSSocketRight->Deactivate()
-$call GPSSocketMiddle->Deactivate()
-$call GPSSocketLeft->Deactivate()
-$call DataTrackerBack1->SetMeshEnabled(false)
-$call DataTrackerBack2->SetMeshEnabled(false)
-$call DataTrackerBack3->SetMeshEnabled(false)
-$call DataTrackerBack4->SetMeshEnabled(false)
-$call DataTrackerBack5->SetMeshEnabled(false)
-
-$call ChickBandPlate->Activate()
-$call BandSocketRight->Activate()
-$call BandSocketMiddle->Activate()
-$call BandSocketLeft->Activate()
 
 {@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/4rm14]
 {@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/4rm15]
@@ -217,31 +203,21 @@ $call BandSocketLeft->Activate()
 {@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/4rm20]
 {@Player}   Cool, no sweat. $[Day4/Rookery/Player_12]  
 
-$call WingBand1->Activate()
-$call WingBand2->Activate()
-$call WingBand3->Activate()
-
-$call SocketObjectTo(WingBand1, BandSocketRight)
-$call SocketObjectTo(WingBand2, BandSocketMiddle)
-$call SocketObjectTo(WingBand3, BandSocketLeft)
 
 :: OnUnsocketedWingBand
 @trigger ObjectUnsocketed
 @who        Player
-@when   objectType == "WingBand", socketType == "BandSocket"
+@when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true
 @interrupt
 
-$if chapter:wingStarted == true
 $set chapter:wingCount - 1
-$endif
 
 :: OnSocketedWingBand
 @trigger ObjectSocketed
 @who    Player
-@when   objectType == "WingBand", socketType == "BandSocket"
+@when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true
 @interrupt
 
-$if chapter:wingStarted == true
 $set chapter:wingCount + 1
 
 $if chapter:wingCount == 1
@@ -278,7 +254,6 @@ $set chapter:finishedBands = true
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
 {@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/4rp18]
 $goto Day4.CheckCompletedTasks
-$endif
 $endif
 
 :: CheckCompletedTasks

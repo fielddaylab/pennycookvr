@@ -4,14 +4,12 @@
 @function	ScenePrepare
 $set chapter:identifiedCount = 0
 $set chapter:finishedObservations = false
+$set chapter:dataTrackersStarted = false
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 //$call DayHeader->SetText(Dec 1)
-$call GPSTrackerPlate->Deactivate()
-$call DataLoggerPlate->Activate()
 $call Clouds->Activate()
-$call Sky2->Deactivate()
 $call Sky3->Activate()
 $call Sky3->SetSkybox(0.003)
 $call Ocean->SetMaterial(2);
@@ -257,13 +255,20 @@ $goto Day3.CheckAllComplete
 @once
 @interrupt
 
-$call DataTracker1->Activate()
-$call DataTracker2->Activate()
-$call DataTracker3->Activate()
+$call DataLoggerPlate->Activate()
+$call DataTracker1->SetMeshEnabled(true)
+$call DataTracker2->SetMeshEnabled(true)
+$call DataTracker3->SetMeshEnabled(true)
 
-$call SocketObjectTo(DataTracker1, GPSSocketRight)
-$call SocketObjectTo(DataTracker2, GPSSocketMiddle)
-$call SocketObjectTo(DataTracker3, GPSSocketLeft)
+//$call DataTracker1->Activate()
+//$call DataTracker2->Activate()
+//$call DataTracker3->Activate()
+
+//$call SocketObjectTo(DataTracker1, GPSSocketRight)
+//$call SocketObjectTo(DataTracker2, GPSSocketMiddle)
+//$call SocketObjectTo(DataTracker3, GPSSocketLeft)
+
+$set chapter:dataTrackersStarted = true
 
 {@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/3rm18]
 {@Margo}	You’ll need to attach a data logger to their backs.	$[Day3/Rookery/3rm19]
@@ -273,7 +278,7 @@ $call SocketObjectTo(DataTracker3, GPSSocketLeft)
 ::	TrackerSocketed
 @trigger ObjectSocketed
 @who	Player
-@when 	objectType == "DataTracker", socketType == "DataSocketPenguin"
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true
 @interrupt
 
 $set chapter:trackerSocketedCount + 1
@@ -289,7 +294,7 @@ $endif
 ::	TrackerUnsocketed
 @trigger ObjectUnsocketed
 @who	Player
-@when 	objectType == "DataTracker", socketType == "DataSocketPenguin"
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true
 $set chapter:trackerSocketedCount - 1
 
 :: CheckAllComplete

@@ -7,10 +7,9 @@ $call SetAllWarpsActive(false)
 $call ClearGoals()
 $set chapter:legCount = 0
 //$call DayHeader->SetText(Feb 22)
-$call GPSTrackerPlate->Activate()
+
 $call DataLoggerPlate->Deactivate()
 $call ChickBandPlate->Deactivate()
-$call Sky4->Deactivate()
 $call Sky5->Activate()
 $call Sky5->SetSkybox(0.003)
 $call Ocean->SetMaterial(4);
@@ -63,6 +62,7 @@ $call Wait(1)
 
 $call SetWarpGroupActive(Rookery, true)
 
+
 {@Margo}   Okay, kiddo. Just one task down at the Rookery today. $[Day5/Bluff/5bm01]
 {@Margo}   We need to put trackers on the penguins who had chicks this year. $[Day5/Bluff/5bm02]
 
@@ -73,15 +73,21 @@ $call SetWarpGroupActive(Rookery, true)
 @once
 @interrupt
 
+$call GPSTrackerPlate->Activate()
+$call LegTracker1->SetMeshEnabled(true)
+$call LegTracker2->SetMeshEnabled(true)
+$call LegTracker3->SetMeshEnabled(true)
+
 $call Wait(1)
 
-$call LegTracker1->Activate()
-$call LegTracker2->Activate()
-$call LegTracker3->Activate()
 
-$call SocketObjectTo(LegTracker1, CaseLegSocketRight)
-$call SocketObjectTo(LegTracker2, CaseLegSocketMiddle)
-$call SocketObjectTo(LegTracker3, CaseLegSocketLeft)
+//$call LegTracker1->Activate()
+//$call LegTracker2->Activate()
+//$call LegTracker3->Activate()
+
+//$call SocketObjectTo(LegTracker1, CaseLegSocketRight)
+//$call SocketObjectTo(LegTracker2, CaseLegSocketMiddle)
+//$call SocketObjectTo(LegTracker3, CaseLegSocketLeft)
 
 {@Player}	Wow… it’s so quiet here.	$[Day5/Rookery/Player_1]
 {@Margo}	Looks like some of our Adelie colony has already headed out to sea.	$[Day5/Rookery/5rm01]

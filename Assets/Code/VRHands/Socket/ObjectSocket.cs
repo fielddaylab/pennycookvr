@@ -51,7 +51,11 @@ namespace FieldDay.Sockets {
             if (Current) {
                 Current.OriginalSocket = this;
             }
-
+			
+			if (Current) {
+                SocketUtility.TryAddToSocket(Current, this, true);
+            }
+			
             Detector.onTriggerEnter.AddListener(OnDetectorEntered);
             Detector.onTriggerExit.AddListener(OnDetectorExited);
         }

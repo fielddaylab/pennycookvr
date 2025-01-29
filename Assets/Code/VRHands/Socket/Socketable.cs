@@ -53,10 +53,8 @@ namespace FieldDay.Sockets {
 
             if (!force && (socket.Locked || socket.Current || !socket.CanAdd(socket, socketable) || !socket.IsSocketAllowed(socketable.SocketType))) {
                 return false;
-            
 			}
 
-			
             if (socket.Current != socketable) {
                 ReleaseCurrent(socket, socket.Current != socketable);
             }
