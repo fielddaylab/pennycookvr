@@ -328,11 +328,15 @@ $call SetWarpActive(WarpDesk, true)
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
+$call DeskGlow->PlayAnimation()
+
 {@Margo}    Okay, kiddo. Put me in the dock and let’s have a look at our findings! $[Day3/Tent/3tm5]
 
 $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
 $endwhile
+
+$call DeskGlow->StopAnimation()
 
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)

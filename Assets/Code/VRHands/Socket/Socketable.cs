@@ -21,6 +21,8 @@ namespace FieldDay.Sockets {
 
         [NonSerialized] public HashSet<ObjectSocket> PotentialSockets = new HashSet<ObjectSocket>();
         [NonSerialized] public ObjectSocket HighlightedSocket;
+		
+		public SocketFlags SocketType = SocketFlags.Nothing;
 
         #region Events
 
@@ -49,10 +51,12 @@ namespace FieldDay.Sockets {
                 return false;
             }
 
-            if (!force && (socket.Locked || socket.Current || !socket.CanAdd(socket, socketable))) {
+            if (!force && (socket.Locked || socket.Current || !socket.CanAdd(socket, socketable) || !socket.IsSocketAllowed(socketable.SocketType))) {
                 return false;
-            }
+            
+			}
 
+			
             if (socket.Current != socketable) {
                 ReleaseCurrent(socket, socket.Current != socketable);
             }
@@ -191,5 +195,16 @@ namespace FieldDay.Sockets {
         static public void SetHomeSocket(Socketable socketable, ObjectSocket socket) {
             socketable.OriginalSocket = socket;
         }
+    }
+	
+	[Flags]
+    public enum SocketFlags
+    {
+        [Hidden]
+        Nothing = 0,
+        Margo = 0x01,
+        LegTracker = 0x02,
+        BackTracker = 0x04,
+        WingBand = 0x08
     }
 }

@@ -791,6 +791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SocketEnabled: 1
+  SocketType: 4
 --- !u!114 &3667515465635546990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -873,6 +874,10 @@ PrefabInstance:
     - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: Current
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: AllowedSockets
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.x
@@ -1276,6 +1281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SocketEnabled: 1
+  SocketType: 4
 --- !u!114 &6201737884468107361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1358,6 +1364,10 @@ PrefabInstance:
     - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: Current
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: AllowedSockets
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.x
@@ -1543,6 +1553,10 @@ PrefabInstance:
     - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: Current
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: AllowedSockets
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.x
@@ -1762,6 +1776,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8124216371476101191, guid: ed088ff268e6c47deb00046936bc3f86, type: 3}
+      propertyPath: SocketType
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1970,6 +1988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SocketEnabled: 1
+  SocketType: 4
 --- !u!114 &8679740495261247239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2052,6 +2071,10 @@ PrefabInstance:
     - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: Current
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: AllowedSockets
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.x
@@ -2411,6 +2434,10 @@ PrefabInstance:
       propertyPath: Current
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: AllowedSockets
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.x
       value: 0.425272
@@ -2596,6 +2623,10 @@ PrefabInstance:
       propertyPath: Current
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: AllowedSockets
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.x
       value: 0.42017856
@@ -2752,6 +2783,10 @@ PrefabInstance:
     - target: {fileID: 1657040248748500443, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.258
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: AllowedSockets
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.z
@@ -3157,6 +3192,10 @@ PrefabInstance:
     - target: {fileID: 4528710434265953284, guid: ed088ff268e6c47deb00046936bc3f86, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8124216371476101191, guid: ed088ff268e6c47deb00046936bc3f86, type: 3}
+      propertyPath: SocketType
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3750,6 +3789,10 @@ PrefabInstance:
       propertyPath: Current
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: AllowedSockets
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.x
       value: 0.40715277
@@ -3931,6 +3974,10 @@ PrefabInstance:
     - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: Current
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: AllowedSockets
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.x
@@ -4150,6 +4197,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8124216371476101191, guid: ed088ff268e6c47deb00046936bc3f86, type: 3}
+      propertyPath: SocketType
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4337,6 +4388,10 @@ PrefabInstance:
     - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: Current
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616917602712771109, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
+      propertyPath: AllowedSockets
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7526956675130423219, guid: 2042cdecad2ca3b46aa4e83bbb804ebc, type: 3}
       propertyPath: m_Size.x

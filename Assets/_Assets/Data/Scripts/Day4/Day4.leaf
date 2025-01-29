@@ -316,11 +316,15 @@ $call TentDoor->Close()
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
+$call DeskGlow->PlayAnimation()
+
 {@Margo}    Okey dokey, let’s have a look at that data! $[Day4/Tent/4tm09]
 
 $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
 $endwhile
+
+$call DeskGlow->StopAnimation()
 
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)

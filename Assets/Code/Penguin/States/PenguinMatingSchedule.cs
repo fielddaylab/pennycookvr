@@ -10,7 +10,7 @@ namespace Pennycook {
             PenguinBrain brain = Brain(process);
             while (true) {
 
-                float newWanderRestlessness = brain.Personality.Wander.IdleWaitDuration + RNG.Instance.NextFloat(brain.Personality.Wander.IdleWaitDurationRandom);
+                /*float newWanderRestlessness = brain.Personality.Wander.IdleWaitDuration + RNG.Instance.NextFloat(brain.Personality.Wander.IdleWaitDurationRandom);
                 brain.MentalState.WanderRestlessness = newWanderRestlessness;
 
                 while(brain.MentalState.WanderRestlessness > 0) {
@@ -18,7 +18,7 @@ namespace Pennycook {
                         brain.MentalState.WanderRestlessness -= Frame.DeltaTime;
                     }
                     yield return null;
-                }
+                }*/
 
                 Vector3 targetWalkPos;
                 if(brain.Relationships != null && brain.Relationships.Mate != null) {

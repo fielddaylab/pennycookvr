@@ -184,6 +184,8 @@ $call TentDoor->Close()
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
+$call DeskGlow->PlayAnimation()
+
 {@Margo}    Okay, let's have a look at that data!  $[Day1/Tent/1tm14]
 {@Margo}    Dock me in the port by the computer over yonder.   $[Day1/Tent/1tm15]
 
@@ -193,6 +195,8 @@ $endwhile
 
 {@Player}   There ya go. Safe and sound.   $[Day1/Tent/1ts01]
 {@Player}   And now the big ole button! $[Day1/Tent/Player_12]
+
+$call DeskGlow->StopAnimation()
 
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)

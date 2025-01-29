@@ -12,12 +12,14 @@ namespace FieldDay.Sockets {
 
         public bool Locked = false;
         public Socketable Current;
-
+		public SocketFlags AllowedSockets = SocketFlags.Nothing;
+		
         [Header("Configuration")]
         public SocketMode Mode = SocketMode.Reparent;
         [ShowIfField("IsFixedJointMode")] public SerializedFixedJoint JointConfig = SerializedFixedJoint.Default;
         [Space]
         public Vector3 ReleaseForce;
+		
 
         [Header("Components")]
         [Required] public Transform Location;
@@ -54,6 +56,10 @@ namespace FieldDay.Sockets {
             Detector.onTriggerExit.AddListener(OnDetectorExited);
         }
 
+		public bool IsSocketAllowed(SocketFlags Flags) {
+            return ((AllowedSockets & Flags) != 0);
+        }
+		
         void ISceneLoadHandler.OnSceneLoad(SceneBinding inScene, object inContext) {
             if (Current != null && Current.CurrentSocket == null) {
                 SocketUtility.TryAddToSocket(Current, this, true);

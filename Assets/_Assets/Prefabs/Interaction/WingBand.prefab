@@ -99,6 +99,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ValidHandType: 2
   IsDynamic: 0
+  AnyOrientation: 0
+  Label:
+    m_Source: 
+    m_HashValue: 0
 --- !u!1001 &572439005004059761
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -145,6 +149,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0e05d8adee489134b8839308e2d8f3bb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 0e05d8adee489134b8839308e2d8f3bb, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0e05d8adee489134b8839308e2d8f3bb, type: 3}
@@ -228,6 +236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SocketEnabled: 1
+  SocketType: 8
 --- !u!114 &5762292508386245424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,6 +252,7 @@ MonoBehaviour:
   GrabEnabled: 1
   MaxGrabbers: 2
   IsHeavy: 0
+  IsAnchored: 0
   MustGrabAtSnap: 0
   GrabberAnim:
     GripAnimIndex: 0
