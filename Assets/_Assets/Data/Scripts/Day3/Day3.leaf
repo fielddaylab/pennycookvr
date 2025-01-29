@@ -27,7 +27,7 @@ $call Wait(2)
 $call Wait(2)
 
 $call Wendy->SetRegurgitation()
-$call Billy->SetRegurgitation()
+//$call Billy->SetRegurgitation()
 
 $call SetWarpActive(WarpBluff, true)
 
@@ -198,6 +198,7 @@ $goto Day3.CheckAllNestsIdentified
 
 :: CheckAllNestsIdentified
 @trigger    CheckAllNestsIdentified
+
 $if chapter:identifiedCount >= 5 
     $set	chapter:finishedObservations = true
 	$goto Day3.CheckAllComplete
@@ -225,18 +226,19 @@ $endif
 
 $goto Day3.RegurgComplete
 
-::TabletIdentifiedRegurgBilly
-@trigger TabletBehaviorInstanceCaptured
-@who        Player
-@when	behaviorId == "day3_regurg2"
-@once
-@interrupt
+//::TabletIdentifiedRegurgBilly
+//@trigger TabletBehaviorInstanceCaptured
+//@who        Player
+//@when	behaviorId == "day3_regurg2"
+//@once
+//@interrupt
 
 $goto Day3.RegurgComplete
 
 ::RegurgComplete
 @trigger RegurgComplete
 
+$set chapter:regurgDone = true
 $call CompleteGoal("day3_regurg")
 
 {@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
@@ -244,9 +246,7 @@ $call CompleteGoal("day3_regurg")
 {@Player}	Seriously?	$[Day3/Rookery/Player_19]
 {@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/3rm17]
 
-$set chapter:regurgDone = true
 $goto Day3.CheckAllComplete
-
 
 :: WarpedToRookerySide
 @trigger    AtWarpPoint
@@ -259,14 +259,6 @@ $call DataLoggerPlate->Activate()
 $call DataTracker1->SetMeshEnabled(true)
 $call DataTracker2->SetMeshEnabled(true)
 $call DataTracker3->SetMeshEnabled(true)
-
-//$call DataTracker1->Activate()
-//$call DataTracker2->Activate()
-//$call DataTracker3->Activate()
-
-//$call SocketObjectTo(DataTracker1, GPSSocketRight)
-//$call SocketObjectTo(DataTracker2, GPSSocketMiddle)
-//$call SocketObjectTo(DataTracker3, GPSSocketLeft)
 
 $set chapter:dataTrackersStarted = true
 
@@ -299,7 +291,6 @@ $set chapter:trackerSocketedCount - 1
 
 :: CheckAllComplete
 @trigger	CheckAllComplete
-@who		Player
 
 $if chapter:trackersSocketed == true, chapter:regurgDone == true, chapter:finishedObservations == true
 $set chapter:day3AllComplete = true

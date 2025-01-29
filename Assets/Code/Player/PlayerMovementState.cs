@@ -28,11 +28,18 @@ namespace Pennycook {
         [NonSerialized] public TabletWarpPoint CurrentWarp;
         public Routine WarpRoutine;
 
-        public IEnumerator DoWarp(float fVis, float fTime) {
+        public IEnumerator DoWarp(float fVis, float fTime, bool FadeOut=true) {
             WarpFader.enabled = true;
+			if(!FadeOut) {
+				WarpFader.SetAlpha(1);
+			} else {
+				WarpFader.SetAlpha(0);
+			}
             yield return WarpFader.FadeTo(fVis, fTime);
-            yield return 0.1f;
-            WarpFader.enabled = false;
+            yield return fTime;
+			//if(!FadeOut) {
+				WarpFader.enabled = false;
+			//}
         }
 
         public IEnumerator DoWarpInOut(float fTime) {
@@ -195,7 +202,7 @@ namespace Pennycook {
             PlayerMovementState movementState = Find.State<PlayerMovementState>();
             if(movementState) {
                 if(!movementState.WarpFader.enabled) {
-                    movementState.WarpRoutine.Replace(movementState, movementState.DoWarp(1.0f, fTime));
+                    movementState.WarpRoutine.Replace(movementState, movementState.DoWarp(1.0f, fTime, false));
                 }
             }
         }
@@ -205,7 +212,7 @@ namespace Pennycook {
             PlayerMovementState movementState = Find.State<PlayerMovementState>();
             if(movementState) {
                 if(!movementState.WarpFader.enabled) {
-                    movementState.WarpRoutine.Replace(movementState, movementState.DoWarp(0.0f, fTime));
+                    movementState.WarpRoutine.Replace(movementState, movementState.DoWarp(0.0f, fTime, true));
                 }
             }
         }
