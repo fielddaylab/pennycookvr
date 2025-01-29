@@ -198,8 +198,19 @@ $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
 
+$call Screen->SetEnabled(true)
+$call Screen->SetTexture(0)
+
+$call Wait(2)
+
+$call Screen->SetTexture(1)
+
 {@Margo}    There are 25 penguins who have returned to the colony, most are adults, but a few are juveniles.    $[Day1/Tent/1tm16]
+
 {@Margo}    Penny counted the rest of the rookery, and in total there are 1527 returners!    $[Day1/Tent/1tm17]
+
+$call Screen->SetTexture(2)
+
 {@Margo}	Your cohort includes five penguins, two females and three males. Alfredo, Fuzz, Polo, Millie, and Winston.	$[Day1/Tent/1tm18]
 {@Margo}	Great first day, kiddo! Get some rest now, why don'tcha?  	$[Day1/Tent/Margo_16]
 {@Margo}	We'll get back at it bright and early tomorrow.  	$[Day1/Tent/1tm25]

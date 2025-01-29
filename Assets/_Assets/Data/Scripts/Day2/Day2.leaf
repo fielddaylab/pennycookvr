@@ -15,6 +15,7 @@ $call Sky2->Activate()
 $call Sky2->SetSkybox(0.008)
 $call Ocean->SetMaterial(1);
 $call Terrain->SetTerrainMaterial(1);
+$call Screen->SetEnabled(false)
 
 $call FadeIn(2.0)
 $call Wait(2)
@@ -129,8 +130,6 @@ $call CompleteGoal("id_millie")
 {@Partner}  Millie and . . . Billy? $[Day2/Rookery/2rp01]
 {@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Day2/Rookery/2rp02]
 
-$goto Day2.CheckAllMatesIdentified
-
 :: OnMeatballIdentified
 @trigger	TabletBehaviorInstanceCaptured
 @who        Player
@@ -146,8 +145,6 @@ $call CompleteGoal("id_alfredo")
 {@Player}   Okay, let’s see. Alfredo and…. um….how about . . . $[Day2/Rookery/Player_6]
 {@Player}    . . Meatball?  $[Day2/Rookery/Player_7]
 {@Player}   Now I’m getting hungry. Got any candy bars in that case?    $[Day2/Rookery/Player_8]
-
-$goto Day2.CheckAllMatesIdentified
 
 :: OnDaisyIdentified
 @trigger	TabletBehaviorInstanceCaptured
@@ -167,7 +164,6 @@ $call CompleteGoal("id_fuzz")
 {@Margo}    You’d be surprised, kid. Not all penguins make good parents.    $[Day2/Rookery/2rm10]
 {@Player}   We’ll just have to wait and see.    $[Day2/Rookery/Player_11]
 
-$goto Day2.CheckAllMatesIdentified
 
 :: OnWendyIdentified
 @trigger	TabletBehaviorInstanceCaptured
@@ -179,10 +175,9 @@ $goto Day2.CheckAllMatesIdentified
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_winston")
 
+
 {@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/2rm11]
 {@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day2/Rookery/2rm12]
-
-$goto Day2.CheckAllMatesIdentified
 
 :: OnBenniIdentified
 @trigger	TabletBehaviorInstanceCaptured
@@ -197,28 +192,17 @@ $call CompleteGoal("id_polo")
 {@Margo}   Ooh, Benni and Polo! What a good match.  $[Day2/Rookery/2rm13]
 {@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day2/Rookery/2rm14]
 
-$goto Day2.CheckAllMatesIdentified
-
 ::CheckAllComplete
 @trigger CheckAllComplete
+@who Player
 $if chapter:finishedObservations == true, chapter:finishedTrackers == true
-	{@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/2rm25]
-	{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/2rm26]
-	$call SetWarpActive(WarpBluffBack, true)
-	$set chapter:finishedAllObservations = true
-$endif
 
-:: CheckAllMatesIdentified
-@trigger    CheckAllMatesIdentified
-$if chapter:identifiedCount >= 5 
-    $set	chapter:finishedObservations = true
-	$call TriggerResponse(CheckAllComplete)
 $endif
 
 :: WarpedToRookeryGate2
 @trigger    AtWarpPoint
 @who        Player
-@when       targetObject == "WarpTarget-RookeryFar"
+@when       targetObject == "WarpTarget-RookeryFar", chapter:identifiedCount >= 5
 @interrupt
 @once
 
@@ -282,8 +266,10 @@ $set chapter:finishedTrackers = true
 
 $call Wait(0.3)
 {@Margo}  Nice work, kid! That’s all the GPS trackers.   $[Day2/Rookery/2rm24]
-
-$call TriggerResponse(CheckAllComplete)
+{@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/2rm25]
+{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/2rm26]
+$call SetWarpActive(WarpBluffBack, true)
+$set chapter:finishedAllObservations = true
 
 :: WarpedBackToTent2
 @trigger    AtWarpPoint
@@ -317,10 +303,33 @@ $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
 
+$call Screen->SetEnabled(true)
+$call Screen->SetTexture(0)
+
+$call Wait(2)
+
+$call Screen->SetTexture(3)
+
 {@Margo}    Looks like the population has increased as more penguins show up for mating season.    $[Day2/Tent/2tm10]
+
+$call Wait(1)
+
+$call Screen->SetTexture(4)
+
 {@Margo}    All five of your penguins have formed breeding pairs!    $[Day2/Tent/2tm11]
 {@Margo}    Most penguin parents lay two eggs each season . . . but not all of them end up hatching.    $[Day2/Tent/2tm12]
 {@Margo}    We'll have to wait and see what happens.    $[Day2/Tent/2tm13]
+
+$call Screen->SetTexture(5)
+
+{@Margo}	I combined GPS data from Penny along with data from your group and now we have a better picture for where the Adelie stay overwinter. $[Day2/Tent/2tm21]
+
+$call Wait(1)
+
+$call Screen->SetTexture(6)
+
+{@Margo}	Looks like they really like staying on the ice floes! Makes sense, that’s where the food is. $[Day2/Tent/2tm20]
+
 {@Margo}    Nice job, kid. Another excellent day's work.    $[Day2/Tent/2tm14]
 {@Margo}    And you've still got plenty of time for trick or treating!  $[Day2/Tent/2tm15]
 {@Margo}    There's a costume parade at McMurdo Station. I'm going as a vintage TV. Penny got me an antenna and everything! $[Day2/Tent/2tm16]

@@ -16,6 +16,7 @@ $call Sky3->Activate()
 $call Sky3->SetSkybox(0.003)
 $call Ocean->SetMaterial(2);
 $call Terrain->SetTerrainMaterial(2);
+$call Screen->SetEnabled(false)
 
 $call FadeIn(2.0)
 $call Wait(2)
@@ -337,12 +338,23 @@ $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
 
+$call Screen->SetEnabled(true)
+$call Screen->SetTexture(0)
+
+$call Wait(2)
+
 {@Margo}    You've got three successful breeding pairs. $[Day3/Tent/3tm6]
+
+$call Screen->SetTexture(7)
+
 {@Margo}    Millie and Billy, Alfredo and Meatball, and Winston and Wendy.  $[Day3/Tent/3tm7]
 {@Margo}    All the chicks seem to be doing well so far.    $[Day3/Tent/3tm8]
 {@Margo}    Fuzz and Daisy's egg isnt lookin' too good.     $[Day3/Tent/3tm9]
 {@Margo}    Fuzz hasn't figured out how to keep it warm... I've got a bad feelin' that we won't see their egg hatch.    $[Day3/Tent/3tm10]
 {@Margo}    Polo and Benni lost their chick.    $[Day3/Tent/3tm11]
+
+$call Screen->SetTexture(8)
+
 {@Margo}    All the parents are feedin' their little ones krill, which is what we'd expect to see this time of year.    $[Day3/Tent/3tm12]
 {@Margo}    A month from now, the chicks should be waddlin' around on their own...  $[Day3/Tent/3tm13]
 {@Margo}    Assuming the skua don't get to 'em first.   $[Day3/Tent/3tm14]
