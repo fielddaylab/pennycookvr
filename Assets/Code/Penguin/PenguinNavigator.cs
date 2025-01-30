@@ -70,7 +70,9 @@ namespace Pennycook {
             navigator.State = PenguinNavState.Searching;
             PenguinNav.CancelPath(ref navigator.CurrentPathRequest);
             PenguinNav.FreeNavPath(ref navigator.CurrentPath);
-            navigator.CurrentPathRequest = PenguinNav.RequestPath(navigator.MoveRoot.position, position, OnPathResponse, navigator);
+            if(navigator.MoveRoot != null) {
+                navigator.CurrentPathRequest = PenguinNav.RequestPath(navigator.MoveRoot.position, position, OnPathResponse, navigator);
+            }
         }
 
         /// <summary>

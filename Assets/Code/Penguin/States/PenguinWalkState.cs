@@ -19,7 +19,9 @@ namespace Pennycook {
 
         public override void OnEnter(Process p, ref PenguinWalkParams param) {
             PenguinBrain brain = Brain(p);
-            PenguinUtility.TryPathTo(brain.Navigator, param.Target);
+            if(brain.Navigator != null) {
+                PenguinUtility.TryPathTo(brain.Navigator, param.Target);
+            }
         }
 
         public override void OnExit(Process p) {
