@@ -16,14 +16,12 @@ $call Ocean->SetMaterial(2);
 $call Terrain->SetTerrainMaterial(2);
 $call Screen->SetEnabled(false)
 
-$call FadeIn(2.0)
-$call Wait(2)
-
 :: StartGame
 @trigger    SceneReady
 @who        Player
 @once
 
+$call FadeIn(2.0)
 $call Wait(2)
 
 $call Wendy->SetRegurgitation()
@@ -211,6 +209,8 @@ $endif
 @once
 @interrupt
 
+$call ExclaimRegurg->Activate()
+
 {@Margo}	We need to get some data on what the parents are feeding their young.	$[Day3/Rookery/3rm14]
 {@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/3rm15]
 
@@ -223,6 +223,8 @@ $endif
 @when	behaviorId == "day3_regurg"
 @once
 @interrupt
+
+$call ExclaimRegurg->Deactivate()
 
 $goto Day3.RegurgComplete
 
@@ -307,6 +309,7 @@ $endif
 @trigger    AtWarpPoint
 @who        Player
 @when       chapter:day3AllComplete, targetId == "WarpBluffBack"
+@interrupt
 @once
 
 $call Wait(1)
@@ -360,7 +363,7 @@ $call Screen->SetTexture(8)
 {@Margo}    Assuming the skua don't get to 'em first.   $[Day3/Tent/3tm14]
 {@Margo}    Nice work, kid. Another good day's work!    $[Day3/Tent/3tm15]
 
-$call FadeOut(1.0)
+$call FadeOut(2.0)
 $call Wait(2)
 
 $call LoadNextDay()

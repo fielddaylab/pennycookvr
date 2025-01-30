@@ -6,6 +6,7 @@ $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call ClearGoals()
 $set chapter:legCount = 0
+$set chapter:legTrackersStarted = false
 //$call DayHeader->SetText(Feb 22)
 
 $call DataLoggerPlate->Deactivate()
@@ -15,13 +16,13 @@ $call Sky5->SetSkybox(0.003)
 $call Ocean->SetMaterial(4);
 $call Terrain->SetTerrainMaterial(4);
 
-$call FadeIn(2.0)
-$call Wait(2)
-
 :: StartGame
 @trigger    SceneReady
 @who        Player
 @once
+
+$call FadeIn(2.0)
+$call Wait(2)
 
 $call SetWarpActive(WarpBluff, true)
 
@@ -78,16 +79,10 @@ $call LegTracker1->SetMeshEnabled(true)
 $call LegTracker2->SetMeshEnabled(true)
 $call LegTracker3->SetMeshEnabled(true)
 
+$set chapter:legTrackersStarted = true
+
 $call Wait(1)
 
-
-//$call LegTracker1->Activate()
-//$call LegTracker2->Activate()
-//$call LegTracker3->Activate()
-
-//$call SocketObjectTo(LegTracker1, CaseLegSocketRight)
-//$call SocketObjectTo(LegTracker2, CaseLegSocketMiddle)
-//$call SocketObjectTo(LegTracker3, CaseLegSocketLeft)
 
 {@Player}	Wow… it’s so quiet here.	$[Day5/Rookery/Player_1]
 {@Margo}	Looks like some of our Adelie colony has already headed out to sea.	$[Day5/Rookery/5rm01]
@@ -105,7 +100,7 @@ $call Wait(1)
 
 :: OnSocketedLegTracker
 @trigger ObjectSocketed
-@when   objectType == "LegTracker", socketType == "LegSocket"
+@when   objectType == "LegTracker", socketType == "LegSocket", chapter:legTrackersStarted == true
 $set chapter:legCount + 1
 
 $if chapter:legCount >= 3
@@ -114,12 +109,12 @@ $endif
 
 :: OnUnsocketedLegTracker
 @trigger ObjectUnsocketed
-@when   objectType == "LegTracker", socketType == "LegSocket"
+@when   objectType == "LegTracker", socketType == "LegSocket", chapter:legTrackersStarted == true
 $set chapter:legCount - 1
 
 :: OnSocketedLegTrackerPolo
 @trigger ObjectSocketed
-@when   objectType == "LegTracker", socketType == "LegSocketPolo"
+@when   objectType == "LegTracker", socketType == "LegSocketPolo", chapter:legTrackersStarted == true
 $set chapter:legCount + 1
 
 {@Player}	Ouch!	$[Day5/Rookery/Player_5]
@@ -131,7 +126,7 @@ $endif
 
 :: OnUnsocketedLegTrackerPolo
 @trigger ObjectUnsocketed
-@when   objectType == "LegTracker", socketType == "LegSocketPolo"
+@when   objectType == "LegTracker", socketType == "LegSocketPolo", chapter:legTrackersStarted == true
 $set chapter:legCount - 1
 
 :: LegTrackersComplete
@@ -179,3 +174,6 @@ $call PenguinCount->ActivateCount(12)
 {@Margo}	Besides, I’ve always loved watchin’ the sunset. It should be any day now.	$[Day5/Bluff/5bm09]
 {@Player}	Okay. See you next year, Margo.	$[Day5/Bluff/Player_4]
 {@Margo}	You too, kiddo.	$[Day5/Bluff/5bm10]
+
+$call FadeOut(4.0)
+$call Wait(4)

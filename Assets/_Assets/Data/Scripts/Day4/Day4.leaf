@@ -16,13 +16,14 @@ $call Ocean->SetMaterial(3);
 $call Terrain->SetTerrainMaterial(3);
 
 //$call DayHeader->SetText(Dec 18)
-$call FadeIn(2.0)
-$call Wait(2)
 
 :: StartGame
 @trigger    SceneReady
 @who        Player
 @once
+
+$call FadeIn(2.0)
+$call Wait(2)
 
 $call SetWarpActive(WarpBluff, true)
 
@@ -126,12 +127,6 @@ $call DataLoggerPlate->Activate()
 $call GPSSocketRight->ReleaseCurrentSocket()
 $call GPSSocketMiddle->ReleaseCurrentSocket()
 $call GPSSocketLeft->ReleaseCurrentSocket()
-
-$call SocketObjectTo(DataTrackerBack1, DataSocketBack1)
-$call SocketObjectTo(DataTrackerBack2, DataSocketBack2)
-$call SocketObjectTo(DataTrackerBack3, DataSocketBack3)
-$call SocketObjectTo(DataTrackerBack4, DataSocketBack4)
-$call SocketObjectTo(DataTrackerBack5, DataSocketBack5)
 
 $call DataTrackerBack1->SetMeshEnabled(true)
 $call DataTrackerBack2->SetMeshEnabled(true)
@@ -322,7 +317,7 @@ $endwhile
 {@Player}   Claro que si!   $[Day4/Tent/Player_13]
 {@Player}   Are you ready for the grand tour? I’ve got these five new friends I think you’re going to love. $[Day4/Tent/Player_14]
 
-//$call FadeOut(1.0)
+$call FadeOut(2.0)
 $call Wait(2)
 
 $call LoadNextDay()

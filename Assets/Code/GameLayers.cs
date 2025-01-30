@@ -75,6 +75,9 @@ static public class LayerMasks {
     // Layer 23: PenguinSensor
     public const int PenguinSensor_Index = 23;
     public const int PenguinSensor_Mask = 8388608;
+    // Layer 24: MargoOnly
+    public const int MargoOnly_Index = 23;
+    public const int MargoOnly_Mask = 16777216;
     // Layer 30: RestrictWalk
     public const int RestrictWalk_Index = 30;
     public const int RestrictWalk_Mask = 1073741824;

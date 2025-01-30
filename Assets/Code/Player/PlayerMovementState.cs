@@ -24,30 +24,23 @@ namespace Pennycook {
         [Header("Components")]
         public SpriteRenderer WarpFader;
 
+        public SpriteRenderer StartEndFader;
+
         [NonSerialized] public State CurrentState;
         [NonSerialized] public TabletWarpPoint CurrentWarp;
         public Routine WarpRoutine;
+		public Routine StartEndRoutine;
 
         public IEnumerator DoWarp(float fVis, float fTime, bool FadeOut=true) {
-            WarpFader.enabled = true;
+            //StartEndFader.enabled = true;
 			if(!FadeOut) {
-				WarpFader.SetAlpha(1);
+				StartEndFader.SetAlpha(1);
 			} else {
-				WarpFader.SetAlpha(0);
+				StartEndFader.SetAlpha(0);
 			}
-            yield return WarpFader.FadeTo(fVis, fTime);
+            yield return StartEndFader.FadeTo(fVis, fTime);
             yield return fTime;
-			//if(!FadeOut) {
-				WarpFader.enabled = false;
-			//}
-        }
-
-        public IEnumerator DoWarpInOut(float fTime) {
-            WarpFader.enabled = true;
-            yield return WarpFader.FadeTo(1.0f, fTime);
-            yield return 0.1f;
-            yield return WarpFader.FadeTo(0.0f, fTime);
-            WarpFader.enabled = false;
+			//StartEndFader.enabled = false;
         }
     }
 
@@ -201,9 +194,8 @@ namespace Pennycook {
         static private void FadeOut(float fTime) {
             PlayerMovementState movementState = Find.State<PlayerMovementState>();
             if(movementState) {
-                if(!movementState.WarpFader.enabled) {
-                    movementState.WarpRoutine.Replace(movementState, movementState.DoWarp(1.0f, fTime, false));
-                }
+				Debug.Log("Fading out: " + fTime);
+				movementState.StartEndRoutine.Replace(movementState, movementState.DoWarp(1.0f, fTime, false));
             }
         }
 
@@ -211,21 +203,10 @@ namespace Pennycook {
         static private void FadeIn(float fTime) {
             PlayerMovementState movementState = Find.State<PlayerMovementState>();
             if(movementState) {
-                if(!movementState.WarpFader.enabled) {
-                    movementState.WarpRoutine.Replace(movementState, movementState.DoWarp(0.0f, fTime, true));
-                }
+				Debug.Log("Fading in: " + fTime);
+				movementState.StartEndRoutine.Replace(movementState, movementState.DoWarp(0.0f, fTime, true));
+			
             }
         }
-
-        [LeafMember("FadeOutIn")]
-        static private void FadeOutIn(float fTime) {
-            PlayerMovementState movementState = Find.State<PlayerMovementState>();
-            if(movementState) {
-                if(!movementState.WarpFader.enabled) {
-                    movementState.WarpRoutine.Replace(movementState, movementState.DoWarpInOut(fTime));
-                }
-            }
-        }
-
     }
 }

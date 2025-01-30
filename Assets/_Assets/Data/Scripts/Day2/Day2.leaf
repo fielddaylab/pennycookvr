@@ -23,8 +23,8 @@ $call Screen->SetEnabled(false)
 @who        Player
 @once
 
-$call FadeIn(5.0)
-$call Wait(5)
+$call FadeIn(2.0)
+$call Wait(2)
 
 $call SetWarpActive(WarpBluff, true)
 
@@ -110,6 +110,12 @@ $call Billy->SetIdentified(false)
 $call Benni->SetIdentified(false)
 $call Wendy->SetIdentified(false)
 
+$call ExclaimPolo->Activate()
+$call ExclaimMillie->Activate()
+$call ExclaimFuzz->Activate()
+$call ExclaimWinston->Activate()
+$call ExclaimAlfredo->Activate()
+
 {@Margo}   Okey dokey. Time to track down the Funtastic Five $[Day2/Rookery/2rm01]
 {@Player}  The Fliptastic Five. $[Day2/Rookery/Player_1]
 {@Margo}    And get an ID on their mates. $[Day2/Rookery/2rm02]
@@ -126,6 +132,7 @@ $call Wendy->SetIdentified(false)
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_millie")
+$call ExclaimMillie->Deactivate()
 
 {@Player}   Looks like Millie paired up with her same mate from last year!  $[Day2/Rookery/Player_4]
 {@Partner}  Millie and . . . Billy? $[Day2/Rookery/2rp01]
@@ -140,6 +147,7 @@ $call CompleteGoal("id_millie")
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_alfredo")
+$call ExclaimAlfredo->Deactivate()
 
 {@Margo}    Hmmm. Alfredo’s mate doesn’t have a tag. Looks like a newbie.   $[Day2/Rookery/2rm04]
 {@Margo}    Why don’t you go ahead and name him?    $[Day2/Rookery/2rm05]
@@ -156,6 +164,7 @@ $call CompleteGoal("id_alfredo")
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_fuzz")
+$call ExclaimFuzz->Deactivate()
 
 {@Margo}    Hmm. Fuzz and Daisy. Interesting.   $[Day2/Rookery/2rm07]
 {@Player}   What's interesting?  $[Day2/Rookery/Player_9]
@@ -175,7 +184,7 @@ $call CompleteGoal("id_fuzz")
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_winston")
-
+$call ExclaimWinston->Deactivate()
 
 {@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/2rm11]
 {@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day2/Rookery/2rm12]
@@ -189,6 +198,7 @@ $call CompleteGoal("id_winston")
 
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_polo")
+$call ExclaimPolo->Deactivate()
 
 {@Margo}   Ooh, Benni and Polo! What a good match.  $[Day2/Rookery/2rm13]
 {@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day2/Rookery/2rm14]
@@ -215,22 +225,13 @@ $call CaseLegSocketMiddle->ReleaseCurrentSocket()
 
 $call Wait(2)
 
-$call FuzzLegTracker->Activate()
-$call AlfredoLegTracker->Activate()
-$call WinstonLegTracker->Activate()
-$call MillieLegTracker->Activate()
-$call PoloLegTracker->Activate()
-$call AdelieLegTracker1->Activate()
-$call AdelieLegTracker2->Activate()
-
-//show the trackers visible on several penguins...
-$call SocketObjectTo(FuzzLegTracker, FuzzLegSocket)
-$call SocketObjectTo(AlfredoLegTracker, AlfredoLegSocket)
-$call SocketObjectTo(WinstonLegTracker, WinstonLegSocket)
-$call SocketObjectTo(MillieLegTracker, MillieLegSocket)
-$call SocketObjectTo(PoloLegTracker, PoloLegSocket)
-$call SocketObjectTo(AdelieLegTracker1, AdelieLegSocket1)
-$call SocketObjectTo(AdelieLegTracker2, AdelieLegSocket2)
+$call FuzzLegTracker->SetMeshEnabled(true)
+$call AlfredoLegTracker->SetMeshEnabled(true)
+$call WinstonLegTracker->SetMeshEnabled(true)
+$call MillieLegTracker->SetMeshEnabled(true)
+$call PoloLegTracker->SetMeshEnabled(true)
+$call AdelieLegTracker1->SetMeshEnabled(true)
+$call AdelieLegTracker2->SetMeshEnabled(true)
 
 $set chapter:trackersStarted = true
 
@@ -351,7 +352,7 @@ $call Screen->SetTexture(6)
 {@Margo}    Yeah, ya got that right.    $[Day2/Tent/2tm18]
 {@Margo}    You better stock up on more candy... I don't think you'll be gettin' much sleep tonight.    $[Day2/Tent/2tm19]
 
-$call FadeOut(1.0)
+$call FadeOut(2.0)
 $call Wait(2)
 
 $call LoadNextDay()

@@ -11,9 +11,8 @@ $call Sky1->Activate()
 @who        Player
 @once
 
-$call FadeIn(5.0)
-
-$call Wait(5)
+$call FadeIn(2.0)
+$call Wait(2)
 
 $call SetWarpActive(WarpBluff, true)
 
@@ -222,7 +221,7 @@ $call Screen->SetTexture(2)
 {@Margo}	Yep. Pro tip: invest in a good sleep mask.   	$[Day1/Tent/1tm26]
 {@Margo}	See ya tomorrow, kid!   	$[Day1/Tent/1tm27]
 
-$call FadeOut(1.0)
+$call FadeOut(2.0)
 $call Wait(2)
 
 $call LoadNextDay()

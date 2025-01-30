@@ -23,6 +23,7 @@ namespace FieldDay.VRHands {
 
         [NonSerialized] private Grabbable GrabbableComponent;
 		[NonSerialized] private MeshRenderer CachedMR;
+		[NonSerialized] private Socketable CachedSocketable;
 		
         private Routine ReturnProcess;
 
@@ -30,6 +31,7 @@ namespace FieldDay.VRHands {
             this.CacheComponent(ref CachedRB);
             this.CacheComponent(ref GrabbableComponent);
 			this.CacheComponent(ref CachedMR);
+			this.CacheComponent(ref CachedSocketable);
 			
             OriginalPosition = transform.position;
             OriginalRotation = transform.rotation;
@@ -44,10 +46,14 @@ namespace FieldDay.VRHands {
                 if (!ReturnProcess.Exists()) {
 					if(CachedMR != null) {
 						if(CachedMR.enabled) {
-							ReturnProcess = Routine.Start(this, ReturnToStart());
+							if(CachedSocketable == null || (CachedSocketable.CurrentSocket == null)) {
+								ReturnProcess = Routine.Start(this, ReturnToStart());
+							}
 						}
 					} else {
-						ReturnProcess = Routine.Start(this, ReturnToStart());
+						if(CachedSocketable == null || (CachedSocketable.CurrentSocket == null)) {
+							ReturnProcess = Routine.Start(this, ReturnToStart());
+						}
 					}
 				}
 			}
