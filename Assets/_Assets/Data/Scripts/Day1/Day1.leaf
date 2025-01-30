@@ -11,6 +11,12 @@ $call Sky1->Activate()
 @who        Player
 @once
 
+$call RedAdelie->SetInteractable(false)
+$call GreenAdelie->SetInteractable(false)
+$call BlueAdelie->SetInteractable(false)
+$call PurpleAdelie->SetInteractable(false)
+$call YellowAdelie->SetInteractable(false)
+
 $call FadeIn(2.0)
 $call Wait(2)
 
@@ -99,6 +105,12 @@ $call SetWarpGroupActive(Rookery, true)
 //$call Billy->SetInteractable(false)
 //$call Benni->SetInteractable(false)
 //$call Wendy->SetInteractable(false)
+
+$call RedAdelie->SetInteractable(true)
+$call GreenAdelie->SetInteractable(true)
+$call BlueAdelie->SetInteractable(true)
+$call PurpleAdelie->SetInteractable(true)
+$call YellowAdelie->SetInteractable(true)
 
 {@Player}	Hah! I can't wait to meet them. I wish Lola was here to see this.	$[Day1/Rookery/1rs01]
 {@Margo}	Who's that now?	$[Day1/Rookery/1rm01]
