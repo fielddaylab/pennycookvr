@@ -70,14 +70,18 @@ namespace Pennycook {
             }
             yield return 0.1f;
             SetCurrentWarp(state, warpPoint);
+            TriggerWarpPoint(warpPoint);
+            yield return state.WarpFader.FadeTo(0, 0.4f);
+            state.WarpFader.enabled = false;
+            state.CurrentState = PlayerMovementState.State.Default;
+        }
+
+        static public void TriggerWarpPoint(TabletWarpPoint warpPoint) {
             using (var t = TempVarTable.Alloc()) {
                 t.Set("targetId", ScriptUtility.ActorId(warpPoint));
                 t.Set("targetObject", warpPoint.name);
                 ScriptUtility.Trigger(GameTriggers.AtWarpPoint, t);
             }
-            yield return state.WarpFader.FadeTo(0, 0.4f);
-            state.WarpFader.enabled = false;
-            state.CurrentState = PlayerMovementState.State.Default;
         }
 
         static private void InstantWarp(PlayerMovementState state, TabletWarpPoint warpPoint, bool rotate, bool sendTriggers) {
@@ -99,11 +103,7 @@ namespace Pennycook {
             }
 
             if (sendTriggers) {
-                using (var t = TempVarTable.Alloc()) {
-                    t.Set("targetId", ScriptUtility.ActorId(warpPoint));
-                    t.Set("targetObject", warpPoint.name);
-                    ScriptUtility.Trigger(GameTriggers.AtWarpPoint, t);
-                }
+                TriggerWarpPoint(warpPoint);
             }
         }
 
@@ -139,8 +139,6 @@ namespace Pennycook {
                 foreach(var affected in affectedPoints) {
                     TabletWarpUtility.UpdateWarpActivation(affected);
                 }
-
-                
             }
 
             TabletUtility.LoadGoals(warpPoint.Group);

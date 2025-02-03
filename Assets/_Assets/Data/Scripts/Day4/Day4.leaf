@@ -69,6 +69,10 @@ $call SetWarpGroupActive(Rookery, true)
 
 $call Wait(1)
 
+$call ExclaimCorral->Activate()
+$call ExclaimWeighGate->Activate()
+$call ExclaimBackTrackers->Activate()
+
 $call SetWarpGroupActive(Rookery, true)
 
 {@Player}   Whoa… look at them! I keep forgetting how funny the chicks look these days. $[Day4/Rookery/Player_1]
@@ -93,6 +97,8 @@ $call SetWarpGroupActive(Rookery, true)
 @when       targetObject == "WarpTarget-RookeryFar"
 @once
 @interrupt
+
+$call ExclaimWeighGate->Deactivate()
 
 $call WeighGate->SetInteractable(true)
 
@@ -120,6 +126,8 @@ $goto Day4.CheckCompletedTasks
 @when       targetObject == "WarpTarget-RookeryMiddle"
 @interrupt
 @once
+
+$call ExclaimBackTrackers->Deactivate()
 
 $call ChickBandPlate->Deactivate()
 $call DataLoggerPlate->Activate()
@@ -175,6 +183,8 @@ $endif
 @when       targetObject == "WarpTarget-RookeryCorral"
 @interrupt
 @once
+
+$call ExclaimCorral->Deactivate()
 
 $call DataLoggerPlate->Deactivate()
 $call ChickBandPlate->Activate()

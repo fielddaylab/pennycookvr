@@ -134,6 +134,10 @@ $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_millie")
 $call ExclaimMillie->Deactivate()
 
+$if chapter:identifiedCount >= 5
+$call ExclaimLegTrackers->Activate()
+$endif
+
 {@Player}   Looks like Millie paired up with her same mate from last year!  $[Day2/Rookery/Player_4]
 {@Partner}  Millie and . . . Billy? $[Day2/Rookery/2rp01]
 {@Partner}  Hey, you try coming up with names for hundreds of penguins each year. You run out of ideas real quick.  $[Day2/Rookery/2rp02]
@@ -148,6 +152,10 @@ $call ExclaimMillie->Deactivate()
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_alfredo")
 $call ExclaimAlfredo->Deactivate()
+
+$if chapter:identifiedCount >= 5
+$call ExclaimLegTrackers->Activate()
+$endif
 
 {@Margo}    Hmmm. Alfredo’s mate doesn’t have a tag. Looks like a newbie.   $[Day2/Rookery/2rm04]
 {@Margo}    Why don’t you go ahead and name him?    $[Day2/Rookery/2rm05]
@@ -165,6 +173,10 @@ $call ExclaimAlfredo->Deactivate()
 $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_fuzz")
 $call ExclaimFuzz->Deactivate()
+
+$if chapter:identifiedCount >= 5
+$call ExclaimLegTrackers->Activate()
+$endif
 
 {@Margo}    Hmm. Fuzz and Daisy. Interesting.   $[Day2/Rookery/2rm07]
 {@Player}   What's interesting?  $[Day2/Rookery/Player_9]
@@ -186,6 +198,10 @@ $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_winston")
 $call ExclaimWinston->Deactivate()
 
+$if chapter:identifiedCount >= 5
+$call ExclaimLegTrackers->Activate()
+$endif
+
 {@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/2rm11]
 {@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day2/Rookery/2rm12]
 
@@ -200,15 +216,13 @@ $set	chapter:identifiedCount + 1
 $call CompleteGoal("id_polo")
 $call ExclaimPolo->Deactivate()
 
+$if chapter:identifiedCount >= 5
+$call ExclaimLegTrackers->Activate()
+$endif
+
 {@Margo}   Ooh, Benni and Polo! What a good match.  $[Day2/Rookery/2rm13]
 {@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day2/Rookery/2rm14]
 
-::CheckAllComplete
-@trigger CheckAllComplete
-@who Player
-$if chapter:finishedObservations == true, chapter:finishedTrackers == true
-
-$endif
 
 :: WarpedToRookeryGate2
 @trigger    AtWarpPoint
@@ -216,6 +230,8 @@ $endif
 @when       targetObject == "WarpTarget-RookeryFar", chapter:identifiedCount >= 5
 @interrupt
 @once
+
+$call ExclaimLegTrackers->Deactivate()
 
 $call GPSTrackerPlate->Activate()
 

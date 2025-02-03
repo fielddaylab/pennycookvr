@@ -22,6 +22,7 @@ namespace Pennycook {
                 TabletWarpPoint warpPoint = s_ColliderWorkList[0].GetComponentInParent<TabletWarpPoint>();
                 if (warpPoint) {
                     PlayerMovementUtility.SetCurrentWarp(m_StateB, warpPoint);
+                    PlayerMovementUtility.TriggerWarpPoint(warpPoint);
                 }
                 Array.Clear(s_ColliderWorkList, 0, collided);
             } 
