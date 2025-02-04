@@ -35,7 +35,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ReferenceClip: {fileID: 7284266810856586860, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
-  m_FrameCount: 45
+  m_FrameCount: 40
   FrameRange:
     Offset: 8
     Length: 22
@@ -91,11 +91,11 @@ AnimatorStateMachine:
   - {fileID: -3608233297873307340}
   m_EntryTransitions: []
   m_StateMachineTransitions:
+  - first: {fileID: -2569485507452647956}
+    second: []
   - first: {fileID: -4785076514993114654}
     second:
     - {fileID: -3759616206171470863}
-  - first: {fileID: -2569485507452647956}
-    second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: -170, y: 140, z: 0}
   m_EntryPosition: {x: 30, y: 300, z: 0}
@@ -856,7 +856,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ReferenceClip: {fileID: 7995497573791248911, guid: 66c90614ba79edd47b082c9d000b85b6, type: 3}
-  m_FrameCount: 45
+  m_FrameCount: 40
   FrameRange:
     Offset: 8
     Length: 22
@@ -944,8 +944,14 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: Regurgitate
-    m_Type: 9
+  - m_Name: Beg
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: Feed
+    m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
