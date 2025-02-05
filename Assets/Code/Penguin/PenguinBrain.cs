@@ -72,7 +72,9 @@ namespace Pennycook {
                 case PenguinType.Adult:
                 case PenguinType.Banded:
                 case PenguinType.Subadult:
-                    StartMainProcess(PenguinSchedules.Wander);
+                    if(Nest != null) {
+                        StartMainProcess(PenguinSchedules.Wander);
+                    }
                     break;
 
                 case PenguinType.Chick:

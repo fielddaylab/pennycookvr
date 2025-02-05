@@ -140,12 +140,12 @@ namespace Pennycook.Tablet {
         }
 
         static private bool DetermineGoodFraming(Rect rect, TabletHighlightState highlightState, TabletCapturable capturable) {
-            if (rect.width < 0.2f || rect.height < 0.2f) {
+            if (rect.width < 0.1f || rect.height < 0.1f) {
                 Log.Msg("Subject width/height too small");
                 return false;
             }
 
-            if ((rect.width * rect.height) < (0.25f * 0.25f)) {
+            if ((rect.width * rect.height) < (0.125f * 0.125f)) {
                 Log.Msg("Subject area too small");
                 return false;
             }

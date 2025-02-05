@@ -11,7 +11,12 @@ namespace Pennycook {
                 PenguinUtility.StopPathing(brain.Navigator);
                 if (brain.Animator) {
                     brain.Animator.Animator.SetBool("Waddle", false);
-                    brain.Animator.Animator.SetBool("Dance", true);
+                    if(brain.Relationships.IsPursued) {
+                        brain.Animator.Animator.SetBool("Bop2", true);
+                    } else {
+                        brain.Animator.Animator.SetBool("Bop1", true);
+                        //brain.Animator.Animator.SetBool("Dance", true);
+                    }
                 }
             } else if (signalId == PenguinUtility.Signals.PathNotFound) {
                 p.TransitionToDefault();
@@ -25,12 +30,24 @@ namespace Pennycook {
             } else if(signalId == PenguinUtility.Signals.Dancing) {
                 PenguinBrain brain = Brain(p);
                 if (brain.Animator) {
-                    brain.Animator.Animator.SetBool("Dance", true);
+                    //brain.Animator.Animator.SetBool("Dance", true);
+                    if(brain.Relationships.IsPursued) {
+                        brain.Animator.Animator.SetBool("Bop2", true);
+                    } else {
+                        brain.Animator.Animator.SetBool("Bop1", true);
+                        //brain.Animator.Animator.SetBool("Dance", true);
+                    }
                 }
             } else if(signalId == PenguinUtility.Signals.DanceComplete) {
                 PenguinBrain brain = Brain(p);
                 if (brain.Animator) {
-                    brain.Animator.Animator.SetBool("Dance", false);
+                    //brain.Animator.Animator.SetBool("Dance", false);
+                    if(brain.Relationships.IsPursued) {
+                        brain.Animator.Animator.SetBool("Bop2", false);
+                    } else {
+                        brain.Animator.Animator.SetBool("Bop1", false);
+                        //brain.Animator.Animator.SetBool("Dance", true);
+                    }
                 }
                 p.TransitionToDefault();
             }
@@ -48,7 +65,13 @@ namespace Pennycook {
         public override void OnExit(Process p) {
             PenguinBrain brain = Brain(p);
             if (brain.Animator) {
-                brain.Animator.Animator.SetBool("Dance", false);
+                //brain.Animator.Animator.SetBool("Dance", false);
+                if(brain.Relationships.IsPursued) {
+                    brain.Animator.Animator.SetBool("Bop2", false);
+                } else {
+                    brain.Animator.Animator.SetBool("Bop1", false);
+                    //brain.Animator.Animator.SetBool("Dance", true);
+                }
             }
             PenguinUtility.StopPathing(brain.Navigator);
         }
