@@ -235,6 +235,10 @@ $call ExclaimLegTrackers->Deactivate()
 
 $call GPSTrackerPlate->Activate()
 
+$call LegTrackerHighlight1->Activate()
+$call LegTrackerHighlight2->Activate()
+$call LegTrackerHighlight3->Activate()
+
 $call CaseLegSocketRight->ReleaseCurrentSocket()
 $call CaseLegSocketLeft->ReleaseCurrentSocket()
 $call CaseLegSocketMiddle->ReleaseCurrentSocket()
@@ -273,6 +277,18 @@ $set chapter:trackersStarted = true
 @when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount + 1
 
+$if socketId == "LegTracker1"
+	$call LegTrackerHighlight1->Deactivate() 
+$endif
+
+$if socketId == "LegTracker2"
+	$call LegTrackerHighlight2->Deactivate() 
+$endif
+
+$if socketId == "LegTracker3"
+	$call LegTrackerHighlight3->Deactivate() 
+$endif
+
 $if chapter:removedCount >= 3
 	$call TriggerResponse(TrackersCompleted)
 $endif
@@ -281,6 +297,18 @@ $endif
 @trigger	ObjectUnsocketed
 @when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount - 1
+
+$if socketId == "LegTracker1"
+	$call LegTrackerHighlight1->Activate() 
+$endif
+
+$if socketId == "LegTracker2"
+	$call LegTrackerHighlight2->Activate() 
+$endif
+
+$if socketId == "LegTracker3"
+	$call LegTrackerHighlight3->Activate() 
+$endif
 
 :: TrackersCompleted
 @trigger	TrackersCompleted
