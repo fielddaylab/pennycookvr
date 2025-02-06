@@ -15,6 +15,8 @@ namespace Pennycook {
         static public readonly StringHash32 SceneReady = "SceneReady";
         static public readonly StringHash32 ScenePrepare = "ScenePrepare";
 
+        static public readonly StringHash32 SceneUnload = "SceneUnload";
+
         static public readonly StringHash32 AtWarpPoint = "AtWarpPoint";
         static public readonly StringHash32 PlayerLookAtObject = "PlayerLookAt";
 

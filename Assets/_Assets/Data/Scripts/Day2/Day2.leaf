@@ -277,15 +277,15 @@ $set chapter:trackersStarted = true
 @when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount + 1
 
-$if socketId == "LegTracker1"
+$if socketId == "CaseLegSocketRight"
 	$call LegTrackerHighlight1->Deactivate() 
 $endif
 
-$if socketId == "LegTracker2"
+$if socketId == "CaseLegSocketMiddle"
 	$call LegTrackerHighlight2->Deactivate() 
 $endif
 
-$if socketId == "LegTracker3"
+$if socketId == "CaseLegSocketLeft"
 	$call LegTrackerHighlight3->Deactivate() 
 $endif
 
@@ -298,15 +298,15 @@ $endif
 @when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount - 1
 
-$if socketId == "LegTracker1"
+$if socketId == "CaseLegSocketRight"
 	$call LegTrackerHighlight1->Activate() 
 $endif
 
-$if socketId == "LegTracker2"
+$if socketId == "CaseLegSocketMiddle"
 	$call LegTrackerHighlight2->Activate() 
 $endif
 
-$if socketId == "LegTracker3"
+$if socketId == "CaseLegSocketLeft"
 	$call LegTrackerHighlight3->Activate() 
 $endif
 

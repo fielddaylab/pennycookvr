@@ -95,6 +95,10 @@ namespace FieldDay.Sockets {
             socket.OnAdded.Invoke(socketable);
             OnObjectAddedToSocket.Invoke(socketable, socket);
 
+            if(socket.HighlightPair) {
+                socket.HighlightPair.SetActive(false);
+            }
+
             return true;
         }
 
@@ -176,6 +180,10 @@ namespace FieldDay.Sockets {
             cachedCurrent.OnRemovedFromSocket.Invoke(socket);
             socket.OnRemoved.Invoke(cachedCurrent);
             OnObjectRemovedFromSocket.Invoke(cachedCurrent, socket);
+
+            if(socket.HighlightPair) {
+                socket.HighlightPair.SetActive(true);
+            }
         }
 
         #endregion // Release

@@ -9,7 +9,6 @@ $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 //$call DayHeader->SetText(Dec 1)
-$call Clouds->Activate()
 $call Sky3->Activate()
 $call Sky3->SetSkybox(0.003)
 $call Ocean->SetMaterial(2);
@@ -273,6 +272,8 @@ $call DataTracker1->SetMeshEnabled(true)
 $call DataTracker2->SetMeshEnabled(true)
 $call DataTracker3->SetMeshEnabled(true)
 
+$call TurnOnSockets(DataSocketPenguin, true)
+
 $set chapter:dataTrackersStarted = true
 
 {@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/3rm18]
@@ -293,6 +294,7 @@ $if chapter:trackerSocketedCount == 1
 $elseif chapter:trackerSocketedCount >= 3
 $set chapter:trackersSocketed = true
 {@Margo}	Great job. That should get us plenty of data.	$[Day3/Rookery/3rm23]
+$call TurnOnSockets(DataSocketPenguin, false)
 $goto Day3.CheckAllComplete
 $endif
 

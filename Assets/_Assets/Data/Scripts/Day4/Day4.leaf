@@ -16,6 +16,7 @@ $call Ocean->SetMaterial(3);
 $call Terrain->SetTerrainMaterial(3);
 
 //$call DayHeader->SetText(Dec 18)
+//$call TurnOnSockets(BandSocketChick, true)
 
 :: StartGame
 @trigger    SceneReady
@@ -132,6 +133,10 @@ $call ExclaimBackTrackers->Deactivate()
 $call ChickBandPlate->Deactivate()
 $call DataLoggerPlate->Activate()
 
+$call DataTrackerHighlight1->Activate()
+$call DataTrackerHighlight2->Activate()
+$call DataTrackerHighlight3->Activate()
+
 $call GPSSocketRight->ReleaseCurrentSocket()
 $call GPSSocketMiddle->ReleaseCurrentSocket()
 $call GPSSocketLeft->ReleaseCurrentSocket()
@@ -156,6 +161,17 @@ $set chapter:trackerStarted = true
 
 $if chapter:trackerStarted == true
 $set chapter:dataCount + 1
+$if socketId == "GPSSocketRight"
+	$call DataTrackerHighlight1->Deactivate() 
+$endif
+
+$if socketId == "GPSSocketMiddle"
+	$call DataTrackerHighlight2->Deactivate() 
+$endif
+
+$if socketId == "GPSSocketLeft"
+	$call DataTrackerHighlight3->Deactivate() 
+$endif
 $goto Day4.CheckDataCount
 $endif
 
@@ -166,6 +182,17 @@ $endif
 
 $if chapter:trackerStarted == true
 $set chapter:dataCount - 1
+$if socketId == "GPSSocketRight"
+	$call DataTrackerHighlight1->Activate() 
+$endif
+
+$if socketId == "GPSSocketMiddle"
+	$call DataTrackerHighlight2->Activate() 
+$endif
+
+$if socketId == "GPSSocketLeft"
+	$call DataTrackerHighlight3->Activate() 
+$endif
 $endif
 
 :: CheckDataCount
@@ -192,6 +219,8 @@ $call ChickBandPlate->Activate()
 $call WingBand1->SetMeshEnabled(true)
 $call WingBand2->SetMeshEnabled(true)
 $call WingBand3->SetMeshEnabled(true)
+
+$call TurnOnSockets(BandSocketChick, true)
 
 $set chapter:wingStarted = true
 $set chapter:wingCount = 0
@@ -235,6 +264,7 @@ $elseif chapter:wingCount == 2
 {@Player}   Okay, okay . . . maybe a little sweat.  $[Day4/Rookery/Player_17]
 $elseif chapter:wingCount == 3
 $set chapter:finishedBands = true
+$call TurnOnSockets(BandSocketChick, false)
 {@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/4rm22]
 {@Partner}  Nice work, new kid. $[Day4/Rookery/4rp05]
 {@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/4rp06]

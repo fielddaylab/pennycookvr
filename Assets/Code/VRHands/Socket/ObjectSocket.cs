@@ -25,6 +25,8 @@ namespace FieldDay.Sockets {
         [Required] public Transform Location;
         [Required] public TriggerListener Detector;
 
+        public GameObject HighlightPair;
+
         #endregion // Inspector
 
         [NonSerialized] public FixedJoint CurrentJoint;

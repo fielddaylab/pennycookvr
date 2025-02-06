@@ -29,6 +29,11 @@ namespace Pennycook {
                 ScriptUtility.Invoke(GameTriggers.ScenePrepare);
             });
 
+            Game.Scenes.OnMainSceneUnloading.Register(() => {
+                //ScriptUtility.Trigger(GameTriggers.SceneUnload);
+                Pennycook.ScriptSocket.LeafClearHighlightSockets();
+            });
+
             Find.State<PlayerProgressState>().Mode = UniverseUtility.GetModeForCurrentScene();
 
             GameLoop.OnShutdown.Register(() => {
