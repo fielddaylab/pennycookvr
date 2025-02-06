@@ -39,7 +39,7 @@ namespace Pennycook {
 				StartEndFader.SetAlpha(0);
 			}
             yield return StartEndFader.FadeTo(fVis, fTime);
-            yield return fTime;
+            //yield return fTime;
 			//StartEndFader.enabled = false;
         }
     }
@@ -192,7 +192,7 @@ namespace Pennycook {
         static private void FadeOut(float fTime) {
             PlayerMovementState movementState = Find.State<PlayerMovementState>();
             if(movementState) {
-				Debug.Log("Fading out: " + fTime);
+				//Debug.Log("Fading out: " + fTime);
 				movementState.StartEndRoutine.Replace(movementState, movementState.DoWarp(1.0f, fTime, false));
             }
         }
@@ -201,7 +201,7 @@ namespace Pennycook {
         static private void FadeIn(float fTime) {
             PlayerMovementState movementState = Find.State<PlayerMovementState>();
             if(movementState) {
-				Debug.Log("Fading in: " + fTime);
+				//Debug.Log("Fading in: " + fTime);
 				movementState.StartEndRoutine.Replace(movementState, movementState.DoWarp(0.0f, fTime, true));
 			
             }

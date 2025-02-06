@@ -9,6 +9,7 @@ namespace FieldDay.Sockets {
     [RequireComponent(typeof(Rigidbody))]
     public class Socketable : BatchedComponent {
         public bool SocketEnabled = true;
+        public bool DeParent = false;
 
         [NonSerialized] public Transform CachedTransform;
         [NonSerialized] public Rigidbody CachedRB;
@@ -157,7 +158,11 @@ namespace FieldDay.Sockets {
 
             switch (socket.Mode) {
                 case SocketMode.Reparent: {
-                    cachedCurrent.CachedTransform.SetParent(socket.Current.OriginalParent, true);
+                    if(!cachedCurrent.DeParent) {
+                        cachedCurrent.CachedTransform.SetParent(socket.Current.OriginalParent, true);
+                    } else {
+                        cachedCurrent.CachedTransform.SetParent(null);
+                    }
 
                     if (cachedCurrent.TryGetComponent(out Grabbable grabbable)) {
                         cachedCurrent.CachedRB.isKinematic = grabbable.DefaultRBKinematic;

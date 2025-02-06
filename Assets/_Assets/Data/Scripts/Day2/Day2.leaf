@@ -264,7 +264,7 @@ $set chapter:trackersStarted = true
 {@Margo}    These little sweeties might look harmless, but they'll nip ya when they feel threatened.    $[Day2/Rookery/2rm20]
 {@Margo}    And they've got a mean bite.    $[Day2/Rookery/2rm21]
 
-::OnFuzzTrackerRemoved
+:: OnFuzzTrackerRemoved
 @trigger TrackerRemoved
 @when   objectId == "FuzzLegTracker"
 @interrupt
@@ -277,18 +277,6 @@ $set chapter:trackersStarted = true
 @when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount + 1
 
-$if socketId == "CaseLegSocketRight"
-	$call LegTrackerHighlight1->Deactivate() 
-$endif
-
-$if socketId == "CaseLegSocketMiddle"
-	$call LegTrackerHighlight2->Deactivate() 
-$endif
-
-$if socketId == "CaseLegSocketLeft"
-	$call LegTrackerHighlight3->Deactivate() 
-$endif
-
 $if chapter:removedCount >= 3
 	$call TriggerResponse(TrackersCompleted)
 $endif
@@ -297,18 +285,6 @@ $endif
 @trigger	ObjectUnsocketed
 @when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount - 1
-
-$if socketId == "CaseLegSocketRight"
-	$call LegTrackerHighlight1->Activate() 
-$endif
-
-$if socketId == "CaseLegSocketMiddle"
-	$call LegTrackerHighlight2->Activate() 
-$endif
-
-$if socketId == "CaseLegSocketLeft"
-	$call LegTrackerHighlight3->Activate() 
-$endif
 
 :: TrackersCompleted
 @trigger	TrackersCompleted

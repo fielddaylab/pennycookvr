@@ -161,17 +161,6 @@ $set chapter:trackerStarted = true
 
 $if chapter:trackerStarted == true
 $set chapter:dataCount + 1
-$if socketId == "GPSSocketRight"
-	$call DataTrackerHighlight1->Deactivate() 
-$endif
-
-$if socketId == "GPSSocketMiddle"
-	$call DataTrackerHighlight2->Deactivate() 
-$endif
-
-$if socketId == "GPSSocketLeft"
-	$call DataTrackerHighlight3->Deactivate() 
-$endif
 $goto Day4.CheckDataCount
 $endif
 
@@ -182,17 +171,6 @@ $endif
 
 $if chapter:trackerStarted == true
 $set chapter:dataCount - 1
-$if socketId == "GPSSocketRight"
-	$call DataTrackerHighlight1->Activate() 
-$endif
-
-$if socketId == "GPSSocketMiddle"
-	$call DataTrackerHighlight2->Activate() 
-$endif
-
-$if socketId == "GPSSocketLeft"
-	$call DataTrackerHighlight3->Activate() 
-$endif
 $endif
 
 :: CheckDataCount
