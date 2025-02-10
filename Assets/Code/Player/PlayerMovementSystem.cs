@@ -25,7 +25,7 @@ namespace Pennycook {
             Vector3 flattenedLook = m_StateA.HeadLook.forward;
             flattenedLook.y = 0;
             flattenedLook.Normalize();
-            flattenedLook *= 0.3f;
+            flattenedLook *= 0.5f;
 
             if (m_StateB.LeftHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisUp)) {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {

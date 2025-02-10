@@ -279,6 +279,12 @@ $call Wait(0.3)
 $call SetWarpActive(WarpBluffBack, true)
 {@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/4rp19]
 {@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/4rp20]
+$elseif chapter:finishedBands == false, chapter:dataTrackersDone == true
+$call ChickBandPlate->Activate()
+$call DataLoggerPlate->Deactivate()
+$elseif chapter:finishedBands == true, chapter:dataTrackersDone == false
+$call ChickBandPlate->Deactivate()
+$call DataLoggerPlate->Activate()
 $endif
 
 :: WarpedBackToTent
