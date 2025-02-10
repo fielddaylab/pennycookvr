@@ -111,7 +111,13 @@ namespace Pennycook {
                 return;
             }
 
-            using(PooledSet<TabletWarpPoint> affectedPoints = PooledSet<TabletWarpPoint>.Create()) {
+            bool newGroup = false;
+            if (current != null && current.Group != warpPoint.Group)
+            {
+                newGroup = true;
+            }
+
+            using (PooledSet<TabletWarpPoint> affectedPoints = PooledSet<TabletWarpPoint>.Create()) {
                 if (current != null) {
                     foreach (var connection in current.Connections) {
                         connection.IsConnected = TabletWarpPoint.ConnectionState.NotConnected;
@@ -139,7 +145,10 @@ namespace Pennycook {
                 }
             }
 
-            TabletUtility.LoadGoals(warpPoint.Group);
+            if(newGroup)
+            {
+                TabletUtility.LoadGoals(warpPoint.Group);
+            }
 
             VRGame.Events.Dispatch(GameEvents.WarpPointUpdated, EvtArgs.Ref(warpPoint));
         }

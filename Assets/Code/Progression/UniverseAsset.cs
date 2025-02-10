@@ -66,7 +66,6 @@ namespace Pennycook {
                 newGoal.WarpPoint = config.Goals[i].WarpPoint;
                 newGoal.Completed = false;
                 newGoal.Current = false;
-                newGoal.Loaded = false;
                 if (config.Goals[i].SubGoals.Length > 0)
                 {
                     newGoal.SubGoals = new Tablet.TabletSubGoal[config.Goals[i].SubGoals.Length];

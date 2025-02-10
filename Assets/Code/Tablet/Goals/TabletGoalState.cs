@@ -39,7 +39,6 @@ namespace Pennycook.Tablet {
     public struct TabletGoal {
         public bool Completed;
         public bool Current;
-        public bool Loaded;
         public TabletGoalType Type;
         public TabletWarpPointGroup WarpPoint;
         public TabletSubGoal[] SubGoals;
@@ -57,33 +56,26 @@ namespace Pennycook.Tablet {
             for (int i = 0; i < Goals.DayGoals.Count; ++i) {
                 //Debug.Log("Loaded: " + Goals.DayGoals[i].Loaded);
                 //Debug.Log("Warp Point: " + Goals.DayGoals[i].WarpPoint);
-                if (!Goals.DayGoals[i].Loaded) {
-                    if(Goals.DayGoals[i].WarpPoint == warpPointType) {
-                        SidePanelDisplay s = Goals.SidePanels[(int)Goals.DayGoals[i].Type];
-                        if (Goals.DayGoals[i].SubGoals != null) {
-                            for (int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
-                                s.UIElements[j].gameObject.SetActive(true);
-                                s.UIElements[j].Text.text = Goals.DayGoals[i].SubGoals[j].Text;
-                                //s.UIElements[j].Circle.Color = Goals.DayGoals[i].SubGoals[j].Color;
-                                if(Goals.DayGoals[i].Type == TabletGoalType.Capture) {
-                                    Goals.RelevantCaptureIds.Add(Goals.DayGoals[i].SubGoals[j].Id);
-                                }
+                if(Goals.DayGoals[i].WarpPoint == warpPointType) {
+                    SidePanelDisplay s = Goals.SidePanels[(int)Goals.DayGoals[i].Type];
+                    if (Goals.DayGoals[i].SubGoals != null) {
+                        for (int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
+                            s.UIElements[j].gameObject.SetActive(true);
+                            s.UIElements[j].Text.text = Goals.DayGoals[i].SubGoals[j].Text;
+                            //s.UIElements[j].Circle.Color = Goals.DayGoals[i].SubGoals[j].Color;
+                            if(Goals.DayGoals[i].Type == TabletGoalType.Capture) {
+                                Goals.RelevantCaptureIds.Add(Goals.DayGoals[i].SubGoals[j].Id);
                             }
                         }
                     }
-                } /*else {
-                    //already has been loaded, so if the warp point is the Rookery, 
-                    if(warpPointType == TabletWarpPointGroup.Rookery) {
-
-                    }
-                }*/
+                }
             }
         }
 
         static public bool GoalOfTypeExists(TabletGoalType Type) {
             if(Goals != null && Goals.DayGoals != null) {
                 for(int i = 0; i < Goals.DayGoals.Count; ++i) {
-                    if(Goals.DayGoals[i].Type == Type && Goals.DayGoals[i].Loaded) {
+                    if(Goals.DayGoals[i].Type == Type) {
                         return true;
                     }
                 }
