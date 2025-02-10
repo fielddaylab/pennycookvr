@@ -23,8 +23,8 @@ $call Terrain->SetTerrainMaterial(3);
 @who        Player
 @once
 
-$call FadeIn(2.0)
-$call Wait(2)
+$call FadeIn(6.0)
+$call Wait(6)
 
 $call SetWarpActive(WarpBluff, true)
 
@@ -341,7 +341,7 @@ $endwhile
 {@Player}   Claro que si!   $[Day4/Tent/Player_13]
 {@Player}   Are you ready for the grand tour? I’ve got these five new friends I think you’re going to love. $[Day4/Tent/Player_14]
 
-$call FadeOut(2.0)
-$call Wait(2)
+$call FadeOut(6.0)
+$call Wait(6)
 
 $call LoadNextDay()

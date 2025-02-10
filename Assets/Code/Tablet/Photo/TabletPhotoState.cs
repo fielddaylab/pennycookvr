@@ -85,6 +85,7 @@ namespace Pennycook.Tablet {
             photoState.QueuedPhoto = photoState.PhotoPool.Alloc();
             photoState.QueuedPhoto.Tag = GetPhotoTag(highlighted);
             HandleBehaviorCapture(highlighted);
+            TabletUtility.PlayHaptics(0.3f, 0.08f);
             TabletUtility.PlaySfx("Tablet.Photo.Snap");
         }
 

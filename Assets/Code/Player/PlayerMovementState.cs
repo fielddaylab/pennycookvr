@@ -31,16 +31,14 @@ namespace Pennycook {
         public Routine WarpRoutine;
 		public Routine StartEndRoutine;
 
-        public IEnumerator DoWarp(float fVis, float fTime, bool FadeOut=true) {
-            //StartEndFader.enabled = true;
-			if(!FadeOut) {
+        public IEnumerator DoWarp(float fVis, float fTime, bool FadeIn=true) {
+			if(FadeIn) {
 				StartEndFader.SetAlpha(1);
+                yield return StartEndFader.FadeTo(0, fTime);
 			} else {
 				StartEndFader.SetAlpha(0);
+                yield return StartEndFader.FadeTo(1, fTime);
 			}
-            yield return StartEndFader.FadeTo(fVis, fTime);
-            //yield return fTime;
-			//StartEndFader.enabled = false;
         }
     }
 

@@ -37,6 +37,7 @@ namespace Pennycook {
                     if(brain.Relationships != null && brain.Relationships.Child != null) {
                         //Debug.Log("FEED TRUE 2");
                         if(brain.Relationships.Regurg != null) {
+                            brain.Relationships.Regurg.Stop();
                             brain.Relationships.Regurg.Play();
                         }
                         brain.Relationships.Child.Animator.Animator.SetBool("Feed", true);

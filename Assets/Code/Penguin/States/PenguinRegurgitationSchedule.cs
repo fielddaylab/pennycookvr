@@ -22,7 +22,7 @@ namespace Pennycook {
 
                 Vector3 targetWalkPos;
                 if(brain.Relationships != null && brain.Relationships.Child != null) {
-                    targetWalkPos = brain.Relationships.Child.transform.position + brain.Relationships.Child.transform.forward;
+                    targetWalkPos = brain.Relationships.Child.transform.position + brain.Relationships.Child.transform.forward * (brain.Relationships.CloseDistance - 0.1f);
                 } else {
                     while(!TryFindGoodWanderPosition(brain, brain.Personality.Wander, brain.Type == PenguinType.Adult, out targetWalkPos)) {
                         yield return null;
@@ -52,7 +52,7 @@ namespace Pennycook {
                         Target = targetWalkPos
                     });
 
-                    yield return 10;
+                    yield return 8;
 
                     brain.Signal(PenguinUtility.Signals.RegurgitatingComplete);
                 }
