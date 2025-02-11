@@ -3,11 +3,13 @@
 :: Prepare
 @function	ScenePrepare
 $set chapter:finishedObservations = false
-$set chapter:identifiedCount = 0
 $set chapter:wingStarted = false
 $set chapter:wingCount = 0
 $set chapter:dataCount = 0
 $set chapter:trackerStarted = false
+$set chapter:weighGate = false
+$set chapter:dataTrackersDone = false
+$set chapter:finishedBands = false
 
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
@@ -170,9 +172,12 @@ $endif
 @who        Player
 @when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true
 
-$if chapter:trackerStarted == true
 $set chapter:dataCount + 1
-$goto Day4.CheckDataCount
+
+$if chapter:dataCount >= 3
+$set chapter:dataTrackersDone = true
+//{@Margo}    Then drop the tracker into the Pelican Case.    $[Day4/Rookery/4rm13]
+$goto Day4.CheckCompletedTasks
 $endif
 
 :: OnUnsocketedTracker
@@ -180,18 +185,7 @@ $endif
 @who        Player
 @when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true
 
-$if chapter:trackerStarted == true
 $set chapter:dataCount - 1
-$endif
-
-:: CheckDataCount
-@trigger    CheckDataCount
-@who    Player
-
-$if chapter:dataCount >= 3
-$set chapter:dataTrackersDone = true
-$goto Day4.CheckCompletedTasks
-$endif
 
 :: WarpedToRookeryCorral
 @trigger    AtWarpPoint
@@ -253,6 +247,11 @@ $elseif chapter:wingCount == 2
 $elseif chapter:wingCount == 3
 $set chapter:finishedBands = true
 $call TurnOnSockets(BandSocketChick, false)
+$if chapter:finishedBands == true, chapter:dataTrackersDone == true, chapter:weighGate == true 
+$set chapter:finishedObservations = true
+$call Wait(0.3)
+$call SetWarpActive(WarpBluffBack, true)
+$endif
 {@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/4rm22]
 {@Partner}  Nice work, new kid. $[Day4/Rookery/4rp05]
 {@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/4rp06]
@@ -289,12 +288,6 @@ $call Wait(0.3)
 $call SetWarpActive(WarpBluffBack, true)
 {@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/4rp19]
 {@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/4rp20]
-$elseif chapter:finishedBands == false, chapter:dataTrackersDone == true
-$call ChickBandPlate->Activate()
-$call DataLoggerPlate->Deactivate()
-$elseif chapter:finishedBands == true, chapter:dataTrackersDone == false
-$call ChickBandPlate->Deactivate()
-$call DataLoggerPlate->Activate()
 $endif
 
 :: WarpedBackToTent
