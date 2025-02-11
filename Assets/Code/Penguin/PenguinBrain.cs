@@ -115,6 +115,13 @@ namespace Pennycook {
         private void LeafSetRegurgitation() {
             StartMainProcess(PenguinSchedules.Regurgitation);
         }
+
+
+        [LeafMember("SetWeighGate")]
+        private void LeafSetWeighGate() {
+            StartMainProcess(PenguinSchedules.WeighGate);
+        }
+
         #endregion // Leaf
     }
 

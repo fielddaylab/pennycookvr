@@ -16,5 +16,6 @@ namespace Pennycook {
         static public readonly ProcessStateDefinition Wander = ProcessStateDefinition.FromCallbacks("Wander", new PenguinWanderSchedule());
         static public readonly ProcessStateDefinition MatingDance = ProcessStateDefinition.FromCallbacks("MatingDance", new PenguinMatingSchedule());
         static public readonly ProcessStateDefinition Regurgitation = ProcessStateDefinition.FromCallbacks("Regurgitation", new PenguinRegurgitationSchedule());
+        static public readonly ProcessStateDefinition WeighGate = ProcessStateDefinition.FromCallbacks("WeighGate", new PenguinWeighGateSchedule());
     }
 }

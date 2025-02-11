@@ -94,6 +94,7 @@ namespace Pennycook {
             if (path != null) {
                 nav.CurrentPath = path;
                 nav.State = PenguinNavState.Found;
+
                 brain.Signal(Signals.PathFound);
             } else {
                 nav.State = PenguinNavState.NotFound;

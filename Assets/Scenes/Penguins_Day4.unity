@@ -1008,6 +1008,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6641921480938123477, guid: f0610d234ddcaf2468023786b349feb7, type: 3}
   m_PrefabInstance: {fileID: 310797435}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &314357264
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 314357265}
+  m_Layer: 0
+  m_Name: WeighGatePos2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &314357265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 314357264}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.64, y: 0.38, z: 9.03}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &361659695
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1976,7 +2007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6298012263750707823, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: m_Name
-      value: GPS Tracked Adelie
+      value: WeighGateAdelie
       objectReference: {fileID: 0}
     - target: {fileID: 6641921480938123477, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2102,6 +2133,30 @@ PrefabInstance:
       propertyPath: m_Id.m_HashValue
       value: 2076698214
       objectReference: {fileID: 0}
+    - target: {fileID: 8350485731795820935, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: m_Id.m_Source
+      value: WeighGatePenguin
+      objectReference: {fileID: 0}
+    - target: {fileID: 8350485731795820935, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: m_Id.m_HashValue
+      value: 2797285064
+      objectReference: {fileID: 0}
+    - target: {fileID: 8377525598834550971, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: GatePosIn
+      value: 
+      objectReference: {fileID: 1104983153}
+    - target: {fileID: 8377525598834550971, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: GatePosOut
+      value: 
+      objectReference: {fileID: 314357265}
+    - target: {fileID: 8377525598834550971, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: CloseDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8588681338419978210, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      propertyPath: Personality
+      value: 
+      objectReference: {fileID: 11400000, guid: bbf5fcb70c3d34b7caa413e8e2ba1dca, type: 2}
     - target: {fileID: 9041391901810414397, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       propertyPath: Identified
       value: 1
@@ -2113,6 +2168,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6298012263750707823, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1144330366}
+    - targetCorrespondingSourceObject: {fileID: 6298012263750707823, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1144330367}
   m_SourcePrefab: {fileID: 100100000, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
 --- !u!4 &584279722 stripped
 Transform:
@@ -4186,6 +4244,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6641921480938123477, guid: 937659e33d4f86b49a20287bdad2ba7a, type: 3}
   m_PrefabInstance: {fileID: 1064973353}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1104983152
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1104983153}
+  m_Layer: 0
+  m_Name: WeighGatePos1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1104983153
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104983152}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.16, y: 0.309, z: 4.59}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1114572909
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4284,6 +4373,20 @@ MonoBehaviour:
   CanInteract: 0
   InteractionCooldown: 1
   Verb: 2
+--- !u!114 &1144330367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144330351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa39a531abadb4b959018eb9203bc40d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GatePosIn: {fileID: 1104983153}
+  GatePosOut: {fileID: 314357265}
 --- !u!1001 &1166507845
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10531,3 +10634,5 @@ SceneRoots:
   - {fileID: 383369830}
   - {fileID: 839201122}
   - {fileID: 941170678}
+  - {fileID: 1104983153}
+  - {fileID: 314357265}

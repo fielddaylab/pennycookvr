@@ -37,6 +37,9 @@ namespace Pennycook {
             }
             return false;
         }
+        static public bool IsClose(PenguinRelationshipTracker rel, Vector3 pos) {
+            return Vector3.Distance(rel.gameObject.transform.position, pos) <= rel.CloseDistance;
+        }
 
         static public bool IsPursuing(PenguinRelationshipTracker rel) {
             if(rel.Mate != null) {
