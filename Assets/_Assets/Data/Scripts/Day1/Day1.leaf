@@ -18,7 +18,9 @@ $call PurpleAdelie->SetInteractable(false)
 $call YellowAdelie->SetInteractable(false)
 
 $call FadeIn(6.0)
-$call Wait(6)
+$call Wait(2)
+
+$call MargoHint->PlayFX()
 
 $call SetWarpActive(WarpBluff, true)
 
@@ -34,6 +36,8 @@ $call SetWarpActive(WarpBluff, true)
 @who        Player
 @interrupt
 @once
+
+$call MargoHint->StopFX()
 
 $call Wait(1)
 $set	chapter:hasTalkedToMargo = true
@@ -196,6 +200,7 @@ $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
 $call DeskGlow->PlayAnimation()
+$call MargoDockParticles->PlayFX()
 
 {@Margo}    Okay, let's have a look at that data!  $[Day1/Tent/1tm14]
 {@Margo}    Dock me in the port by the computer over yonder.   $[Day1/Tent/1tm15]
@@ -208,6 +213,7 @@ $endwhile
 {@Player}   And now the big ole button! $[Day1/Tent/Player_12]
 
 $call DeskGlow->StopAnimation()
+$call MargoDockParticles->StopFX()
 
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)

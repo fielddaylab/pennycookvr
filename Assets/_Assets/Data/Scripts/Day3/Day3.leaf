@@ -21,7 +21,7 @@ $call Screen->SetEnabled(false)
 @once
 
 $call FadeIn(6.0)
-$call Wait(6)
+$call Wait(2)
 
 $call Wendy->SetRegurgitation()
 //$call Billy->SetRegurgitation()
@@ -341,6 +341,7 @@ $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
 $call DeskGlow->PlayAnimation()
+$call MargoDockParticles->PlayFX()
 
 {@Margo}    Okay, kiddo. Put me in the dock and let’s have a look at our findings! $[Day3/Tent/3tm5]
 
@@ -349,6 +350,7 @@ $call Wait(0.5)
 $endwhile
 
 $call DeskGlow->StopAnimation()
+$call MargoDockParticles->StopFX()
 
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)

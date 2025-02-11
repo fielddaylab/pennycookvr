@@ -24,7 +24,7 @@ $call Screen->SetEnabled(false)
 @once
 
 $call FadeIn(6.0)
-$call Wait(6)
+$call Wait(2)
 
 $call SetWarpActive(WarpBluff, true)
 
@@ -50,6 +50,8 @@ $call BlueAdelie->SetMatingDance()
 @who        Player
 @interrupt
 @once
+
+$call SetWarpActive(WarpBluff, true)
 
 $call Wait(1)
 
@@ -239,9 +241,9 @@ $call LegTrackerHighlight1->Activate()
 $call LegTrackerHighlight2->Activate()
 $call LegTrackerHighlight3->Activate()
 
-$call CaseLegSocketRight->ReleaseCurrentSocket()
-$call CaseLegSocketLeft->ReleaseCurrentSocket()
-$call CaseLegSocketMiddle->ReleaseCurrentSocket()
+$call CaseLegSocketRight->ReleaseCurrentSocket(true)
+$call CaseLegSocketLeft->ReleaseCurrentSocket(true)
+$call CaseLegSocketMiddle->ReleaseCurrentSocket(true)
 
 $call Wait(2)
 
@@ -323,6 +325,7 @@ $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
 $call DeskGlow->PlayAnimation()
+$call MargoDockParticles->PlayFX()
 
 {@Margo}    Okay dokey! Just dock me in the port there, and I’ll take a look at our data. $[Day2/Tent/2tm9]
 
@@ -331,6 +334,7 @@ $call Wait(0.5)
 $endwhile
 
 $call DeskGlow->StopAnimation()
+$call MargoDockParticles->StopFX()
 
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)

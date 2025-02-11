@@ -5,6 +5,8 @@
 $set chapter:finishedObservations = false
 $set chapter:identifiedCount = 0
 $set chapter:wingStarted = false
+$set chapter:wingCount = 0
+$set chapter:dataCount = 0
 $set chapter:trackerStarted = false
 
 $call ClearGoals()
@@ -26,7 +28,7 @@ $call Terrain->SetTerrainMaterial(3);
 $call WeighGatePenguin->SetWeighGate()
 
 $call FadeIn(6.0)
-$call Wait(6)
+$call Wait(2)
 
 $call SetWarpActive(WarpBluff, true)
 
@@ -128,20 +130,25 @@ $goto Day4.CheckCompletedTasks
 @who        Player
 @when       targetObject == "WarpTarget-RookeryMiddle"
 @interrupt
-@once
 
 $call ExclaimBackTrackers->Deactivate()
 
 $call ChickBandPlate->Deactivate()
 $call DataLoggerPlate->Activate()
 
+$if chapter:dataCount < 3
+
+$if chapter:trackerStarted == false
 $call DataTrackerHighlight1->Activate()
 $call DataTrackerHighlight2->Activate()
 $call DataTrackerHighlight3->Activate()
 
-$call GPSSocketRight->ReleaseCurrentSocket()
-$call GPSSocketMiddle->ReleaseCurrentSocket()
-$call GPSSocketLeft->ReleaseCurrentSocket()
+$call GPSSocketRight->ReleaseCurrentSocket(true)
+$call GPSSocketMiddle->ReleaseCurrentSocket(true)
+$call GPSSocketLeft->ReleaseCurrentSocket(true)
+$endif
+
+$set chapter:trackerStarted = true
 
 $call DataTrackerBack1->SetMeshEnabled(true)
 $call DataTrackerBack2->SetMeshEnabled(true)
@@ -149,12 +156,14 @@ $call DataTrackerBack3->SetMeshEnabled(true)
 $call DataTrackerBack4->SetMeshEnabled(true)
 $call DataTrackerBack5->SetMeshEnabled(true)
 
-$set chapter:trackerStarted = true
-
+$if chapter:dataCount == 0
 {@Margo}    Wahoo! Looks like all the penguins with data loggers have come back.    $[Day4/Rookery/4rm10]
 {@Margo}    Now we’ll be able to get the stats on their swimming behaviors!     $[Day4/Rookery/4rm11]
 {@Margo}    Just hold the penguin still with one hand and remove their trackers.    $[Day4/Rookery/4rm12]
 {@Margo}    Then drop the tracker into the Pelican Case.    $[Day4/Rookery/4rm13]
+$endif
+
+$endif
 
 :: OnSocketedTracker
 @trigger    ObjectSocketed
@@ -189,7 +198,6 @@ $endif
 @who        Player
 @when       targetObject == "WarpTarget-RookeryCorral"
 @interrupt
-@once
 
 $call ExclaimCorral->Deactivate()
 
@@ -203,8 +211,8 @@ $call WingBand3->SetMeshEnabled(true)
 $call TurnOnSockets(BandSocketChick, true)
 
 $set chapter:wingStarted = true
-$set chapter:wingCount = 0
 
+$if chapter:wingCount == 0
 {@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/4rm14]
 {@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/4rm15]
 {@Player}    Oh, come on. They're, like, half the size of the grown-ups. How hard can it be?    $[Day4/Rookery/Player_9]
@@ -216,7 +224,7 @@ $set chapter:wingCount = 0
 {@Margo}    First you’ll need to hold the penguin in place. $[Day4/Rookery/4rm19]
 {@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/4rm20]
 {@Player}   Cool, no sweat. $[Day4/Rookery/Player_12]  
-
+$endif
 
 :: OnUnsocketedWingBand
 @trigger ObjectUnsocketed
@@ -313,6 +321,7 @@ $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
 
 $call DeskGlow->PlayAnimation()
+$call MargoDockParticles->PlayFX()
 
 {@Margo}    Okey dokey, let’s have a look at that data! $[Day4/Tent/4tm09]
 
@@ -321,6 +330,7 @@ $call Wait(0.5)
 $endwhile
 
 $call DeskGlow->StopAnimation()
+$call MargoDockParticles->StopFX()
 
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)

@@ -136,7 +136,7 @@ namespace FieldDay.Sockets {
         /// <summary>
         /// Releases the current socketed object.
         /// </summary>
-        static public void ReleaseCurrent(ObjectSocket socket, bool applyReleaseForce) {
+        static public void ReleaseCurrent(ObjectSocket socket, bool applyReleaseForce, bool highlightOnRemove=false) {
             Socketable cachedCurrent = socket.Current;
 
             if (!cachedCurrent) {
@@ -186,7 +186,7 @@ namespace FieldDay.Sockets {
             socket.OnRemoved.Invoke(cachedCurrent);
             OnObjectRemovedFromSocket.Invoke(cachedCurrent, socket);
 
-            if(socket.HighlightPair) {
+            if(socket.HighlightPair && highlightOnRemove) {
                 socket.HighlightPair.SetActive(true);
             }
         }

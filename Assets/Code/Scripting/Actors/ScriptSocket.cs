@@ -65,9 +65,9 @@ namespace Pennycook {
         }
 		
 		[LeafMember("ReleaseCurrentSocket"), Preserve]
-		public bool ReleaseCurrentSocket() {
+		public bool ReleaseCurrentSocket(bool highlight=false) {
             if(m_Socket != null) {
-				SocketUtility.ReleaseCurrent(m_Socket, false);
+				SocketUtility.ReleaseCurrent(m_Socket, false, highlight);
 				return true;
             }
 			
