@@ -101,6 +101,8 @@ $call Wait(1)
 :: OnSocketedLegTracker
 @trigger ObjectSocketed
 @when   objectType == "LegTracker", socketType == "LegSocket", chapter:legTrackersStarted == true
+@interrupt
+
 $set chapter:legCount + 1
 
 $if chapter:legCount >= 3

@@ -273,29 +273,41 @@ $call DataTracker2->SetMeshEnabled(true)
 $call DataTracker3->SetMeshEnabled(true)
 
 $set chapter:dataTrackersStarted = true
+$call TurnOnSockets(DataSocketPenguin, true)
 
 {@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/3rm18]
 {@Margo}	You’ll need to attach a data logger to their backs.	$[Day3/Rookery/3rm19]
 {@Margo}	Grab a data logger from the Pelican Case.	$[Day3/Rookery/3rm20]
 {@Margo}	Place one hand on the penguin to stop them, and then attach the logger to their back.	$[Day3/Rookery/3rm21]
 
-$call TurnOnSockets(DataSocketPenguin, true)
-
-::	TrackerSocketed
+::	TrackerSocketed1
 @trigger ObjectSocketed
 @who	Player
-@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true, chapter:trackerSocketedCount == 0
+@interrupt
+
+$set chapter:trackerSocketedCount + 1
+{@Margo}	Nice work! Let’s do two more. 	$[Day3/Rookery/3rm22]
+
+::	TrackerSocketed2
+@trigger ObjectSocketed
+@who	Player
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true, chapter:trackerSocketedCount == 1
+@interrupt
 
 $set chapter:trackerSocketedCount + 1
 
-$if chapter:trackerSocketedCount == 1
-{@Margo}	Nice work! Let’s do two more. 	$[Day3/Rookery/3rm22]
-$elseif chapter:trackerSocketedCount >= 3
+::	TrackerSocketed3
+@trigger ObjectSocketed
+@who	Player
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true, chapter:trackerSocketedCount == 2
+@interrupt
+
+$set chapter:trackerSocketedCount + 1
 $set chapter:trackersSocketed = true
 {@Margo}	Great job. That should get us plenty of data.	$[Day3/Rookery/3rm23]
 $call TurnOnSockets(DataSocketPenguin, false)
 $goto Day3.CheckAllComplete
-$endif
 
 ::	TrackerUnsocketed
 @trigger ObjectUnsocketed
