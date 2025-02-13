@@ -202,8 +202,6 @@ $call WingBand1->SetMeshEnabled(true)
 $call WingBand2->SetMeshEnabled(true)
 $call WingBand3->SetMeshEnabled(true)
 
-$call TurnOnSockets(BandSocketChick, true)
-
 $set chapter:wingStarted = true
 
 $if chapter:wingCount == 0
@@ -220,11 +218,13 @@ $if chapter:wingCount == 0
 {@Player}   Cool, no sweat. $[Day4/Rookery/Player_12]  
 $endif
 
+$call TurnOnSockets(BandSocketChick, true)
+
+
 :: OnUnsocketedWingBand
 @trigger ObjectUnsocketed
 @who        Player
 @when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true
-@interrupt
 
 $set chapter:wingCount - 1
 
@@ -232,7 +232,6 @@ $set chapter:wingCount - 1
 @trigger ObjectSocketed
 @who    Player
 @when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true
-@interrupt
 
 $set chapter:wingCount + 1
 

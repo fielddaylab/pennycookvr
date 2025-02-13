@@ -272,8 +272,6 @@ $call DataTracker1->SetMeshEnabled(true)
 $call DataTracker2->SetMeshEnabled(true)
 $call DataTracker3->SetMeshEnabled(true)
 
-$call TurnOnSockets(DataSocketPenguin, true)
-
 $set chapter:dataTrackersStarted = true
 
 {@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/3rm18]
@@ -281,11 +279,12 @@ $set chapter:dataTrackersStarted = true
 {@Margo}	Grab a data logger from the Pelican Case.	$[Day3/Rookery/3rm20]
 {@Margo}	Place one hand on the penguin to stop them, and then attach the logger to their back.	$[Day3/Rookery/3rm21]
 
+$call TurnOnSockets(DataSocketPenguin, true)
+
 ::	TrackerSocketed
 @trigger ObjectSocketed
 @who	Player
 @when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true
-@interrupt
 
 $set chapter:trackerSocketedCount + 1
 
