@@ -9,8 +9,12 @@ $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 //$call DayHeader->SetText(Dec 1)
+$call Sky1->Deactivate()
+$call Sky2->Deactivate()
 $call Sky3->Activate()
 $call Sky3->SetSkybox(0.003)
+$call Sky4->Deactivate()
+$call Sky5->Deactivate()
 $call Ocean->SetMaterial(2);
 $call Terrain->SetTerrainMaterial(2);
 $call Screen->SetEnabled(false)

@@ -11,6 +11,10 @@ $set chapter:legTrackersStarted = false
 
 $call DataLoggerPlate->Deactivate()
 $call ChickBandPlate->Deactivate()
+$call Sky1->Deactivate()
+$call Sky2->Deactivate()
+$call Sky3->Deactivate()
+$call Sky4->Deactivate()
 $call Sky5->Activate()
 $call Sky5->SetSkybox(0.003)
 $call Ocean->SetMaterial(4);

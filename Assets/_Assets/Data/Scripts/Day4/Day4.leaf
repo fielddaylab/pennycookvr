@@ -14,8 +14,12 @@ $set chapter:finishedBands = false
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
+$call Sky1->Deactivate()
+$call Sky2->Deactivate()
+$call Sky3->Deactivate()
 $call Sky4->Activate()
 $call Sky4->SetSkybox(0.003)
+$call Sky5->Deactivate()
 $call Ocean->SetMaterial(3);
 $call Terrain->SetTerrainMaterial(3);
 

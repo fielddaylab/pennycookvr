@@ -5,6 +5,10 @@
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call Sky1->Activate()
+$call Sky2->Deactivate()
+$call Sky3->Deactivate()
+$call Sky4->Deactivate()
+$call Sky5->Deactivate()
 
 :: StartGame
 @trigger    SceneReady
