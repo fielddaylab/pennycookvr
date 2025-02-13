@@ -22,7 +22,14 @@ namespace Pennycook {
                         c.Grabber.State = GrabberState.AttemptGrab;
                     }
                 } else if (c.Grabber.State == GrabberState.Holding) {
-                    if (!hand.Buttons.IsDown(XRHandButtons.GripButton)) {
+                    bool release;
+                    if (c.Grabber.HeldObject.TapToRelease) {
+                        release = hand.Buttons.ConsumePress(XRHandButtons.GripButton);
+                    } else {
+                        release = !hand.Buttons.IsDown(XRHandButtons.GripButton);
+                    }
+
+                    if (release) {
                         c.Grabber.State = GrabberState.AttemptRelease;
                     }
                 }

@@ -24,6 +24,7 @@ namespace FieldDay.VRHands {
         public bool IsHeavy = false;
         public bool IsAnchored = false;
         public bool MustGrabAtSnap = false;
+        public bool TapToRelease = false;
         public GrabbablePoseAnim GrabberAnim;
 
         [Header("Snap Node Data -- DO NOT EDIT")]

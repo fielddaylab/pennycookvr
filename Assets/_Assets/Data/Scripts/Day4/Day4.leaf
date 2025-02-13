@@ -14,8 +14,12 @@ $set chapter:finishedBands = false
 $call ClearGoals()
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
+$call Sky1->Deactivate()
+$call Sky2->Deactivate()
+$call Sky3->Deactivate()
 $call Sky4->Activate()
 $call Sky4->SetSkybox(0.003)
+$call Sky5->Deactivate()
 $call Ocean->SetMaterial(3);
 $call Terrain->SetTerrainMaterial(3);
 
@@ -167,22 +171,35 @@ $endif
 
 $endif
 
-:: OnSocketedTracker
+:: OnSocketedTracker1
 @trigger    ObjectSocketed
 @who        Player
-@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true
+@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true, chapter:dataCount == 0
+@interrupt
 
 $set chapter:dataCount + 1
 
-$if chapter:dataCount >= 3
+:: OnSocketedTracker2
+@trigger    ObjectSocketed
+@who        Player
+@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true, chapter:dataCount == 1
+@interrupt
+
+$set chapter:dataCount + 1
+
+:: OnSocketedTracker3
+@trigger    ObjectSocketed
+@who        Player
+@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true, chapter:dataCount == 2
+@interrupt
+
+$set chapter:dataCount + 1
+
 $set chapter:dataTrackersDone = true
-//{@Margo}    Then drop the tracker into the Pelican Case.    $[Day4/Rookery/4rm13]
 $goto Day4.CheckCompletedTasks
-$endif
 
 :: OnUnsocketedTracker
 @trigger    ObjectUnsocketed
-@who        Player
 @when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true
 
 $set chapter:dataCount - 1
@@ -202,9 +219,9 @@ $call WingBand1->SetMeshEnabled(true)
 $call WingBand2->SetMeshEnabled(true)
 $call WingBand3->SetMeshEnabled(true)
 
-$call TurnOnSockets(BandSocketChick, true)
-
 $set chapter:wingStarted = true
+
+$call TurnOnSockets(BandSocketChick, true)
 
 $if chapter:wingCount == 0
 {@Margo}    Okay, kiddo. Time to band the chicks.   $[Day4/Rookery/4rm14]
@@ -224,34 +241,44 @@ $endif
 @trigger ObjectUnsocketed
 @who        Player
 @when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true
-@interrupt
 
 $set chapter:wingCount - 1
 
-:: OnSocketedWingBand
+:: OnSocketedWingBand1
 @trigger ObjectSocketed
 @who    Player
-@when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true
+@when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true, chapter:wingCount == 0
 @interrupt
 
 $set chapter:wingCount + 1
 
-$if chapter:wingCount == 1
 {@Player}   Jeez! Ouch! Would you just—hold—still?  $[Day4/Rookery/Player_13]
-$elseif chapter:wingCount == 2
+
+:: OnSocketedWingBand2
+@trigger ObjectSocketed
+@who    Player
+@when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true, chapter:wingCount == 1
+@interrupt
+$set chapter:wingCount + 1
+
 {@Player}   Yikes. This little guy is not happy.    $[Day4/Rookery/Player_14]
 {@Player}   I promise, I’m not gonna hurt you! It’s just like a hair clip. Totally harmless.    $[Day4/Rookery/Player_15]
 {@Player}   Ouch!    $[Day4/Rookery/Player_16]
 {@Margo}    No sweat, huh, kiddo?   $[Day4/Rookery/4rm21]
 {@Player}   Okay, okay . . . maybe a little sweat.  $[Day4/Rookery/Player_17]
-$elseif chapter:wingCount == 3
+
+:: OnSocketedWingBand3
+@trigger ObjectSocketed
+@who    Player
+@when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true, chapter:wingCount == 2
+@interrupt
+
+$set chapter:wingCount + 1
+
+$if chapter:finishedBands == false
 $set chapter:finishedBands = true
 $call TurnOnSockets(BandSocketChick, false)
-$if chapter:finishedBands == true, chapter:dataTrackersDone == true, chapter:weighGate == true 
-$set chapter:finishedObservations = true
-$call Wait(0.3)
-$call SetWarpActive(WarpBluffBack, true)
-$endif
+$call TriggerResponseAndWait(Day4.CheckCompletedTasks)
 {@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/4rm22]
 {@Partner}  Nice work, new kid. $[Day4/Rookery/4rp05]
 {@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/4rp06]
@@ -275,7 +302,7 @@ $endif
 {@Player}   Yeah. You’re right. $[Day4/Rookery/Player_24]
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
 {@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/4rp18]
-$goto Day4.CheckCompletedTasks
+
 $endif
 
 :: CheckCompletedTasks
@@ -284,7 +311,6 @@ $endif
 
 $if chapter:finishedBands == true, chapter:dataTrackersDone == true, chapter:weighGate == true 
 $set chapter:finishedObservations = true
-$call Wait(0.3)
 $call SetWarpActive(WarpBluffBack, true)
 {@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/4rp19]
 {@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/4rp20]
