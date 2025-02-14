@@ -21,8 +21,6 @@ namespace Pennycook.Scripting {
 
         #endregion // ILeafActor
 
-        bool m_IsDestination = false;
-
         #region Leaf
 
         [LeafMember("PlayFX"), Preserve]

@@ -240,15 +240,6 @@ $call ExclaimRegurg->Deactivate()
 
 $goto Day3.RegurgComplete
 
-//::TabletIdentifiedRegurgBilly
-//@trigger TabletBehaviorInstanceCaptured
-//@who        Player
-//@when	behaviorId == "day3_regurg2"
-//@once
-//@interrupt
-
-$goto Day3.RegurgComplete
-
 ::RegurgComplete
 @trigger RegurgComplete
 
@@ -261,6 +252,26 @@ $call CompleteGoal("day3_regurg")
 {@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/3rm17]
 
 $goto Day3.CheckAllComplete
+
+:: OnGrabbedBackTracker
+@trigger ObjectGrabbed
+@when   objectType == "DataTracker"
+
+$if local:hand == "Left"
+$call LeftHandCollider->ReduceSize()
+$elseif local:hand == "Right"
+$call RightHandCollider->ReduceSize()
+$endif
+
+:: OnDroppedBackTracker
+@trigger ObjectDropped
+@when   objectType == "DataTracker"
+
+$if local:hand == "Left"
+$call LeftHandCollider->ResetSize()
+$elseif local:hand == "Right"
+$call RightHandCollider->ResetSize()
+$endif
 
 :: WarpedToRookerySide
 @trigger    AtWarpPoint

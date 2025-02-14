@@ -106,9 +106,9 @@ $call Wait(1)
 @trigger ObjectGrabbed
 @when   objectType == "LegTracker"
 
-$if hand == Left
+$if local:hand == "Left"
 $call LeftHandCollider->ReduceSize()
-$else
+$elseif local:hand == "Right"
 $call RightHandCollider->ReduceSize()
 $endif
 
@@ -116,9 +116,9 @@ $endif
 @trigger ObjectDropped
 @when   objectType == "LegTracker"
 
-$if hand == Left
+$if local:hand == "Left"
 $call LeftHandCollider->ResetSize()
-$else
+$elseif local:hand == "Right"
 $call RightHandCollider->ResetSize()
 $endif
 

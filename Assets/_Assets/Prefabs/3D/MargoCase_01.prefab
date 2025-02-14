@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1827840913091633618}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.22496302, y: -0.000000014901158, z: -0.000000007450579, w: 0.9743673}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.00000045448542, y: 0.06400075, z: 0.13199764}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -128,7 +128,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4231161831162979723}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.16787615, y: -0, z: -0.000000007450579, w: 0.98580813}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.000002231449, y: 0.06999936, z: 0.1319997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -284,7 +284,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6121627284366272443}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.18024175, y: -0.000000029802315, z: -0.0000000037252894, w: 0.9836224}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.0000016018748, y: 0.052000336, z: 0.13199776}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -816,7 +816,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 159274898791308606}
   serializedVersion: 4
-  m_Mass: 5
+  m_Mass: 3
   m_Drag: 1
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -852,6 +852,7 @@ MonoBehaviour:
   IsHeavy: 0
   IsAnchored: 0
   MustGrabAtSnap: 0
+  TapToRelease: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -1390,7 +1391,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1665783712886213575}
   serializedVersion: 4
-  m_Mass: 5
+  m_Mass: 3
   m_Drag: 1
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -1426,6 +1427,7 @@ MonoBehaviour:
   IsHeavy: 0
   IsAnchored: 0
   MustGrabAtSnap: 0
+  TapToRelease: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -2152,7 +2154,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2404990579818328652}
   serializedVersion: 4
-  m_Mass: 5
+  m_Mass: 3
   m_Drag: 1
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -2188,6 +2190,7 @@ MonoBehaviour:
   IsHeavy: 0
   IsAnchored: 0
   MustGrabAtSnap: 0
+  TapToRelease: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -4323,7 +4326,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MargoSocket: {fileID: 2105807844169613837}
-  ExteriorMargoSocket: {fileID: 0}
 --- !u!114 &6978236146479966051
 MonoBehaviour:
   m_ObjectHideFlags: 0
