@@ -755,6 +755,7 @@ MonoBehaviour:
   IsHeavy: 1
   IsAnchored: 1
   MustGrabAtSnap: 1
+  TapToRelease: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0
@@ -896,7 +897,7 @@ Transform:
   m_GameObject: {fileID: 3385565235339914779}
   serializedVersion: 2
   m_LocalRotation: {x: -0.05236404, y: -0.002231713, z: -0.008563485, w: 0.99858886}
-  m_LocalPosition: {x: 0, y: 0, z: -0.117000386}
+  m_LocalPosition: {x: -0, y: 0.002, z: -0.101}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -921,7 +922,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.33500984
+  m_Radius: 0.25
   m_Height: 0.71246773
   m_Direction: 1
   m_Center: {x: 0.010891891, y: 0.019337835, z: -0.06412624}

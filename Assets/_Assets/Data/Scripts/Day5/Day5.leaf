@@ -102,6 +102,26 @@ $call Wait(1)
 {@Margo}	Hold the penguin still with one hand. Then snap the trackers onto their legs.	$[Day5/Rookery/5rm09]
 {@Player}	Got it.	$[Day5/Rookery/Player_4]
 
+:: OnGrabbedLegTracker
+@trigger ObjectGrabbed
+@when   objectType == "LegTracker"
+
+$if hand == Left
+$call LeftHandCollider->ReduceSize()
+$else
+$call RightHandCollider->ReduceSize()
+$endif
+
+:: OnDroppedLegTracker
+@trigger ObjectDropped
+@when   objectType == "LegTracker"
+
+$if hand == Left
+$call LeftHandCollider->ResetSize()
+$else
+$call RightHandCollider->ResetSize()
+$endif
+
 :: OnSocketedLegTracker
 @trigger ObjectSocketed
 @when   objectType == "LegTracker", socketType == "LegSocket", chapter:legTrackersStarted == true
