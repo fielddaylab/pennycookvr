@@ -42,6 +42,8 @@ namespace Pennycook.Tablet {
         public TabletTool CurrentTool;
         public bool AllowToolSwitch = true;
 
+        public bool NoCount = false;
+
         [NonSerialized] public int CurrentToolIndex = -1;
         [NonSerialized] public TabletToolDefinition CurrentToolDef = TabletToolDefinitions.None;
 
@@ -66,6 +68,12 @@ namespace Pennycook.Tablet {
                 adjust -= buttonTransform.anchoredPosition.x;
                 TabLayout.anchoredPosition = new Vector2(adjust, 0);
             }
+        }
+
+        public void SetNoCount(bool NC)
+        {
+            NoCount = NC;
+            Configs[Configs.Length-1].Label.gameObject.SetActive(!NC);
         }
     }
 

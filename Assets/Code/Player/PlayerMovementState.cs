@@ -117,6 +117,14 @@ namespace Pennycook {
                 newGroup = true;
             }
 
+            if(newGroup) {
+                if(warpPoint.Group == TabletWarpPointGroup.Rookery) {
+                    Find.State<TabletToolState>().SetNoCount(true);
+                } else {
+                    Find.State<TabletToolState>().SetNoCount(false);
+                }
+            }
+
             using (PooledSet<TabletWarpPoint> affectedPoints = PooledSet<TabletWarpPoint>.Create()) {
                 if (current != null) {
                     foreach (var connection in current.Connections) {
