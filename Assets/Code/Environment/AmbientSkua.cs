@@ -31,9 +31,9 @@ namespace Pennycook {
 		[AudioEventRef]
 		public StringHash32 MoveSound;
 
-		Vector3 _startingPosition;
-
 		private SkuaState _currentState;
+
+		Vector3 _startingPosition;
 
 		private enum SkuaState : byte {
 			Idling,
@@ -44,7 +44,12 @@ namespace Pennycook {
 		void Awake()
 		{
 			_startingPosition = transform.position;
-			StartCoroutine(StartIdle(NewIdleTime()));
+
+			if(!_flier) {
+				StartCoroutine(StartIdle(NewIdleTime()));
+			} else {
+				_currentState = SkuaState.ReadyToMove;
+			}
 		}
 
 		// Update is called once per frame

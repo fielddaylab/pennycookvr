@@ -70,11 +70,11 @@ Shader "URP/OToonCustomLit"
         _HatchingRotation ("[hatching]Hatching Rotation", Range(0, 90)) = 0
         [ToggleEx]_HalfToneIncludeReceivedShadow ("[Halftone][hatching]Include Shadow Receiving Area", Float) = 0.0
 
-        [Enum(NormalExtrude, 0)]_OutlineMode ("Outline Mode", Float) = 0
-        [Toggle(_OUTLINE)] _OutlineEnabled ("[Indent]Enable Outline", Float) = 0.0
-        _OutlineColor ("[Outline]Outline Color", Color) = (0, 0, 0, 1)
-        _OutlineWidth ("[Outline]Outline Width", Range(0, 15)) = 0.0
-        [MinMax(Near, Far, 200)]_OutlineDistancFade ("[Outline] Fade outline with near/far distance ", Vector) = (-25, 50, 0, 0)
+        //[Enum(NormalExtrude, 0)]_OutlineMode ("Outline Mode", Float) = 0
+        //[Toggle(_OUTLINE)] _OutlineEnabled ("[Indent]Enable Outline", Float) = 0.0
+        //_OutlineColor ("[Outline]Outline Color", Color) = (0, 0, 0, 1)
+        //_OutlineWidth ("[Outline]Outline Width", Range(0, 15)) = 0.0
+        //[MinMax(Near, Far, 200)]_OutlineDistancFade ("[Outline] Fade outline with near/far distance ", Vector) = (-25, 50, 0, 0)
 
         [ToggleEx] _SpherizeNormalEnabled ("[Indent]SpherizeNormalEnabled", Float) = 0.0
         _SpherizeNormalOrigin ("_SpherizeNormalOrigin", Vector) = (0, 0, 0, 0)
@@ -133,23 +133,23 @@ Shader "URP/OToonCustomLit"
         Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" }
         LOD 300
 
-        Pass
-        {
-            Name "Outline"
-            Tags { "LightMode" = "OutlineObject" "RenderType" = "Opaque" }
-            Cull Front
-            Blend SrcAlpha OneMinusSrcAlpha
-            HLSLPROGRAM
+        //Pass
+        //{
+        //    Name "Outline"
+        //    Tags { "LightMode" = "OutlineObject" "RenderType" = "Opaque" }
+        //    Cull Front
+        //    Blend SrcAlpha OneMinusSrcAlpha
+        //    HLSLPROGRAM
 
-            #pragma vertex vert
-            #pragma fragment frag
-            #pragma target 2.0
-            #pragma shader_feature_local _OUTLINE
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Library/OToonOutline.hlsl"
-            ENDHLSL
+        //    #pragma vertex vert
+        //    #pragma fragment frag
+        //    #pragma target 2.0
+        //    #pragma shader_feature_local _OUTLINE
+        //    #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+        //    #include "Library/OToonOutline.hlsl"
+        //    ENDHLSL
 
-        }
+        //}
 
         Pass
         {
@@ -176,7 +176,7 @@ Shader "URP/OToonCustomLit"
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature_local _FACE_SHADOW_MAP
-            #pragma shader_feature_local _OUTLINE
+            //#pragma shader_feature_local _OUTLINE
             #pragma shader_feature_local _HALFTONESHAPE_DOT _HALFTONESHAPE_STRIPE _HALFTONESHAPE_CROSS  _HALFTONESHAPE_CUSTOM
             #pragma shader_feature_local _RIMLIGHTING_ON
             #pragma shader_feature_local _TOON_SHADING_ON

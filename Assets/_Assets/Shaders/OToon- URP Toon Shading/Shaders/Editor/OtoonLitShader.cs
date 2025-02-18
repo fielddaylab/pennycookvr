@@ -23,7 +23,7 @@ class OToonLitShader : StandardBaseShaderGUI
     private OToon.SavedBool m_DiffuseWrapNoiseFoldout;
     private OToon.SavedBool m_RimOptionFoldout;
     private OToon.SavedBool m_OverlayOptionFoldout;
-    private OToon.SavedBool m_OutlineOptionFoldout;
+    //private OToon.SavedBool m_OutlineOptionFoldout;
     private OToon.SavedBool m_advanceOptionFoldout;
     private OToon.SavedBool m_LightAndShadowOptionFoldout;
     private OToon.SavedBool m_HairOptionFoldout;
@@ -34,8 +34,8 @@ class OToonLitShader : StandardBaseShaderGUI
     private MaterialProperty m_RimLightEnabledProp;
     private MaterialProperty m_RampColorProp;
     private MaterialProperty m_ToonEnabledProp;
-    private MaterialProperty m_OutlineEnabledProp;
-    private MaterialProperty m_OutlineModeProp;
+    //private MaterialProperty m_OutlineEnabledProp;
+    //private MaterialProperty m_OutlineModeProp;
     private MaterialProperty m_HairProp;
     private MaterialProperty m_SpherizeNormalProp;
     private MaterialProperty m_FaceShadowMapEnabledProp;
@@ -71,7 +71,7 @@ class OToonLitShader : StandardBaseShaderGUI
             m_RimOptionFoldout = new OToon.SavedBool($"{m_HeaderStateKey}.rimOptionFoldout", false);
             m_OverlayOptionFoldout = new OToon.SavedBool($"{m_HeaderStateKey}.halfToneOptionFoldout", false);
             m_advanceOptionFoldout = new OToon.SavedBool($"{m_HeaderStateKey}.advanceOptionFoldout", false);
-            m_OutlineOptionFoldout = new OToon.SavedBool($"{m_HeaderStateKey}.outlineOptionFoldout", false);
+            //m_OutlineOptionFoldout = new OToon.SavedBool($"{m_HeaderStateKey}.outlineOptionFoldout", false);
             m_LightAndShadowOptionFoldout = new OToon.SavedBool($"{m_HeaderStateKey}.lightAndShadowOptionFoldout", false);
             m_HairOptionFoldout = new OToon.SavedBool($"{m_HeaderStateKey}.hairOptionFoldout", false);
             m_FaceShadowMapFoldout = new OToon.SavedBool($"{m_HeaderStateKey}.faceShadowMapFoldout", false);
@@ -213,7 +213,7 @@ class OToonLitShader : StandardBaseShaderGUI
         EditorGUI.indentLevel = originIndentLevel;
         EditorGUILayout.Space();
 
-        m_OutlineOptionFoldout.value = materialEditor.Foldout(m_OutlineOptionFoldout.value, "Outline Options", m_OutlineEnabledProp.floatValue == 1, m_OutlineEnabledProp.floatValue == 1, "_OutlineColor", true);
+        /*m_OutlineOptionFoldout.value = materialEditor.Foldout(m_OutlineOptionFoldout.value, "Outline Options", m_OutlineEnabledProp.floatValue == 1, m_OutlineEnabledProp.floatValue == 1, "_OutlineColor", true);
         if (m_OutlineOptionFoldout.value)
         {
             materialEditor.DrawStandard(m_OutlineModeProp);
@@ -288,7 +288,7 @@ class OToonLitShader : StandardBaseShaderGUI
             }
         }
         EditorGUI.indentLevel = originIndentLevel;
-        EditorGUILayout.Space();
+        EditorGUILayout.Space();*/
 
         m_LightAndShadowOptionFoldout.value = materialEditor.Foldout(m_LightAndShadowOptionFoldout.value, "Light And Shadow", false, true, "_ShadowColor", true);
         if (m_LightAndShadowOptionFoldout.value)
@@ -386,8 +386,8 @@ class OToonLitShader : StandardBaseShaderGUI
         m_RimLightEnabledProp = BaseShaderGUI.FindProperty("_RimEnabled", properties, false);
         m_halfToneEnabledProp = BaseShaderGUI.FindProperty("_HalfToneEnabled", properties, false);
         m_hatchingEnabledProp = BaseShaderGUI.FindProperty("_HatchingEnabled", properties, false);
-        m_OutlineEnabledProp = BaseShaderGUI.FindProperty("_OutlineEnabled", properties, false);
-        m_OutlineModeProp = BaseShaderGUI.FindProperty("_OutlineMode", properties, false);
+        //m_OutlineEnabledProp = BaseShaderGUI.FindProperty("_OutlineEnabled", properties, false);
+        //m_OutlineModeProp = BaseShaderGUI.FindProperty("_OutlineMode", properties, false);
         m_HairProp = BaseShaderGUI.FindProperty("_EnabledHairSpec", properties, false);
         m_SpherizeNormalProp = BaseShaderGUI.FindProperty("_SpherizeNormalEnabled", properties, false);
         m_FaceShadowMapEnabledProp = BaseShaderGUI.FindProperty("_FaceShadowMapEnabled", properties, false);

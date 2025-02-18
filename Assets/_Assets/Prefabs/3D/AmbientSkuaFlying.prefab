@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wanderRadius: 15
   _idleTime: 4
-  _speed: 0.8
+  _speed: 1
   _flier: 1
   AudioLocation: {fileID: 143296813034287189}
   MoveSound:
@@ -60,21 +60,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 420105304415001787}
     m_Modifications:
+    - target: {fileID: 3613583809211051856, guid: 4b692bc7844878d4fa6e05480b1e75f7, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b7e89178b8123bc47aa12b4c7b707ff9, type: 2}
     - target: {fileID: 7150881545531263718, guid: 4b692bc7844878d4fa6e05480b1e75f7, type: 3}
       propertyPath: m_Name
       value: Skua_00
       objectReference: {fileID: 0}
     - target: {fileID: 7527441649920233564, guid: 4b692bc7844878d4fa6e05480b1e75f7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.0262413
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7527441649920233564, guid: 4b692bc7844878d4fa6e05480b1e75f7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.816627
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7527441649920233564, guid: 4b692bc7844878d4fa6e05480b1e75f7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.7426014
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7527441649920233564, guid: 4b692bc7844878d4fa6e05480b1e75f7, type: 3}
       propertyPath: m_LocalRotation.w

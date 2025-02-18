@@ -6,6 +6,7 @@ using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
@@ -28,6 +29,9 @@ namespace Pennycook {
 
         [NonSerialized] public State CurrentState;
         [NonSerialized] public TabletWarpPoint CurrentWarp;
+
+        [NonSerialized] public AudioHandle SfxHandle;
+
         public Routine WarpRoutine;
 		public Routine StartEndRoutine;
 
@@ -47,6 +51,9 @@ namespace Pennycook {
             if (!interruptCurrentWarp && (state.WarpRoutine || state.CurrentState == PlayerMovementState.State.Warping)) {
                 return false;
             }
+
+            //drop any items other than Margo if holding...
+            
 
             state.CurrentState = PlayerMovementState.State.Warping;
             state.WarpRoutine.Replace(state, WarpRoutine(state, warpPoint, warpPoint.Rotate));
@@ -112,16 +119,19 @@ namespace Pennycook {
             }
 
             bool newGroup = false;
-            if (current != null && current.Group != warpPoint.Group)
-            {
+            if (current != null && current.Group != warpPoint.Group) {
                 newGroup = true;
             }
 
             if(newGroup) {
                 if(warpPoint.Group == TabletWarpPointGroup.Rookery) {
                     Find.State<TabletToolState>().SetNoCount(true);
+                    state.SfxHandle = Sfx.Play("Penguin.Ambiance");
                 } else {
                     Find.State<TabletToolState>().SetNoCount(false);
+                    if(state.SfxHandle != null) {
+                        Sfx.Stop(state.SfxHandle);
+                    }
                 }
             }
 
