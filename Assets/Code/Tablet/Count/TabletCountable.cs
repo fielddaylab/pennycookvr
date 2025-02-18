@@ -52,6 +52,7 @@ namespace Pennycook.Tablet {
                 //}
 
                 if(countable.Group.IsCountFinished()) {
+                    TabletUtility.PlaySfx("Tablet.CountedDone");
                     var actor = ScriptUtility.Actor(countable.Group);
                     if (actor != null) {
                         using (var table = TempVarTable.Alloc()) {

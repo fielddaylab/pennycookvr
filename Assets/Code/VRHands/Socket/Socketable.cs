@@ -64,6 +64,10 @@ namespace FieldDay.Sockets {
                 ReleaseCurrent(socketable.CurrentSocket, false);
             }
 
+            if(!force && socket != null && socket.AllowedSockets == SocketFlags.Margo && socketable != null && socketable.SocketType == SocketFlags.Margo) {
+                Pennycook.Tablet.TabletUtility.PlaySfx("Tablet.Placed");
+            }
+
             socket.Current = socketable;
             socketable.CurrentSocket = socket;
             socketable.LastSocket = socket;

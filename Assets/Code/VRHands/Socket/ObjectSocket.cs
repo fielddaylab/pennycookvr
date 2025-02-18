@@ -77,6 +77,7 @@ namespace FieldDay.Sockets {
         private void OnDetectorEntered(Collider collider) {
             Socketable socketable = collider.GetComponentInParent<Socketable>();
             if (socketable) {
+                Pennycook.Tablet.TabletUtility.PlayHaptics(0.3f, 0.05f);
                 socketable.PotentialSockets.Add(this);
             }
         }
