@@ -12,7 +12,7 @@ struct Attributes
     float4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 lightmapUV : TEXCOORD1;
-    float2 faceShadowUV : TEXCOORD2;
+    //float2 faceShadowUV : TEXCOORD2;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -41,9 +41,9 @@ struct Varyings
     float4 screenPos : TEXCOORD8;
     float3 originWS : TEXCOORD9;
     float4 spos : TEXCOORD10;
-    float3 frontDirectionWS : TEXCOORD11;
-    float3 rightDirectionWS : TEXCOORD12;
-    float2 faceShadowUV : TEXCOORD13;
+    //float3 frontDirectionWS : TEXCOORD11;
+    //float3 rightDirectionWS : TEXCOORD12;
+    //float2 faceShadowUV : TEXCOORD13;
 
     float4 positionCS : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -135,9 +135,9 @@ Varyings LitPassVertexSimple(Attributes input)
     output.screenPos = ComputeScreenPos(output.positionCS);
     output.spos = output.positionCS;
     output.originWS = TransformObjectToWorld(float3(0, 0, 0));
-    output.frontDirectionWS = TransformObjectToWorldDir(_FaceFrontDirection);
-    output.rightDirectionWS = TransformObjectToWorldDir(_FaceRightDirection);
-    output.faceShadowUV = input.faceShadowUV;
+    //output.frontDirectionWS = TransformObjectToWorldDir(_FaceFrontDirection);
+    //output.rightDirectionWS = TransformObjectToWorldDir(_FaceRightDirection);
+    //output.faceShadowUV = input.faceShadowUV;
     return output;
 }
 
@@ -178,7 +178,7 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
     half4 specular = SampleSpecularSmoothness(uv, alpha, _SpecColor, TEXTURE2D_ARGS(_SpecGlossMap, sampler_SpecGlossMap));
     half smoothness = specular.a;
 
-    input.normal = lerp(input.normal, normalize(float4((input.posWS - _SpherizeNormalOrigin.xyz), 1)), _SpherizeNormalEnabled);
+    //input.normal = lerp(input.normal, normalize(float4((input.posWS - _SpherizeNormalOrigin.xyz), 1)), _SpherizeNormalEnabled);
     InputData inputData;
     InitializeInputData(input, normalTS, inputData);
     
@@ -187,9 +187,9 @@ half4 LitPassFragmentSimple(Varyings input) : SV_Target
     otoonSurfaceData.posWS = input.posWS;
     otoonSurfaceData.originPosWS = input.originWS;
     otoonSurfaceData.bitangent = input.bitangent.xyz;
-    otoonSurfaceData.frontDirectionWS = input.frontDirectionWS;
-    otoonSurfaceData.rightDirectionWS = input.rightDirectionWS;
-    otoonSurfaceData.faceShadowMapUV = input.faceShadowUV;
+    //otoonSurfaceData.frontDirectionWS = input.frontDirectionWS;
+    //otoonSurfaceData.rightDirectionWS = input.rightDirectionWS;
+    //otoonSurfaceData.faceShadowMapUV = input.faceShadowUV;
 
     half2 clipUv = input.spos.xy / input.spos.w;
     half4 cpos = TransformObjectToHClip(float3(0, 0, 0));

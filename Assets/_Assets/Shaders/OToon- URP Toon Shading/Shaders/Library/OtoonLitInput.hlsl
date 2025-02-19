@@ -30,10 +30,10 @@ CBUFFER_START(UnityPerMaterial)
     half _SpecularClipStrength;
     half _SpecularFalloff;
     half _SpecularSize;
-    half _RimPower;
-    half _RimLightAlign;
-    half _RimLightSmoothness;
-    half4 _RimColor;
+    //half _RimPower;
+    //half _RimLightAlign;
+    //half _RimLightSmoothness;
+    //half4 _RimColor;
     half _HalfToneEnabled;
     half4 _HalfToneColor;
     half _HalftoneNoiseClip;
@@ -45,16 +45,16 @@ CBUFFER_START(UnityPerMaterial)
     half _HalfToneIncludeReceivedShadow;
     half _HalftoneFadeDistance;
     half _HalftoneFadeToColor;
-    half4 _OutlineColor;
-    half _OutlineWidth;
-    half2 _OutlineDistancFade;
-    half _OutlineMode;
+    //half4 _OutlineColor;
+    //half _OutlineWidth;
+    //half2 _OutlineDistancFade;
+    //half _OutlineMode;
     half4 _ShadowColor;
     half _SpecShadowStrength;
-    half4 _HairSpecColor;
-    half _EnabledHairSpec;
-    float4 _SpherizeNormalOrigin;
-    half _SpherizeNormalEnabled;
+    //half4 _HairSpecColor;
+    //half _EnabledHairSpec;
+    //float4 _SpherizeNormalOrigin;
+    //half _SpherizeNormalEnabled;
     half _HatchingEnabled;
     half _HatchingDensity;
     half _HatchingRotation;
@@ -69,9 +69,9 @@ CBUFFER_START(UnityPerMaterial)
     float4 _HalfTonePatternMap_ST;
     float4 _HalfToneNoiseMap_ST;
     float4 _HatchingNoiseMap_ST;
-    float4 _HairSpecNoiseMap_ST;
+    //float4 _HairSpecNoiseMap_ST;
     float _OverrideShadowColor;
-    float _HairSpecNoiseStrength;
+    /*float _HairSpecNoiseStrength;
     float _HairSpecExponent;
     float _HairSpecScale;
     float _HairSpecularSize;
@@ -80,7 +80,7 @@ CBUFFER_START(UnityPerMaterial)
     float _FaceShadowMapPow;
     float _FaceShadowSmoothness;
     float3 _FaceFrontDirection;
-    float3 _FaceRightDirection;
+    float3 _FaceRightDirection;*/
 CBUFFER_END
 
 
@@ -173,10 +173,10 @@ void InitializeOtoonPBRSurfaceData(out OtoonPBRSurfaceData otoonSurfaceData)
     otoonSurfaceData.halfToneUvMode = _HalfToneUvMode;
     otoonSurfaceData.specularFalloff = _SpecularFalloff;
     otoonSurfaceData.specularSize = _SpecularSize;
-    otoonSurfaceData.rimPower = _RimPower;
-    otoonSurfaceData.rimLightAlign = _RimLightAlign;
-    otoonSurfaceData.rimLightSmoothness = _RimLightSmoothness;
-    otoonSurfaceData.rimColor = _RimColor;
+    //otoonSurfaceData.rimPower = _RimPower;
+    //otoonSurfaceData.rimLightAlign = _RimLightAlign;
+    //otoonSurfaceData.rimLightSmoothness = _RimLightSmoothness;
+    //otoonSurfaceData.rimColor = _RimColor;
     otoonSurfaceData.halfToneEnabled = _HalfToneEnabled;
     otoonSurfaceData.halfToneColor = _HalfToneColor;
     otoonSurfaceData.halftoneNoiseClip = _HalftoneNoiseClip;
@@ -186,13 +186,13 @@ void InitializeOtoonPBRSurfaceData(out OtoonPBRSurfaceData otoonSurfaceData)
     otoonSurfaceData.halfToneDiffuseStep = _HalfToneDiffuseStep;
     otoonSurfaceData.sizeFalloff = _SizeFalloff;
     otoonSurfaceData.halfToneIncludeReceivedShadow = _HalfToneIncludeReceivedShadow;
-    otoonSurfaceData.outlineColor = _OutlineColor;
-    otoonSurfaceData.outlineWidth = _OutlineWidth;
+    //otoonSurfaceData.outlineColor = _OutlineColor;
+    //otoonSurfaceData.outlineWidth = _OutlineWidth;
     otoonSurfaceData.shadowColor = _ShadowColor;
     otoonSurfaceData.specShadowStrength = _SpecShadowStrength;
     otoonSurfaceData.specClipStrength = _SpecularClipStrength;
     otoonSurfaceData.specClipMaskScale = _SpecClipMaskScale;
-    otoonSurfaceData.hairSpecColor = _HairSpecColor;
+    //otoonSurfaceData.hairSpecColor = _HairSpecColor;
     otoonSurfaceData.originPosWS = 0;
     otoonSurfaceData.posWS = 0;
     otoonSurfaceData.bitangent = 0;
@@ -203,9 +203,9 @@ void InitializeOtoonPBRSurfaceData(out OtoonPBRSurfaceData otoonSurfaceData)
     otoonSurfaceData.hatchingSmoothness = _HatchingSmoothness;
     otoonSurfaceData.hatchingDiffuseOffset = _HatchingDiffuseOffset;
     otoonSurfaceData.hatchingColor = _HatchingColor;
-    otoonSurfaceData.frontDirectionWS = 0;
-    otoonSurfaceData.rightDirectionWS = 0;
-    otoonSurfaceData.faceShadowMapUV = 0;
+    //otoonSurfaceData.frontDirectionWS = 0;
+    //otoonSurfaceData.rightDirectionWS = 0;
+    //otoonSurfaceData.faceShadowMapUV = 0;
     otoonSurfaceData.halftoneFadeDistance = _HalftoneFadeDistance;
     otoonSurfaceData.halftoneFadeToColor = _HalftoneFadeToColor;
 }

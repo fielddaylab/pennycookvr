@@ -39,11 +39,11 @@ Shader "URP/OToonCustomLitTerrain"
         _NoiseScale ("[_DiffuseWrapNoise][AllToon]Noise Scale", float) = 1
         _NoiseStrength ("[ResumeIndent][_DiffuseWrapNoise][AllToon]Noise Strength", Range(0.01, 1.0)) = 0.1
 
-        [Toggle(_RIMLIGHTING_ON)] _RimEnabled ("[Indent]Enable Rim Lighting", Float) = 0.0
-        _RimPower ("[RimLight]Rim Power", Range(0, 1)) = 0.55
-        _RimLightAlign ("[RimLight]Rim Light Align", Range(-1, 1)) = 0
-        _RimLightSmoothness ("[RimLight]Rim Light Smoothness", Range(0, 1)) = 0
-        [HDR]_RimColor ("[RimLight][AlphaBlend]Rim Color", Color) = (1, 1, 1, 1)
+        //[Toggle(_RIMLIGHTING_ON)] _RimEnabled ("[Indent]Enable Rim Lighting", Float) = 0.0
+        //_RimPower ("[RimLight]Rim Power", Range(0, 1)) = 0.55
+        //_RimLightAlign ("[RimLight]Rim Light Align", Range(-1, 1)) = 0
+        //_RimLightSmoothness ("[RimLight]Rim Light Smoothness", Range(0, 1)) = 0
+        //[HDR]_RimColor ("[RimLight][AlphaBlend]Rim Color", Color) = (1, 1, 1, 1)
         
         [ToggleEx] _HalfToneEnabled ("[Indent]Enable Hal1fTone Shading", Float) = 0.0
         [KeywordEnum(Dot, Stripe, Cross, Custom)]_HalfToneShape ("[Halftone]HalfTone Shape Mode", Float) = 0
@@ -70,28 +70,28 @@ Shader "URP/OToonCustomLitTerrain"
         _HatchingRotation ("[hatching]Hatching Rotation", Range(0, 90)) = 0
         [ToggleEx]_HalfToneIncludeReceivedShadow ("[Halftone][hatching]Include Shadow Receiving Area", Float) = 0.0
 
-        [Enum(NormalExtrude, 0)]_OutlineMode ("Outline Mode", Float) = 0
-        [Toggle(_OUTLINE)] _OutlineEnabled ("[Indent]Enable Outline", Float) = 0.0
-        _OutlineColor ("[Outline]Outline Color", Color) = (0, 0, 0, 1)
-        _OutlineWidth ("[Outline]Outline Width", Range(0, 15)) = 0.0
-        [MinMax(Near, Far, 200)]_OutlineDistancFade ("[Outline] Fade outline with near/far distance ", Vector) = (-25, 50, 0, 0)
+        //[Enum(NormalExtrude, 0)]_OutlineMode ("Outline Mode", Float) = 0
+        //[Toggle(_OUTLINE)] _OutlineEnabled ("[Indent]Enable Outline", Float) = 0.0
+        //_OutlineColor ("[Outline]Outline Color", Color) = (0, 0, 0, 1)
+        //_OutlineWidth ("[Outline]Outline Width", Range(0, 15)) = 0.0
+        //[MinMax(Near, Far, 200)]_OutlineDistancFade ("[Outline] Fade outline with near/far distance ", Vector) = (-25, 50, 0, 0)
 
-        [ToggleEx] _SpherizeNormalEnabled ("[Indent]SpherizeNormalEnabled", Float) = 0.0
-        _SpherizeNormalOrigin ("_SpherizeNormalOrigin", Vector) = (0, 0, 0, 0)
+        //[ToggleEx] _SpherizeNormalEnabled ("[Indent]SpherizeNormalEnabled", Float) = 0.0
+        //_SpherizeNormalOrigin ("_SpherizeNormalOrigin", Vector) = (0, 0, 0, 0)
 
-        [Toggle(_FACE_SHADOW_MAP)] _FaceShadowMapEnabled ("Face ShadowMap Enabled", Float) = 0.0
-        _FaceShadowMap ("[Face][SinglelineTexture]Face Shadow Map", 2D) = "white" { }
-        _FaceShadowMapPow ("[Face][_FaceShadowMap]Face Shadow Map Power", range(0.001, 0.5)) = 0.2
-        _FaceShadowSmoothness ("[Face][_FaceShadowMap]Face Shadow Smoothness", range(0.0, 0.5)) = 0.0
-        [Space(30)]_FaceFrontDirection ("[Face][_FaceShadowMap]Face Front Direction", Vector) = (0, 0, 1, 0)
-        _FaceRightDirection ("[ResumeIndent][Face][_FaceShadowMap]Face Right Direction", Vector) = (1, 0, 0, 0)
-        [Toggle]_EnabledHairSpec ("[Indent]Enable Hair Specular(天使の輪)", float) = 0
-        _HairSpecColor ("[Hair][AlphaBlend]Hair Spec Color", Color) = (0, 0, 0)
-        _HairSpecNoiseMap ("[Hair]Noise Map", 2D) = "Noise Map" { }
-        _HairSpecNoiseStrength ("[Hair]Hair Spec Noise Strength", Range(-10, 10)) = 1
-        _HairSpecExponent ("[Hair]Spec Exponent", Range(2, 250)) = 128
-        _HairSpecularSize ("[Hair]Hair Spec Size", Range(0.1, 1.0)) = 0.8
-        _HairSpecularSmoothness ("[Hair]Hair Spec Smoothness", Range(0.1, 1.0)) = 0.1
+        //[Toggle(_FACE_SHADOW_MAP)] _FaceShadowMapEnabled ("Face ShadowMap Enabled", Float) = 0.0
+        //_FaceShadowMap ("[Face][SinglelineTexture]Face Shadow Map", 2D) = "white" { }
+        //_FaceShadowMapPow ("[Face][_FaceShadowMap]Face Shadow Map Power", range(0.001, 0.5)) = 0.2
+        //_FaceShadowSmoothness ("[Face][_FaceShadowMap]Face Shadow Smoothness", range(0.0, 0.5)) = 0.0
+        //[Space(30)]_FaceFrontDirection ("[Face][_FaceShadowMap]Face Front Direction", Vector) = (0, 0, 1, 0)
+        //_FaceRightDirection ("[ResumeIndent][Face][_FaceShadowMap]Face Right Direction", Vector) = (1, 0, 0, 0)
+        //[Toggle]_EnabledHairSpec ("[Indent]Enable Hair Specular(天使の輪)", float) = 0
+        //_HairSpecColor ("[Hair][AlphaBlend]Hair Spec Color", Color) = (0, 0, 0)
+        //_HairSpecNoiseMap ("[Hair]Noise Map", 2D) = "Noise Map" { }
+        //_HairSpecNoiseStrength ("[Hair]Hair Spec Noise Strength", Range(-10, 10)) = 1
+        //_HairSpecExponent ("[Hair]Spec Exponent", Range(2, 250)) = 128
+        //_HairSpecularSize ("[Hair]Hair Spec Size", Range(0.1, 1.0)) = 0.8
+        //_HairSpecularSmoothness ("[Hair]Hair Spec Smoothness", Range(0.1, 1.0)) = 0.1
         
         _ShadowColor ("[LightAndShadow][AlphaBlend]Shadow Color", Color) = (0, 0, 0, 1)
         _SpecShadowStrength ("[LightAndShadow]Shadow Specular Mask", Range(0, 1)) = 1
@@ -135,23 +135,23 @@ Shader "URP/OToonCustomLitTerrain"
         Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "UniversalMaterialType" = "SimpleLit" "IgnoreProjector" = "True" "ShaderModel" = "4.5" "TerrainCompatible" = "True" }
         LOD 300
 
-        Pass
-        {
-            Name "Outline"
-            Tags { "LightMode" = "OutlineObject" "RenderType" = "Opaque" }
-            Cull Front
-            Blend SrcAlpha OneMinusSrcAlpha
-            HLSLPROGRAM
+        //Pass
+        //{
+        //    Name "Outline"
+        //    Tags { "LightMode" = "OutlineObject" "RenderType" = "Opaque" }
+        //    Cull Front
+        //    Blend SrcAlpha OneMinusSrcAlpha
+        //    HLSLPROGRAM
 
-            #pragma vertex vert
-            #pragma fragment frag
-            #pragma target 2.0
-            #pragma shader_feature_local _OUTLINE
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Library/OToonOutline.hlsl"
-            ENDHLSL
+        //    #pragma vertex vert
+        //    #pragma fragment frag
+        //    #pragma target 2.0
+        //    #pragma shader_feature_local _OUTLINE
+        //    #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+        //    #include "Library/OToonOutline.hlsl"
+        //    ENDHLSL
 
-        }
+        //}
 
         Pass
         {
@@ -178,9 +178,9 @@ Shader "URP/OToonCustomLitTerrain"
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature_local _FACE_SHADOW_MAP
-            #pragma shader_feature_local _OUTLINE
+            //#pragma shader_feature_local _OUTLINE
             #pragma shader_feature_local _HALFTONESHAPE_DOT _HALFTONESHAPE_STRIPE _HALFTONESHAPE_CROSS  _HALFTONESHAPE_CUSTOM
-            #pragma shader_feature_local _RIMLIGHTING_ON
+            //#pragma shader_feature_local _RIMLIGHTING_ON
             #pragma shader_feature_local _TOON_SHADING_ON
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON

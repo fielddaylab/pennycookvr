@@ -13,7 +13,7 @@ public class SpherizeNormalCenterObject : MonoBehaviour
 
     private void Awake()
     {
-        m_spherizeNormalPropId = Shader.PropertyToID("_SpherizeNormalOrigin");
+        //m_spherizeNormalPropId = Shader.PropertyToID("_SpherizeNormalOrigin");
     }
 
     // Start is called before the first frame update
@@ -29,7 +29,7 @@ public class SpherizeNormalCenterObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_renderer == null)
+        /*if (m_renderer == null)
             return;
         if (Application.isEditor)
         {
@@ -38,6 +38,6 @@ public class SpherizeNormalCenterObject : MonoBehaviour
         else
         {
             m_renderer.materials[m_targetMaterialSubMeshIndex].SetVector(m_spherizeNormalPropId, transform.position);
-        }
+        }*/
     }
 }

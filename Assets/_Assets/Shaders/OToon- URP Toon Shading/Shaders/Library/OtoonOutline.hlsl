@@ -22,10 +22,10 @@ CBUFFER_START(UnityPerMaterial)
     half _SpecularClipStrength;
     half _SpecularFalloff;
     half _SpecularSize;
-    half _RimPower;
-    half _RimLightAlign;
-    half _RimLightSmoothness;
-    half4 _RimColor;
+    //half _RimPower;
+    //half _RimLightAlign;
+    //half _RimLightSmoothness;
+    //half4 _RimColor;
     half _HalfToneEnabled;
     half4 _HalfToneColor;
     half _HalftoneNoiseClip;
@@ -37,16 +37,16 @@ CBUFFER_START(UnityPerMaterial)
     half _HalfToneIncludeReceivedShadow;
     half _HalftoneFadeDistance;
     half _HalftoneFadeToColor;
-    half4 _OutlineColor;
-    half _OutlineWidth;
-    half2 _OutlineDistancFade;
-    half _OutlineMode;
+    //half4 _OutlineColor;
+    //half _OutlineWidth;
+    //half2 _OutlineDistancFade;
+    //half _OutlineMode;
     half4 _ShadowColor;
     half _SpecShadowStrength;
-    half4 _HairSpecColor;
-    half _EnabledHairSpec;
-    float4 _SpherizeNormalOrigin;
-    half _SpherizeNormalEnabled;
+    //half4 _HairSpecColor;
+    //half _EnabledHairSpec;
+    //float4 _SpherizeNormalOrigin;
+    //half _SpherizeNormalEnabled;
     half _HatchingEnabled;
     half _HatchingDensity;
     half _HatchingRotation;
@@ -61,19 +61,19 @@ CBUFFER_START(UnityPerMaterial)
     float4 _HalfTonePatternMap_ST;
     float4 _HalfToneNoiseMap_ST;
     float4 _HatchingNoiseMap_ST;
-    float4 _HairSpecNoiseMap_ST;
+    //float4 _HairSpecNoiseMap_ST;
     float _OverrideShadowColor;
-    float _HairSpecNoiseStrength;
-    float _HairSpecExponent;
-    float _HairSpecScale;
-    float _HairSpecularSize;
-    float _HairSpecularSmoothness;
+    //float _HairSpecNoiseStrength;
+    //float _HairSpecExponent;
+    //float _HairSpecScale;
+    //float _HairSpecularSize;
+    //float _HairSpecularSmoothness;
 
-    float _FaceShadowMapEnabled;
-    float _FaceShadowMapPow;
-    float _FaceShadowSmoothness;
-    half3 _FaceFrontDirection;
-    half3 _FaceRightDirection;
+    //float _FaceShadowMapEnabled;
+    //float _FaceShadowMapPow;
+    //float _FaceShadowSmoothness;
+    //half3 _FaceFrontDirection;
+    //half3 _FaceRightDirection;
 CBUFFER_END
 
 struct VertexInput

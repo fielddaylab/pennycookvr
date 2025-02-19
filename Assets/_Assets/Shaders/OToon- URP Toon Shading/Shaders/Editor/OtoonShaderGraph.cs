@@ -39,11 +39,11 @@ public class OtoonShaderGraph : StandardBaseShaderGUI
     private MaterialProperty m_SpecLightEnabledProp;
     private MaterialProperty m_ToonEnabledProp;
     private MaterialProperty m_RampColorProp;
-    private MaterialProperty m_OutlineEnabledProp;
-    private MaterialProperty m_OutlineModeProp;
-    private MaterialProperty m_HairProp;
-    private MaterialProperty m_SpherizeNormalProp;
-    private MaterialProperty m_FaceShadowMapEnabledProp;
+    //private MaterialProperty m_OutlineEnabledProp;
+    //private MaterialProperty m_OutlineModeProp;
+    //private MaterialProperty m_HairProp;
+    //private MaterialProperty m_SpherizeNormalProp;
+    //private MaterialProperty m_FaceShadowMapEnabledProp;
     private const string k_KeyPrefix = "OToon:Material:UI_State:";
     private string m_HeaderStateKey = null;
 
@@ -169,7 +169,7 @@ public class OtoonShaderGraph : StandardBaseShaderGUI
         EditorGUILayout.Space();
 
 
-        m_RimOptionFoldout.value = materialEditor.Foldout(m_RimOptionFoldout.value, "Rim Lighting", material.IsKeywordEnabled("_RIMLIGHTING_ON"), material.IsKeywordEnabled("_RIMLIGHTING"), "_RimColor", true);
+        /*m_RimOptionFoldout.value = materialEditor.Foldout(m_RimOptionFoldout.value, "Rim Lighting", material.IsKeywordEnabled("_RIMLIGHTING_ON"), material.IsKeywordEnabled("_RIMLIGHTING"), "_RimColor", true);
         if (m_RimOptionFoldout.value)
         {
             if (m_RimLightEnabledProp != null)
@@ -192,7 +192,7 @@ public class OtoonShaderGraph : StandardBaseShaderGUI
             GUI.enabled = true;
         }
         EditorGUI.indentLevel = originIndentLevel;
-        EditorGUILayout.Space();
+        EditorGUILayout.Space();*/
 
         var overlayEnabled = m_halfToneEnabledProp.floatValue == 1 || m_hatchingEnabledProp.floatValue == 1;
         var overlayColorPropName = m_halfToneEnabledProp.floatValue == 1 ? "_HalftoneColor" : "_HatchingColor";

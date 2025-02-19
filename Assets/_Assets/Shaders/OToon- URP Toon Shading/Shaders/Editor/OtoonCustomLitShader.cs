@@ -35,8 +35,8 @@ class OToonCustomLitShader : StandardBaseShaderGUI
     //private MaterialProperty m_OutlineEnabledProp;
     //private MaterialProperty m_OutlineModeProp;
     private MaterialProperty m_HairProp;
-    private MaterialProperty m_SpherizeNormalProp;
-    private MaterialProperty m_FaceShadowMapEnabledProp;
+    //private MaterialProperty m_SpherizeNormalProp;
+    //private MaterialProperty m_FaceShadowMapEnabledProp;
     private const string k_KeyPrefix = "OToon:Material:UI_State:";
     private string m_HeaderStateKey = null;
 
@@ -160,7 +160,7 @@ class OToonCustomLitShader : StandardBaseShaderGUI
         EditorGUILayout.Space();
 
 
-        m_RimOptionFoldout.value = materialEditor.Foldout(m_RimOptionFoldout.value, "Rim Lighting", m_RimLightEnabledProp.floatValue == 1, m_RimLightEnabledProp.floatValue == 1, "_RimColor", true);
+        /*m_RimOptionFoldout.value = materialEditor.Foldout(m_RimOptionFoldout.value, "Rim Lighting", m_RimLightEnabledProp.floatValue == 1, m_RimLightEnabledProp.floatValue == 1, "_RimColor", true);
         if (m_RimOptionFoldout.value)
         {
             if (m_RimLightEnabledProp != null)
@@ -183,7 +183,7 @@ class OToonCustomLitShader : StandardBaseShaderGUI
             GUI.enabled = true;
         }
         EditorGUI.indentLevel = originIndentLevel;
-        EditorGUILayout.Space();
+        EditorGUILayout.Space();*/
         var overlayEnabled = m_halfToneEnabledProp.floatValue == 1 || m_hatchingEnabledProp.floatValue == 1;
         var overlayColorPropName = m_halfToneEnabledProp.floatValue == 1 ? "_HalfToneColor" : "_HatchingColor";
         m_OverlayOptionFoldout.value = materialEditor.Foldout(m_OverlayOptionFoldout.value, "Halftone / Hatching Overlay", overlayEnabled, overlayEnabled, overlayColorPropName, true);
@@ -299,7 +299,7 @@ class OToonCustomLitShader : StandardBaseShaderGUI
         EditorGUI.indentLevel = originIndentLevel;
         EditorGUILayout.Space();
 
-        m_HairOptionFoldout.value = materialEditor.Foldout(m_HairOptionFoldout.value, "Face & Hair Options", m_FaceShadowMapEnabledProp.floatValue == 1 || m_HairProp.floatValue == 1 || m_SpherizeNormalProp.floatValue == 1, m_HairProp.floatValue == 1, "_HairSpecColor", true);
+        /*m_HairOptionFoldout.value = materialEditor.Foldout(m_HairOptionFoldout.value, "Face & Hair Options", m_FaceShadowMapEnabledProp.floatValue == 1 || m_HairProp.floatValue == 1 || m_SpherizeNormalProp.floatValue == 1, m_HairProp.floatValue == 1, "_HairSpecColor", true);
         if (m_HairOptionFoldout.value)
         {
             materialEditor.DrawStandard(m_SpherizeNormalProp);
@@ -365,7 +365,7 @@ class OToonCustomLitShader : StandardBaseShaderGUI
             //Hair Specular
         }
         EditorGUI.indentLevel = originIndentLevel;
-        EditorGUILayout.Space();
+        EditorGUILayout.Space();*/
 
     }
 
@@ -381,9 +381,9 @@ class OToonCustomLitShader : StandardBaseShaderGUI
         m_hatchingEnabledProp = BaseShaderGUI.FindProperty("_HatchingEnabled", properties, false);
         //m_OutlineEnabledProp = BaseShaderGUI.FindProperty("_OutlineEnabled", properties, false);
         //m_OutlineModeProp = BaseShaderGUI.FindProperty("_OutlineMode", properties, false);
-        m_HairProp = BaseShaderGUI.FindProperty("_EnabledHairSpec", properties, false);
-        m_SpherizeNormalProp = BaseShaderGUI.FindProperty("_SpherizeNormalEnabled", properties, false);
-        m_FaceShadowMapEnabledProp = BaseShaderGUI.FindProperty("_FaceShadowMapEnabled", properties, false);
+        //m_HairProp = BaseShaderGUI.FindProperty("_EnabledHairSpec", properties, false);
+        //m_SpherizeNormalProp = BaseShaderGUI.FindProperty("_SpherizeNormalEnabled", properties, false);
+        //m_FaceShadowMapEnabledProp = BaseShaderGUI.FindProperty("_FaceShadowMapEnabled", properties, false);
     }
 
     // material changed check

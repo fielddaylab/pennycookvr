@@ -13,7 +13,7 @@ struct Attributes
     float4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 lightmapUV : TEXCOORD1;
-    float2 faceShadowUV : TEXCOORD2;
+    //float2 faceShadowUV : TEXCOORD2;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -39,9 +39,9 @@ struct Varyings
     float3 originWS : TEXCOORD9;
     float4 spos : TEXCOORD10;
     float3 bitangent : TEXCOORD11;
-    float3 frontDirectionWS : TEXCOORD12;
-    float3 rightDirectionWS : TEXCOORD13;
-    float2 faceShadowUV : TEXCOORD14;
+    //float3 frontDirectionWS : TEXCOORD12;
+    //float3 rightDirectionWS : TEXCOORD13;
+    //float2 faceShadowUV : TEXCOORD14;
 
     float4 positionCS : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -136,9 +136,9 @@ Varyings LitPassVertex(Attributes input)
     output.screenPos = ComputeScreenPos(output.positionCS);
     output.spos = output.positionCS;
     output.originWS = TransformObjectToWorld(float3(0, 0, 0));
-    output.frontDirectionWS = TransformObjectToWorldDir(_FaceFrontDirection);
-    output.rightDirectionWS = TransformObjectToWorldDir(_FaceRightDirection);
-    output.faceShadowUV = input.faceShadowUV;
+    //output.frontDirectionWS = TransformObjectToWorldDir(_FaceFrontDirection);
+    //output.rightDirectionWS = TransformObjectToWorldDir(_FaceRightDirection);
+    //output.faceShadowUV = input.faceShadowUV;
     return output;
 }
 
@@ -181,7 +181,7 @@ half4 LitPassFragment(Varyings input) : SV_Target
     SurfaceData surfaceData;
     InitializeStandardLitSurfaceData(input.uv, surfaceData);
 
-    input.normalWS = lerp(input.normalWS, normalize(float3(input.positionWS - _SpherizeNormalOrigin.xyz)), _SpherizeNormalEnabled);
+    //input.normalWS = lerp(input.normalWS, normalize(float3(input.positionWS - _SpherizeNormalOrigin.xyz)), _SpherizeNormalEnabled);
     InputData inputData;
     InitializeInputData(input, surfaceData.normalTS, inputData);
 
@@ -190,9 +190,9 @@ half4 LitPassFragment(Varyings input) : SV_Target
     otoonSurfaceData.posWS = input.positionWS;
     otoonSurfaceData.originPosWS = input.originWS;
     otoonSurfaceData.bitangent = input.bitangent;
-    otoonSurfaceData.frontDirectionWS = input.frontDirectionWS;
-    otoonSurfaceData.rightDirectionWS = input.rightDirectionWS;
-    otoonSurfaceData.faceShadowMapUV = input.faceShadowUV;
+    //otoonSurfaceData.frontDirectionWS = input.frontDirectionWS;
+    //otoonSurfaceData.rightDirectionWS = input.rightDirectionWS;
+    //otoonSurfaceData.faceShadowMapUV = input.faceShadowUV;
 
     half4 spos = TransformWorldToHClip(input.positionWS);
     half2 clipUv = input.spos.xy / input.spos.w;

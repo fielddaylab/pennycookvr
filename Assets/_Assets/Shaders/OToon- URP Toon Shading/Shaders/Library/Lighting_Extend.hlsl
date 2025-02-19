@@ -154,7 +154,7 @@ half DirectBRDFToonSpecular(BRDFData brdfData, half3 normalWS, half3 lightDirect
     return specularTerm;
 }
 
-float3 ShiftTangentHair(float3 T, float3 N, float shift)
+/*float3 ShiftTangentHair(float3 T, float3 N, float shift)
 {
     float3 shiftedT = T + (shift * N);
     return normalize(shiftedT);
@@ -179,7 +179,7 @@ float AnistropicPower(float3 tangent, float3 normal, float3 viewVec, float3 ligh
     half size = 1.0 - _HairSpecularSize;
     half modifier = smoothstep(size - delta, size + delta + _HairSpecularSmoothness, spec);
     return modifier;
-}
+}*/
 
 half3 LightingSpecularToon(half3 lightColor, half3 lightDir, half3 normal, half3 viewDir, half4 specular, half size, half smoothness)
 {
@@ -259,7 +259,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-half3 FaceShadowMapColor(half3 baseColor, half3 shadowdColor, float2 uv, OtoonPBRSurfaceData otoonSurface, Light light)
+/*half3 FaceShadowMapColor(half3 baseColor, half3 shadowdColor, float2 uv, OtoonPBRSurfaceData otoonSurface, Light light)
 {
     float3 lightDir = light.direction.xyz;
     float3 front = otoonSurface.frontDirectionWS;
@@ -273,7 +273,7 @@ half3 FaceShadowMapColor(half3 baseColor, half3 shadowdColor, float2 uv, OtoonPB
 
     float lightAttenuation = smoothstep(shadedArea - _FaceShadowSmoothness, shadedArea + _FaceShadowSmoothness, flippedFaceShadow) * light.shadowAttenuation;
     return lerp(shadowdColor, baseColor, saturate(lightAttenuation));
-}
+}*/
 
 half3 LightingPhysicallyBased_Extend(BRDFData brdfData, BRDFData brdfDataClearCoat,
 Light light,
@@ -320,11 +320,11 @@ half clearCoatMask, bool specularHighlightsOff, float3 positionWS, float2 uv, fl
     // CUSTOM SHADOW  COLOR
 
     //FACE SHADOW MAP
-    #ifdef _FACE_SHADOW_MAP
+    /*#ifdef _FACE_SHADOW_MAP
         {
             outColor = FaceShadowMapColor(baseColor, lerp(baseColor, adjustShadowColor, shadowPower), otoonSurface.faceShadowMapUV, otoonSurface, light);
         }
-    #endif
+    #endif*/
     //FACE SHADOW MAP
 
     //HalfTone Effect
@@ -405,11 +405,11 @@ half3 normalWS, half3 viewDirectionWS, float3 positionWS, float2 uv, float2 scre
     // CUSTOM SHADOW  COLOR
 
     //FACE SHADOW MAP
-    #ifdef _FACE_SHADOW_MAP
+    /*#ifdef _FACE_SHADOW_MAP
         {
             outColor = FaceShadowMapColor(diffuse, lerp(diffuse, adjustShadowColor, shadowPower), otoonSurface.faceShadowMapUV, otoonSurface, light);
         }
-    #endif
+    #endif*/
     //FACE SHADOW MAP
     
     //HalfTone Effect
@@ -530,7 +530,7 @@ half4 UniversalFragmentPBR_Extend(InputData inputData, SurfaceData surfaceData, 
         color += inputData.vertexLighting * brdfData.diffuse;
     #endif
 
-    #if defined(_RIMLIGHTING_ON)
+    /*#if defined(_RIMLIGHTING_ON)
         half rimPower = 1.0 - otoonSurface.rimPower;
         half NdotL = saturate(dot(mainLight.direction, inputData.normalWS));
         half rim = saturate((1.0 - dot(inputData.viewDirectionWS, inputData.normalWS)) * lerp(1, NdotL, saturate(_RimLightAlign)) * lerp(1, 1 - NdotL, saturate(-_RimLightAlign)));
@@ -543,7 +543,7 @@ half4 UniversalFragmentPBR_Extend(InputData inputData, SurfaceData surfaceData, 
     {
         half3 hairSpec = otoonSurface.hairSpecColor.rgb * AnistropicPower(otoonSurface.bitangent, inputData.normalWS, inputData.viewDirectionWS, mainLight.direction, uv, otoonSurface.hairSpecColor.a);
         color += hairSpec;
-    }
+    }*/
 
     color += surfaceData.emission;
 
@@ -622,7 +622,7 @@ half4 UniversalFragmentToon_Extend(InputData inputData, half3 diffuse, half4 spe
         color += inputData.vertexLighting;
     #endif
 
-    #if defined(_RIMLIGHTING_ON)
+    /*#if defined(_RIMLIGHTING_ON)
         half rimPower = 1.0 - otoonSurface.rimPower;
         half NdotL = saturate(dot(mainLight.direction, inputData.normalWS));
         half rim = saturate((1.0 - dot(inputData.viewDirectionWS, inputData.normalWS)) * lerp(1, NdotL, saturate(_RimLightAlign)) * lerp(1, 1 - NdotL, saturate(-_RimLightAlign)));
@@ -635,7 +635,7 @@ half4 UniversalFragmentToon_Extend(InputData inputData, half3 diffuse, half4 spe
     {
         half3 hairSpec = otoonSurface.hairSpecColor.rgb * AnistropicPower(otoonSurface.bitangent, inputData.normalWS, inputData.viewDirectionWS, mainLight.direction, uv, otoonSurface.hairSpecColor.a);
         color += hairSpec;
-    }
+    }*/
 
     color += emission;
     
