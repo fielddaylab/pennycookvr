@@ -991,10 +991,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.31622812
+  m_Radius: 0.27275977
   m_Height: 1.158075
   m_Direction: 1
-  m_Center: {x: 0.0075345673, y: -0.07903781, z: 0.000000007649625}
+  m_Center: {x: 0.0075345724, y: -0.079037786, z: 0.043468483}
 --- !u!114 &8853553182329069026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2569,6 +2569,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 368448990905742610}
     m_Modifications:
+    - target: {fileID: 210602169899965550, guid: 46eb4d8365c144702a4b01d9ee277727, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 210602169899965550, guid: 46eb4d8365c144702a4b01d9ee277727, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 210602169899965550, guid: 46eb4d8365c144702a4b01d9ee277727, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
     - target: {fileID: 3854786015729220287, guid: 46eb4d8365c144702a4b01d9ee277727, type: 3}
       propertyPath: DeParent
       value: 1

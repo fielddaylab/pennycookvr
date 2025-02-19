@@ -6,9 +6,14 @@ $set chapter:identifiedCount = 0
 $set chapter:finishedObservations = false
 $set chapter:dataTrackersStarted = false
 $call ClearGoals()
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
+
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-//$call DayHeader->SetText(Dec 1)
 $call Sky1->Deactivate()
 $call Sky2->Deactivate()
 $call Sky3->Activate()
@@ -19,18 +24,13 @@ $call Ocean->SetMaterial(2);
 $call Terrain->SetTerrainMaterial(2);
 $call Screen->SetEnabled(false)
 
-:: StartGame
-@trigger    SceneReady
-@who        Player
-@once
-
 $call FadeIn(6.0)
 $call Wait(2)
 
+$call SetWarpActive(WarpBluff, true)
+
 $call Wendy->SetRegurgitation()
 //$call Billy->SetRegurgitation()
-
-$call SetWarpActive(WarpBluff, true)
 
 {@Margo}   Mornin’, kiddo! You’re up awfully early.   $[Day3/Tent/3tm01]
 {@Player}   I was too excited to sleep.   $[Day3/Tent/Player_1]

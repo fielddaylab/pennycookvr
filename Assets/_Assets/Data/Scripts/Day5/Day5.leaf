@@ -2,13 +2,18 @@
 
 :: Prepare
 @function	ScenePrepare
-$call PlaceAndRotatePlayerAt(WarpDesk, true)
-$call SetAllWarpsActive(false)
-$call ClearGoals()
+
 $set chapter:legCount = 0
 $set chapter:legTrackersStarted = false
-//$call DayHeader->SetText(Feb 22)
+$call ClearGoals()
 
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
 $call DataLoggerPlate->Deactivate()
 $call ChickBandPlate->Deactivate()
 $call Sky1->Deactivate()
@@ -19,11 +24,6 @@ $call Sky5->Activate()
 $call Sky5->SetSkybox(0.003)
 $call Ocean->SetMaterial(4);
 $call Terrain->SetTerrainMaterial(4);
-
-:: StartGame
-@trigger    SceneReady
-@who        Player
-@once
 
 $call FadeIn(6.0)
 $call Wait(2)

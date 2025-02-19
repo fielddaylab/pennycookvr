@@ -10,8 +10,14 @@ $set chapter:trackerStarted = false
 $set chapter:weighGate = false
 $set chapter:dataTrackersDone = false
 $set chapter:finishedBands = false
-
 $call ClearGoals()
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
+
+
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call Sky1->Deactivate()
@@ -22,21 +28,13 @@ $call Sky4->SetSkybox(0.003)
 $call Sky5->Deactivate()
 $call Ocean->SetMaterial(3);
 $call Terrain->SetTerrainMaterial(3);
-
-//$call DayHeader->SetText(Dec 18)
-//$call TurnOnSockets(BandSocketChick, true)
-
-:: StartGame
-@trigger    SceneReady
-@who        Player
-@once
-
-$call WeighGatePenguin->SetWeighGate()
+$call Screen->SetEnabled(false)
 
 $call FadeIn(6.0)
 $call Wait(2)
 
 $call SetWarpActive(WarpBluff, true)
+$call WeighGatePenguin->SetWeighGate()
 
 {@Margo}   Mornin', kiddo.   $[Day4/Tent/4tm01]
 {@Player}   Whoa… what’s all this?   $[Day4/Tent/Player_1]

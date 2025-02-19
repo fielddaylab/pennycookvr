@@ -6,12 +6,16 @@ $set chapter:identifiedCount = 0
 $set chapter:finishedAllObservations = false
 $set chapter:finishedObservations = false
 $set chapter:trackersStarted = false
-
 $call ClearGoals()
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+@once
+
+
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
-//$call DayHeader->SetText(Nov 16)
-
 $call Sky1->Deactivate()
 $call Sky2->Activate()
 $call Sky2->SetSkybox(0.008)
@@ -22,11 +26,6 @@ $call Ocean->SetMaterial(1);
 $call Terrain->SetTerrainMaterial(1);
 $call Screen->SetEnabled(false)
 $call WaterAudio->SetVolume(1.0)
-
-:: StartGame
-@trigger    SceneReady
-@who        Player
-@once
 
 $call FadeIn(6.0)
 $call Wait(2)
