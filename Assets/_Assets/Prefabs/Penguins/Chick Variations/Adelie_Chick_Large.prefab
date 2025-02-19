@@ -1262,6 +1262,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mate: {fileID: 0}
   Child: {fileID: 0}
+  IsPursued: 0
+  CloseDistance: 0
+  Regurg: {fileID: 0}
 --- !u!114 &4919357969015245165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1394,7 +1397,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2420517757205481800}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf880d7901e88d346b1b1f487617e9a6, type: 3}
   m_Name: 
@@ -3125,6 +3128,7 @@ MonoBehaviour:
   IsHeavy: 1
   IsAnchored: 1
   MustGrabAtSnap: 1
+  TapToRelease: 0
   GrabberAnim:
     GripAnimIndex: 0
     GripAnimStrength: 0

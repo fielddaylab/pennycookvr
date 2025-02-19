@@ -124,12 +124,15 @@ $call WinstonWendyChick->SetIdentified(false)
 @interrupt
 
 $set	chapter:identifiedCount + 1
+$if chapter:identifiedCount >= 5 
+    $set	chapter:finishedObservations = true
+$endif
 $call CompleteGoal("id_millie_nest")
 
 {@Player}   Yes! Millie and Billy have hatched a healthy chick! $[Day3/Rookery/Player_8]
 {@Margo}    Aw, good for them. Two years in a row!  $[Day3/Rookery/3rm03]
 
-$goto Day3.CheckAllNestsIdentified
+$goto Day3.CheckAllComplete
 
 :: OnAlfredoEggIdentified
 @trigger	TabletIdentified
@@ -139,6 +142,9 @@ $goto Day3.CheckAllNestsIdentified
 @interrupt
 
 $set	chapter:identifiedCount + 1
+$if chapter:identifiedCount >= 5 
+    $set	chapter:finishedObservations = true
+$endif
 //play egg hatching animation
 $call AlfredoEgg->Hatch()
 $call CompleteGoal("id_alfredo_nest")
@@ -147,7 +153,7 @@ $call CompleteGoal("id_alfredo_nest")
 {@Margo}    Ooh. We better snag a video later.  $[Day3/Rookery/3rm04]
 {@Margo}    I betcha those’ll be the most famous Adelie chicks on Youtube.  $[Day3/Rookery/3rm05]
 
-$goto Day3.CheckAllNestsIdentified
+$goto Day3.CheckAllComplete
 
 :: OnFuzzEggIdentified
 @trigger	TabletIdentified
@@ -157,6 +163,9 @@ $goto Day3.CheckAllNestsIdentified
 @interrupt
 
 $set chapter:identifiedCount + 1
+$if chapter:identifiedCount >= 5 
+    $set	chapter:finishedObservations = true
+$endif
 $call CompleteGoal("id_fuzz_nest")
 
 {@Player}   Uh oh. Something’s not right here.  $[Day3/Rookery/Player_10]
@@ -167,7 +176,7 @@ $call CompleteGoal("id_fuzz_nest")
 {@Player}   He’s brand new at this. Maybe he’ll figure it out.  $[Day3/Rookery/Player_12]
 {@Margo}    Well, he’d better hurry. Those eggs are gonna freeze fast.  $[Day3/Rookery/3rm09]
 
-$goto Day3.CheckAllNestsIdentified
+$goto Day3.CheckAllComplete
 
 :: OnWinstonWendyIdentified
 @trigger	TabletIdentified
@@ -177,6 +186,9 @@ $goto Day3.CheckAllNestsIdentified
 @interrupt
 
 $set chapter:identifiedCount + 1
+$if chapter:identifiedCount >= 5 
+    $set	chapter:finishedObservations = true
+$endif
 $call CompleteGoal("id_winston_nest")
 
 {@Player}   Nice. A new chick for Winston and Wendy! $[Day3/Rookery/Player_13]
@@ -184,7 +196,7 @@ $call CompleteGoal("id_winston_nest")
 {@Margo}    Winston and Wendy have had a successful chick every year.  $[Day3/Rookery/3rm11]
 {@Player}   Wow. Penguin Parents of the Year award! Keep it up, you two.    $[Day3/Rookery/Player_14]
 
-$goto Day3.CheckAllNestsIdentified
+$goto Day3.CheckAllComplete
 
 :: OnPoloNestIdentified
 @trigger	TabletIdentified
@@ -194,6 +206,10 @@ $goto Day3.CheckAllNestsIdentified
 @interrupt
 
 $set chapter:identifiedCount + 1
+$if chapter:identifiedCount >= 5 
+    $set	chapter:finishedObservations = true
+$endif
+
 $call CompleteGoal("id_polo_nest")
 
 {@Player}   Whoa, wait a second. Weren’t there an egg here yesterday?   $[Day3/Rookery/Player_15]
@@ -202,15 +218,7 @@ $call CompleteGoal("id_polo_nest")
 {@Margo}    The skua must’ve been here. $[Day3/Rookery/3rm13]
 {@Player}   You mean . . . the egg is gone?  $[Day3/Rookery/Player_17]
 
-$goto Day3.CheckAllNestsIdentified
-
-:: CheckAllNestsIdentified
-@trigger    CheckAllNestsIdentified
-
-$if chapter:identifiedCount >= 5 
-    $set	chapter:finishedObservations = true
-	$goto Day3.CheckAllComplete
-$endif
+$goto Day3.CheckAllComplete
 
 :: WarpedToRookeryBack
 @trigger    AtWarpPoint
@@ -332,6 +340,7 @@ $set chapter:trackerSocketedCount - 1
 
 :: CheckAllComplete
 @trigger	CheckAllComplete
+@who		Player
 
 $if chapter:trackersSocketed == true, chapter:regurgDone == true, chapter:finishedObservations == true
 $set chapter:day3AllComplete = true

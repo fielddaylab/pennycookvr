@@ -77,7 +77,18 @@ namespace FieldDay.Sockets {
         private void OnDetectorEntered(Collider collider) {
             Socketable socketable = collider.GetComponentInParent<Socketable>();
             if (socketable) {
-                Pennycook.Tablet.TabletUtility.PlayHaptics(0.3f, 0.05f);
+				if(socketable.SocketType == AllowedSockets) {
+					FieldDay.VRHands.Grabbable grabbable = collider.GetComponentInParent<FieldDay.VRHands.Grabbable>();
+					if(grabbable != null) {
+						if(grabbable.CurrentGrabbers[0] != null && grabbable.CurrentGrabbers[0].State == FieldDay.VRHands.GrabberState.Holding) {
+							Pennycook.PlayerHaptics.Play(grabbable.CurrentGrabbers[0].Chirality, 0.3f, 0.5f);
+						}
+						
+						if(grabbable.CurrentGrabbers[1] != null && grabbable.CurrentGrabbers[1].State == FieldDay.VRHands.GrabberState.Holding) {
+							Pennycook.PlayerHaptics.Play(grabbable.CurrentGrabbers[1].Chirality, 0.3f, 0.5f);
+						}
+					}
+				}
                 socketable.PotentialSockets.Add(this);
             }
         }

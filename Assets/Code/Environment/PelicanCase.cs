@@ -27,7 +27,7 @@ namespace Pennycook {
             TabletControlState tcs = Find.State<TabletControlState>();
             if(MargoSocket) {
                 SocketUtility.SetHomeSocket(tcs.Socketable, MargoSocket);
-                SocketUtility.TryAddToSocket(tcs.Socketable, MargoSocket, false);
+                SocketUtility.TryAddToSocket(tcs.Socketable, MargoSocket, false, false);
             }
         }
 

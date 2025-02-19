@@ -47,7 +47,7 @@ namespace FieldDay.Sockets {
         /// <summary>
         /// Attempts to add the given socketable to a socket.
         /// </summary>
-        static public bool TryAddToSocket(Socketable socketable, ObjectSocket socket, bool force) {
+        static public bool TryAddToSocket(Socketable socketable, ObjectSocket socket, bool force, bool playSound=false) {
             if (!socketable) {
                 return false;
             }
@@ -64,7 +64,7 @@ namespace FieldDay.Sockets {
                 ReleaseCurrent(socketable.CurrentSocket, false);
             }
 
-            if(!force && socket != null && socket.AllowedSockets == SocketFlags.Margo && socketable != null && socketable.SocketType == SocketFlags.Margo) {
+            if(playSound && socket != null && socket.AllowedSockets == SocketFlags.Margo && socketable != null && socketable.SocketType == SocketFlags.Margo) {
                 Pennycook.Tablet.TabletUtility.PlaySfx("Tablet.Placed");
             }
 
