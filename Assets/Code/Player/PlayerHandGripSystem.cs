@@ -3,6 +3,7 @@ using FieldDay.HID.XR;
 using FieldDay.Systems;
 using FieldDay.VRHands;
 using FieldDay.XR;
+using UnityEngine;
 
 namespace Pennycook {
     [SysUpdate(GameLoopPhase.FixedUpdate, 0)]
@@ -11,6 +12,24 @@ namespace Pennycook {
             XRInputState input = Find.State<XRInputState>();
             PlayerMovementState moveState = Find.State<PlayerMovementState>();
             if (moveState.CurrentState == PlayerMovementState.State.Warping) {
+				if(moveState.CurrentWarp.Group == Pennycook.Tablet.TabletWarpPointGroup.Tent) {
+					foreach(var c in m_Components) {
+						if (c.Grabber.State == GrabberState.Holding) {
+							if(c.Grabber.HeldObject != null) {
+								FieldDay.Sockets.Socketable s = c.Grabber.HeldObject.GetComponent<FieldDay.Sockets.Socketable>();
+								if(s == null) {
+									//drop current item...
+									c.Grabber.State = GrabberState.AttemptRelease;
+								}
+								else {
+									if(s.SocketType != FieldDay.Sockets.SocketFlags.Margo) {
+										c.Grabber.State = GrabberState.AttemptRelease;
+									}
+								}
+							}
+						}
+					}
+				}
                 return;
             }
 
