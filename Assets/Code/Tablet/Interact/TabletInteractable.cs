@@ -72,7 +72,7 @@ namespace Pennycook.Tablet {
                 if (identified) {
                     TabletUtility.PlayHaptics(0.3f, 0.08f);
                     TabletUtility.PlaySfx("Tablet.Identified");
-                    TabletUtility.PlaySfx("Tablet.IdentifiedDone");
+                    //TabletUtility.PlaySfx("Tablet.IdentifiedDone");
                 }
 
                 TabletInteractionState iState = Find.State<TabletInteractionState>();

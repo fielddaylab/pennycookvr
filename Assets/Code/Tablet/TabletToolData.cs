@@ -212,7 +212,7 @@ namespace Pennycook.Tablet {
                 PlayerMovementState moveState = Find.State<PlayerMovementState>();
                 if (PlayerMovementUtility.WarpTo(moveState, h.CachedWarp)) {
                     TabletUtility.PlayHaptics(0.3f, 0.05f);
-                    TabletUtility.PlaySfx("Tablet.Warp");
+                    //TabletUtility.PlaySfx("Tablet.Warp");
                 }
             },
 
