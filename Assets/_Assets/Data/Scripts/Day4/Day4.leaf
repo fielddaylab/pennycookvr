@@ -39,19 +39,9 @@ $call SetWarpActive(WarpBluff, true)
 $call WeighGatePenguin->SetWeighGate()
 
 {@Margo}   Mornin', kiddo.   $[Day4/Tent/4tm01]
-{@Player}   Whoa… what’s all this?   $[Day4/Tent/Player_1]
-{@Margo}   Penny got up early to decorate. It’s one week til Christmas!  $[Day4/Tent/4tm02]
-{@Margo}    Sorry, no presents yet…. Santa usually shows up a little late here. $[Day4/Tent/4tm03]
-{@Player}   Yeah. I guess we’re about as far from the North Pole as you can get.  $[Day4/Tent/Player_2]
 {@Player}   I wish Lola could meet the Fliptastic Five for Christmas. She’d love them!     $[Day4/Tent/Player_3]
 {@Player}   Especially Polo.    $[Day4/Tent/Player_4]
 {@Margo}   Aw, cheer up, kiddo. You’ll see Lola again before ya know it!     $[Day4/Tent/4tm04]
-{@Margo}    What’s she doin’ today, do ya think?    $[Day4/Tent/4tm05]
-{@Player}   She’s a sixth-grade teacher and it’s the last day before winter break.  $[Day4/Tent/Player_5]
-{@Player}   So they’re probably… I don’t know. Eating cookies and making ornaments out of noodles?  $[Day4/Tent/Player_6]
-{@Margo}    For a human, you don’t know too much about human kids, do ya?   $[Day4/Tent/4tm06]
-{@Player}   Guess not.  $[Day4/Tent/Player_7]
-{@Margo}    Well, at least you’re becomin’ an expert on penguin kids.   $[Day4/Tent/4tm07]
 {@Margo}    Come on. Let’s get out there and check on those penguins.   $[Day4/Tent/4tm08]
 
 $call Wait(1)
@@ -86,17 +76,9 @@ $call ExclaimBackTrackers->Activate()
 
 $call SetWarpGroupActive(Rookery, true)
 
-{@Player}   Whoa… look at them! I keep forgetting how funny the chicks look these days. $[Day4/Rookery/Player_1]
-{@Partner}   Isn’t it great? We call this their awkward-teenager stage. $[Day4/Rookery/4rp01]
 {@Player}   How’s Polo’s chick doing?   $[Day4/Rookery/Player_2]
 {@Partner}  Seems fine. A little small for her age, but she’s a tough cookie.   $[Day4/Rookery/4rp02]
 {@Player}   Phew. That’s good. I was rooting for her.   $[Day4/Rookery/Player_3]
-{@Player}   Oh, and speaking of cookies . . . where’d you get all that Christmas stuff? $[Day4/Rookery/Player_4]
-{@Partner}  Oh, did you like it? It’s no biggie, just some old decorations I had lying around.  $[Day4/Rookery/4rp03]
-{@Player}   At the South Pole?? How?    $[Day4/Rookery/Player_5]
-{@Partner}  I won most of it in a cribbage game at McMurdo. $[Day4/Rookery/4rp04]
-{@Player}   Oh. Yeah… that tracks.  $[Day4/Rookery/Player_6]
-{@Margo}    Okay, enough chatter. Lots to do today. $[Day4/Rookery/4rm01]
 {@Margo}    You’ll need to collect data from the weigh bridge—that’s that gate doohickey over there. $[Day4/Rookery/4rm02]
 {@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/4rm03]
 {@Margo}    And we’ll need to band 3 of the chicks. $[Day4/Rookery/4rm04]
@@ -112,13 +94,6 @@ $call SetWarpGroupActive(Rookery, true)
 $call ExclaimWeighGate->Deactivate()
 
 $call WeighGate->SetInteractable(true)
-
-{@Player}    Okay, Margo. How does this weigh bridge thing work, exactly? $[Day4/Rookery/Player_8]
-{@Margo}    Oh, it’s easy as pie!    $[Day4/Rookery/4rm05]
-{@Margo}    The weigh bridge gathers data on what the penguins were up to when they were away from the colony.   $[Day4/Rookery/4rm06]
-{@Margo}    You know . . . where they went, what they were eatin’, stuff like that.   $[Day4/Rookery/4rm07]
-{@Margo}   Just make sure Scan Mode is on, and then point me at the gate. $[Day4/Rookery/4rm08]
-{@Margo}    I’ll scan each penguin’s data as it passes through. $[Day4/Rookery/4rm09]
 
 :: OnWeighGateIdentified
 @trigger	TabletIdentified
@@ -229,12 +204,9 @@ $if chapter:wingCount == 0
 {@Player}    Oh, come on. They're, like, half the size of the grown-ups. How hard can it be?    $[Day4/Rookery/Player_9]
 {@Margo}    Haven’t you been paying attention for the last three months??   $[Day4/Rookery/4rm16]
 {@Margo}    They’re cuties, but they’re tougher than they look. $[Day4/Rookery/4rm17]
-{@Margo}    “Though she be but little . . . ”   $[Day4/Rookery/4rm18]
-{@Player}   Okay, okay, I get it. I'll be careful.  $[Day4/Rookery/Player_10]
 {@Player}   What do I need to do?   $[Day4/Rookery/Player_11]
 {@Margo}    First you’ll need to hold the penguin in place. $[Day4/Rookery/4rm19]
 {@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/4rm20]
-{@Player}   Cool, no sweat. $[Day4/Rookery/Player_12]  
 $endif
 
 :: OnUnsocketedWingBand
@@ -252,20 +224,12 @@ $set chapter:wingCount - 1
 
 $set chapter:wingCount + 1
 
-{@Player}   Jeez! Ouch! Would you just—hold—still?  $[Day4/Rookery/Player_13]
-
 :: OnSocketedWingBand2
 @trigger ObjectSocketed
 @who    Player
 @when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true, chapter:wingCount == 1
 @interrupt
 $set chapter:wingCount + 1
-
-{@Player}   Yikes. This little guy is not happy.    $[Day4/Rookery/Player_14]
-{@Player}   I promise, I’m not gonna hurt you! It’s just like a hair clip. Totally harmless.    $[Day4/Rookery/Player_15]
-{@Player}   Ouch!    $[Day4/Rookery/Player_16]
-{@Margo}    No sweat, huh, kiddo?   $[Day4/Rookery/4rm21]
-{@Player}   Okay, okay . . . maybe a little sweat.  $[Day4/Rookery/Player_17]
 
 :: OnSocketedWingBand3
 @trigger ObjectSocketed
@@ -287,10 +251,7 @@ $call TriggerResponseAndWait(Day4.CheckCompletedTasks)
 {@Player}   What!?  $[Day4/Rookery/Player_19]
 {@Partner}  It’s a rough world out there for penguins. The skua are only the tip of the iceberg.    $[Day4/Rookery/4rp08]
 {@Partner}  There’s hungry leopard seals, snow storms, melting sea ice . . .    $[Day4/Rookery/4rp09]
-{@Player}   Oookay. I just lost my Christmas spirit.    $[Day4/Rookery/Player_20]
 {@Player}   I guess that’s why you and Margo have such a thick skin. You’re used to it by now.  $[Day4/Rookery/Player_21]
-{@Partner}  Me?? A thick skin?  $[Day4/Rookery/4rp10]
-{@Player}   I mean… none of it seems to bother you. $[Day4/Rookery/Player_22]
 {@Partner}  Oh, trust me, it bothers me. Those skua drive me crazy. $[Day4/Rookery/4rp11]
 {@Partner}  And some of the parents just can’t seem to figure out how to feed their chicks. $[Day4/Rookery/4rp12]
 {@Partner}  I’ve been here twenty years, and it’s still hard to watch sometimes.    $[Day4/Rookery/4rp13]
@@ -301,7 +262,6 @@ $call TriggerResponseAndWait(Day4.CheckCompletedTasks)
 {@Partner}  Plus I just love this work. I love these birds   $[Day4/Rookery/4rp17]
 {@Player}   Yeah. You’re right. $[Day4/Rookery/Player_24]
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
-{@Partner}  Aw, don’t look so down, new kid.    $[Day4/Rookery/4rp18]
 
 $endif
 
@@ -358,19 +318,11 @@ $endwhile
 {@Player}   Awesome! Thanks, Margo. $[Day4/Tent/Player_8]
 {@Margo}    Hang on a sec, kiddo.   $[Day4/Tent/4tm13]
 {@Margo}    There’s still one more thing. Did you forget about the surprise?    $[Day4/Tent/4tm14]
-{@Player}   Yikes… it’s not a pumpkin pie to the face, is it?   $[Day4/Tent/Player_9]
-{@Player}   Because I already told Penny I was sorry back at Thanksgiving $[Day4/Tent/Player_10]
-{@Margo}  Nope. It’s not a pie, in your face or otherwise.  $[Day4/Tent/4tm15]
 {@Margo}    Penny and I made a couple phone calls while you were sleepin’.  $[Day4/Tent/4tm16]
 {@Margo}    Let’s see if we can get connected…. $[Day4/Tent/4tm17]
 {@Player}   Lola!   $[Day4/Tent/Player_11]
 {@Lola}     Hola, mi amor. How’s Christmas at the South Pole?   $[Day4/Tent/Lola_1]
 {@Player}   A lot better now! What are you doing here?  $[Day4/Tent/Player_12]
-{@Lola}     Well… of course I wanted to see you.    $[Day4/Tent/Lola_2]
-{@Lola}     But also… we’ve been learning all about penguin adaptations, and your friend Penny said that you do virtual classroom visits.    $[Day4/Tent/Lola_3]
-{@Lola}     Do you think my students and I could get in on that?    $[Day4/Tent/Lola_4]
-{@Player}   Claro que si!   $[Day4/Tent/Player_13]
-{@Player}   Are you ready for the grand tour? I’ve got these five new friends I think you’re going to love. $[Day4/Tent/Player_14]
 
 $call FadeOut(6.0)
 $call Wait(6)

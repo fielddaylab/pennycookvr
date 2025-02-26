@@ -47,9 +47,6 @@ $call PurpleAdelie->SetMatingDance()
 $call BlueAdelie->SetMatingDance()
 
 {@Margo}   Mornin', kiddo!   $[Day2/Tent/2tm01]
-{@Margo}   Jeepers... you look exhausted.   $[Day2/Tent/2tm02]
-{@Player}   I couldn't sleep. I tried counting sheep, counting penguins, stress-eating candy bars . . .   $[Day2/Tent/Player_2]
-{@Margo}   Just wait til you spend a few days runnin' around after penguins. You'll be so tired you won't know what hit ya.     $[Day2/Tent/2tm04]
 
 :: PickedUpMargo2
 @trigger    TabletLifted
@@ -61,10 +58,8 @@ $call SetWarpActive(WarpBluff, true)
 
 $call Wait(1)
 
-{@Player}    Sounds good to me. Let's get out there!   $[Day2/Tent/Player_3]
 {@Margo}    Got your cold weather gear on?   $[Day2/Tent/2tm06]
 {@Player}    All five layers of it. Plus some extra hand warmers.    $[Day2/Tent/Player_4]
-{@Margo}    Well, okey dokey, then. Looks like somebody's learnin'.  $[Day2/Tent/2tm08]
 {@Margo}    Whenever you're ready, point me at the door, and we'll head out to the Bluff!     $[Day2/Tent/2tm09]
 
 
@@ -85,7 +80,6 @@ $call PenguinCount->ActivateCount(12)
 
 {@Player}    Wow, look at them all! $[Day2/Bluff/Player_1]
 {@Margo}    Yep, seems we've got some new arrivals. We'll need a new population count. $[Day2/Bluff/2bm01]
-{@Margo}    You’ll also have two tasks down at the Rookery: retrieve your penguins’ GPS trackers, and see if they’ve paired up with a mate. $[Day2/Bluff/2bm02]
 {@Player}   Hmmm, Maybe we should get a head count. $[Day2/Bluff/Player_3]
 
 :: ScannedFromBluff2
@@ -372,15 +366,8 @@ $call Wait(1)
 $call Screen->SetTexture(6)
 
 {@Margo}	Looks like they really like staying on the ice floes! Makes sense, that’s where the food is. $[Day2/Tent/2tm20]
-
 {@Margo}    Nice job, kid. Another excellent day's work.    $[Day2/Tent/2tm14]
-{@Margo}    And you've still got plenty of time for trick or treating!  $[Day2/Tent/2tm15]
-{@Margo}    There's a costume parade at McMurdo Station. I'm going as a vintage TV. Penny got me an antenna and everything! $[Day2/Tent/2tm16]
-{@Player}   I think I'll stay here. I checked out a copy of The Thing from the library. $[Day2/Tent/Player_6]
-{@Margo}    Yikes. Do you, uh... know what it's about? $[Day2/Tent/2tm17]
-{@Player}   Not really, but I've heard it's pretty spooky.  $[Day2/Tent/Player_7]
-{@Margo}    Yeah, ya got that right.    $[Day2/Tent/2tm18]
-{@Margo}    You better stock up on more candy... I don't think you'll be gettin' much sleep tonight.    $[Day2/Tent/2tm19]
+
 
 $call FadeOut(6.0)
 $call Wait(6)

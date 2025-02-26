@@ -80,13 +80,10 @@ $call Wait(1)
 $call SetWarpGroupActive(Rookery, true)
 
 {@Player}   Oh. My. God. They’re amazing! $[Day3/Rookery/Player_1]
-{@Partner}   Hey there, new kid. $[Day3/Rookery/3rp01]
 {@Partner}   Pretty extraordinary, aren’t they?   $[Day3/Rookery/3rp02]
 {@Partner}  This is our favorite time of year around here.   $[Day3/Rookery/3rp03]
 {@Player}   The skua are pretty active today   $[Day3/Rookery/Player_2]
-{@Partner}   They drive me crazy. They’re pretty nasty. $[Day3/Rookery/3rp04]
 {@Partner}  Harmless to adult penguins, but they love a nice breakfast of penguin chicks and eggs.  $[Day3/Rookery/3rp05]
-{@Player}  They look like they are hunting today. These poor chicks. $[Day3/Rookery/Player_3]
 {@Player}   I want to help them.  $[Day3/Rookery/Player_4]
 {@Partner}    Help the chicks? Yeah, I wish.  $[Day3/Rookery/3rp06]
 {@Partner}    We cant interfere.  $[Day3/Rookery/3rp07]
@@ -95,8 +92,6 @@ $call SetWarpGroupActive(Rookery, true)
 {@Partner}   Right. Take a look at which eggs hatched and how the chicks are doing.  $[Day3/Rookery/3rp09]
 {@Partner}  You’ll also need to document what the parents are feeding their chicks. $[Day3/Rookery/3rp10]
 {@Player}   Got it. $[Day3/Rookery/Player_6]
-{@Partner}  Oh… and you don’t know what happened to the last slice of pumpkin pie, do you? $[Day3/Rookery/3rp11]
-{@Player}   Oh, uh… sorry. do you want some of my champurrado?  $[Day3/Rookery/Player_7]
 
 :: WarpedToRookeryMiddle
 @trigger    AtWarpPoint
@@ -152,7 +147,6 @@ $call AlfredoEgg->Hatch()
 $call CompleteGoal("id_alfredo_nest")
 
 {@Player}   Look, Alfredo’s egg is hatching!  $[Day3/Rookery/Player_9]
-{@Margo}    Ooh. We better snag a video later.  $[Day3/Rookery/3rm04]
 {@Margo}    I betcha those’ll be the most famous Adelie chicks on Youtube.  $[Day3/Rookery/3rm05]
 
 $goto Day3.CheckAllComplete
@@ -218,7 +212,6 @@ $call CompleteGoal("id_polo_nest")
 {@Player}   What happened to the egg?   $[Day3/Rookery/Player_16]
 {@Margo}    Oh no. Poor Polo.   $[Day3/Rookery/3rm12]
 {@Margo}    The skua must’ve been here. $[Day3/Rookery/3rm13]
-{@Player}   You mean . . . the egg is gone?  $[Day3/Rookery/Player_17]
 
 $goto Day3.CheckAllComplete
 
@@ -233,7 +226,6 @@ $call ExclaimRegurgGame->Deactivate()
 
 //$call Wendy->SetRegurgitation()
 
-{@Margo}	We need to get some data on what the parents are feeding their young.	$[Day3/Rookery/3rm14]
 {@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/3rm15]
 
 $call ExclaimRegurg->Activate()
@@ -257,8 +249,6 @@ $set chapter:regurgDone = true
 $call CompleteGoal("day3_regurg")
 
 {@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
-{@Margo}	Says the guy with pumpkin pie on his face.	$[Day3/Rookery/3rm16]
-{@Player}	Seriously?	$[Day3/Rookery/Player_19]
 {@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/3rm17]
 
 $goto Day3.CheckAllComplete
@@ -350,9 +340,6 @@ $call SetWarpActive(WarpBluffBack, true)
 {@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]
 {@Margo}	Yep, looks like we've got all the data we need!	$[Day3/Rookery/3rm24]
 {@Player}	Phew, good. All this running around in the cold is making me hungry. $[Day3/Rookery/Player_21]
-{@Player}	I can see why you all keep so much candy around here. 	$[Day3/Rookery/Player_22]
-{@Partner}	Don’t worry. We’ll be having turkey and mashed potatoes soon.	$[Day3/Rookery/3rp12]
-{@Partner}	I miss my moms pasole we always have on the holidays.	$[Day3/Rookery/3rp13]
 $endif
 
 :: WarpedBackToTent

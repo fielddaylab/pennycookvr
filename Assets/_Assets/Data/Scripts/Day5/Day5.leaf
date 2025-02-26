@@ -100,8 +100,6 @@ $call Wait(1)
 {@Margo}	I sure hope so, kiddo.	$[Day5/Rookery/5rm05]
 {@Margo}	Either way, we’ll be here to cheer ‘em on.	$[Day5/Rookery/5rm06]
 {@Margo}	Time to band those penguin parents.	$[Day5/Rookery/5rm07]
-{@Margo}	You should be an expert at this by now!	$[Day5/Rookery/5rm08]
-{@Margo}	Hold the penguin still with one hand. Then snap the trackers onto their legs.	$[Day5/Rookery/5rm09]
 {@Player}	Got it.	$[Day5/Rookery/Player_4]
 
 :: OnGrabbedLegTracker
@@ -145,9 +143,6 @@ $set chapter:legCount - 1
 @when   objectType == "LegTracker", socketType == "LegSocketPolo", chapter:legTrackersStarted == true
 $set chapter:legCount + 1
 
-{@Player}	Ouch!	$[Day5/Rookery/Player_5]
-{@Player}	Thanks, Polo. I’ll miss you too.	$[Day5/Rookery/Player_6]
-
 $if chapter:legCount >= 3
 $goto Day5.LegTrackersComplete
 $endif
@@ -190,7 +185,6 @@ $call PenguinCount->ActivateCount(12)
 @interrupt
 @once
 
-{@Margo}	Nice work, kiddo. There they go.	$[Day5/Bluff/5bm04]
 {@Margo}	They’ll be back next year, around the same time you are.	$[Day5/Bluff/5bm05]
 {@Partner}	Hey, kid. You ready? The plane’s waiting.	$[Day5/Bluff/5bp01]
 {@Player}	Yeah. I’m ready.	$[Day5/Bluff/Player_1]
@@ -199,7 +193,6 @@ $call PenguinCount->ActivateCount(12)
 {@Player}	You’re staying here? All winter??	$[Day5/Bluff/Player_3]
 {@Margo}	Aw, don’t worry, kiddo. I’m literally built for this.	$[Day5/Bluff/5bm07]
 {@Margo}	That’s what Hibernate Mode is for!	$[Day5/Bluff/5bm08]
-{@Margo}	Besides, I’ve always loved watchin’ the sunset. It should be any day now.	$[Day5/Bluff/5bm09]
 {@Player}	Okay. See you next year, Margo.	$[Day5/Bluff/Player_4]
 {@Margo}	You too, kiddo.	$[Day5/Bluff/5bm10]
 
