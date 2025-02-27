@@ -47,7 +47,7 @@ namespace FieldDay.Sockets {
         /// <summary>
         /// Attempts to add the given socketable to a socket.
         /// </summary>
-        static public bool TryAddToSocket(Socketable socketable, ObjectSocket socket, bool force, bool playSound=false) {
+        static public bool TryAddToSocket(Socketable socketable, ObjectSocket socket, bool force, bool playSound=true) {
             if (!socketable) {
                 return false;
             }
