@@ -46,7 +46,7 @@ $call YellowAdelie->SetMatingDance()
 $call PurpleAdelie->SetMatingDance()
 $call BlueAdelie->SetMatingDance()
 
-{@Margo}   Mornin', kiddo!   $[Day2/Tent/2tm01]
+{@Margo}   Well, good mornin!   $[Day2/Tent/2tm00]
 
 :: PickedUpMargo2
 @trigger    TabletLifted
@@ -59,7 +59,7 @@ $call SetWarpActive(WarpBluff, true)
 $call Wait(1)
 
 {@Margo}    Got your cold weather gear on?   $[Day2/Tent/2tm06]
-{@Player}    All five layers of it. Plus some extra hand warmers.    $[Day2/Tent/Player_4]
+{@Player}    Yep all five layers and some extra hand warmers.    $[Day2/Tent/Player_4]
 {@Margo}    Whenever you're ready, point me at the door, and we'll head out to the Bluff!     $[Day2/Tent/2tm09]
 
 
@@ -78,7 +78,7 @@ $call TentDoor->Close()
 
 $call PenguinCount->ActivateCount(12)
 
-{@Player}    Wow, look at them all! $[Day2/Bluff/Player_1]
+{@Player}    Wow, look at all those penguins! $[Day2/Bluff/Player_1]
 {@Margo}    Yep, seems we've got some new arrivals. We'll need a new population count. $[Day2/Bluff/2bm01]
 {@Player}   Hmmm, Maybe we should get a head count. $[Day2/Bluff/Player_3]
 
@@ -359,13 +359,13 @@ $call Screen->SetTexture(4)
 
 $call Screen->SetTexture(5)
 
-{@Margo}	I combined GPS data from Penny along with data from your group and now we have a better picture for where the Adelie stay overwinter. $[Day2/Tent/2tm21]
+{@Margo}	I combined GPS data from Penny along with data from your group and now we have a better picture for where the Adelie stay overwinter. $[Day2/Tent/2tm1]
 
 $call Wait(1)
 
 $call Screen->SetTexture(6)
 
-{@Margo}	Looks like they really like staying on the ice floes! Makes sense, that’s where the food is. $[Day2/Tent/2tm20]
+{@Margo}	Looks like they really like staying on the ice floes! Makes sense, that’s where the food is. $[Day2/Tent/2tm2]
 {@Margo}    Nice job, kid. Another excellent day's work.    $[Day2/Tent/2tm14]
 
 

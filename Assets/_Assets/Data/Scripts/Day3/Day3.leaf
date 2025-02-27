@@ -41,7 +41,7 @@ $call Wendy->SetRegurgitation()
 {@Player}   And hopefully Fuzz has figured things out by now . . . I don’t know what he was thinking yesterday.  $[Day3/Tent/Player_4]
 {@Margo}   What happened to not playin’ favorites?     $[Day3/Tent/3tm02]
 {@Player}   Oh, uh . . . I just . . .    $[Day3/Tent/Player_5]
-{@Margo}   Ha. Relax, kiddo, I’m teasin’.     $[Day3/Tent/3tm03]
+{@Margo}   I’m just teasin’.     $[Day3/Tent/3tm03]
 {@Margo}    Let’s get out there and see how your Fabulous Five are doin’.    $[Day3/Tent/3tm04]
 
 :: WarpedOutsideTent
@@ -60,8 +60,8 @@ $call SetWarpActive(WarpBluff, false)
 $call SetWarpGroupActive(Rookery, true)
 
 {@Player}	Boy the rookery sure is pink... $[Day3/Bluff/3bs1]
-{@Player}   What’s on our list for today?  $[Day3/Bluff/Player_1]
-{@Margo}   We need to get some data on those chicks, and see how the parents are doin'.   $[Day3/Bluff/3bm01]
+{@Margo}   Guano from eating krill. Penguin's turn so much snow in antarctica pink from krill that it's visible from the International space station!   $[Day3/Bluff/3bm01]
+{@Player}   So.. what's on our list today?  $[Day3/Bluff/Player_1]
 {@Margo}    Let’s head down to the Rookery. Looks like Penny is already there.   $[Day3/Bluff/3bm02]
 
 :: WarpedToRookery
@@ -110,8 +110,8 @@ $call MillieBillyChick->SetIdentified(false)
 $call FuzzEgg->SetIdentified(false)
 $call WinstonWendyChick->SetIdentified(false)
 
-{@Margo}    Use my Scan mode to take a look at the nests.   $[Day3/Rookery/3rm01-scan]
-{@Margo}    We need to see how many eggs are hatched and if any are missing.    $[Day3/Rookery/3rm02]
+{@Margo}    Scan the nests to see if eggs are hatched or missing.   $[Day3/Rookery/3rm01]
+//{@Margo}    We need to see how many eggs are hatched and if any are missing.    $[Day3/Rookery/3rm02]
 
 :: OnMillieBillyIdentified
 @trigger	TabletIdentified
@@ -393,11 +393,11 @@ $call Screen->SetTexture(7)
 {@Margo}    All the chicks seem to be doing well so far.    $[Day3/Tent/3tm8]
 {@Margo}    Fuzz and Daisy's egg isnt lookin' too good.     $[Day3/Tent/3tm9]
 {@Margo}    Fuzz hasn't figured out how to keep it warm... I've got a bad feelin' that we won't see their egg hatch.    $[Day3/Tent/3tm10]
-{@Margo}    Polo and Benni lost their chick.    $[Day3/Tent/3tm11]
+{@Margo}    Polo and Benni lost their egg.    $[Day3/Tent/3tm11]
 
 $call Screen->SetTexture(8)
 
-{@Margo}    All the parents are feedin' their little ones krill, which is what we'd expect to see this time of year.    $[Day3/Tent/3tm12]
+{@Margo}    All the parents are feedin' their little ones krill, which is what we'd expect to see this time of year. Hence all the pink.    $[Day3/Tent/3tm12]
 {@Margo}    A month from now, the chicks should be waddlin' around on their own...  $[Day3/Tent/3tm13]
 {@Margo}    Assuming the skua don't get to 'em first.   $[Day3/Tent/3tm14]
 {@Margo}    Nice work, kid. Another good day's work!    $[Day3/Tent/3tm15]

@@ -81,7 +81,7 @@ $call SetWarpGroupActive(Rookery, true)
 {@Player}   Phew. That’s good. I was rooting for her.   $[Day4/Rookery/Player_3]
 {@Margo}    You’ll need to collect data from the weigh bridge—that’s that gate doohickey over there. $[Day4/Rookery/4rm02]
 {@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/4rm03]
-{@Margo}    And we’ll need to band 3 of the chicks. $[Day4/Rookery/4rm04]
+{@Margo}    And we’ll need to band three of the chicks. $[Day4/Rookery/4rm04]
 {@Player}   Got it. Let’s get to work.  $[Day4/Rookery/Player_7]
 
 :: WarpedToRookeryGate
@@ -242,7 +242,11 @@ $set chapter:wingCount + 1
 $if chapter:finishedBands == false
 $set chapter:finishedBands = true
 $call TurnOnSockets(BandSocketChick, false)
-$call TriggerResponseAndWait(Day4.CheckCompletedTasks)
+//$call TriggerResponseAndWait(Day4.CheckCompletedTasks)
+$if chapter:finishedBands == true, chapter:dataTrackersDone == true, chapter:weighGate == true 
+$set chapter:finishedObservations = true
+$call SetWarpActive(WarpBluffBack, true)
+$endif
 {@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/4rm22]
 {@Partner}  Nice work, new kid. $[Day4/Rookery/4rp05]
 {@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/4rp06]
@@ -262,6 +266,8 @@ $call TriggerResponseAndWait(Day4.CheckCompletedTasks)
 {@Partner}  Plus I just love this work. I love these birds   $[Day4/Rookery/4rp17]
 {@Player}   Yeah. You’re right. $[Day4/Rookery/Player_24]
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
+
+$goto Day4.CheckCompletedTasks
 
 $endif
 
@@ -303,6 +309,9 @@ $call DeskGlow->PlayAnimation()
 $call MargoDockParticles->PlayFX()
 
 {@Margo}    Okey dokey, let’s have a look at that data! $[Day4/Tent/4tm09]
+{@Margo}    We're getting data back from the penguins you placed trackers on. $[Day4/Tent/4tm10]
+{@Margo}    They are still eating mainly krill, and diving pretty deep to get it! $[Day4/Tent/4tm11]
+{@Margo}    And thanks to the weigh gate, we can see just how much each penguin is eating. Which is quite a bit! $[Day4/Tent/4tm12]
 
 $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
@@ -320,7 +329,7 @@ $endwhile
 {@Margo}    There’s still one more thing. Did you forget about the surprise?    $[Day4/Tent/4tm14]
 {@Margo}    Penny and I made a couple phone calls while you were sleepin’.  $[Day4/Tent/4tm16]
 {@Margo}    Let’s see if we can get connected…. $[Day4/Tent/4tm17]
-{@Player}   Lola!   $[Day4/Tent/Player_11]
+{@Player}   Hey Lolita!   $[Day4/Tent/Player_11]
 {@Lola}     Hola, mi amor. How’s Christmas at the South Pole?   $[Day4/Tent/Lola_1]
 {@Player}   A lot better now! What are you doing here?  $[Day4/Tent/Player_12]
 
