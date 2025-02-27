@@ -41,24 +41,32 @@ namespace Pennycook.Tablet {
 
     static public class TabletInteractionUtility {
         static public void CleanBlockingTasks(TabletInteractable interactable) {
-            while(interactable.BlockingTasks.TryPeekFront(out Routine task) && !task) {
-                interactable.BlockingTasks.PopFront();
-            }
+			if(interactable != null) {
+				while(interactable.BlockingTasks.TryPeekFront(out Routine task) && !task) {
+					interactable.BlockingTasks.PopFront();
+				}
+			}
         }
 
         static public bool CanInteract(TabletInteractable interactable, double currentTime) {
-            if (interactable.CanInteract && interactable.CooldownTimestamp <= currentTime) {
-                CleanBlockingTasks(interactable);
-                return interactable.BlockingTasks.Count == 0;
-            }
+			if(interactable != null) {
+				if (interactable.CanInteract && interactable.CooldownTimestamp <= currentTime) {
+					CleanBlockingTasks(interactable);
+					return interactable.BlockingTasks.Count == 0;
+				}
+			}
             return false;
         }
 
         static public bool HasInteractions(TabletHighlightable highlightable, TabletInteractable interactable) {
-            if (interactable.OnInteract.Count > 0) {
-                return true;
-            }
-            return interactable.Verb != TabletInteractableVerb.None;
+			if(interactable != null) {
+				if (interactable.OnInteract.Count > 0) {
+					return true;
+				}
+				return interactable.Verb != TabletInteractableVerb.None;
+			}
+			
+			return false;
         }
 
         static public bool TryInteract(TabletHighlightable highlightable, TabletInteractable interactable, double currentTime) {
