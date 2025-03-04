@@ -48,7 +48,7 @@ namespace Pennycook {
 			if(!_flier) {
 				StartCoroutine(StartIdle(NewIdleTime()));
 			} else {
-				_currentState = SkuaState.ReadyToMove;
+				StartCoroutine(FlyStartIdle(NewIdleTime()));
 			}
 		}
 
@@ -79,6 +79,13 @@ namespace Pennycook {
 			a.SetBool("flying", false);
 			a.SetBool("walking", false);
 
+			yield return new WaitForSeconds(duration);
+			_currentState = SkuaState.ReadyToMove;
+			yield break;
+		}
+
+		IEnumerator FlyStartIdle(float duration)
+		{
 			yield return new WaitForSeconds(duration);
 			_currentState = SkuaState.ReadyToMove;
 			yield break;
