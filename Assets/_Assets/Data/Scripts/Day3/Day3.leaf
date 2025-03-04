@@ -385,10 +385,10 @@ $call Screen->SetTexture(0)
 
 $call Wait(2)
 
-{@Margo}    You've got three successful breeding pairs. $[Day3/Tent/3tm6]
-
-$call MargoScreen->SetMeshEnabled(true)
+$call MargoQuad->SetMeshEnabled(true)
 $call Screen->SetTexture(7)
+
+{@Margo}    You've got three successful breeding pairs. $[Day3/Tent/3tm6]
 
 {@Margo}    Millie and Billy, Alfredo and Meatball, and Winston and Wendy.  $[Day3/Tent/3tm7]
 {@Margo}    All the chicks seem to be doing well so far.    $[Day3/Tent/3tm8]

@@ -297,10 +297,10 @@ $set chapter:finishedTrackers = true
 
 $call Wait(0.3)
 {@Margo}  Nice work, kid! That’s all the GPS trackers.   $[Day2/Rookery/2rm24]
-{@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/2rm25]
-{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/2rm26]
 $call SetWarpActive(WarpBluffBack, true)
 $set chapter:finishedAllObservations = true
+{@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/2rm25]
+{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/2rm26]
 
 :: WarpedBackToTent2
 @trigger    AtWarpPoint
@@ -347,7 +347,7 @@ $call Screen->SetTexture(0)
 $call Wait(2)
 
 $call Screen->SetTexture(3)
-$call MargoScreen->SetMeshEnabled(true)
+$call MargoQuad->SetMeshEnabled(true)
 
 {@Margo}    Looks like the population has increased as more penguins show up for mating season.    $[Day2/Tent/2tm10]
 
@@ -365,6 +365,7 @@ $call Screen->SetTexture(5)
 
 $call Wait(1)
 
+$call MargoQuad->SetMeshEnabled(false)
 $call Screen->SetTexture(6)
 
 {@Margo}	Looks like they really like staying on the ice floes! Makes sense, that’s where the food is. $[Day2/Tent/2tm2]

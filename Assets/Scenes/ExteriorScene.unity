@@ -1308,8 +1308,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Textures:
-  - {fileID: 2800000, guid: 029554ceaf314dc4a849f48152193e1c, type: 3}
   - {fileID: 2800000, guid: 91ba8cd4b8213b145890451111526c87, type: 3}
+  - {fileID: 2800000, guid: 029554ceaf314dc4a849f48152193e1c, type: 3}
   - {fileID: 2800000, guid: a7e8dd5cc2ffe3f43b23075445cd6bcc, type: 3}
   - {fileID: 2800000, guid: a08a72d5fc2ed7d46ac66affae8f5a2d, type: 3}
   - {fileID: 2800000, guid: abff47d8dad80784cb1d3732928614b4, type: 3}
@@ -10800,6 +10800,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8672dcc90e16b0a489a41edf56e016f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PrefabBehaviour: 0
+  PrefabSourceAlignment: 4
+  PrefabDestinationAlignment: 0
+  Version: 1.1
+  infiniteBrush: {fileID: 0}
+  Settings: 1537
+  VertexChannels: 14
+  ReceiveGI: 2
+  MeshColliderCookingOptions: 14
+  ShowGeneratedMeshes: 0
+  DefaultPhysicsMaterial: {fileID: 13400000, guid: 0c5fdfb44d6f19646a41a0720fbf751a, type: 2}
+  exportType: 0
+  originType: 0
+  exportColliders: 0
+  exportPath: 
+  angleError: 1
+  areaError: 1
+  hardAngle: 60
+  packMargin: 20
+  scaleInLightmap: 1
+  autoUVMaxDistance: 0.5
+  autoUVMaxAngle: 89
+  minimumChartSize: 4
 --- !u!4 &744887878
 Transform:
   m_ObjectHideFlags: 17
@@ -11604,6 +11627,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c3643d4978096d4880d7edbf4f65a50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Version: 1
+  owner: {fileID: 744887877}
+  helperSurfaces: []
 --- !u!1 &964399944 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2480374032357289166, guid: c8ad5529b35450745aea445537a11974, type: 3}
@@ -13572,6 +13598,7 @@ GameObject:
   - component: {fileID: 1337805948}
   - component: {fileID: 1337805947}
   - component: {fileID: 1337805946}
+  - component: {fileID: 1337805949}
   m_Layer: 0
   m_Name: MargoQuad
   m_TagString: Untagged
@@ -13588,8 +13615,8 @@ Transform:
   m_GameObject: {fileID: 1337805944}
   serializedVersion: 2
   m_LocalRotation: {x: 0.043619405, y: 0, z: 0, w: 0.9990483}
-  m_LocalPosition: {x: -0.93, y: 0.793, z: -0.018}
-  m_LocalScale: {x: 0.73627836, y: 0.59760696, z: 0.29958826}
+  m_LocalPosition: {x: -0.963, y: 0.79, z: -0.018}
+  m_LocalScale: {x: 0.7322463, y: 0.6052563, z: 0.29958826}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4235214683632379591}
@@ -13607,8 +13634,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Id:
-    m_Source: MargoScreen
-    m_HashValue: 2598374597
+    m_Source: MargoQuad
+    m_HashValue: 977808682
   m_ClassName:
     m_Source: 
     m_HashValue: 0
@@ -13662,6 +13689,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1337805944}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1337805949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337805944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71d58e9241e24da4abf4baf95cdae226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Materials: []
 --- !u!1001 &1359619582
 PrefabInstance:
   m_ObjectHideFlags: 0
