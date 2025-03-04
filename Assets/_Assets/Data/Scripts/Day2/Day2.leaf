@@ -340,12 +340,14 @@ $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
 
+$call MargoTabletFace->SetMeshEnabled(false)
 $call Screen->SetEnabled(true)
 $call Screen->SetTexture(0)
 
 $call Wait(2)
 
 $call Screen->SetTexture(3)
+$call MargoScreen->SetMeshEnabled(true)
 
 {@Margo}    Looks like the population has increased as more penguins show up for mating season.    $[Day2/Tent/2tm10]
 

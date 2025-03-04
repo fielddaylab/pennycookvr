@@ -223,12 +223,11 @@ $goto Day3.CheckAllComplete
 @interrupt
 
 $call ExclaimRegurgGame->Deactivate()
-
+$call ExclaimRegurg->Activate()
 //$call Wendy->SetRegurgitation()
 
 {@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/3rm15]
 
-$call ExclaimRegurg->Activate()
 //$call Billy->SetRegurgitation()
 
 ::TabletIdentifiedRegurgWendy
@@ -380,6 +379,7 @@ $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
 
+$call MargoTabletFace->SetMeshEnabled(false)
 $call Screen->SetEnabled(true)
 $call Screen->SetTexture(0)
 
@@ -387,6 +387,7 @@ $call Wait(2)
 
 {@Margo}    You've got three successful breeding pairs. $[Day3/Tent/3tm6]
 
+$call MargoScreen->SetMeshEnabled(true)
 $call Screen->SetTexture(7)
 
 {@Margo}    Millie and Billy, Alfredo and Meatball, and Winston and Wendy.  $[Day3/Tent/3tm7]

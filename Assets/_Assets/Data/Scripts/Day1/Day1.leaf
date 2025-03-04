@@ -222,12 +222,14 @@ $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
 
+$call MargoTabletFace->SetMeshEnabled(false)
 $call Screen->SetEnabled(true)
 $call Screen->SetTexture(0)
 
 $call Wait(2)
 
 $call Screen->SetTexture(1)
+$call MargoScreen->SetMeshEnabled(true)
 
 {@Margo}    There are 25 penguins who have returned to the colony, most are adults, but a few are juveniles.    $[Day1/Tent/1tm16]
 
