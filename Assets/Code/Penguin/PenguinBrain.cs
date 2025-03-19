@@ -78,6 +78,8 @@ namespace Pennycook {
                     break;
 
                 case PenguinType.Chick:
+					Animator.Animator.SetFloat("IdleSpeed", UnityEngine.Random.Range(0.5f, 3f));
+					StartMainProcess(PenguinSchedules.Wander);
                     break;
 
             }
