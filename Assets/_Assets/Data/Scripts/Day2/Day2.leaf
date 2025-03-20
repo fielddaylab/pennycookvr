@@ -293,6 +293,7 @@ $set	chapter:removedCount - 1
 @who		Player
 @interrupt
 
+$call ExclaimLegTrackers->Deactivate()
 $set chapter:finishedTrackers = true
 
 $call Wait(0.3)
