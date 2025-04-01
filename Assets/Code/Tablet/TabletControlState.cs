@@ -50,7 +50,7 @@ namespace Pennycook.Tablet {
                 }
             }
 
-            if (GrippedHandMask.Count == 1) {
+            if (GrippedHandMask.Count > 0) {
                 ScriptUtility.Trigger(TabletTriggers.LiftedTablet);
                 if(CachedRB != null) {
                     CachedRB.angularDrag = 70f;

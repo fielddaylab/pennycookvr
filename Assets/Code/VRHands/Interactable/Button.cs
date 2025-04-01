@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BeauUtil;
 using BeauRoutine;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.Components;
 using FieldDay.Scripting;
 using UnityEngine;
@@ -40,6 +41,9 @@ namespace Pennycook {
 		private bool IsIn = false;
 
         public readonly CastableEvent<Button> OnPressed = new CastableEvent<Button>();
+		
+		[AudioEventRef]
+		public StringHash32 ButtonSound;
 		
 		private void Awake() {
 
@@ -120,6 +124,8 @@ namespace Pennycook {
 						}
 						
 					}
+					
+					Sfx.Play(ButtonSound, transform);
 					
 					//haptics...
 					//todo - optimize
