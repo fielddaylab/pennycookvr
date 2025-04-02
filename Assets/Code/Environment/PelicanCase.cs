@@ -32,11 +32,13 @@ namespace Pennycook {
         }
 
         private void OnWarpUpdated(TabletWarpPoint warpPoint) {
-            Transform objPos = warpPoint.TabletCaseLocation;
-            if (objPos) {
-                objPos.GetPositionAndRotation(out Vector3 newPos, out Quaternion newRot);
-                transform.SetPositionAndRotation(newPos, newRot);
-            }
+            //if(warpPoint.Group != TabletWarpPointGroup.Rookery) {
+                Transform objPos = warpPoint.TabletCaseLocation;
+                if (objPos) {
+                    objPos.GetPositionAndRotation(out Vector3 newPos, out Quaternion newRot);
+                    transform.SetPositionAndRotation(newPos, newRot);
+                }
+            //}
         }
     }
 }

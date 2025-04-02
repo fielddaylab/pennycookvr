@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Pennycook.Tablet {
     public class TabletToolDefinition {
         public LayerMask RaycastMask;
-        public float RaycastBaseDistance = 25;
+        public float RaycastBaseDistance = 100;
         public float RaycastUnitConeRadius;
         public bool ShowReticle = true;
 

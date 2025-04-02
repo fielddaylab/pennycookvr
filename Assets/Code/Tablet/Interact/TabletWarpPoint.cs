@@ -32,6 +32,8 @@ namespace Pennycook.Tablet {
 		[Header("Movement")]
 		public float Radius;
 
+        public PelicanCase Case;
+
         [NonSerialized] public TabletHighlightable Highlightable;
         [NonSerialized] public ConnectionState IsConnected;
         [NonSerialized] public BitSet32 AllowedConnections = new BitSet32(Bits.AllU32);

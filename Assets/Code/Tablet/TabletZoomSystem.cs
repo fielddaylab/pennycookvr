@@ -10,7 +10,7 @@ namespace Pennycook.Tablet {
     public class TabletZoomSystem : SharedStateSystemBehaviour<TabletZoomState, TabletControlState, XRInputState, TabletRenderState> {
         public override void ProcessWork(float deltaTime) {
             if (TabletUtility.ConsumeButtonPress(XRHandButtons.Secondary)) {
-                TabletUtility.AdjustZoom(m_StateA, (m_StateA.ZoomIndex + 1) % m_StateA.ZoomLabels.Length, true);
+            //    TabletUtility.AdjustZoom(m_StateA, (m_StateA.ZoomIndex + 1) % m_StateA.ZoomLabels.Length, true);
             }
         }
     }

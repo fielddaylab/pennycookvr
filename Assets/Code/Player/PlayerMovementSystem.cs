@@ -31,6 +31,7 @@ namespace Pennycook {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
                     if(TryMove(move.Rig.HeadRoot.position, flattenedLook, m_StateC.CurrentWarp)) {
                         move.Translate(flattenedLook);
+                        TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
             }
@@ -38,6 +39,7 @@ namespace Pennycook {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
                     if(TryMove(move.Rig.HeadRoot.position, -flattenedLook, m_StateC.CurrentWarp)) {
                         move.Translate(-flattenedLook);
+                        TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, -flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
             }
@@ -46,6 +48,7 @@ namespace Pennycook {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
                     if(TryMove(move.Rig.HeadRoot.position, flattenedLook, m_StateC.CurrentWarp)) {
                         move.Translate(flattenedLook);
+                        TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
             }
@@ -53,6 +56,7 @@ namespace Pennycook {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
                     if(TryMove(move.Rig.HeadRoot.position, -flattenedLook, m_StateC.CurrentWarp)) {
                         move.Translate(-flattenedLook);
+                        TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, -flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
             }
@@ -65,6 +69,30 @@ namespace Pennycook {
             }
 
 #endif // UNITY_EDITOR
+        }
+
+        private void TryMoveCase(Vector3 root, Vector3 look, Vector3 translation, TabletWarpPoint warpPoint) {
+            if(warpPoint.Group == TabletWarpPointGroup.Rookery) {
+                Vector3 caseToPlayer = root - warpPoint.Case.transform.position;
+                caseToPlayer.y = 0f;
+                caseToPlayer = Vector3.Normalize(caseToPlayer);
+
+                if(Vector3.Dot(caseToPlayer, look) > 0f) {
+                    Vector3 flatRoot = root;
+                    flatRoot.y = warpPoint.Case.transform.position.y;
+                    if(Vector3.Distance(flatRoot, warpPoint.Case.transform.position) > 4f) {
+                        warpPoint.Case.transform.position += translation;
+                    }
+                } else {
+                     if(Vector3.Dot(caseToPlayer, translation) > 0f) {
+                        Vector3 flatRoot = root;
+                        flatRoot.y = warpPoint.Case.transform.position.y;
+                        if(Vector3.Distance(flatRoot, warpPoint.Case.transform.position) > 4f) {
+                            warpPoint.Case.transform.position += translation;
+                        }
+                     }
+                }
+            }
         }
 
         private bool TryMove(Vector3 root, Vector3 translation, TabletWarpPoint warpPoint) {
