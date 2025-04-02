@@ -18,6 +18,11 @@ namespace Pennycook {
         #region Inspector
 		private AudioSource m_Audio = null;
         
+		[SerializeField]
+		AudioClip m_Indoor;
+
+		[SerializeField]
+		AudioClip m_Outdoor;
 		#endregion // Inspector
 		
         #region Leaf
@@ -39,6 +44,22 @@ namespace Pennycook {
         public void StopAudio() {
 			if(m_Audio) {
 				m_Audio.Stop();
+			}
+        }
+
+		[LeafMember("PlayIndoor"), Preserve]
+        public void PlayIndoor() {
+			if(m_Audio) {
+				m_Audio.clip = m_Indoor;
+				m_Audio.Play();
+			}
+        }
+		
+		[LeafMember("PlayOutdoor"), Preserve]
+        public void PlayOutdoor() {
+			if(m_Audio) {
+				m_Audio.clip = m_Outdoor;
+				m_Audio.Play();
 			}
         }
 

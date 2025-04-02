@@ -70,6 +70,8 @@ $set	chapter:hasTalkedToMargo = true
 @interrupt
 @once
 
+$call BackgroundMusic->PlayOutdoor()
+
 $call TentDoor->Close()
 
 $call Wait(1)
@@ -197,6 +199,8 @@ $call SetWarpActive(WarpDesk, true)
 @who        Player
 @when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
 @interrupt
+
+$call BackgroundMusic->PlayIndoor()
 
 $call TentDoor->Close()
 $call Wait(1)

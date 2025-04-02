@@ -13,6 +13,7 @@ $call ClearGoals()
 @who        Player
 @once
 
+$call BackgroundMusic->PlayIndoor()
 
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
@@ -69,6 +70,8 @@ $call Wait(1)
 @when       targetObject == "WarpTarget-Bluff"
 @interrupt
 @once
+
+$call BackgroundMusic->PlayOutdoor()
 
 $call Wait(1)
 
@@ -320,6 +323,8 @@ $call SetWarpActive(WarpDesk, true)
 @who        Player
 @when       chapter:finishedAllObservations, targetObject == "WarpTarget-Desk"
 @interrupt
+
+$call BackgroundMusic->PlayIndoor()
 
 $call TentDoor->Close()
 $call Wait(1)

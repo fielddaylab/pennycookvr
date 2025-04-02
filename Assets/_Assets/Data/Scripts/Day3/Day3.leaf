@@ -12,6 +12,8 @@ $call ClearGoals()
 @who        Player
 @once
 
+$call BackgroundMusic->PlayIndoor()
+
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call Sky1->Deactivate()
@@ -50,6 +52,8 @@ $call Wendy->SetRegurgitation()
 @when       targetId == "WarpBluff"
 @once
 @interrupt
+
+$call BackgroundMusic->PlayOutdoor()
 
 $call TentDoor->Close()
 
@@ -359,6 +363,8 @@ $call SetWarpActive(WarpDesk, true)
 @who        Player
 @when       chapter:day3AllComplete, targetId == "WarpDesk"
 @interrupt
+
+$call BackgroundMusic->PlayIndoor()
 
 $call Wait(1)
 $call SetWarpActive(WarpDesk, true)
