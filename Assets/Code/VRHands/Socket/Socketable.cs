@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BeauUtil;
 using FieldDay.Components;
 using FieldDay.VRHands;
+using FieldDay.Audio;
 using UnityEngine;
 
 namespace FieldDay.Sockets {
@@ -94,6 +95,12 @@ namespace FieldDay.Sockets {
                     socket.JointConfig.Apply(socket.CurrentJoint);
                     break;
                 }
+            }
+            
+            if(socket.AllowedSockets == SocketFlags.BackTracker || socket.AllowedSockets == SocketFlags.LegTracker || socket.AllowedSockets == SocketFlags.WingBand)  {
+                Sfx.Play("Socket.Penguin");
+            } else if(socket.AllowedSockets == SocketFlags.Margo) {
+                Sfx.Play("Socket.Case");
             }
 
             socketable.OnAddedToSocket.Invoke(socket);
