@@ -12,8 +12,9 @@ $call ClearGoals()
 @who        Player
 @once
 
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
 $call BackgroundMusic->PlayIndoor()
-
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call Sky1->Deactivate()
@@ -83,6 +84,16 @@ $call Wait(1)
 
 $call SetWarpGroupActive(Rookery, true)
 
+$call ExclaimEggScan->Deactivate()
+
+$call FuzzEgg->Activate()
+$call AlfredoEgg->Activate()
+
+$call AlfredoEgg->SetIdentified(false)
+$call MillieBillyChick->SetIdentified(false)
+$call FuzzEgg->SetIdentified(false)
+$call WinstonWendyChick->SetIdentified(false)
+
 {@Player}   Oh. My. God. They’re amazing! $[Day3/Rookery/Player_1]
 {@Partner}   Pretty extraordinary, aren’t they?   $[Day3/Rookery/3rp02]
 {@Partner}  This is our favorite time of year around here.   $[Day3/Rookery/3rp03]
@@ -96,23 +107,6 @@ $call SetWarpGroupActive(Rookery, true)
 {@Partner}   Right. Take a look at which eggs hatched and how the chicks are doing.  $[Day3/Rookery/3rp09]
 {@Partner}  You’ll also need to document what the parents are feeding their chicks. $[Day3/Rookery/3rp10]
 {@Player}   Got it. $[Day3/Rookery/Player_6]
-
-:: WarpedToRookeryMiddle
-@trigger    AtWarpPoint
-@who        Player
-@when       targetId == "WarpRookeryMiddle"
-@once
-@interrupt
-
-$call ExclaimEggScan->Deactivate()
-
-$call FuzzEgg->Activate()
-$call AlfredoEgg->Activate()
-
-$call AlfredoEgg->SetIdentified(false)
-$call MillieBillyChick->SetIdentified(false)
-$call FuzzEgg->SetIdentified(false)
-$call WinstonWendyChick->SetIdentified(false)
 
 {@Margo}    Scan the nests to see if eggs are hatched or missing.   $[Day3/Rookery/3rm01]
 //{@Margo}    We need to see how many eggs are hatched and if any are missing.    $[Day3/Rookery/3rm02]
@@ -133,7 +127,7 @@ $call CompleteGoal("id_millie_nest")
 {@Player}   Yes! Millie and Billy have hatched a healthy chick! $[Day3/Rookery/Player_8]
 {@Margo}    Aw, good for them. Two years in a row!  $[Day3/Rookery/3rm03]
 
-$goto Day3.CheckAllComplete
+$goto Day3.CheckScanComplete
 
 :: OnAlfredoEggIdentified
 @trigger	TabletIdentified
@@ -153,7 +147,7 @@ $call CompleteGoal("id_alfredo_nest")
 {@Player}   Look, Alfredo’s egg is hatching!  $[Day3/Rookery/Player_9]
 {@Margo}    I betcha those’ll be the most famous Adelie chicks on Youtube.  $[Day3/Rookery/3rm05]
 
-$goto Day3.CheckAllComplete
+$goto Day3.CheckScanComplete
 
 :: OnFuzzEggIdentified
 @trigger	TabletIdentified
@@ -176,7 +170,7 @@ $call CompleteGoal("id_fuzz_nest")
 {@Player}   He’s brand new at this. Maybe he’ll figure it out.  $[Day3/Rookery/Player_12]
 {@Margo}    Well, he’d better hurry. Those eggs are gonna freeze fast.  $[Day3/Rookery/3rm09]
 
-$goto Day3.CheckAllComplete
+$goto Day3.CheckScanComplete
 
 :: OnWinstonWendyIdentified
 @trigger	TabletIdentified
@@ -196,7 +190,7 @@ $call CompleteGoal("id_winston_nest")
 {@Margo}    Winston and Wendy have had a successful chick every year.  $[Day3/Rookery/3rm11]
 {@Player}   Wow. Penguin Parents of the Year award! Keep it up, you two.    $[Day3/Rookery/Player_14]
 
-$goto Day3.CheckAllComplete
+$goto Day3.CheckScanComplete
 
 :: OnPoloNestIdentified
 @trigger	TabletIdentified
@@ -217,22 +211,7 @@ $call CompleteGoal("id_polo_nest")
 {@Margo}    Oh no. Poor Polo.   $[Day3/Rookery/3rm12]
 {@Margo}    The skua must’ve been here. $[Day3/Rookery/3rm13]
 
-$goto Day3.CheckAllComplete
-
-:: WarpedToRookeryBack
-@trigger    AtWarpPoint
-@who        Player
-@when       targetId == "WarpRookeryBack"
-@once
-@interrupt
-
-$call ExclaimRegurgGame->Deactivate()
-$call ExclaimRegurg->Activate()
-//$call Wendy->SetRegurgitation()
-
-{@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/3rm15]
-
-//$call Billy->SetRegurgitation()
+$goto Day3.CheckScanComplete
 
 ::TabletIdentifiedRegurgWendy
 @trigger TabletBehaviorInstanceCaptured
@@ -242,19 +221,27 @@ $call ExclaimRegurg->Activate()
 @interrupt
 
 $call ExclaimRegurg->Deactivate()
-
-$goto Day3.RegurgComplete
-
-::RegurgComplete
-@trigger RegurgComplete
-
 $set chapter:regurgDone = true
 $call CompleteGoal("day3_regurg")
 
 {@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
 {@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/3rm17]
 
-$goto Day3.CheckAllComplete
+$call ExclaimBackTrackers->Deactivate()
+
+$call DataLoggerPlate->Activate()
+$call DataTracker1->SetMeshEnabled(true)
+$call DataTracker2->SetMeshEnabled(true)
+$call DataTracker3->SetMeshEnabled(true)
+
+$set chapter:dataTrackersStarted = true
+$call TurnOnSockets(DataSocketPenguin, true)
+
+{@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/3rm18]
+{@Margo}	You’ll need to attach a data logger to their backs.	$[Day3/Rookery/3rm19]
+{@Margo}	Grab a data logger from the Pelican Case.	$[Day3/Rookery/3rm20]
+{@Margo}	Place one hand on the penguin to stop them, and then attach the logger to their back.	$[Day3/Rookery/3rm21]
+
 
 :: OnGrabbedBackTracker
 @trigger ObjectGrabbed
@@ -275,28 +262,6 @@ $call LeftHandCollider->ResetSize()
 $elseif local:hand == "Right"
 $call RightHandCollider->ResetSize()
 $endif
-
-:: WarpedToRookerySide
-@trigger    AtWarpPoint
-@who        Player
-@when       targetId == "WarpRookerySide"
-@once
-@interrupt
-
-$call ExclaimBackTrackers->Deactivate()
-
-$call DataLoggerPlate->Activate()
-$call DataTracker1->SetMeshEnabled(true)
-$call DataTracker2->SetMeshEnabled(true)
-$call DataTracker3->SetMeshEnabled(true)
-
-$set chapter:dataTrackersStarted = true
-$call TurnOnSockets(DataSocketPenguin, true)
-
-{@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/3rm18]
-{@Margo}	You’ll need to attach a data logger to their backs.	$[Day3/Rookery/3rm19]
-{@Margo}	Grab a data logger from the Pelican Case.	$[Day3/Rookery/3rm20]
-{@Margo}	Place one hand on the penguin to stop them, and then attach the logger to their back.	$[Day3/Rookery/3rm21]
 
 ::	TrackerSocketed1
 @trigger ObjectSocketed
@@ -332,6 +297,22 @@ $goto Day3.CheckAllComplete
 @who	Player
 @when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true
 $set chapter:trackerSocketedCount - 1
+
+:: CheckScanComplete
+@trigger	CheckScanComplete
+@who		Player
+
+$if chapter:finishedObservations == true
+
+$call ExclaimRegurgGame->Deactivate()
+$call ExclaimRegurg->Activate()
+//$call Wendy->SetRegurgitation()
+
+{@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/3rm15]
+
+//$call Billy->SetRegurgitation()
+
+$endif
 
 :: CheckAllComplete
 @trigger	CheckAllComplete

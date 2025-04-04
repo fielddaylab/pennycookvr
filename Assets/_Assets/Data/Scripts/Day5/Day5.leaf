@@ -12,8 +12,9 @@ $call ClearGoals()
 @who        Player
 @once
 
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
 $call BackgroundMusic->PlayIndoor()
-
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call DataLoggerPlate->Deactivate()

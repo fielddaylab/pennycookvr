@@ -7,9 +7,7 @@ $set chapter:wingStarted = false
 $set chapter:wingCount = 0
 $set chapter:dataCount = 0
 $set chapter:trackerStarted = false
-$set chapter:weighGate = false
-$set chapter:dataTrackersDone = false
-$set chapter:finishedBands = false
+
 $call ClearGoals()
 
 :: StartGame
@@ -17,8 +15,9 @@ $call ClearGoals()
 @who        Player
 @once
 
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
 $call BackgroundMusic->PlayIndoor()
-
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
 $call Sky1->Deactivate()
@@ -83,16 +82,7 @@ $call SetWarpGroupActive(Rookery, true)
 {@Partner}  Seems fine. A little small for her age, but she’s a tough cookie.   $[Day4/Rookery/4rp02]
 {@Player}   Phew. That’s good. I was rooting for her.   $[Day4/Rookery/Player_3]
 {@Margo}    You’ll need to collect data from the weigh bridge—that’s that gate doohickey over there. $[Day4/Rookery/4rm02]
-{@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/4rm03]
-{@Margo}    And we’ll need to band three of the chicks. $[Day4/Rookery/4rm04]
 {@Player}   Got it. Let’s get to work.  $[Day4/Rookery/Player_7]
-
-:: WarpedToRookeryGate
-@trigger    AtWarpPoint
-@who        Player
-@when       targetObject == "WarpTarget-RookeryFar"
-@once
-@interrupt
 
 $call ExclaimWeighGate->Deactivate()
 
@@ -106,14 +96,8 @@ $call WeighGate->SetInteractable(true)
 @once
 
 $call CompleteGoal("day4_gate")
-$set	chapter:weighGate = true
-$goto Day4.CheckCompletedTasks
 
-:: WarpedToRookeryMiddle
-@trigger    AtWarpPoint
-@who        Player
-@when       targetObject == "WarpTarget-RookeryMiddle"
-@interrupt
+{@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/4rm03]
 
 $call ExclaimBackTrackers->Deactivate()
 
@@ -173,21 +157,6 @@ $set chapter:dataCount + 1
 
 $set chapter:dataCount + 1
 
-$set chapter:dataTrackersDone = true
-$goto Day4.CheckCompletedTasks
-
-:: OnUnsocketedTracker
-@trigger    ObjectUnsocketed
-@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true
-
-$set chapter:dataCount - 1
-
-:: WarpedToRookeryCorral
-@trigger    AtWarpPoint
-@who        Player
-@when       targetObject == "WarpTarget-RookeryCorral"
-@interrupt
-
 $call ExclaimCorral->Deactivate()
 
 $call DataLoggerPlate->Deactivate()
@@ -211,6 +180,12 @@ $if chapter:wingCount == 0
 {@Margo}    First you’ll need to hold the penguin in place. $[Day4/Rookery/4rm19]
 {@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/4rm20]
 $endif
+
+:: OnUnsocketedTracker
+@trigger    ObjectUnsocketed
+@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true
+
+$set chapter:dataCount - 1
 
 :: OnUnsocketedWingBand
 @trigger ObjectUnsocketed
@@ -242,14 +217,11 @@ $set chapter:wingCount + 1
 
 $set chapter:wingCount + 1
 
-$if chapter:finishedBands == false
-$set chapter:finishedBands = true
 $call TurnOnSockets(BandSocketChick, false)
 //$call TriggerResponseAndWait(Day4.CheckCompletedTasks)
-$if chapter:finishedBands == true, chapter:dataTrackersDone == true, chapter:weighGate == true 
 $set chapter:finishedObservations = true
 $call SetWarpActive(WarpBluffBack, true)
-$endif
+
 {@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/4rm22]
 {@Partner}  Nice work, new kid. $[Day4/Rookery/4rp05]
 {@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/4rp06]
@@ -270,20 +242,9 @@ $endif
 {@Player}   Yeah. You’re right. $[Day4/Rookery/Player_24]
 {@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
 
-$goto Day4.CheckCompletedTasks
-
-$endif
-
-:: CheckCompletedTasks
-@trigger	CheckCompletedTasks
-@who		Player
-
-$if chapter:finishedBands == true, chapter:dataTrackersDone == true, chapter:weighGate == true 
-$set chapter:finishedObservations = true
-$call SetWarpActive(WarpBluffBack, true)
 {@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/4rp19]
 {@Partner}  You and Margo need to analyze your data. And then we’ve got a little surprise for you.  $[Day4/Rookery/4rp20]
-$endif
+
 
 :: WarpedBackToTent
 @trigger    AtWarpPoint

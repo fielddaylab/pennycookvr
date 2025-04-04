@@ -3,6 +3,9 @@
 :: Prepare
 @function	ScenePrepare
 
+$set chapter:needCount = false
+$set chapter:needWarp = false
+
 :: StartGame
 @trigger    SceneReady
 @who        Player
@@ -36,11 +39,19 @@ $call SetWarpActive(WarpBluff, true)
 {@Player}   Step two: Report to Margo, penguin expert and senior researcher.    $[Day1/Tent/Player_5]
 {@Player}   Hmmm. But where is she?     $[Day1/Tent/Player_6]
 
+$call Tutorial1->Activate()
+$call LeftController->Activate()
+$call RightController->Activate()
+
 :: PickedUpMargo
 @trigger    TabletLifted
 @who        Player
 @interrupt
 @once
+
+$call Tutorial1->Deactivate()
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
 
 $call MargoHint->StopFX()
 
@@ -62,6 +73,38 @@ $set	chapter:hasTalkedToMargo = true
 {@Margo}    Couldja peek out the front door with me? I can't wait to see who's here! $[Day1/Tent/Margo_12]
 {@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
 
+$call LeftController->Activate()
+$call RightController->Activate()
+$call RightControllerSideGrip->SetMaterial(1)
+$call LeftControllerSideGrip->SetMaterial(1)
+$call XButton->SetMaterial(0)
+$call AButton->SetMaterial(0)
+
+$call Tutorial2->Activate()
+$set chapter:needWarp = true
+
+:: UserChangedModeMove
+@trigger ChangedTabletTool
+@who 	 Player
+@when	 toolId == "Move", chapter:needWarp == true
+@interrupt
+
+$call Tutorial2->Deactivate()
+$call Tutorial3->Activate()
+$call XButton->SetMaterial(1)
+$call AButton->SetMaterial(1)
+$call RightControllerTrigger->SetMaterial(0)
+$call LeftControllerTrigger->SetMaterial(0)
+$set chapter:needWarp = false
+
+:: UserChangedModes
+@trigger ChangedTabletTool
+@who 	 Player
+@when	 toolId == "Count", chapter:needCount == true
+@once
+
+$call Tutorial2->Deactivate()
+$set chapter:needCount = false
 
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
@@ -69,6 +112,13 @@ $set	chapter:hasTalkedToMargo = true
 @when       targetObject == "WarpTarget-Bluff"
 @interrupt
 @once
+
+$set chapter:needCount = true
+
+$call Tutorial3->Deactivate()
+$call Tutorial2->Activate()
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
 
 $call BackgroundMusic->PlayOutdoor()
 
@@ -98,6 +148,10 @@ $call SetWarpGroupActive(Rookery, true)
 {@Player}	Wow! I remember when you talked to my 5th grade class at Gompers Elementary. $[Day1/Bluff/1bs07]
 {@Margo}	Let's get on down there and say hello! Find a waypoint in the rookery. 	$[Day1/Bluff/1bm11]
 
+$set chapter:needWarp = true
+
+$call Tutorial2->Activate()
+
 :: WarpedToRookery
 @trigger    AtWarpPoint
 @who        Player
@@ -106,6 +160,9 @@ $call SetWarpGroupActive(Rookery, true)
 @interrupt
 
 $call Wait(1)
+
+$call Tutorial2->Deactivate()
+$call Tutorial3->Deactivate()
 
 $call SetWarpGroupActive(Rookery, true)
 
