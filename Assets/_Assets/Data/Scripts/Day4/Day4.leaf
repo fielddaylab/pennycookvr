@@ -72,10 +72,6 @@ $call SetWarpGroupActive(Rookery, true)
 
 $call Wait(1)
 
-$call ExclaimCorral->Activate()
-$call ExclaimWeighGate->Activate()
-$call ExclaimBackTrackers->Activate()
-
 $call SetWarpGroupActive(Rookery, true)
 
 {@Player}   How’s Polo’s chick doing?   $[Day4/Rookery/Player_2]
@@ -83,8 +79,6 @@ $call SetWarpGroupActive(Rookery, true)
 {@Player}   Phew. That’s good. I was rooting for her.   $[Day4/Rookery/Player_3]
 {@Margo}    You’ll need to collect data from the weigh bridge—that’s that gate doohickey over there. $[Day4/Rookery/4rm02]
 {@Player}   Got it. Let’s get to work.  $[Day4/Rookery/Player_7]
-
-$call ExclaimWeighGate->Deactivate()
 
 $call WeighGate->SetInteractable(true)
 
@@ -98,8 +92,6 @@ $call WeighGate->SetInteractable(true)
 $call CompleteGoal("day4_gate")
 
 {@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/4rm03]
-
-$call ExclaimBackTrackers->Deactivate()
 
 $call ChickBandPlate->Deactivate()
 $call DataLoggerPlate->Activate()
@@ -156,8 +148,6 @@ $set chapter:dataCount + 1
 @interrupt
 
 $set chapter:dataCount + 1
-
-$call ExclaimCorral->Deactivate()
 
 $call DataLoggerPlate->Deactivate()
 $call ChickBandPlate->Activate()

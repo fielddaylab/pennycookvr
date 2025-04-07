@@ -76,15 +76,10 @@ $call SetWarpGroupActive(Rookery, true)
 @once
 @interrupt
 
-$call ExclaimRegurgGame->Activate()
-$call ExclaimBackTrackers->Activate()
-$call ExclaimEggScan->Activate()
-
 $call Wait(1)
 
 $call SetWarpGroupActive(Rookery, true)
 
-$call ExclaimEggScan->Deactivate()
 
 $call FuzzEgg->Activate()
 $call AlfredoEgg->Activate()
@@ -227,8 +222,6 @@ $call CompleteGoal("day3_regurg")
 {@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
 {@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/3rm17]
 
-$call ExclaimBackTrackers->Deactivate()
-
 $call DataLoggerPlate->Activate()
 $call DataTracker1->SetMeshEnabled(true)
 $call DataTracker2->SetMeshEnabled(true)
@@ -304,7 +297,6 @@ $set chapter:trackerSocketedCount - 1
 
 $if chapter:finishedObservations == true
 
-$call ExclaimRegurgGame->Deactivate()
 $call ExclaimRegurg->Activate()
 //$call Wendy->SetRegurgitation()
 
