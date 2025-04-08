@@ -82,6 +82,7 @@ namespace Pennycook {
                     flatRoot.y = warpPoint.Case.transform.position.y;
                     if(Vector3.Distance(flatRoot, warpPoint.Case.transform.position) > 4f) {
                         warpPoint.Case.transform.position += translation;
+						warpPoint.Case.transform.rotation = Quaternion.LookRotation(caseToPlayer);
                     }
                 } else {
                      if(Vector3.Dot(caseToPlayer, translation) > 0f) {
@@ -89,6 +90,7 @@ namespace Pennycook {
                         flatRoot.y = warpPoint.Case.transform.position.y;
                         if(Vector3.Distance(flatRoot, warpPoint.Case.transform.position) > 4f) {
                             warpPoint.Case.transform.position += translation;
+							warpPoint.Case.transform.rotation = Quaternion.LookRotation(caseToPlayer);
                         }
                      }
                 }
