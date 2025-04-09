@@ -62,25 +62,32 @@ namespace Pennycook.Tablet {
                 //Debug.Log("Warp Point: " + Goals.DayGoals[i].WarpPoint);
                 if(Goals.DayGoals[i].WarpPoint == warpPointType) {
                     
-                    SidePanelDisplay s = Goals.SidePanels[(int)Goals.DayGoals[i].Type];
-                    if(s.Instructions != null) {
-                        s.Instructions.text = Goals.DayGoals[i].Instructions;
-                    }
+					if(Goals.DayGoals[i].Current) {
+						SidePanelDisplay s = Goals.SidePanels[(int)Goals.DayGoals[i].Type];
+						if(s.Instructions != null) {
+							s.Instructions.text = Goals.DayGoals[i].Instructions;
+						}
 
-                    if(s.Summary != null) { 
-                        s.Summary.text = Goals.DayGoals[i].Summary;
-                    }
+						if(s.Summary != null) { 
+							s.Summary.text = Goals.DayGoals[i].Summary;
+						}
 
-                    if (Goals.DayGoals[i].SubGoals != null) {
-                        for (int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
-                            s.UIElements[j].gameObject.SetActive(true);
-                            s.UIElements[j].Text.text = Goals.DayGoals[i].SubGoals[j].Text;
-                            //s.UIElements[j].Circle.Color = Goals.DayGoals[i].SubGoals[j].Color;
-                            if(Goals.DayGoals[i].Type == TabletGoalType.Capture) {
-                                Goals.RelevantCaptureIds.Add(Goals.DayGoals[i].SubGoals[j].Id);
-                            }
-                        }
-                    }
+						if (Goals.DayGoals[i].SubGoals != null) {
+							for (int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
+								s.UIElements[j].gameObject.SetActive(true);
+								s.UIElements[j].Text.text = Goals.DayGoals[i].SubGoals[j].Text;
+								//s.UIElements[j].Circle.Color = Goals.DayGoals[i].SubGoals[j].Color;
+								if(Goals.DayGoals[i].Type == TabletGoalType.Capture) {
+									Goals.RelevantCaptureIds.Add(Goals.DayGoals[i].SubGoals[j].Id);
+								}
+							}
+						}
+					} else {
+						SidePanelDisplay s = Goals.SidePanels[(int)Goals.DayGoals[i].Type];
+						if(s != null) {
+							s.SetSummaryGoals(true);
+						}
+					}
                 }
             }
         }

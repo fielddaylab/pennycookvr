@@ -9,7 +9,9 @@ namespace Pennycook {
         public Tablet.TabletGoalType Type;
         public Tablet.TabletCheckboxItem[] UIElements;
         public SidePanelDisplay PairedPanel;
-
+		
+		public GameObject Title;
+		public GameObject SummaryHeader;
         public TMPro.TextMeshProUGUI Instructions;
         public TMPro.TextMeshProUGUI Summary;
 
@@ -42,6 +44,24 @@ namespace Pennycook {
 
             }
         }
+		
+		public void SetSummaryGoals(bool visible) {
+			if(Title != null) {
+				Title.SetActive(!visible);
+			}
+			
+			if(Instructions != null) {
+				Instructions.enabled = !visible;
+			}
+			
+			if(SummaryHeader != null) {
+				SummaryHeader.SetActive(visible);
+			}
+			
+			if(Summary != null) { 
+				Summary.enabled = visible;
+			}
+		}
 
         public void CountIncreased(int currCount, int totalCount) {
             if(Type == Tablet.TabletGoalType.Count) {

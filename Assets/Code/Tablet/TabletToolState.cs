@@ -102,6 +102,7 @@ namespace Pennycook.Tablet {
                 toolState.Configs[prevIdx].SidePanel.SetState(false);
                 if(toolState.Configs[prevIdx].SidePanel.PairedPanel != null) {
                     toolState.Configs[prevIdx].SidePanel.PairedPanel.SetState(false);
+					toolState.Configs[prevIdx].SidePanel.PairedPanel.SetSummaryGoals(false);
                 }
 
                 var oldTool = TabletToolDefinitions.Get(toolState.CurrentTool);
@@ -121,6 +122,7 @@ namespace Pennycook.Tablet {
                 if(config.SidePanel.PairedPanel != null) {
                     if(TabletUtility.GoalOfTypeExists(config.SidePanel.PairedPanel.Type)) {
                         config.SidePanel.PairedPanel.SetState(true);
+						config.SidePanel.PairedPanel.SetSummaryGoals(true);
                         config.SidePanel.gameObject.transform.SetAsFirstSibling();
                     }
                 }
