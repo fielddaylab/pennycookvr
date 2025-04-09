@@ -111,10 +111,10 @@ $endif
 $set chapter:trackerStarted = true
 
 $call DataTrackerBack1->SetMeshEnabled(true)
-$call DataTrackerBack2->SetMeshEnabled(true)
+//$call DataTrackerBack2->SetMeshEnabled(true)
 $call DataTrackerBack3->SetMeshEnabled(true)
 $call DataTrackerBack4->SetMeshEnabled(true)
-$call DataTrackerBack5->SetMeshEnabled(true)
+//$call DataTrackerBack5->SetMeshEnabled(true)
 
 $if chapter:dataCount == 0
 {@Margo}    Wahoo! Looks like all the penguins with data loggers have come back.    $[Day4/Rookery/4rm10]

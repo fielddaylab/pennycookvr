@@ -1,43 +1,53 @@
 using System.Collections;
 using System.Collections.Generic;
+using BeauUtil;
+using BeauUtil.Variants;
+using BeauRoutine;
+using FieldDay;
+using FieldDay.Components;
+using FieldDay.Scenes;
+using FieldDay.Scripting;
+using Leaf.Runtime;
 using UnityEngine;
+using UnityEngine.Scripting;
 
-public class PennyAnimation : MonoBehaviour
+public class PennyAnimation : ScriptActorComponent 
 {
 	[SerializeField]
 	Animator _animator;
-	
-	public GameObject Notebook;
-	
-	public GameObject Pen;
-	
-	public GameObject StartPointNW;
-	public GameObject WalkPointNW;
-	
-	public GameObject StartPointS;	
-	public GameObject WalkPointS;
-	public GameObject WalkPointS2;
+
+	[SerializeField]
+	GameObject Notebook;
 	
 	[SerializeField]
-	List<Transform> _startLocations = new List<Transform>(5);
+	GameObject Pen;
+	
+	[SerializeField]
+	GameObject Binoculars;
+
+	[SerializeField]
+	Transform StartPoint;
+
+	[SerializeField]
+	Transform NearGate;
+	
+	[SerializeField]
+	Transform FarPoint;
 	
 	private bool ToggleSpot = false;
 	private bool Walking = false;
-	private bool WalkingBackAndForthS = false;
-	private bool WalkingBackAndForthNW = false;
+
 	private bool TurnedAround = true;
 	private bool TurningAround = true;
 	
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartWalkLoopNW();
-    }
+	private Routine _currentAnimRoutine;
 
-    // Update is called once per frame
-    void Update()
+	//[SerializeField]
+	//List<Transform> _startLocations = new List<Transform>(5);
+
+    void Awake()
     {
-        
+
     }
 	
 	public IEnumerator Walk(Transform location, float duration)
@@ -47,12 +57,12 @@ public class PennyAnimation : MonoBehaviour
 			Walking = true;
 			
 			_animator.SetBool("walking", true);
-			yield return new WaitForSeconds(1f);
+			yield return 0.5f;
 			
 			float t = 0f;
 			Vector3 startPos = transform.position;
 			Quaternion startRot = transform.rotation;
-			while(t < duration && (WalkingBackAndForthS || WalkingBackAndForthNW))
+			while(t < duration)
 			{
 				Vector3 newPos = Vector3.Lerp(startPos, location.position, t/duration);
 				Quaternion newRot = Quaternion.Slerp(startRot, location.rotation, t/duration);
@@ -65,7 +75,7 @@ public class PennyAnimation : MonoBehaviour
 			ToggleSpot = !ToggleSpot;
 			_animator.SetBool("walking", false);
 			
-			yield return new WaitForSeconds(2f);
+			yield return 2f;
 		}
 		
 		Walking = false;
@@ -79,10 +89,10 @@ public class PennyAnimation : MonoBehaviour
 			TurningAround = true;
 			
 			//do a point here...
-			if(doPoint)
-			{
-				_animator.SetTrigger("point00");
-			}
+			//if(doPoint)
+			//{
+			//	_animator.SetTrigger("point00");
+			//}
 			
 			yield return new WaitForSeconds(3f);
 			
@@ -96,79 +106,55 @@ public class PennyAnimation : MonoBehaviour
 		
 	}
 	
-	public IEnumerator WalkBackAndForthS()
+	public IEnumerator NotebookWrite()
 	{
-		while(WalkingBackAndForthS)
-		{
-			if(!Walking)
-			{
-				if(!TurningAround)
-				{
-					StartCoroutine(TurnAround());
-				}	
-				
-				if(TurnedAround)
-				{
-					TurningAround = false;
-					
-					if(ToggleSpot)
-					{
-						StartCoroutine(Walk(WalkPointS2.transform, 30f));
-					}
-					else
-					{
-						StartCoroutine(Walk(WalkPointS.transform, 30f));
-					}
-				}
-			}
+		yield return null;
+		_animator.SetBool("write", true);
+		int writeTime = UnityEngine.Random.Range(5, 15);
+		yield return writeTime;
 
-			yield return null;
-		}
 	}
-	
-	public IEnumerator WalkBackAndForthNW()
+
+	public IEnumerator LookBinoculars()
 	{
-		while(WalkingBackAndForthNW)
-		{
-			_animator.SetBool("kneeling", true);
-			_animator.SetBool("tinkering", true);
-			
-			yield return new WaitForSeconds(1f);
-			
-			_animator.SetTrigger("stand");
-			
-			/*_animator.SetBool("kneeling", false);
-			_animator.SetBool("tinkering", false);
-			
-			TurnedAround = false;
-			
-			StartCoroutine(TurnAround(false));
-			
-			StartCoroutine(Walk(WalkPointNW.transform, 3f));
-			
-			TurnedAround = false;
-			
-			StartCoroutine(TurnAround(false));
-			
-			StartCoroutine(Walk(StartPointNW.transform, 3f));*/
-			
-			//_animator.ResetTrigger("stand");
-		}
+		yield return null;
+		_animator.SetBool("binoculars", true);
+		int lookTime = UnityEngine.Random.Range(5, 15);
+		yield return lookTime;
+		
+	}
+
+	public IEnumerator WalkToGate()
+	{
+
+		/*_animator.SetBool("kneeling", true);
+		_animator.SetBool("tinkering", true);
+		
+		yield return new WaitForSeconds(1f);
+		
+		_animator.SetTrigger("stand");*/
+		
+		yield return null;
+		_currentAnimRoutine.Replace(Walk(NearGate, 3f));
+	}
+
+	public IEnumerator WalkToStart()
+	{
+		yield return null;
+		_currentAnimRoutine.Replace(Walk(FarPoint, 3f));
 	}
 	
-	public void SetStartingLocation(int index)
+	/*public void SetStartingLocation(int index)
 	{
 		if(index < _startLocations.Count)
 		{
 			transform.position = _startLocations[index].position;
 			transform.rotation = _startLocations[index].rotation;
 		}
-	}
+	}*/
 	
 	public void StopAllAnimations()
 	{
-		WalkingBackAndForthS = false;
-		WalkingBackAndForthNW = false;
 		ToggleSpot = false;
 		Walking = false;
 		TurnedAround = true;
@@ -214,21 +200,12 @@ public class PennyAnimation : MonoBehaviour
 		}
 	}
 	
-	public void StartWalkLoopNW()
+	[LeafMember("LoopToGate"), Preserve]
+	public void LoopToGate()
 	{
 		if(_animator != null)
 		{
-			WalkingBackAndForthNW = true;
-			StartCoroutine(WalkBackAndForthNW());
-		}
-	}
-	
-	public void StartWalkLoopS()
-	{
-		if(_animator != null)
-		{
-			WalkingBackAndForthS = true;
-			StartCoroutine(WalkBackAndForthS());
+			_currentAnimRoutine.Replace(WalkToGate());
 		}
 	}
 	

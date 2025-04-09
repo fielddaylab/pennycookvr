@@ -10,6 +10,9 @@ namespace Pennycook {
         public Tablet.TabletCheckboxItem[] UIElements;
         public SidePanelDisplay PairedPanel;
 
+        public TMPro.TextMeshProUGUI Instructions;
+        public TMPro.TextMeshProUGUI Summary;
+
         [Header("Selected State")]
         public bool Active;
 

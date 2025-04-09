@@ -228,7 +228,10 @@ $call DataTracker2->SetMeshEnabled(true)
 $call DataTracker3->SetMeshEnabled(true)
 
 $set chapter:dataTrackersStarted = true
-$call TurnOnSockets(DataSocketPenguin, true)
+//$call TurnOnSockets(DataSocketPenguin, true)
+$call DataTrackerBackHighlight1->Activate()
+$call DataTrackerBackHighlight3->Activate()
+$call DataTrackerBackHighlight4->Activate()
 
 {@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/3rm18]
 {@Margo}	You’ll need to attach a data logger to their backs.	$[Day3/Rookery/3rm19]

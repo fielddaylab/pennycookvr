@@ -39,6 +39,10 @@ namespace Pennycook.Tablet {
     public struct TabletGoal {
         public bool Completed;
         public bool Current;
+
+        public string Summary;
+        public string Instructions;
+
         public TabletGoalType Type;
         public TabletWarpPointGroup WarpPoint;
         public TabletSubGoal[] SubGoals;
@@ -57,7 +61,16 @@ namespace Pennycook.Tablet {
                 //Debug.Log("Loaded: " + Goals.DayGoals[i].Loaded);
                 //Debug.Log("Warp Point: " + Goals.DayGoals[i].WarpPoint);
                 if(Goals.DayGoals[i].WarpPoint == warpPointType) {
+                    
                     SidePanelDisplay s = Goals.SidePanels[(int)Goals.DayGoals[i].Type];
+                    if(s.Instructions != null) {
+                        s.Instructions.text = Goals.DayGoals[i].Instructions;
+                    }
+
+                    if(s.Summary != null) { 
+                        s.Summary.text = Goals.DayGoals[i].Summary;
+                    }
+
                     if (Goals.DayGoals[i].SubGoals != null) {
                         for (int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
                             s.UIElements[j].gameObject.SetActive(true);

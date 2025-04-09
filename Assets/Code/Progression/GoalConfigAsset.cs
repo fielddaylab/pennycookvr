@@ -13,6 +13,8 @@ namespace Pennycook {
 
         public Tablet.TabletWarpPointGroup WarpPoint;
         public Tablet.TabletGoalType Type;
+        public string Instructions;
+        public string SummaryDescription;
         public SubGoalConfigAsset[] SubGoals;
     }
 }
