@@ -36,9 +36,6 @@ public class PennyAnimation : ScriptActorComponent
 	
 	private bool ToggleSpot = false;
 	private bool Walking = false;
-
-	private bool TurnedAround = true;
-	private bool TurningAround = true;
 	
 	private Routine _currentAnimRoutine;
 
@@ -78,64 +75,81 @@ public class PennyAnimation : ScriptActorComponent
 			yield return 2f;
 		}
 		
-		Walking = false;
-		TurnedAround = false;
+		//Walking = false;
+
+		int waitTime = (int)UnityEngine.Random.Range(2, 8);
+
+		yield return waitTime;
+
+		float noteBookOrBinoculars = UnityEngine.Random.Range(0.0f,1.0f);
+		//Debug.Log(noteBookOrBinoculars);
+		if(noteBookOrBinoculars < 0.33f) {
+			_currentAnimRoutine.Replace(NotebookWrite());
+		} else if(noteBookOrBinoculars >= 0.33f && noteBookOrBinoculars <= 0.66f) {
+			_currentAnimRoutine.Replace(Wave());
+		} else {
+			_currentAnimRoutine.Replace(LookBinoculars());
+		}
 	}
 	
 	public IEnumerator TurnAround(bool doPoint=true)
 	{
-		if(!TurnedAround)
-		{
-			TurningAround = true;
-			
-			//do a point here...
-			//if(doPoint)
-			//{
-			//	_animator.SetTrigger("point00");
-			//}
-			
-			yield return new WaitForSeconds(3f);
-			
-			_animator.SetTrigger("turnaround");
-			
-			yield return new WaitForSeconds(3f);
-			
+		//do a point here...
+		//if(doPoint)
+		//{
+		//	_animator.SetTrigger("point00");
+		//}
+		
+		yield return 0.5f;
+		
+		//_animator.SetTrigger("turnaround");
+		//_animator.SetBool("walking", true);
+		
+		if(ToggleSpot) {
+			_currentAnimRoutine.Replace(Walk(StartPoint, 3f));
+		} else {
+			_currentAnimRoutine.Replace(Walk(NearGate, 3f));
 		}
-		
-		TurnedAround = true;
-		
 	}
 	
+	public IEnumerator Wave()
+	{
+		_animator.SetBool("wave", true);
+				
+		float writeTime = UnityEngine.Random.Range(15.0f, 20.0f);
+		yield return writeTime;
+		_animator.SetBool("wave", false);
+		_currentAnimRoutine.Replace(TurnAround());
+	}
+
 	public IEnumerator NotebookWrite()
 	{
 		yield return null;
 		_animator.SetBool("write", true);
-		int writeTime = UnityEngine.Random.Range(5, 15);
-		yield return writeTime;
 
+		if(Notebook != null && Pen != null) {
+			Notebook.GetComponent<Animator>().SetTrigger("NotebookWrite_isPlaying");
+			Pen.GetComponent<Animator>().SetTrigger("PenWrite_isPlaying");
+		}
+		
+		float writeTime = UnityEngine.Random.Range(15.0f, 20.0f);
+		yield return writeTime;
+		_animator.SetBool("write", false);
+		_currentAnimRoutine.Replace(TurnAround());
 	}
 
 	public IEnumerator LookBinoculars()
 	{
 		yield return null;
 		_animator.SetBool("binoculars", true);
-		int lookTime = UnityEngine.Random.Range(5, 15);
+		if(Binoculars != null) {
+			Binoculars.GetComponent<Animator>().SetTrigger("BinocularAnim_isPlaying");
+		}
+		
+		float lookTime = UnityEngine.Random.Range(15.0f, 20.0f);
 		yield return lookTime;
-		
-	}
-
-	public IEnumerator WalkToGate()
-	{
-
-		/*_animator.SetBool("kneeling", true);
-		_animator.SetBool("tinkering", true);
-		
-		yield return new WaitForSeconds(1f);
-		
-		_animator.SetTrigger("stand");*/
-		
-		yield return null;
-		_currentAnimRoutine.Replace(Walk(NearGate, 3f));
+		_animator.SetBool("binoculars", false);
+		_currentAnimRoutine.Replace(TurnAround());
 	}
 
 	public IEnumerator WalkToStart()
@@ -157,8 +171,6 @@ public class PennyAnimation : ScriptActorComponent
 	{
 		ToggleSpot = false;
 		Walking = false;
-		TurnedAround = true;
-		TurningAround = false;
 		
 		if(Notebook != null)
 		{
@@ -205,7 +217,7 @@ public class PennyAnimation : ScriptActorComponent
 	{
 		if(_animator != null)
 		{
-			_currentAnimRoutine.Replace(WalkToGate());
+			_currentAnimRoutine.Replace(Walk(NearGate, 3f));
 		}
 	}
 	
