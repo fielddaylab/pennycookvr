@@ -237,8 +237,9 @@ $endif
 @who        Player
 @once
 
-$call CompleteMainGoal("identify_mates")
 $call SetCurrentMainGoal("retrieve_leg_trackers")
+$call CompleteMainGoal("identify_mates")
+
 
 $call GPSTrackerPlate->Activate()
 
@@ -284,11 +285,11 @@ $set chapter:trackersStarted = true
 @when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount + 1
 
-$if chapter:removedCount == 0
+$if chapter:removedCount == 1
 $call CompleteGoal("goal_gps_tracker_1")
-$elseif chapter:removedCount == 1
-$call CompleteGoal("goal_gps_tracker_2")
 $elseif chapter:removedCount == 2
+$call CompleteGoal("goal_gps_tracker_2")
+$elseif chapter:removedCount == 3
 $call CompleteGoal("goal_gps_tracker_3")
 $endif
 
@@ -301,11 +302,11 @@ $endif
 @when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount - 1
 
-$if chapter:removedCount == 1
+$if chapter:removedCount == 0
 $call RemoveGoal("goal_gps_tracker_1")
-$elseif chapter:removedCount == 2
+$elseif chapter:removedCount == 1
 $call RemoveGoal("goal_gps_tracker_2")
-$elseif chapter:removedCount == 3
+$elseif chapter:removedCount == 2
 $call RemoveGoal("goal_gps_tracker_3")
 $endif
 
@@ -315,6 +316,7 @@ $endif
 @interrupt
 
 $set chapter:finishedTrackers = true
+$call CompleteMainGoal("retrieve_leg_trackers")
 
 $call Wait(0.3)
 {@Margo}  Nice work, kid! That’s all the GPS trackers.   $[Day2/Rookery/2rm24]

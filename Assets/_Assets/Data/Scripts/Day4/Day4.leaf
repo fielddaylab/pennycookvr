@@ -89,10 +89,9 @@ $call WeighGate->SetInteractable(true)
 @interrupt
 @once
 
-
 $call CompleteGoal("day4_gate")
-$call CompleteMainGoal("scan_weigh_gate")
 $call SetCurrentMainGoal("retrieve_back_trackers")
+$call CompleteMainGoal("scan_weigh_gate")
 
 {@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/4rm03]
 
@@ -136,11 +135,11 @@ $endif
 
 $set chapter:dataCount + 1
 
-$if objectId == "DataTrackerBack1"
+$if local:objectId == "DataTrackerBack1"
 $call CompleteGoal("goal_back_tracker_alfredo_get")
-$elseif objectId == "DataTrackerBack3"
+$elseif local:objectId == "DataTrackerBack3"
 $call CompleteGoal("goal_back_tracker_millie_get")
-$elseif objectId == "DataTrackerBack4"
+$elseif local:objectId == "DataTrackerBack4"
 $call CompleteGoal("goal_back_tracker_winston_get")
 $endif
 
@@ -152,11 +151,11 @@ $endif
 
 $set chapter:dataCount + 1
 
-$if objectId == "DataTrackerBack1"
+$if local:objectId == "DataTrackerBack1"
 $call CompleteGoal("goal_back_tracker_alfredo_get")
-$elseif objectId == "DataTrackerBack3"
+$elseif local:objectId == "DataTrackerBack3"
 $call CompleteGoal("goal_back_tracker_millie_get")
-$elseif objectId == "DataTrackerBack4"
+$elseif local:objectId == "DataTrackerBack4"
 $call CompleteGoal("goal_back_tracker_winston_get")
 $endif
 
@@ -168,16 +167,16 @@ $endif
 
 $set chapter:dataCount + 1
 
-$if objectId == "DataTrackerBack1"
+$if local:objectId == "DataTrackerBack1"
 $call CompleteGoal("goal_back_tracker_alfredo_get")
-$elseif objectId == "DataTrackerBack3"
+$elseif local:objectId == "DataTrackerBack3"
 $call CompleteGoal("goal_back_tracker_millie_get")
-$elseif objectId == "DataTrackerBack4"
+$elseif local:objectId == "DataTrackerBack4"
 $call CompleteGoal("goal_back_tracker_winston_get")
 $endif
 
-$call CompleteMainGoal("retrieve_back_trackers")
 $call SetCurrentMainGoal("band_chicks")
+$call CompleteMainGoal("retrieve_back_trackers")
 
 $call DataLoggerPlate->Deactivate()
 $call ChickBandPlate->Activate()
@@ -207,11 +206,11 @@ $endif
 
 $set chapter:dataCount - 1
 
-$if objectId == "DataTrackerBack1"
+$if local:objectId == "DataTrackerBack1"
 $call RemoveGoal("goal_back_tracker_alfredo_get")
-$elseif objectId == "DataTrackerBack3"
+$elseif local:objectId == "DataTrackerBack3"
 $call RemoveGoal("goal_back_tracker_millie_get")
-$elseif objectId == "DataTrackerBack4"
+$elseif local:objectId == "DataTrackerBack4"
 $call RemoveGoal("goal_back_tracker_winston_get")
 $endif
 

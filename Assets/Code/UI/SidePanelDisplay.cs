@@ -8,12 +8,13 @@ namespace Pennycook {
 
         public Tablet.TabletGoalType Type;
         public Tablet.TabletCheckboxItem[] UIElements;
-        public SidePanelDisplay PairedPanel;
-		
+        
+        public Tablet.TabletCheckboxItem[] SummaryHeaders;
+        
 		public GameObject Title;
-		public Tablet.TabletCheckboxItem SummaryHeader;
+
+        public GameObject InstructionObject;
         public TMPro.TextMeshProUGUI Instructions;
-        public TMPro.TextMeshProUGUI Summary;
 
         [Header("Selected State")]
         public bool Active;
@@ -27,6 +28,18 @@ namespace Pennycook {
 
         void IRegistrationCallbacks.OnDeregister() {
             Tablet.TabletCountable.OnCounted.Deregister(CountIncreased);
+        }
+
+        public void SetBackgroundColor(Color bg) {
+            for(int i = 0; i < UIElements.Length; ++i) {
+                UIElements[i].Background.color = bg;
+            } 
+
+            for(int i = 0; i < SummaryHeaders.Length; ++i) {
+                if(SummaryHeaders[i] != null) {
+                    SummaryHeaders[i].Background.color = bg;
+                }
+            }
         }
 
         public void SetState(bool visible, bool highlighted=false) {
@@ -44,6 +57,24 @@ namespace Pennycook {
 
             }
         }
+
+        public void SetVisibleAll(bool visible) {
+        	/*if(Title != null) {
+				Title.SetActive(visible);
+			}*/ 
+
+            for(int i = 0; i < SummaryHeaders.Length; ++i) {
+				SummaryHeaders[i].gameObject.SetActive(visible);
+			}
+
+			if(InstructionObject != null) {
+				InstructionObject.SetActive(false);
+			}
+            
+            for(int i = 0; i < UIElements.Length; ++i) {
+                UIElements[i].gameObject.SetActive(false);
+            } 
+        }
 		
 		public void SetSummaryGoals(bool visible) {
 			if(Title != null) {
@@ -54,12 +85,8 @@ namespace Pennycook {
 				Instructions.enabled = !visible;
 			}
 			
-			if(SummaryHeader != null) {
-				SummaryHeader.gameObject.SetActive(visible);
-			}
-			
-			if(Summary != null) { 
-				Summary.enabled = visible;
+            for(int i = 0; i < SummaryHeaders.Length; ++i) {
+				SummaryHeaders[i].gameObject.SetActive(visible);
 			}
 
             for(int i = 0; i < UIElements.Length; ++i) {
