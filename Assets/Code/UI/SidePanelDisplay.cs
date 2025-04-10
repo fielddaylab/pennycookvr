@@ -11,7 +11,7 @@ namespace Pennycook {
         public SidePanelDisplay PairedPanel;
 		
 		public GameObject Title;
-		public GameObject SummaryHeader;
+		public Tablet.TabletCheckboxItem SummaryHeader;
         public TMPro.TextMeshProUGUI Instructions;
         public TMPro.TextMeshProUGUI Summary;
 
@@ -55,12 +55,16 @@ namespace Pennycook {
 			}
 			
 			if(SummaryHeader != null) {
-				SummaryHeader.SetActive(visible);
+				SummaryHeader.gameObject.SetActive(visible);
 			}
 			
 			if(Summary != null) { 
 				Summary.enabled = visible;
 			}
+
+            for(int i = 0; i < UIElements.Length; ++i) {
+                UIElements[i].gameObject.SetActive(false);
+            }
 		}
 
         public void CountIncreased(int currCount, int totalCount) {

@@ -237,6 +237,9 @@ $endif
 @who        Player
 @once
 
+$call CompleteMainGoal("identify_mates")
+$call SetCurrentMainGoal("retrieve_leg_trackers")
+
 $call GPSTrackerPlate->Activate()
 
 $call LegTrackerHighlight1->Activate()
@@ -281,6 +284,14 @@ $set chapter:trackersStarted = true
 @when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount + 1
 
+$if chapter:removedCount == 0
+$call CompleteGoal("goal_gps_tracker_1")
+$elseif chapter:removedCount == 1
+$call CompleteGoal("goal_gps_tracker_2")
+$elseif chapter:removedCount == 2
+$call CompleteGoal("goal_gps_tracker_3")
+$endif
+
 $if chapter:removedCount >= 3
 	$call TriggerResponse(TrackersCompleted)
 $endif
@@ -289,6 +300,14 @@ $endif
 @trigger	ObjectUnsocketed
 @when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
 $set	chapter:removedCount - 1
+
+$if chapter:removedCount == 1
+$call RemoveGoal("goal_gps_tracker_1")
+$elseif chapter:removedCount == 2
+$call RemoveGoal("goal_gps_tracker_2")
+$elseif chapter:removedCount == 3
+$call RemoveGoal("goal_gps_tracker_3")
+$endif
 
 :: TrackersCompleted
 @trigger	TrackersCompleted

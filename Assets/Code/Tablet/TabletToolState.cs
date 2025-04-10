@@ -97,6 +97,8 @@ namespace Pennycook.Tablet {
             TabletHighlightState highlights = Find.State<TabletHighlightState>();
             TabletControlState ctrl = Find.State<TabletControlState>();
 
+            TabletUtility.LoadGoals(index);
+
             if (prevIdx >= 0) {
                 toolState.Configs[prevIdx].Label.SetState(false);
                 toolState.Configs[prevIdx].SidePanel.SetState(false);

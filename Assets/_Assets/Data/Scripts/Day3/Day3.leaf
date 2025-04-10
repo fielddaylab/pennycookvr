@@ -219,6 +219,9 @@ $call ExclaimRegurg->Deactivate()
 $set chapter:regurgDone = true
 $call CompleteGoal("day3_regurg")
 
+$call CompleteMainGoal("capture_regurgitation")
+$call SetCurrentMainGoal("place_back_trackers")
+
 {@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
 {@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/3rm17]
 
@@ -268,6 +271,14 @@ $endif
 $set chapter:trackerSocketedCount + 1
 {@Margo}	Nice work! Let’s do two more. 	$[Day3/Rookery/3rm22]
 
+$if socketId == "DataSocketBack1"
+$call CompleteGoal("goal_back_tracker_alfredo")
+$elseif socketId == "DataSocketBack3"
+$call CompleteGoal("goal_back_tracker_millie")
+$elseif socketId == "DataSocketBack3"
+$call CompleteGoal("goal_back_tracker_winston")
+$endif
+
 ::	TrackerSocketed2
 @trigger ObjectSocketed
 @who	Player
@@ -276,16 +287,34 @@ $set chapter:trackerSocketedCount + 1
 
 $set chapter:trackerSocketedCount + 1
 
+$if socketId == "DataSocketBack1"
+$call CompleteGoal("goal_back_tracker_alfredo")
+$elseif socketId == "DataSocketBack3"
+$call CompleteGoal("goal_back_tracker_millie")
+$elseif socketId == "DataSocketBack3"
+$call CompleteGoal("goal_back_tracker_winston")
+$endif
+
 ::	TrackerSocketed3
 @trigger ObjectSocketed
 @who	Player
 @when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true, chapter:trackerSocketedCount == 2
 @interrupt
 
+$if socketId == "DataSocketBack1"
+$call CompleteGoal("goal_back_tracker_alfredo")
+$elseif socketId == "DataSocketBack3"
+$call CompleteGoal("goal_back_tracker_millie")
+$elseif socketId == "DataSocketBack3"
+$call CompleteGoal("goal_back_tracker_winston")
+$endif
+
 $set chapter:trackerSocketedCount + 1
 $set chapter:trackersSocketed = true
+$call CompleteMainGoal("place_back_trackers")
+
 {@Margo}	Great job. That should get us plenty of data.	$[Day3/Rookery/3rm23]
-$call TurnOnSockets(DataSocketPenguin, false)
+//$call TurnOnSockets(DataSocketPenguin, false)
 $goto Day3.CheckAllComplete
 
 ::	TrackerUnsocketed
@@ -294,11 +323,23 @@ $goto Day3.CheckAllComplete
 @when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true
 $set chapter:trackerSocketedCount - 1
 
+$if socketId == "DataSocketBack1"
+$call RemoveGoal("goal_back_tracker_alfredo")
+$elseif socketId == "DataSocketBack3"
+$call RemoveGoal("goal_back_tracker_millie")
+$elseif socketId == "DataSocketBack3"
+$call RemoveGoal("goal_back_tracker_winston")
+$endif
+
+
 :: CheckScanComplete
 @trigger	CheckScanComplete
 @who		Player
 
 $if chapter:finishedObservations == true
+
+$call CompleteMainGoal("scan_eggs_and_chicks")
+$call SetCurrentMainGoal("capture_regurgitation")
 
 $call ExclaimRegurg->Activate()
 //$call Wendy->SetRegurgitation()

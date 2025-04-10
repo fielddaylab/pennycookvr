@@ -89,7 +89,10 @@ $call WeighGate->SetInteractable(true)
 @interrupt
 @once
 
+
 $call CompleteGoal("day4_gate")
+$call CompleteMainGoal("scan_weigh_gate")
+$call SetCurrentMainGoal("retrieve_back_trackers")
 
 {@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/4rm03]
 
@@ -133,6 +136,14 @@ $endif
 
 $set chapter:dataCount + 1
 
+$if objectId == "DataTrackerBack1"
+$call CompleteGoal("goal_back_tracker_alfredo_get")
+$elseif objectId == "DataTrackerBack3"
+$call CompleteGoal("goal_back_tracker_millie_get")
+$elseif objectId == "DataTrackerBack4"
+$call CompleteGoal("goal_back_tracker_winston_get")
+$endif
+
 :: OnSocketedTracker2
 @trigger    ObjectSocketed
 @who        Player
@@ -141,6 +152,14 @@ $set chapter:dataCount + 1
 
 $set chapter:dataCount + 1
 
+$if objectId == "DataTrackerBack1"
+$call CompleteGoal("goal_back_tracker_alfredo_get")
+$elseif objectId == "DataTrackerBack3"
+$call CompleteGoal("goal_back_tracker_millie_get")
+$elseif objectId == "DataTrackerBack4"
+$call CompleteGoal("goal_back_tracker_winston_get")
+$endif
+
 :: OnSocketedTracker3
 @trigger    ObjectSocketed
 @who        Player
@@ -148,6 +167,17 @@ $set chapter:dataCount + 1
 @interrupt
 
 $set chapter:dataCount + 1
+
+$if objectId == "DataTrackerBack1"
+$call CompleteGoal("goal_back_tracker_alfredo_get")
+$elseif objectId == "DataTrackerBack3"
+$call CompleteGoal("goal_back_tracker_millie_get")
+$elseif objectId == "DataTrackerBack4"
+$call CompleteGoal("goal_back_tracker_winston_get")
+$endif
+
+$call CompleteMainGoal("retrieve_back_trackers")
+$call SetCurrentMainGoal("band_chicks")
 
 $call DataLoggerPlate->Deactivate()
 $call ChickBandPlate->Activate()
@@ -177,12 +207,27 @@ $endif
 
 $set chapter:dataCount - 1
 
+$if objectId == "DataTrackerBack1"
+$call RemoveGoal("goal_back_tracker_alfredo_get")
+$elseif objectId == "DataTrackerBack3"
+$call RemoveGoal("goal_back_tracker_millie_get")
+$elseif objectId == "DataTrackerBack4"
+$call RemoveGoal("goal_back_tracker_winston_get")
+$endif
+
 :: OnUnsocketedWingBand
 @trigger ObjectUnsocketed
 @who        Player
 @when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true
 
 $set chapter:wingCount - 1
+$if chapter:wingCount == 0
+$call RemoveGoal("goal_place_band_1")
+$elseif chapter:wingCount == 1
+$call RemoveGoal("goal_place_band_2")
+$elseif chapter:wingCount == 2
+$call RemoveGoal("goal_place_band_3")
+$endif
 
 :: OnSocketedWingBand1
 @trigger ObjectSocketed
@@ -192,12 +237,16 @@ $set chapter:wingCount - 1
 
 $set chapter:wingCount + 1
 
+$call CompleteGoal("goal_place_band_1")
+
 :: OnSocketedWingBand2
 @trigger ObjectSocketed
 @who    Player
 @when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true, chapter:wingCount == 1
 @interrupt
 $set chapter:wingCount + 1
+
+$call CompleteGoal("goal_place_band_2")
 
 :: OnSocketedWingBand3
 @trigger ObjectSocketed
@@ -206,6 +255,8 @@ $set chapter:wingCount + 1
 @interrupt
 
 $set chapter:wingCount + 1
+$call CompleteGoal("goal_place_band_3")
+$call CompleteMainGoal("band_chicks")
 
 $call TurnOnSockets(BandSocketChick, false)
 //$call TriggerResponseAndWait(Day4.CheckCompletedTasks)

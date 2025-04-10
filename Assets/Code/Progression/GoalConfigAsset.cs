@@ -10,7 +10,7 @@ namespace Pennycook {
 
     [CreateAssetMenu(menuName = "Pennycook/Goal Config")]
     public sealed class GoalConfigAsset : NamedAsset {
-
+        public string ID;
         public Tablet.TabletWarpPointGroup WarpPoint;
         public Tablet.TabletGoalType Type;
         public string Instructions;

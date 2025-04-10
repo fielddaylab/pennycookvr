@@ -59,27 +59,31 @@ namespace Pennycook {
         }
 
         static public void LoadGoals(DayConfigAsset config) {
+
+            Tablet.TabletUtility.Goals.DayGoals = new Tablet.TabletGoal[config.Goals.Length];
+
             for (int i = 0; i < config.Goals.Length; ++i)
             {
-                Tablet.TabletGoal newGoal = new Tablet.TabletGoal();
-                newGoal.Type = config.Goals[i].Type;
-                newGoal.WarpPoint = config.Goals[i].WarpPoint;
-				newGoal.Instructions = config.Goals[i].Instructions;
-				newGoal.Summary = config.Goals[i].SummaryDescription;
-                newGoal.Completed = false;
-                newGoal.Current = false;
+                Tablet.TabletUtility.Goals.DayGoals[i] = new Tablet.TabletGoal();
+                Tablet.TabletUtility.Goals.DayGoals[i].ID = config.Goals[i].ID;
+                Tablet.TabletUtility.Goals.DayGoals[i].Type = config.Goals[i].Type;
+                Tablet.TabletUtility.Goals.DayGoals[i].WarpPoint = config.Goals[i].WarpPoint;
+				Tablet.TabletUtility.Goals.DayGoals[i].Instructions = config.Goals[i].Instructions;
+				Tablet.TabletUtility.Goals.DayGoals[i].Summary = config.Goals[i].SummaryDescription;
+                Tablet.TabletUtility.Goals.DayGoals[i].Completed = false;
+                Tablet.TabletUtility.Goals.DayGoals[i].Current = false;
                 if (config.Goals[i].SubGoals.Length > 0)
                 {
-                    newGoal.SubGoals = new Tablet.TabletSubGoal[config.Goals[i].SubGoals.Length];
+                    Tablet.TabletUtility.Goals.DayGoals[i].SubGoals = new Tablet.TabletSubGoal[config.Goals[i].SubGoals.Length];
                     for (int j = 0; j < config.Goals[i].SubGoals.Length; ++j)
                     {
-                        newGoal.SubGoals[j] = new Tablet.TabletSubGoal();
-                        newGoal.SubGoals[j].Id = config.Goals[i].SubGoals[j].ID;
-                        newGoal.SubGoals[j].Text = config.Goals[i].SubGoals[j].Description;
-                        newGoal.SubGoals[j].Color = config.Goals[i].SubGoals[j].Color;
+                        Tablet.TabletUtility.Goals.DayGoals[i].SubGoals[j] = new Tablet.TabletSubGoal();
+                        Tablet.TabletUtility.Goals.DayGoals[i].SubGoals[j].Id = config.Goals[i].SubGoals[j].ID;
+                        Tablet.TabletUtility.Goals.DayGoals[i].SubGoals[j].Text = config.Goals[i].SubGoals[j].Description;
+                        Tablet.TabletUtility.Goals.DayGoals[i].SubGoals[j].Color = config.Goals[i].SubGoals[j].Color;
                     }
                 }
-                Tablet.TabletUtility.Goals.DayGoals.Add(newGoal);
+                //Tablet.TabletUtility.Goals.DayGoals[i] = newGoal;
             }
         }
 

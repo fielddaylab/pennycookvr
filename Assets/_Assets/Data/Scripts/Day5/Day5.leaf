@@ -134,6 +134,14 @@ $endif
 
 $set chapter:legCount + 1
 
+$if chapter:legCount == 1
+$call CompleteGoal("goal_place_leg_tracker_1")
+$elseif chapter:legCount == 2
+$call CompleteGoal("goal_place_leg_tracker_2")
+$elseif chapter:legCount == 3
+$call CompleteGoal("goal_place_leg_tracker_3")
+$endif
+
 $if chapter:legCount >= 3
 $goto Day5.LegTrackersComplete
 $endif
@@ -143,10 +151,26 @@ $endif
 @when   objectType == "LegTracker", socketType == "LegSocket", chapter:legTrackersStarted == true
 $set chapter:legCount - 1
 
+$if chapter:legCount == 0
+$call RemoveGoal("goal_place_leg_tracker_1")
+$elseif chapter:legCount == 1
+$call RemoveGoal("goal_place_leg_tracker_2")
+$elseif chapter:legCount == 2
+$call RemoveGoal("goal_place_leg_tracker_3")
+$endif
+
 :: OnSocketedLegTrackerPolo
 @trigger ObjectSocketed
 @when   objectType == "LegTracker", socketType == "LegSocketPolo", chapter:legTrackersStarted == true
 $set chapter:legCount + 1
+
+$if chapter:legCount == 1
+$call CompleteGoal("goal_place_leg_tracker_1")
+$elseif chapter:legCount == 2
+$call CompleteGoal("goal_place_leg_tracker_2")
+$elseif chapter:legCount == 3
+$call CompleteGoal("goal_place_leg_tracker_3")
+$endif
 
 $if chapter:legCount >= 3
 $goto Day5.LegTrackersComplete
@@ -157,9 +181,19 @@ $endif
 @when   objectType == "LegTracker", socketType == "LegSocketPolo", chapter:legTrackersStarted == true
 $set chapter:legCount - 1
 
+$if chapter:legCount == 0
+$call RemoveGoal("goal_place_leg_tracker_1")
+$elseif chapter:legCount == 1
+$call RemoveGoal("goal_place_leg_tracker_2")
+$elseif chapter:legCount == 2
+$call RemoveGoal("goal_place_leg_tracker_3")
+$endif
+
 :: LegTrackersComplete
 @trigger LegTrackersComplete
 @who	Player
+
+$call CompleteMainGoal("place_leg_trackers")
 
 {@Margo}	Great work, kiddo.	$[Day5/Rookery/5rm10]
 {@Margo}	Your penguins are all ready to head out into the world.	$[Day5/Rookery/5rm11]
