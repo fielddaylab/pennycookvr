@@ -26,7 +26,8 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _HALFTONESHAPE_CUSTOM
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _STEPVIARAMPTEXTURE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -141,7 +142,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DiffuseStep: 0.08
+    - _DiffuseStep: -1
     - _DitherTexelSize: 1
     - _DitherThreshold: 1
     - _DstBlend: 0
@@ -207,13 +208,13 @@ Material:
     - _SrcBlendAlpha: 1
     - _StencilComp: 0
     - _StencilRef: 0
-    - _StepViaRampTexture: 0
+    - _StepViaRampTexture: 1
     - _Surface: 0
     - _UseRampColor: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.50188667, g: 0.45891857, b: 0.40813804, a: 1}
+    - _BaseColor: {r: 0.5019608, g: 0.45088628, b: 0.39052552, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0.14716971, g: 0.14716971, b: 0.14716971, a: 1}
     - _FaceFrontDirection: {r: 0, g: 0, b: 1, a: 0}
@@ -224,7 +225,7 @@ Material:
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineDistancFade: {r: -66.66667, g: 46.19336, b: 0, a: 0}
     - _RimColor: {r: 0.76792455, g: 0.981212, b: 1, a: 0.493}
-    - _ShadowColor: {r: 0.10188351, g: 0.10188351, b: 0.10188351, a: 0.137}
+    - _ShadowColor: {r: 0.101881765, g: 0.101881765, b: 0.101881765, a: 0}
     - _SpecColor: {r: 0.19999993, g: 0.19999993, b: 0.19999993, a: 0}
     - _SpherizeNormalOrigin: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
