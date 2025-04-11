@@ -322,9 +322,6 @@ $call DeskGlow->PlayAnimation()
 $call MargoDockParticles->PlayFX()
 
 {@Margo}    Okey dokey, let’s have a look at that data! $[Day4/Tent/4tm09]
-{@Margo}    We're getting data back from the penguins you placed trackers on. $[Day4/Tent/4tm10]
-{@Margo}    They are still eating mainly krill, and diving pretty deep to get it! $[Day4/Tent/4tm11]
-{@Margo}    And thanks to the weigh gate, we can see just how much each penguin is eating. Which is quite a bit! $[Day4/Tent/4tm12]
 
 $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
@@ -338,6 +335,24 @@ $while !ButtonPressed(BigButton)
 $call Wait(0.5)
 $endwhile
 
+$call MargoTabletFace->SetMeshEnabled(false)
+$call Screen->SetEnabled(true)
+$call Screen->SetTexture(0)
+
+$call Wait(2)
+
+$call MargoQuad->SetMeshEnabled(true)
+$call Screen->SetTexture(9)
+
+{@Margo}    We're getting data back from the penguins you placed trackers on. $[Day4/Tent/4tm10]
+
+$call Screen->SetTexture(10)
+
+{@Margo}    They are still eating mainly krill, and diving pretty deep to get it! $[Day4/Tent/4tm11]
+
+$call Screen->SetTexture(11)
+
+{@Margo}    And thanks to the weigh gate, we can see just how much each penguin is eating. Which is quite a bit! $[Day4/Tent/4tm12]
 {@Player}   Awesome! Thanks, Margo. $[Day4/Tent/Player_8]
 
 $call FadeOut(6.0)
