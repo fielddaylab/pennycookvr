@@ -46,6 +46,13 @@ public class PennyAnimation : ScriptActorComponent
     {
 
     }
+
+	void OnDestroy()
+	{
+		if(_currentAnimRoutine != null) {
+			_currentAnimRoutine.Stop();
+		}
+	}
 	
 	public IEnumerator Walk(Transform location, float duration)
 	{

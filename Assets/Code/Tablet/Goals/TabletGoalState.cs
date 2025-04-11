@@ -59,7 +59,7 @@ namespace Pennycook.Tablet {
         static public void LoadGoals(int toolIndex) {
             //Debug.Log("IN LOAD GOALS");
             //Debug.Log("warpPointType: " + warpPointType);
-            if(Goals.DayGoals == null) { 
+            if(Goals == null || Goals.DayGoals == null) { 
                 return;
             }
 
@@ -181,8 +181,8 @@ namespace Pennycook.Tablet {
                     for(int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
                         if(Goals.DayGoals[i].SubGoals[j].Id == id) {
                             Goals.DayGoals[i].SubGoals[j].Completed = true;
-                            if (Goals.SidePanels[currTool.CurrentToolIndex].UIElements[j].Check != null) {
-                                Goals.SidePanels[currTool.CurrentToolIndex].UIElements[j].Check.SetAlpha(1);
+                            if (Goals.SidePanels[0].UIElements[j].Check != null) {
+                                Goals.SidePanels[0].UIElements[j].Check.SetAlpha(1);
                             }
                             return true;
                         }
@@ -230,8 +230,8 @@ namespace Pennycook.Tablet {
                     for(int j = 0; j < Goals.DayGoals[i].SubGoals.Length; ++j) {
                         if(Goals.DayGoals[i].SubGoals[j].Id == id) {
                             Goals.DayGoals[i].SubGoals[j].Completed = false;
-                            if (Goals.SidePanels[currTool.CurrentToolIndex].UIElements[j].Check != null) {
-                                Goals.SidePanels[currTool.CurrentToolIndex].UIElements[j].Check.SetAlpha(0);
+                            if (Goals.SidePanels[0].UIElements[j].Check != null) {
+                                Goals.SidePanels[0].UIElements[j].Check.SetAlpha(0);
                             }
                             return true;
                         }

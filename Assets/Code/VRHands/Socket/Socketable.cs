@@ -98,9 +98,9 @@ namespace FieldDay.Sockets {
             }
             
             if(socket.AllowedSockets == SocketFlags.BackTracker || socket.AllowedSockets == SocketFlags.LegTracker || socket.AllowedSockets == SocketFlags.WingBand)  {
-                Sfx.Play("Socket.Penguin");
+                Sfx.PlayDetached("Socket.Penguin", socket.gameObject.transform);
             } else if(socket.AllowedSockets == SocketFlags.Margo) {
-                Sfx.Play("Socket.Case");
+                Sfx.PlayDetached("Socket.Case", socket.gameObject.transform);
             }
 
             socketable.OnAddedToSocket.Invoke(socket);

@@ -20,14 +20,14 @@
 
 {@Player}	Hmm. What's this thing for? $[Day1/LookAt/Margo_Player_1]
 
-:: LookAtMargo.2
-@trigger    PlayerLookAt
-@who        Player
-@when       objectType == "Margo", chapter:hasTalkedToMargo, chapter:allIdentified
-@priority	Low
-@once
+//:: LookAtMargo.2
+//@trigger    PlayerLookAt
+//@who        Player
+//@when       objectType == "Margo", chapter:hasTalkedToMargo, chapter:allIdentified
+//@priority	Low
+//@once
 
-{@Player}	I wish Margo had games loaded on her operating system. $[Day1/LookAt/Margo_Player_2]
+//{@Player}	I wish Margo had games loaded on her operating system. $[Day1/LookAt/Margo_Player_2]
 
 :: LookAtHand
 @trigger    PlayerLookAt

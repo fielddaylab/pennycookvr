@@ -39,10 +39,8 @@ $call Wait(2)
 $call SetWarpActive(WarpBluff, true)
 $call WeighGatePenguin->SetWeighGate()
 
+$call MargoFace->Activate()
 {@Margo}   Mornin', kiddo.   $[Day4/Tent/4tm01]
-{@Player}   I wish Lola could meet the Fliptastic Five for Christmas. She’d love them!     $[Day4/Tent/Player_3]
-{@Player}   Especially Polo.    $[Day4/Tent/Player_4]
-{@Margo}   Aw, cheer up, kiddo. You’ll see Lola again before ya know it!     $[Day4/Tent/4tm04]
 {@Margo}    Come on. Let’s get out there and check on those penguins.   $[Day4/Tent/4tm08]
 
 $call Wait(1)
@@ -179,16 +177,7 @@ $endif
 $call SetCurrentMainGoal("band_chicks")
 $call CompleteMainGoal("retrieve_back_trackers")
 
-$call DataLoggerPlate->Deactivate()
-$call ChickBandPlate->Activate()
-
-$call WingBand1->SetMeshEnabled(true)
-$call WingBand2->SetMeshEnabled(true)
-$call WingBand3->SetMeshEnabled(true)
-
-$set chapter:wingStarted = true
-
-$call TurnOnSockets(BandSocketChick, true)
+$call ExclaimCorral->Activate()
 
 $if chapter:wingCount == 0
 {@Margo}    Okay, time to band the chicks. Penny corralled them here to make it a bit easier.   $[Day4/Rookery/4rm14]
@@ -200,6 +189,23 @@ $if chapter:wingCount == 0
 {@Margo}    First you’ll need to hold the penguin in place. $[Day4/Rookery/4rm19]
 {@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/4rm20]
 $endif
+
+:: WarpedToRookeryCorral
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-RookeryCorral"
+@interrupt
+
+$call TurnOnSockets(BandSocketChick, true)
+$call ExclaimCorral->Deactivate()
+$call DataLoggerPlate->Deactivate()
+$call ChickBandPlate->Activate()
+
+$call WingBand1->SetMeshEnabled(true)
+$call WingBand2->SetMeshEnabled(true)
+$call WingBand3->SetMeshEnabled(true)
+
+$set chapter:wingStarted = true
 
 :: OnUnsocketedTracker
 @trigger    ObjectUnsocketed
@@ -324,6 +330,7 @@ $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
 $endwhile
 
+$call BigButton->SetButtonPressed(false)
 $call DeskGlow->StopAnimation()
 $call MargoDockParticles->StopFX()
 
@@ -332,13 +339,6 @@ $call Wait(0.5)
 $endwhile
 
 {@Player}   Awesome! Thanks, Margo. $[Day4/Tent/Player_8]
-{@Margo}    Hang on a sec, kiddo.   $[Day4/Tent/4tm13]
-{@Margo}    There’s still one more thing. Did you forget about the surprise?    $[Day4/Tent/4tm14]
-{@Margo}    Penny and I made a couple phone calls while you were sleepin’.  $[Day4/Tent/4tm16]
-{@Margo}    Let’s see if we can get connected…. $[Day4/Tent/4tm17]
-{@Player}   Hey Lolita!   $[Day4/Tent/Player_11]
-{@Lola}     Hola, mi amor. How’s Christmas at the South Pole?   $[Day4/Tent/Lola_1]
-{@Player}   A lot better now! What are you doing here?  $[Day4/Tent/Player_12]
 
 $call FadeOut(6.0)
 $call Wait(6)

@@ -38,6 +38,8 @@ $call SetWarpActive(WarpBluff, true)
 $call Wendy->SetRegurgitation()
 //$call Billy->SetRegurgitation()
 
+$call MargoFace->Activate()
+
 {@Margo}   Mornin’, kiddo! You’re up awfully early.   $[Day3/Tent/3tm01]
 {@Player}   I was too excited to sleep.   $[Day3/Tent/Player_1]
 {@Player}   Some of the eggs have probably already hatched!  $[Day3/Tent/Player_2]
@@ -66,9 +68,9 @@ $call SetWarpActive(WarpBluff, false)
 $call SetWarpGroupActive(Rookery, true)
 
 {@Player}	Boy the rookery sure is pink... $[Day3/Bluff/3bs1]
-{@Margo}   Guano from eating krill. Penguin's turn so much snow in antarctica pink from krill that it's visible from the International space station!   $[Day3/Bluff/3bm01]
 {@Player}   So.. what's on our list today?  $[Day3/Bluff/Player_1]
-{@Margo}    Let’s head down to the Rookery. Looks like Penny is already there.   $[Day3/Bluff/3bm02]
+{@Margo}   Guano from eating krill. Penguin's turn so much snow in antarctica pink from krill that it's visible from the International space station!   $[Day3/Bluff/3bm01]
+{@Margo}	We need to get some data on those chicks, and see how the parents are doin'.  $[Day3/Bluff/3bm02]
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
@@ -81,7 +83,6 @@ $call Wait(1)
 
 $call SetWarpGroupActive(Rookery, true)
 
-
 $call FuzzEgg->Activate()
 $call AlfredoEgg->Activate()
 
@@ -90,8 +91,6 @@ $call MillieBillyChick->SetIdentified(false)
 $call FuzzEgg->SetIdentified(false)
 $call WinstonWendyChick->SetIdentified(false)
 
-{@Player}   Oh. My. God. They’re amazing! $[Day3/Rookery/Player_1]
-{@Partner}   Pretty extraordinary, aren’t they?   $[Day3/Rookery/3rp02]
 {@Partner}  This is our favorite time of year around here.   $[Day3/Rookery/3rp03]
 {@Player}   The skua are pretty active today   $[Day3/Rookery/Player_2]
 {@Partner}  Harmless to adult penguins, but they love a nice breakfast of penguin chicks and eggs.  $[Day3/Rookery/3rp05]
@@ -397,6 +396,7 @@ $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
 $endwhile
 
+$call BigButton->SetButtonPressed(false)
 $call DeskGlow->StopAnimation()
 $call MargoDockParticles->StopFX()
 

@@ -34,7 +34,6 @@ $call MargoHint->PlayFX()
 $call SetWarpActive(WarpBluff, true)
 
 {@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1]
-{@Player}   Brr. Lola was right though... I should've packed an extra sweater.   $[Day1/Tent/Player_2]
 {@Player}   Alright, time to get focused. Those penguins aren’t gonna research themselves. $[Day1/Tent/Player_3]
 {@Player}   Step one: Find research tent. Check.    $[Day1/Tent/Player_4]
 {@Player}   Step two: Report to Margo, penguin expert and senior researcher.    $[Day1/Tent/Player_5]
@@ -50,6 +49,7 @@ $call RightController->Activate()
 @interrupt
 @once
 
+$call MargoFace->Activate()
 $call Tutorial1->Deactivate()
 $call LeftController->Deactivate()
 $call RightController->Deactivate()
@@ -58,6 +58,8 @@ $call MargoHint->StopFX()
 
 $call Wait(1)
 $set	chapter:hasTalkedToMargo = true
+
+$call Tutorial2->Activate()
 
 {@Margo}    Oh, hiya! Welcome to the South Pole, kid!   $[Day1/Tent/Margo_1]
 {@Player}   Oh, uh… I’m not a kid. I’m the new junior researcher.  $[Day1/Tent/Player_7]
@@ -81,7 +83,6 @@ $call LeftControllerSideGrip->SetMaterial(1)
 $call XButton->SetMaterial(0)
 $call AButton->SetMaterial(0)
 
-$call Tutorial2->Activate()
 $set chapter:needWarp = true
 
 :: UserChangedModeMove
@@ -147,6 +148,8 @@ $call SetWarpGroupActive(Rookery, true)
 {@Margo}	Nice work, kiddo! We've got our initial population count. $[Day1/Bluff/1bm08]
 {@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny. $[Day1/Bluff/1bp01]
 {@Player}	Wow! I remember when you talked to my 5th grade class at Gompers Elementary. $[Day1/Bluff/1bs07]
+{@Partner}	Hmm. That would've been, what, 12 or 13 years ago?  $[Day1/Bluff/1bp02]
+{@Player}	15, I think.	$[Day1/Bluff/1bs08]
 {@Margo}	Let's get on down there and say hello! Find a waypoint in the rookery. 	$[Day1/Bluff/1bm11]
 
 $set chapter:needWarp = true
@@ -179,9 +182,6 @@ $call BlueAdelie->SetInteractable(true)
 $call PurpleAdelie->SetInteractable(true)
 $call YellowAdelie->SetInteractable(true)
 
-{@Player}	Hah! I can't wait to meet them. I wish Lola was here to see this.	$[Day1/Rookery/1rs01]
-{@Margo}	Who's that now?	$[Day1/Rookery/1rm01]
-{@Player}	Oh, Lola is my girlfriend. She loves birds too!	$[Day1/Rookery/1rs02]
 {@Margo}	Remember, you're just looking for five adult penguins with trackers on their wings.	$[Day1/Rookery/1rm05]
 {@Player}	How do I scan them?	$[Day1/Rookery/1rs04]
 {@Margo}	Just hold me up in front of each penguin.	$[Day1/Rookery/1rm06]
@@ -271,13 +271,18 @@ $call MargoDockParticles->PlayFX()
 {@Margo}    Okay, let's have a look at that data!  $[Day1/Tent/1tm14]
 {@Margo}    Dock me in the port by the computer over yonder.   $[Day1/Tent/1tm15]
 
+$call Tutorial4->Activate()
+
 $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
 $endwhile
 
+$call Tutorial4->Deactivate()
+
 {@Player}   There ya go. Safe and sound.   $[Day1/Tent/1ts01]
 {@Player}   And now the big ole button! $[Day1/Tent/Player_12]
 
+$call BigButton->SetButtonPressed(false)
 $call DeskGlow->StopAnimation()
 $call MargoDockParticles->StopFX()
 

@@ -58,6 +58,7 @@ $call BlueAdelie->SetMatingDance()
 @interrupt
 @once
 
+$call MargoFace->Activate()
 $call SetWarpActive(WarpBluff, true)
 
 $call Wait(1)
@@ -85,8 +86,8 @@ $call TentDoor->Close()
 $call PenguinCount->ActivateCount(12)
 
 {@Player}    Wow, look at all those penguins! $[Day2/Bluff/Player_1]
-{@Margo}    Yep, seems we've got some new arrivals. We'll need a new population count. $[Day2/Bluff/2bm01]
-{@Player}   Hmmm, Maybe we should get a head count. $[Day2/Bluff/Player_3]
+{@Partner}	Yep, seems we've got some new arrivals. We'll need a new population count.  $[Day2/Bluff/2bp01]
+
 
 :: ScannedFromBluff2
 @trigger	TabletCounted
@@ -94,7 +95,7 @@ $call PenguinCount->ActivateCount(12)
 @interrupt
 @once
 
-{@Margo}  Great job, kid! We’ve got a new population count.  $[Day2/Bluff/2bm04]
+{@Partner}  Great job, kid! We’ve got a new population count.  $[Day2/Bluff/2bp02]
 
 $call SetWarpGroupActive(Rookery, true)
 
@@ -106,11 +107,19 @@ $call SetWarpGroupActive(Rookery, true)
 
 $call Wait(1)
 
-$call Daisy->SetInteractable(true)
-$call Meatball->SetInteractable(true)
-$call Billy->SetInteractable(true)
-$call Benni->SetInteractable(true)
-$call Wendy->SetInteractable(true)
+$call FuzzLegTracker->SetMeshEnabled(true)
+$call AlfredoLegTracker->SetMeshEnabled(true)
+$call WinstonLegTracker->SetMeshEnabled(true)
+$call MillieLegTracker->SetMeshEnabled(true)
+$call PoloLegTracker->SetMeshEnabled(true)
+$call AdelieLegTracker1->SetMeshEnabled(true)
+$call AdelieLegTracker2->SetMeshEnabled(true)
+
+$call Daisy->SetInteractable(false)
+$call Meatball->SetInteractable(false)
+$call Billy->SetInteractable(false)
+$call Benni->SetInteractable(false)
+$call Wendy->SetInteractable(false)
 
 $call Daisy->SetIdentified(false)
 $call Meatball->SetIdentified(false)
@@ -254,14 +263,6 @@ $call CaseLegSocketMiddle->ReleaseCurrentSocket(true)
 
 $call Wait(2)
 
-$call FuzzLegTracker->SetMeshEnabled(true)
-$call AlfredoLegTracker->SetMeshEnabled(true)
-$call WinstonLegTracker->SetMeshEnabled(true)
-$call MillieLegTracker->SetMeshEnabled(true)
-$call PoloLegTracker->SetMeshEnabled(true)
-$call AdelieLegTracker1->SetMeshEnabled(true)
-$call AdelieLegTracker2->SetMeshEnabled(true)
-
 $set chapter:trackersStarted = true
 
 {@Margo}    Okay, kid. This is the tricky part. You’ll need to remove each penguin’s GPS tracker. $[Day2/Rookery/2rm15]
@@ -359,6 +360,7 @@ $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
 $endwhile
 
+$call BigButton->SetButtonPressed(false)
 $call DeskGlow->StopAnimation()
 $call MargoDockParticles->StopFX()
 
@@ -389,9 +391,10 @@ $call Screen->SetTexture(5)
 
 {@Margo}	I combined GPS data from Penny along with data from your group and now we have a better picture for where the Adelie stay overwinter. $[Day2/Tent/2tm1]
 
+$call MargoQuad->SetMeshEnabled(false)
+
 $call Wait(1)
 
-$call MargoQuad->SetMeshEnabled(false)
 $call Screen->SetTexture(6)
 
 {@Margo}	Looks like they really like staying on the ice floes! Makes sense, that’s where the food is. $[Day2/Tent/2tm2]
