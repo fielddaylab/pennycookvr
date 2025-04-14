@@ -34,6 +34,13 @@ namespace FieldDay.Sockets {
 
         #endregion // Events
 
+        static public StringHash32 LegSocketCaseClass = "CaseLegSocket";
+        static public StringHash32 WingBandSocketCaseClass = "BandSocket";
+        static public StringHash32 BackSocketCaseClass = "TrackerSocket";
+        static public StringHash32 LegSocketPenguinClass = "LegSocket";
+        static public StringHash32 WingBandSocketPenguinClass = "BandSocketChick";
+        static public StringHash32 BackSocketPenguinClass = "DataSocketPenguin";
+
         private void Awake() {
             this.CacheComponent(ref CachedTransform);
             this.CacheComponent(ref CachedRB);
@@ -97,11 +104,15 @@ namespace FieldDay.Sockets {
                 }
             }
             
-            if(socket.AllowedSockets == SocketFlags.BackTracker || socket.AllowedSockets == SocketFlags.LegTracker || socket.AllowedSockets == SocketFlags.WingBand)  {
-                Sfx.PlayDetached("Socket.Penguin", socket.gameObject.transform);
-            } /*else if(socket.AllowedSockets == SocketFlags.Margo) {
-                Sfx.PlayDetached("Socket.Case", socket.gameObject.transform);
-            }*/
+            Pennycook.ScriptSocket scriptSocket = socket.GetComponent<Pennycook.ScriptSocket>();
+            if(scriptSocket != null) {  
+                StringHash32 socketClass = FieldDay.Scripting.ScriptUtility.ActorType(scriptSocket);//.ClassName;
+                if(socketClass == Socketable.LegSocketCaseClass || socketClass == Socketable.WingBandSocketCaseClass || socketClass == Socketable.BackSocketCaseClass)  {
+                    Sfx.PlayDetached("Socket.Case", socket.gameObject.transform);
+                } else if(socketClass == Socketable.LegSocketPenguinClass || socketClass == Socketable.WingBandSocketPenguinClass || socketClass == Socketable.BackSocketPenguinClass)  {
+                    Sfx.PlayDetached("Socket.Penguin", socket.gameObject.transform);
+                }
+            }
 
             socketable.OnAddedToSocket.Invoke(socket);
             socket.OnAdded.Invoke(socketable);
