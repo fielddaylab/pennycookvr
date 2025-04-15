@@ -1388,6 +1388,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1625950774}
   - {fileID: 1938487097}
   - {fileID: 2031770445}
   m_Father: {fileID: 0}
@@ -10640,11 +10641,6 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 6540644235995933220, guid: a1c0d7267e614444dad11f3fbe363aea, type: 3}
   m_PrefabInstance: {fileID: 214267484}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &563780676 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6000904968075154265, guid: a1c0d7267e614444dad11f3fbe363aea, type: 3}
-  m_PrefabInstance: {fileID: 214267484}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &563780677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10661,7 +10657,7 @@ MonoBehaviour:
   Notebook: {fileID: 30965900}
   Pen: {fileID: 49703113}
   Binoculars: {fileID: 214267485}
-  StartPoint: {fileID: 563780676}
+  StartPoint: {fileID: 1625950774}
   NearGate: {fileID: 1938487097}
   FarPoint: {fileID: 2031770445}
 --- !u!114 &563780678
@@ -16245,6 +16241,37 @@ MonoBehaviour:
   m_ClassName:
     m_Source: TentMap
     m_HashValue: 3730441686
+--- !u!1 &1625950773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1625950774}
+  m_Layer: 0
+  m_Name: StartPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1625950774
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1625950773}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.4831102, z: -0, w: -0.8755595}
+  m_LocalPosition: {x: -0.104, y: 0, z: 0.015}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 169983993}
+  m_LocalEulerAnglesHint: {x: 0, y: 302.223, z: 0}
 --- !u!1 &1627383518
 GameObject:
   m_ObjectHideFlags: 0
