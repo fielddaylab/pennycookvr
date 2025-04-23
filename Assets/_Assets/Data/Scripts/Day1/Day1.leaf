@@ -11,8 +11,8 @@ $set chapter:isLookingAtDoor = false
 $set chapter:localCount = 0
 $set chapter:isCountMode = false
 $set chapter:waitingForAction = false
-$set chapter:warpedToBluff = false;
-$set chapter:warpedToRookery = false;
+$set chapter:warpedToBluff = false
+$set chapter:warpedToRookery = false
 
 :: StartGame
 @trigger    SceneReady
@@ -220,7 +220,7 @@ $set chapter:waitingForAction = false
 $set chapter:pressWarp = false
 $set chapter:needWarp = false
 $set chapter:needCount = true
-$set chapter:warpedToBluff = true;
+$set chapter:warpedToBluff = true
 
 $call Tutorial3->Deactivate()
 $call Tutorial2->Activate()
