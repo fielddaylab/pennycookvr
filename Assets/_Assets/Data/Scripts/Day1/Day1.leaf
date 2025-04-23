@@ -5,6 +5,14 @@
 
 $set chapter:needCount = false
 $set chapter:needWarp = false
+$set chapter:pressWarp = false
+$set chapter:hasTalkedToMargo = false
+$set chapter:isLookingAtDoor = false
+$set chapter:localCount = 0
+$set chapter:isCountMode = false
+$set chapter:waitingForAction = false
+$set chapter:warpedToBluff = false;
+$set chapter:warpedToRookery = false;
 
 :: StartGame
 @trigger    SceneReady
@@ -37,11 +45,21 @@ $call SetWarpActive(WarpBluff, true)
 {@Player}   Alright, time to get focused. Those penguins aren’t gonna research themselves. $[Day1/Tent/Player_3]
 {@Player}   Step one: Find research tent. Check.    $[Day1/Tent/Player_4]
 {@Player}   Step two: Report to Margo, penguin expert and senior researcher.    $[Day1/Tent/Player_5]
-{@Player}   Hmmm. But where is she?     $[Day1/Tent/Player_6]
 
 $call Tutorial1->Activate()
 $call LeftController->Activate()
 $call RightController->Activate()
+
+$goto Day1.Tutorial1Loop
+
+:: Tutorial1Loop
+@trigger Tutorial1Loop
+@who	Player
+
+$while !chapter:hasTalkedToMargo
+{@Player}   Hmmm. But where could she be?     $[Day1/Tent/Player_6]
+$call Wait(15)
+$endwhile
 
 :: PickedUpMargo
 @trigger    TabletLifted
@@ -49,6 +67,7 @@ $call RightController->Activate()
 @interrupt
 @once
 
+$set chapter:hasTalkedToMargo = true
 $call MargoFace->Activate()
 $call Tutorial1->Deactivate()
 $call LeftController->Deactivate()
@@ -57,7 +76,6 @@ $call RightController->Deactivate()
 $call MargoHint->StopFX()
 
 $call Wait(1)
-$set	chapter:hasTalkedToMargo = true
 
 $call Tutorial2->Activate()
 
@@ -84,29 +102,112 @@ $call XButton->SetMaterial(0)
 $call AButton->SetMaterial(0)
 
 $set chapter:needWarp = true
+$goto Day1.Tutorial2Loop
 
-:: UserChangedModeMove
-@trigger ChangedTabletTool
-@who 	 Player
-@when	 toolId == "Move", chapter:needWarp == true
+:: Tutorial2Loop
+@trigger Tutorial2Loop
+@who	Player
+
+$while chapter:needWarp
+$call Wait(15)
+{@Margo}   Switch to warp mode and point me at the door.     $[Day1/Triggered/margo_warp_door]
+$endwhile
+
+:: CheckPress
+@trigger TabletTriggered
+@who	Player
+@when	chapter:waitingForAction
 @interrupt
 
+$if !chapter:isLookingAtDoor
+{@Margo}	You have to aim me out the door for warp to work	$[Day1/Triggered/margo_aim_door]
+$elseif !chapter:isCountMode, chapter:needCount
+{@Margo}	You have to switch to count mode first. $[Day1/Triggered/margo_count_first]
+$endif
+
+:: LookAtDoor
+@trigger TabletLookAt
+@who     Margo
+@when    objectId == "TentDoor"
+@priority High
+
+$set chapter:isLookingAtDoor = true
+
+$if !IsOpen(TentDoor)
+$call TentDoor->Open()
+$endif
+
+:: LookAtNonDoor
+@trigger TabletLookAt
+@who     Margo
+@when    objectId != "TentDoor"
+@priority High
+
+$set chapter:isLookingAtDoor = false
+
+:: Tutorial3Loop
+@trigger Tutorial3Loop
+@who	Player
+
+$while chapter:pressWarp, !chapter:warpedToBluff
+$call Wait(15)
+$if chapter:pressWarp
+{@Margo}   Aim me out the door and activate warp.     $[Day1/Triggered/margo_activate_warp]
+$endif
+$endwhile
+
+:: Tutorial4Loop
+@trigger Tutorial3Loop
+@who	Player
+
+$while chapter:needCount, !chapter:isCountMode
+$call Wait(15)
+$if chapter:needCount, !chapter:isCountMode
+{@Margo}   Switch to count mode.     $[Day1/Triggered/margo_switch_count]
+$endif
+$endwhile
+
+:: Tutorial5Loop
+@trigger Tutorial5Loop
+@who	Player
+
+$while chapter:pressWarp
+$call Wait(15)
+$if chapter:pressWarp, !chapter:warpedToRookery
+{@Margo}   Switch to warp mode and aim me at a warp point.     $[Day1/Triggered/margo_switch_warp]
+$endif
+$endwhile
+
+
+:: UserChangedModes
+@trigger ChangedTabletTool
+@who	player
+
+$if local:toolId != "Count"
+$set chapter:isCountMode = false
+$if local:toolId == "Move", chapter:needWarp == true
+$set chapter:waitingForAction = true
+$set chapter:isCountMode = false
+$set chapter:needWarp = false
 $call Tutorial2->Deactivate()
 $call Tutorial3->Activate()
 $call XButton->SetMaterial(1)
 $call AButton->SetMaterial(1)
 $call RightControllerTrigger->SetMaterial(0)
 $call LeftControllerTrigger->SetMaterial(0)
-$set chapter:needWarp = false
-
-:: UserChangedModes
-@trigger ChangedTabletTool
-@who 	 Player
-@when	 toolId == "Count", chapter:needCount == true
-@once
-
+$set chapter:pressWarp = true
+//{@Margo} Nice! Ok, let's head out there! $[Day1/Triggered/]
+$goto Day1.Tutorial3Loop
+$endif
+$else
+$set chapter:waitingForAction = false
+$set chapter:isCountMode = true
+$if chapter:needCount == true
 $call Tutorial2->Deactivate()
 $set chapter:needCount = false
+{@Margo} Great! Now move me around so I can get a good look at all the penguins. $[Day1/Triggered/margo_move_me]
+$endif
+$endif
 
 :: WarpedOutsideTent
 @trigger    AtWarpPoint
@@ -115,7 +216,11 @@ $set chapter:needCount = false
 @interrupt
 @once
 
+$set chapter:waitingForAction = false
+$set chapter:pressWarp = false
+$set chapter:needWarp = false
 $set chapter:needCount = true
+$set chapter:warpedToBluff = true;
 
 $call Tutorial3->Deactivate()
 $call Tutorial2->Activate()
@@ -137,6 +242,9 @@ $call PenguinCount->ActivateCount(12)
 {@Margo}    Just turn on Count Mode and point me at the colony. $[Day1/Bluff/1bm05]
 {@Margo}    I'll collect all the data! $[Day1/Bluff/1bm06]
 
+$set chapter:waitingForAction = true
+$goto Day1.Tutorial4Loop
+
 :: ScannedFromBluff
 @trigger	TabletCounted
 @who		Player
@@ -152,9 +260,11 @@ $call SetWarpGroupActive(Rookery, true)
 {@Player}	15, I think.	$[Day1/Bluff/1bs08]
 {@Margo}	Let's get on down there and say hello! Find a waypoint in the rookery. 	$[Day1/Bluff/1bm11]
 
+$set chapter:pressWarp = true
 $set chapter:needWarp = true
 
-$call Tutorial2->Activate()
+$call Tutorial2->Activate()	//switch this to updated label when it comes in.
+$goto Day1.Tutorial5Loop
 
 :: WarpedToRookery
 @trigger    AtWarpPoint
@@ -162,6 +272,9 @@ $call Tutorial2->Activate()
 @when       targetObject == "WarpTarget-Rookery"
 @once
 @interrupt
+
+$set chapter:pressWarp = false
+$set chapter:warpedToRookery = true
 
 $call Wait(1)
 

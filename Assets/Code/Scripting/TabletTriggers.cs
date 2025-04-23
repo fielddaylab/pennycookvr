@@ -20,6 +20,8 @@ namespace Pennycook {
         static public readonly StringHash32 ObjectHighlighted = "TabletHighlighted";
         static public readonly StringHash32 ObjectUnhighlighted = "TabletUnhighlighted";
 
+        static public readonly StringHash32 TabletTriggerPressed = "TabletTriggered";
+
         [InvokeOnBoot]
         static private void Initialize() {
             VRGame.Events.Register<TabletHighlightable>(GameEvents.ObjectHighlighted, OnObjectHighlight)

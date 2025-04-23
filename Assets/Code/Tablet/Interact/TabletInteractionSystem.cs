@@ -1,5 +1,6 @@
 using FieldDay;
 using FieldDay.HID.XR;
+using FieldDay.Scripting;
 using FieldDay.Systems;
 using FieldDay.XR;
 using UnityEngine;
@@ -23,6 +24,9 @@ namespace Pennycook.Tablet {
                 switch (m_StateC.CurrentToolDef.InteractMode) {
                     case TabletToolInteractionMode.Press:
                         isPressing = TabletUtility.ConsumeButtonPress(XRHandButtons.TriggerButton);
+                        if(isPressing) {
+                            ScriptUtility.Trigger(TabletTriggers.TabletTriggerPressed);
+                        }
                         break;
                     case TabletToolInteractionMode.Hold:
                         isPressing = TabletUtility.IsButtonHeld(XRHandButtons.TriggerButton);
@@ -34,6 +38,10 @@ namespace Pennycook.Tablet {
 
                 if (isPressing) {
                     DoInteraction(ts);
+                }
+            } else {
+                if(TabletUtility.ConsumeButtonPress(XRHandButtons.TriggerButton)) {
+                    ScriptUtility.Trigger(TabletTriggers.TabletTriggerPressed);
                 }
             }
         }
