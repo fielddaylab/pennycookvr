@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 8920876003359027084}
   - component: {fileID: 2484703443505250956}
   - component: {fileID: 3224995025430024819}
-  - component: {fileID: 4857760435909959017}
-  m_Layer: 0
+  - component: {fileID: 8029755613590349294}
+  - component: {fileID: 5497841349827464562}
+  - component: {fileID: 6931374914474812787}
+  m_Layer: 14
   m_Name: QuestionResponse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,8 +87,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4857760435909959017
-MeshCollider:
+--- !u!65 &8029755613590349294
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -100,13 +102,50 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5497841349827464562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791171202481425418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb387d5604852e24d9c47006aeb957ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id: 0
+  m_Collider: {fileID: 8029755613590349294}
+  m_TrackOccupants: 1
+  m_FilterEventMask: 1
+  m_LayerMaskFilter:
+    serializedVersion: 2
+    m_Bits: 8192
+  m_CompareTagFilters: []
+  m_NameFilter: 
+--- !u!114 &6931374914474812787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791171202481425418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 914ee197a71cd4dbba5d0eda7463bc0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Detector: {fileID: 5497841349827464562}
+  FilledGraphic: {fileID: 2800000, guid: a0acdbdc6e9214adfad08423e3148743, type: 3}
+  UnfilledGraphic: {fileID: 2800000, guid: 11e6c3081cabc43888f116803cd0a8e8, type: 3}
+  ButtonSound:
+    m_HashValue: 864557713
 --- !u!1 &3717436653747395673
 GameObject:
   m_ObjectHideFlags: 0

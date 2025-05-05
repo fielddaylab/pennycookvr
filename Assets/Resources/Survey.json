@@ -1,0 +1,166 @@
+{
+    "package_config_id": "pennycook_v1",
+    "surveys": [
+        {
+            "display_event_id": "demographics",
+            "header": "A few questions",
+            "pages": [
+                {
+                    "items": [
+                        {
+                            "prompt": "Age",
+                            "responses": [
+                                "Under 18", "18-24", "25-34", "35-44", "45+", "Prefer not to answer"
+                            ]
+                        },
+                        {
+                            "prompt": "Race (select all that apply)",
+                            "responses": [
+                                "Native American", "Asian", "African American", "Native Hawaiian", "White", "Other", "Prefer not to answer"
+                            ]
+                        },
+                        {
+                            "prompt": "Ethnicity (select one)",
+                            "responses": [
+                                "Hispanic or Latino", "Not Hispanic or Latino", "Prefer not to answer"
+                            ]
+                        },
+						{
+                            "prompt": "Gender (select one)",
+                            "responses": [
+                                "Male", "Female", "Other", "Prefer not to answer"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+		{
+            "display_event_id": "science-trust",
+            "header": "Science Trust Subscale",
+            "pages": [
+                {
+                    "type": "likert-confidence",
+                    "subheader": "1 = Strongly Disagree, 7 = Strongly Agree",
+                    "items": [
+                        {
+                            "prompt": "I trust that the work of scientists will make life better for people.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        },
+                        {
+                            "prompt": "We should trust that scientists are being honest in their work.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        }
+
+                    ]
+                },
+                {
+                    "type": "likert-confidence",
+                    "subheader": "1 = Strongly Disagree, 7 = Strongly Agree",
+                    "items": [
+                        {
+                            "prompt": "We can trust science to find the answers that explain the natural world.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        },
+                        {
+                            "prompt": "We cannot trust scientists because they are biased in their perspectives.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "display_event_id": "avatar-likeness",
+            "header": "How true or false is each statement for you?",
+            "pages": [
+                {
+                    "type": "likert-confidence",
+                    "subheader": "1 = Strongly Disagree, 7 = Strongly Agree",
+                    "items": [
+                        {
+                            "prompt": "I have a lot in common with the virtual character I played.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        },
+                        {
+                            "prompt": "The virtual character’s voice sounded like my voice.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        }
+                    ]
+                },
+                {
+                    "type": "likert-confidence",
+                    "subheader": "1 = Strongly Disagree, 7 = Strongly Agree",
+                    "items": [
+                        {
+                            "prompt": "The virtual character had a very different life than mine.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        },
+                        {
+                            "prompt": "The virtual character had a similar race/ethnicity to mine.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "display_event_id": "alpha-ivbo",
+            "header": "1 = Strongly Disagree, 7 = Strongly Agree",
+            "pages": [
+                {
+                    "type": "likert-confidence",
+                    "subheader": "1 = Strongly Disagree, 7 = Strongly Agree",
+                    "items": [
+                        {
+                            "prompt": "I felt as if the virtual body was my own body.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        },
+                        {
+                            "prompt": "I felt as if the virtual hands were my own hands.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        }
+                    ]
+                },
+                {
+                    "type": "likert-confidence",
+                    "subheader": "1 = Strongly Disagree, 7 = Strongly Agree",
+                    "items": [
+                        {
+                            "prompt": "The virtual body was humanlike.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        },
+                        {
+                            "prompt": "The movements of my virtual body seemed to be my own movements.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        }
+                    ]
+                },
+                {
+                    "type": "likert-confidence",
+                    "subheader": "1 = Strongly Disagree, 7 = Strongly Agree",
+                    "items": [
+                        {
+                            "prompt": "I enjoyed controlling the virtual body.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        },
+                        {
+                            "prompt": "I felt as if I was controlling the movement of the virtual body.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        }
+                    ]
+                },
+                {
+                    "type": "likert-confidence",
+                    "subheader": "1 = Strongly Disagree, 7 = Strongly Agree",
+                    "items": [
+                        {
+                            "prompt": "I felt as if I was causing the movement of the virtual body.",
+                            "responses": [ "1", "2", "3", "4", "5", "6", "7" ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
