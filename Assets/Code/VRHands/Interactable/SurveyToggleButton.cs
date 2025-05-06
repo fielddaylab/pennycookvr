@@ -32,7 +32,7 @@ namespace Pennycook {
 		//private Rigidbody CachedRB;
 		private MeshRenderer CachedMR;
 		
-        //public readonly CastableEvent<Button> OnPressed = new CastableEvent<Button>();
+        public readonly CastableEvent<SurveyToggleButton> OnPressed = new CastableEvent<SurveyToggleButton>();
 		
 		[AudioEventRef]
 		public StringHash32 ButtonSound;
@@ -47,6 +47,9 @@ namespace Pennycook {
 
 		public void Untoggle() {
 			IsPressed = false;
+			if(CachedMR != null) {
+				CachedMR.material.mainTexture = UnfilledGraphic;
+			}
 		}
 		
 		public void ButtonTrigger(Collider c) {
@@ -81,7 +84,7 @@ namespace Pennycook {
 			} else if(c.gameObject.name.StartsWith("Right")) {
 				data.RightHand.HapticImpulse = 0.25f;
 			}*/
-
+			OnPressed.Invoke(this);
 		}
     }
 }

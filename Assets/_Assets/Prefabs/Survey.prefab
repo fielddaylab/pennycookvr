@@ -197,7 +197,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2101382696089656952}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.015}
+  m_LocalPosition: {x: 0, y: 0, z: -0.003}
   m_LocalScale: {x: 0.08, y: 0.184602, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 1300624145543540647}
   - component: {fileID: 5631715086450128573}
   - component: {fileID: 6972561538657915099}
+  - component: {fileID: 1776441578493170602}
   m_Layer: 14
   m_Name: NextButton
   m_TagString: Untagged
@@ -447,8 +448,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1, z: 0.02137947}
+  m_Center: {x: 0, y: 0, z: -0.010689735}
 --- !u!114 &6972561538657915099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,6 +471,23 @@ MonoBehaviour:
     m_Bits: 8192
   m_CompareTagFilters: []
   m_NameFilter: 
+--- !u!114 &1776441578493170602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4655536586078438191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 914ee197a71cd4dbba5d0eda7463bc0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Detector: {fileID: 6972561538657915099}
+  FilledGraphic: {fileID: 0}
+  UnfilledGraphic: {fileID: 0}
+  ButtonSound:
+    m_HashValue: 864557713
 --- !u!1 &5666898623321787558
 GameObject:
   m_ObjectHideFlags: 0
@@ -483,6 +501,7 @@ GameObject:
   - component: {fileID: 2446920470399130408}
   - component: {fileID: 4356094102059158201}
   - component: {fileID: 1558332294233597301}
+  - component: {fileID: 514976678219148855}
   m_Layer: 0
   m_Name: Survey
   m_TagString: Untagged
@@ -599,6 +618,19 @@ MonoBehaviour:
   m_ClassName:
     m_Source: 
     m_HashValue: 0
+--- !u!114 &514976678219148855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5666898623321787558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2269287c47b3dde48ba0f7b684e93857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SurveyAsset: {fileID: 4900000, guid: 4cc84f7f435e7440aa57325ee67e010b, type: 3}
 --- !u!1001 &4585024738159283107
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -673,13 +705,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: SurveyQuestion2
       objectReference: {fileID: 0}
+    - target: {fileID: 5292541447943189736, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
+      propertyPath: m_fontStyle
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8512541619296337493, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.001
       objectReference: {fileID: 0}
     - target: {fileID: 8512541619296337493, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.147
+      value: -0.16
       objectReference: {fileID: 0}
     - target: {fileID: 8512541619296337493, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
       propertyPath: m_LocalPosition.z

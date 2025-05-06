@@ -2,8 +2,8 @@
 
 :: Prepare
 @function	ScenePrepare
-$set chapter:identifiedCount = 0
-$set chapter:finishedObservations = false
+$set chapter:scanCount = 0
+$set chapter:finishedScan = false
 $set chapter:dataTrackersStarted = false
 $call ClearGoals()
 
@@ -115,9 +115,9 @@ $call WinstonWendyChick->SetIdentified(false)
 @once
 @interrupt
 
-$set	chapter:identifiedCount + 1
-$if chapter:identifiedCount >= 5 
-    $set	chapter:finishedObservations = true
+$set	chapter:scanCount + 1
+$if chapter:scanCount >= 5 
+    $set	chapter:finishedScan = true
 $endif
 $call CompleteGoal("id_millie_nest")
 
@@ -133,9 +133,9 @@ $goto Day3.CheckScanComplete
 @once
 @interrupt
 
-$set	chapter:identifiedCount + 1
-$if chapter:identifiedCount >= 5 
-    $set	chapter:finishedObservations = true
+$set	chapter:scanCount + 1
+$if chapter:scanCount >= 5 
+    $set	chapter:finishedScan = true
 $endif
 //play egg hatching animation
 $call AlfredoEgg->Hatch()
@@ -153,9 +153,9 @@ $goto Day3.CheckScanComplete
 @once
 @interrupt
 
-$set chapter:identifiedCount + 1
-$if chapter:identifiedCount >= 5 
-    $set	chapter:finishedObservations = true
+$set chapter:scanCount + 1
+$if chapter:scanCount >= 5 
+    $set	chapter:finishedScan = true
 $endif
 $call CompleteGoal("id_fuzz_nest")
 
@@ -176,9 +176,9 @@ $goto Day3.CheckScanComplete
 @once
 @interrupt
 
-$set chapter:identifiedCount + 1
-$if chapter:identifiedCount >= 5 
-    $set	chapter:finishedObservations = true
+$set chapter:scanCount + 1
+$if chapter:scanCount >= 5 
+    $set	chapter:finishedScan = true
 $endif
 $call CompleteGoal("id_winston_nest")
 
@@ -196,9 +196,9 @@ $goto Day3.CheckScanComplete
 @once
 @interrupt
 
-$set chapter:identifiedCount + 1
-$if chapter:identifiedCount >= 5 
-    $set	chapter:finishedObservations = true
+$set chapter:scanCount + 1
+$if chapter:scanCount >= 5 
+    $set	chapter:finishedScan = true
 $endif
 
 $call CompleteGoal("id_polo_nest")
@@ -339,7 +339,7 @@ $endif
 @trigger	CheckScanComplete
 @who		Player
 
-$if chapter:finishedObservations == true
+$if chapter:finishedScan == true
 
 $call SetCurrentMainGoal("capture_regurgitation")
 $call CompleteMainGoal("scan_eggs_and_chicks")
@@ -357,7 +357,7 @@ $endif
 @trigger	CheckAllComplete
 @who		Player
 
-$if chapter:trackersSocketed == true, chapter:regurgDone == true, chapter:finishedObservations == true
+$if chapter:trackersSocketed == true, chapter:regurgDone == true, chapter:finishedScan == true
 $set chapter:day3AllComplete = true
 $call SetWarpActive(WarpBluffBack, true)
 {@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]

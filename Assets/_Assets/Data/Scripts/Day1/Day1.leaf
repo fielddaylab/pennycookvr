@@ -5,6 +5,7 @@
 
 $set chapter:needCount = false
 $set chapter:needWarp = false
+$set chapter:needWarpToRookery = false
 $set chapter:pressWarp = false
 $set chapter:hasTalkedToMargo = false
 $set chapter:isLookingAtDoor = false
@@ -261,7 +262,7 @@ $call SetWarpGroupActive(Rookery, true)
 {@Margo}	Let's get on down there and say hello! Find a waypoint in the rookery. 	$[Day1/Bluff/1bm11]
 
 $set chapter:pressWarp = true
-$set chapter:needWarp = true
+$set chapter:needWarpToRookery = true
 
 $call Tutorial5->Activate()
 $goto Day1.Tutorial5Loop
@@ -275,6 +276,7 @@ $goto Day1.Tutorial5Loop
 
 $set chapter:pressWarp = false
 $set chapter:warpedToRookery = true
+$set chapter:needWarpToRookery = false
 
 $call Wait(1)
 
