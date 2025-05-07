@@ -11,34 +11,38 @@ using UnityEngine;
 
 
 namespace Pennycook {
-    public class SurveyToggleButton : BatchedComponent {
+    public class SurveyNextButton : BatchedComponent {
 		
         #region Inspector
         [Required]
 		public TriggerListener Detector;
 		
 		[SerializeField]
-		Texture2D FilledGraphic;
+		Color EnabledColor;
 		
 		[SerializeField]
-		Texture2D UnfilledGraphic;
+		Color TextEnabledColor;
+
+		[SerializeField]
+		Color DisabledColor;
 		
+		[SerializeField]
+		Color TextDisabledColor;
         #endregion // Inspector
 		
 		[NonSerialized] public bool WasPressed = false;
 
         [NonSerialized] public bool IsPressed = false;
 		
-		[NonSerialized] public TMPro.TextMeshPro ResponseText;
-
-		//private Rigidbody CachedRB;
 		private MeshRenderer CachedMR;
 		
-        public readonly CastableEvent<SurveyToggleButton> OnPressed = new CastableEvent<SurveyToggleButton>();
+        public readonly CastableEvent<SurveyNextButton> OnPressed = new CastableEvent<SurveyNextButton>();
 		
 		[AudioEventRef]
 		public StringHash32 ButtonSound;
 		
+		[NonSerialized] public TMPro.TextMeshPro NextText;
+
 		private void Awake() {
 
 			Detector.onTriggerEnter.AddListener(ButtonTrigger);
@@ -46,14 +50,19 @@ namespace Pennycook {
 			CachedMR = GetComponent<MeshRenderer>();
 
 			if(transform.childCount > 0) {
-				ResponseText = transform.GetChild(0).GetComponent<TMPro.TextMeshPro>();
+				NextText = transform.GetChild(0).GetComponent<TMPro.TextMeshPro>();
 			}
         }
 
-		public void Untoggle() {
-			IsPressed = false;
-			if(CachedMR != null) {
-				CachedMR.material.mainTexture = UnfilledGraphic;
+		public void EnableNextButton(bool enabled) {
+			if(!enabled) {
+				//switch to unfilled graphic
+				CachedMR.material.color = DisabledColor;
+				NextText.color = TextDisabledColor;
+			} else {
+				//switch to filled graphic
+				CachedMR.material.color = EnabledColor;
+				NextText.color = TextEnabledColor;
 			}
 		}
 		
@@ -70,14 +79,6 @@ namespace Pennycook {
 			IsPressed = !IsPressed;
 
 			//Sfx.OneShot("button-click", transform.position);
-			
-			if(!IsPressed) {
-				//switch to unfilled graphic
-				CachedMR.material.mainTexture = UnfilledGraphic;
-			} else {
-				//switch to filled graphic
-				CachedMR.material.mainTexture = FilledGraphic;
-			}
 
 			Sfx.Play(ButtonSound, transform);
 			

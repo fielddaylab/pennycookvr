@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 1300624145543540647}
   - component: {fileID: 5631715086450128573}
   - component: {fileID: 6972561538657915099}
-  - component: {fileID: 1776441578493170602}
+  - component: {fileID: 8456950588577441683}
   m_Layer: 14
   m_Name: NextButton
   m_TagString: Untagged
@@ -471,7 +471,7 @@ MonoBehaviour:
     m_Bits: 8192
   m_CompareTagFilters: []
   m_NameFilter: 
---- !u!114 &1776441578493170602
+--- !u!114 &8456950588577441683
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -480,12 +480,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4655536586078438191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 914ee197a71cd4dbba5d0eda7463bc0d, type: 3}
+  m_Script: {fileID: 11500000, guid: b871db9bc45b448a4a3aad89dfff9f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Detector: {fileID: 6972561538657915099}
-  FilledGraphic: {fileID: 0}
-  UnfilledGraphic: {fileID: 0}
+  EnabledColor: {r: 0.16078432, g: 0.6039216, b: 0.6392157, a: 1}
+  TextEnabledColor: {r: 1, g: 1, b: 1, a: 1}
+  DisabledColor: {r: 0.08627451, g: 0.34901962, b: 0.36862746, a: 1}
+  TextDisabledColor: {r: 0.20784314, g: 0.20784314, b: 0.20784314, a: 1}
   ButtonSound:
     m_HashValue: 864557713
 --- !u!1 &5666898623321787558
@@ -631,6 +633,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SurveyAsset: {fileID: 4900000, guid: 4cc84f7f435e7440aa57325ee67e010b, type: 3}
+  SurveyLikert1: {fileID: 7979964329132943649}
+  SurveyLikert2: {fileID: 3108064649442948663}
+  NextButton: {fileID: 8456950588577441683}
 --- !u!1001 &4585024738159283107
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -653,7 +658,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8512541619296337493, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.015
+      value: -0.009
       objectReference: {fileID: 0}
     - target: {fileID: 8512541619296337493, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
       propertyPath: m_LocalRotation.w
@@ -693,6 +698,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8512541619296337493, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
   m_PrefabInstance: {fileID: 4585024738159283107}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7979964329132943649 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5845602995053339266, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
+  m_PrefabInstance: {fileID: 4585024738159283107}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 188b1b0657ce74ee2a4b547a08e6fa5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8808425862872683701
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -719,7 +735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8512541619296337493, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.015
+      value: -0.009
       objectReference: {fileID: 0}
     - target: {fileID: 8512541619296337493, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
       propertyPath: m_LocalRotation.w
@@ -759,3 +775,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8512541619296337493, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
   m_PrefabInstance: {fileID: 8808425862872683701}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3108064649442948663 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5845602995053339266, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
+  m_PrefabInstance: {fileID: 8808425862872683701}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 188b1b0657ce74ee2a4b547a08e6fa5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

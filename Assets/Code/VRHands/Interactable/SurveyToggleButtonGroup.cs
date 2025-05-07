@@ -33,5 +33,17 @@ namespace Pennycook {
 				}
 			}
 		}
+
+		public void SetResponseText(string response, int index) {
+			if(index < ToggleButtons.Count) {
+				ToggleButtons[index].ResponseText.text = response;
+			}
+		}
+
+		public void SetEnabled(bool enabled, int index) {
+			if(index < ToggleButtons.Count) {
+				ToggleButtons[index].gameObject.SetActive(enabled);
+			}
+		}
     }
 }
