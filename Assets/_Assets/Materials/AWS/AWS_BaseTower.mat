@@ -8,18 +8,23 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: AWS_BaseTower
-  m_Shader: {fileID: -6465566751694194690, guid: f77148b23af0a084ba82ec453dacb6d5, type: 3}
+  m_Shader: {fileID: 4800000, guid: e88aeddd2ef1f934d805981244872e27, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _HALFTONESHAPE_CUSTOM
+  - _RECEIVE_SHADOWS_OFF
+  m_InvalidKeywords:
   - _HAFTONESHAPES_CROSS
+  - _RECEIVESHADOWS_OFF
   - _RIMLIGHTING_ON
-  m_InvalidKeywords: []
+  - _STEPVIARAMPTEXTURE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 2050
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -137,6 +142,7 @@ Material:
     - Vector1_e5b6f1488dec4326bd8bbd0e05156810: 0.09
     - _AllToon_OverrideShadowColor: 0
     - _AlphaClip: 0
+    - _Base_Map_Scale: 0
     - _Blend: 0
     - _BrushLowerCut: 0.292
     - _BrushSize: 0.75
@@ -201,7 +207,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _RIMLIGHTING: 1
-    - _ReceiveShadows: 1
+    - _ReceiveShadows: 0
     - _RimEnabled: 1
     - _RimLightAlign: 1
     - _RimLightSmoothness: 0
@@ -225,7 +231,7 @@ Material:
     - _SpecSource: 0
     - _SpecularClipStrength: 0
     - _SpecularFalloff: 0.343
-    - _SpecularHighlights: 0
+    - _SpecularHighlights: 1
     - _SpecularSize: 0.064
     - _SpherizeNormalEnabled: 0
     - _SrcBlend: 1
