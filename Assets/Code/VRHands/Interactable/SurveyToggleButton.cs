@@ -29,7 +29,7 @@ namespace Pennycook {
 
         [NonSerialized] public bool IsPressed = false;
 		
-		[NonSerialized] public TMPro.TextMeshPro ResponseText;
+		[SerializeField] public TMPro.TextMeshPro ResponseText;
 
 		//private Rigidbody CachedRB;
 		private MeshRenderer CachedMR;
@@ -44,10 +44,6 @@ namespace Pennycook {
 			Detector.onTriggerEnter.AddListener(ButtonTrigger);
 
 			CachedMR = GetComponent<MeshRenderer>();
-
-			if(transform.childCount > 0) {
-				ResponseText = transform.GetChild(0).GetComponent<TMPro.TextMeshPro>();
-			}
         }
 
 		public void Untoggle() {

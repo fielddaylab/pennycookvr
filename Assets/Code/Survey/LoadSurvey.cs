@@ -30,12 +30,15 @@ namespace Pennycook {
 
         void Awake()
         {
+            NextButton.OnPressed.Register(NextQuestions);
+        }
+
+        void Start()
+        {
             if(SurveyAsset != null) {
                 OpenGameDataSurvey = SurveyPackage.Parse(SurveyAsset.text);
                 LoadLikertQuestions(true);
             }
-
-            NextButton.OnPressed.Register(NextQuestions);
         }
 
         public void SetSurveyIndex(int surveyIndex, int stopIndex) {
@@ -105,8 +108,10 @@ namespace Pennycook {
             if(SurveyLikert1.IsPressed()) {
                 if(SurveyLikert2.gameObject.activeSelf) {
                     NextButton.EnableNextButton(SurveyLikert2.IsPressed());
+                    return;
                 }
                 NextButton.EnableNextButton(true);
+                return;
             }
 
             NextButton.EnableNextButton(false);

@@ -55,6 +55,7 @@ namespace Pennycook {
         }
 
 		public void EnableNextButton(bool enabled) {
+			//Debug.Log("Enable next: " + enabled);
 			if(!enabled) {
 				//switch to unfilled graphic
 				CachedMR.material.color = DisabledColor;
@@ -92,6 +93,7 @@ namespace Pennycook {
 			} else if(c.gameObject.name.StartsWith("Right")) {
 				data.RightHand.HapticImpulse = 0.25f;
 			}*/
+			EnableNextButton(false);
 			OnPressed.Invoke(this);
 		}
     }
