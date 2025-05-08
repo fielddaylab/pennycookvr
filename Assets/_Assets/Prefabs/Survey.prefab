@@ -504,6 +504,7 @@ GameObject:
   - component: {fileID: 4356094102059158201}
   - component: {fileID: 1558332294233597301}
   - component: {fileID: 514976678219148855}
+  - component: {fileID: 5478412749971462510}
   m_Layer: 0
   m_Name: Survey
   m_TagString: Untagged
@@ -636,6 +637,18 @@ MonoBehaviour:
   SurveyLikert1: {fileID: 7979964329132943649}
   SurveyLikert2: {fileID: 3108064649442948663}
   NextButton: {fileID: 8456950588577441683}
+--- !u!114 &5478412749971462510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5666898623321787558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aea42c977b864f87a25ad1112deadd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4585024738159283107
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -644,6 +657,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 638764394559495310}
     m_Modifications:
+    - target: {fileID: 194037132997664905, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
+      propertyPath: ParentSurvey
+      value: 
+      objectReference: {fileID: 514976678219148855}
     - target: {fileID: 4445029958491043544, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
       propertyPath: m_Name
       value: SurveyQuestion1
@@ -717,6 +734,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 638764394559495310}
     m_Modifications:
+    - target: {fileID: 194037132997664905, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
+      propertyPath: ParentSurvey
+      value: 
+      objectReference: {fileID: 514976678219148855}
     - target: {fileID: 4445029958491043544, guid: 96e8677135b0f4fd6b37f6750d45e605, type: 3}
       propertyPath: m_Name
       value: SurveyQuestion2

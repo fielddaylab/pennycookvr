@@ -44,5 +44,15 @@ namespace Pennycook {
 				ToggleGroup.SetEnabled(enabled, index);
 			}
 		}
+
+		public void DeselectButtons() {
+			if(ToggleGroup) {
+				ToggleGroup.DeselectButtons();
+			}
+		}
+
+		public bool IsPressed() {
+			return ToggleGroup.IsPressed();
+		}
     }
 }

@@ -14,6 +14,8 @@ namespace Pennycook {
     public class SurveyToggleButtonGroup : BatchedComponent {
 		
         #region Inspector
+		[SerializeField]
+		LoadSurvey ParentSurvey;
 		public List<SurveyToggleButton> ToggleButtons = new List<SurveyToggleButton>();
 		
         #endregion // Inspector
@@ -24,6 +26,12 @@ namespace Pennycook {
 			}
         }
 
+		public void DeselectButtons() {
+			for(int i = 0; i < ToggleButtons.Count; ++i) {
+				ToggleButtons[i].Untoggle();
+			}
+		}
+
 		public void DoToggle(SurveyToggleButton pressedButton) {
 			if(pressedButton.IsPressed) {
 				for(int i = 0; i < ToggleButtons.Count; ++i) {
@@ -32,6 +40,8 @@ namespace Pennycook {
 					}
 				}
 			}
+
+			ParentSurvey.ActivateNext();
 		}
 
 		public void SetResponseText(string response, int index) {
@@ -44,6 +54,17 @@ namespace Pennycook {
 			if(index < ToggleButtons.Count) {
 				ToggleButtons[index].gameObject.SetActive(enabled);
 			}
+		}
+
+		public bool IsPressed()
+		{
+			for(int i = 0; i < ToggleButtons.Count; ++i) {
+				if(ToggleButtons[i].IsPressed) {
+					return true;
+				}
+			}
+
+			return false;
 		}
     }
 }

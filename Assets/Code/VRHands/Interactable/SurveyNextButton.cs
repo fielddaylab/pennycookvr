@@ -59,10 +59,12 @@ namespace Pennycook {
 				//switch to unfilled graphic
 				CachedMR.material.color = DisabledColor;
 				NextText.color = TextDisabledColor;
+				Detector.enabled = false;
 			} else {
 				//switch to filled graphic
 				CachedMR.material.color = EnabledColor;
 				NextText.color = TextEnabledColor;
+				Detector.enabled = true;
 			}
 		}
 		

@@ -24,6 +24,8 @@ namespace Pennycook {
         int CurrentPage = 0;
         int CurrentQuestion = 0;
 
+        int SurveyStopIndex = 1;
+
         static string[] DefaultResponse = new string[7] {"Strongly Disagree", "Disagree", "Somewhat Disagree", "Neutral", "Somewhat Agree", "Agree", "Strongly Agree"};
 
         void Awake()
@@ -36,8 +38,18 @@ namespace Pennycook {
             NextButton.OnPressed.Register(NextQuestions);
         }
 
+        public void SetSurveyIndex(int surveyIndex, int stopIndex) {
+            CurrentSurvey = surveyIndex;
+            SurveyStopIndex = stopIndex;
+        }
+
         public void LoadLikertQuestions(bool isCustom=false)
         {
+            gameObject.SetActive(true);
+
+            SurveyLikert1.DeselectButtons();
+            SurveyLikert2.DeselectButtons();
+            
             SurveyLikert1.IsCustom = isCustom;
             SurveyLikert2.IsCustom = isCustom;
 
@@ -80,12 +92,25 @@ namespace Pennycook {
 
             }
         }
+
 		/*void Update()
 		{
 			if(UnityEngine.Input.GetKeyDown("q")) {
 				NextQuestions();
 			}
 		}*/
+
+        public void ActivateNext()
+        {
+            if(SurveyLikert1.IsPressed()) {
+                if(SurveyLikert2.gameObject.activeSelf) {
+                    NextButton.EnableNextButton(SurveyLikert2.IsPressed());
+                }
+                NextButton.EnableNextButton(true);
+            }
+
+            NextButton.EnableNextButton(false);
+        }
 
         public void NextQuestions()
         {
@@ -101,8 +126,7 @@ namespace Pennycook {
             } 
 
             //Debug.Log(CurrentSurvey + " " + CurrentPage + " " + CurrentQuestion);
-
-            if(CurrentSurvey < OpenGameDataSurvey.Surveys.Length) {
+            if(CurrentSurvey < OpenGameDataSurvey.Surveys.Length && CurrentSurvey != SurveyStopIndex) {
                 LoadLikertQuestions(CurrentSurvey == 0);
             } else {
                 //send in the data...and hide survey.
