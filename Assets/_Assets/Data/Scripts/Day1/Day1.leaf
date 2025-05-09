@@ -253,6 +253,7 @@ $goto Day1.Tutorial4Loop
 @interrupt
 @once
 
+$call Tutorial2->Deactivate()
 $call SetWarpGroupActive(Rookery, true)
 
 {@Margo}	Nice work, kiddo! We've got our initial population count. $[Day1/Bluff/1bm08]
