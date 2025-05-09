@@ -32,7 +32,7 @@ namespace Pennycook {
         void ShowSurvey(int surveyIndex, int stopIndex)
         {
             m_Survey.SetSurveyIndex(surveyIndex, stopIndex);
-            m_Survey.LoadLikertQuestions();
+            m_Survey.LoadLikertQuestions(surveyIndex == 0);
         }
         #endregion // Leaf
 		

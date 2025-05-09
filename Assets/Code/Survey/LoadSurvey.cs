@@ -37,13 +37,14 @@ namespace Pennycook {
         {
             if(SurveyAsset != null) {
                 OpenGameDataSurvey = SurveyPackage.Parse(SurveyAsset.text);
-                LoadLikertQuestions(true);
             }
         }
 
         public void SetSurveyIndex(int surveyIndex, int stopIndex) {
             CurrentSurvey = surveyIndex;
             SurveyStopIndex = stopIndex;
+            CurrentQuestion = 0;
+            CurrentPage = 0;
         }
 
         public void LoadLikertQuestions(bool isCustom=false)
@@ -76,6 +77,7 @@ namespace Pennycook {
                     SurveyLikert2.SetEnabled(false, i);
                 }
             } else {
+                
                 SurveyLikert1.GetQuestion().text = OpenGameDataSurvey.Surveys[CurrentSurvey].Pages[CurrentPage].Questions[CurrentQuestion].Prompt;
                 for(int i = 0; i < DefaultResponse.Length; ++i) {
                     SurveyLikert1.SetCustomResponse(DefaultResponse[i], i);
