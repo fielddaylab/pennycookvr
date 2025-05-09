@@ -138,7 +138,7 @@ public class PennyAnimation : ScriptActorComponent
 		//_animator.SetTrigger("turnaround");
 		//_animator.SetBool("walking", true);
 		
-		Debug.Log("WALKING AWAY: " + WalkingAway);
+		//Debug.Log("WALKING AWAY: " + WalkingAway);
 		if(!WalkingAway) {
 			_currentAnimRoutine.Replace(Walk(NearGate, 5f));
 		} else {
