@@ -316,6 +316,7 @@ $endif
 :: TrackersCompleted
 @trigger	TrackersCompleted
 @who		Player
+@when		chapter:finishedTrackers == false
 @interrupt
 
 $set chapter:finishedTrackers = true
