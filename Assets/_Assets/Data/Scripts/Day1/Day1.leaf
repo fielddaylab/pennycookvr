@@ -14,6 +14,7 @@ $set chapter:isCountMode = false
 $set chapter:waitingForAction = false
 $set chapter:warpedToBluff = false
 $set chapter:warpedToRookery = false
+$set chapter:finishedFirstObservations = false
 
 :: StartGame
 @trigger    SceneReady
@@ -308,14 +309,13 @@ $call YellowAdelie->SetInteractable(true)
 :: OnPenguinIdentified
 @trigger	TabletIdentified
 @who        Player
-@when		objectType == "BandedPenguin"
+@when		objectType == "BandedPenguin", chapter:finishedFirstObservations == false
 @interrupt
 
 $set	chapter:identifiedCount + 1
 $if chapter:identifiedCount >= 5
-	$set chapter:allIdentified = true
 	$call SetWarpActive(WarpBluffBack, true)
-	$set chapter:finishedObservations = true
+	$set chapter:finishedFirstObservations = true
 $endif
 
 $if local:objectId == "RedAdelie"
@@ -360,7 +360,7 @@ $endif
 :: WarpedBackToTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
+@when       chapter:finishedFirstObservations, targetObject == "WarpTarget-Bluff-Back"
 @once
 @interrupt
 
@@ -373,7 +373,7 @@ $call SetWarpActive(WarpDesk, true)
 :: WarpedInsideTent
 @trigger    AtWarpPoint
 @who        Player
-@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
+@when       chapter:finishedFirstObservations, targetObject == "WarpTarget-Desk"
 @interrupt
 
 $call BackgroundMusic->PlayIndoor()
