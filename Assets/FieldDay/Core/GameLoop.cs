@@ -710,7 +710,20 @@ namespace FieldDay {
 
         private void OnApplicationPause(bool pause) {
             s_AppPauseState = pause;
+            
+            AudioListener.pause = pause;
+            Sfx.SetBusPaused(AudioBus.Master, pause);
+
+            if(pause) {
+                Time.timeScale = 0;
+                Routine.Settings.Paused = true;
+            } else {
+                Time.timeScale = 1.0f;
+                Routine.Settings.Paused = false;
+            }
+            
             OnPauseStateChanged.Invoke(pause);
+
         }
 
         #endregion // Unity Events
