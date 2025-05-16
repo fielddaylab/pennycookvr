@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Tent_Cookware
+  m_Name: DM_Banner_04
   m_Shader: {fileID: 4800000, guid: e88aeddd2ef1f934d805981244872e27, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -21,10 +21,11 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2051
+  m_CustomRenderQueue: 3051
   stringTagMap:
-    RenderType: Opaque
-  disabledShaderPasses: []
+    RenderType: Transparent
+  disabledShaderPasses:
+  - SHADOWCASTER
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -38,7 +39,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 1ee729ebcd9727644abd5130aa0b8183, type: 3}
+        m_Texture: {fileID: 2800000, guid: 473ac035fbe2e4247a152fe966857535, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -90,7 +91,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 1ee729ebcd9727644abd5130aa0b8183, type: 3}
+        m_Texture: {fileID: 2800000, guid: 473ac035fbe2e4247a152fe966857535, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -166,7 +167,7 @@ Material:
     - _DiffuseStep: 0
     - _DitherTexelSize: 1
     - _DitherThreshold: 1
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _EnabledHairSpec: 0
     - _EnvironmentReflections: 1
     - _FaceShadowMapEnabled: 0
@@ -240,22 +241,22 @@ Material:
     - _SpecularHighlights: 0
     - _SpecularSize: 0.518
     - _SpherizeNormalEnabled: 0
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _StencilComp: 0
     - _StencilRef: 0
     - _StepViaRampTexture: 0
-    - _Surface: 0
+    - _Surface: 1
     - _USERAMPCOLOR: 0
     - _UseClipPattern: 0
     - _UseNormalMap: 0
     - _UseRampColor: 0
     - _WorkflowMode: 1
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - Color_28180829: {r: 0.657823, g: 0.7455769, b: 0.773, a: 1}
     - Color_57D43A16: {r: 0.2926552, g: 0.3562759, b: 0.36900002, a: 0}
     - Color_F689E8B9: {r: 1, g: 1, b: 1, a: 1}
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.3915094, g: 0.65146595, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FaceFrontDirection: {r: 0, g: 0, b: 1, a: 0}
