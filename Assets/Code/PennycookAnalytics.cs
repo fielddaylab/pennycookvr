@@ -1,18 +1,20 @@
-//using Firebase;
-//using Firebase.Analytics;
 using UnityEngine;
 using System.Globalization;
 using System.Text;
+using BeauData;
 using BeauUtil;
 using FieldDay;
+using FieldDay.Data;
 using FieldDay.SharedState;
 using FieldDay.Systems;
+using FieldDay.Vox;
+using FieldDay.XR;
 using System;
 using System.Security.Cryptography;
 using System.Runtime.InteropServices;
 using System.Collections;
 
-namespace Pennycook {
+namespace Pennycook.Data {
 //[System.Serializable]
 [StructLayout(LayoutKind.Sequential)]
 public struct LogGazeData
@@ -57,6 +59,26 @@ public static class RunMode {
   }
 }
 
+public enum HandType : byte {
+    LEFT,
+    RIGHT
+}
+
+[Serializable]
+public struct GrabLogInfo {
+    public Vector3 pos;
+    public Quaternion rot;
+    public bool is_grab_toggle;
+    public HandType hand;
+
+    public GrabLogInfo(Vector3 position, Quaternion rotation, bool isGrab, HandType h) {
+        pos = position;
+        rot = rotation;
+        is_grab_toggle = isGrab;
+        hand = h;
+    }
+}
+
 public class PennycookAnalytics : SharedStateComponent
 {
 	public static bool FirebaseEnabled { get; set; }
@@ -68,7 +90,7 @@ public class PennycookAnalytics : SharedStateComponent
 	
 	OGD.OGDLog _ogdLog;
 	
-	//FieldDay.FirebaseConsts _firebase;
+	OGD.FirebaseConsts _firebase;
 
 	[SerializeField]
 	bool _loggingEnabled = true;
@@ -84,11 +106,14 @@ public class PennycookAnalytics : SharedStateComponent
 	StringBuilder m_PosBuilder = new StringBuilder(128);
 	
 	[NonSerialized] private string m_HardwareId;
+    [NonSerialized] private bool m_Debug = false;
 
-    void Awake()
+    void Start()
     {
-		//OVRPlugin.systemDisplayFrequency = 90.0f;
-		
+		VRGame.Events.Register<int>(GameEvents.DayCompleted, LogDayCompleted);
+        VRGame.Events.Register<GrabLogInfo>(GameEvents.PlayerGrab, LogGrabGesture);
+        VRGame.Events.Register<GrabLogInfo>(GameEvents.PlayerRelease, LogGrabRelease);
+        
         m_HardwareId = GenerateHardwareId();
 
         //Debug.Log("Starting analytics");
@@ -105,8 +130,11 @@ public class PennycookAnalytics : SharedStateComponent
 			_loggingEnabled = false;
 		//}
 		
-		//_ogdLog.UseFirebase(_firebase);
-        //_ogdLog.SetDebug(true);
+        if (!string.IsNullOrEmpty(_firebase.ApiKey)) {
+            _ogdLog.UseFirebase(_firebase);
+        }
+        
+        _ogdLog.SetDebug(m_Debug);
     }
 	
 	void OnDestroy()
@@ -117,6 +145,18 @@ public class PennycookAnalytics : SharedStateComponent
 			_ogdLog = null;
 		}
 	}
+
+    public void LogDayBegin(int beginDay) {
+        _ogdLog.BeginEvent("day_begin");
+        _ogdLog.EventParam("day_index", beginDay);
+        _ogdLog.SubmitEvent();
+    }
+
+    private void LogDayCompleted(int completedDay) {
+        _ogdLog.BeginEvent("day_complete");
+        _ogdLog.EventParam("day_index", completedDay);
+        _ogdLog.SubmitEvent();
+    }
 
     private void LogGazeGameState(Vector3 pos, Quaternion quat)
     {
@@ -139,23 +179,24 @@ public class PennycookAnalytics : SharedStateComponent
 	
 	void SetGameState()
 	{		
-        /*PlayerLocator player = Find.State<PlayerLocator>();
-        SceneLoader scene = Find.State<SceneLoader>();
-        
+        XRUserRig player = Find.State<XRUserRig>();
+        PlayerProgressState state = Find.State<PlayerProgressState>();
+        PlayerMovementState moveState = Find.State<PlayerMovementState>();
+
 		if(player != null)
         {
             _ogdLog.BeginGameState();
             _ogdLog.GameStateParam("seconds_from_launch", UnityEngine.Time.time-seconds_at_start);
-            _ogdLog.GameStateParam("level", scene.GetCurrentSceneIndex());
-            _ogdLog.GameStateParam("location", player.IsInside ? "inside" : "outside");
+            _ogdLog.GameStateParam("day", state.DayIndex+1);
+            _ogdLog.GameStateParam("location", PlayerMovementUtility.IsInside(Find.State<PlayerMovementState>()) ? "INSIDE" : "OUTSIDE");
 
-            Vector3 pos = Vector3.zero;
-            Quaternion quat = Quaternion.identity;
-            player.GetHeadTransform(out pos, out quat);
-            LogGazeGameState(pos, quat);
+            LogGazeGameState(player.Head.transform.position, player.Head.transform.rotation);
+            
+            //_ogdLog.GameStateParam("margo_mode", state.DayIndex+1);
+            //_ogdLog.GameStateParam("margo_taskbar", state.DayIndex+1);
 
             _ogdLog.SubmitGameState();
-        }*/
+        }
 	}
 	
 	public void LogSessionStart()
@@ -234,7 +275,7 @@ public class PennycookAnalytics : SharedStateComponent
 		}
     }
 
-    public void LogGrabGesture(bool left, Vector3 pos, Quaternion quat)
+    public void LogGrabGesture(GrabLogInfo info)
     {
         if(_loggingEnabled)
 		{
@@ -242,18 +283,19 @@ public class PennycookAnalytics : SharedStateComponent
 			
 			//m_PosBuilder.Clear().Append("[").AppendNoAlloc(pos.x, 3).Append(',').AppendNoAlloc(pos.y, 3).Append(',').AppendNoAlloc(pos.z, 3).Append(',').Append("]");
 			//m_RotBuilder.Clear().Append("[").AppendNoAlloc(quat.x, 3).Append(',').AppendNoAlloc(quat.y, 3).Append(',').AppendNoAlloc(quat.z, 3).Append(',').AppendNoAlloc(quat.w, 3).Append("]");
-            m_PosBuilder.Clear().Append("[").AppendNoAlloc(pos.x, 3).Append(',').AppendNoAlloc(pos.y, 3).Append(',').AppendNoAlloc(pos.z, 3).Append(',').Append("]");
-		    m_RotBuilder.Clear().Append("[").AppendNoAlloc(quat.x, 3).Append(',').AppendNoAlloc(quat.y, 3).Append(',').AppendNoAlloc(quat.z, 3).Append(',').AppendNoAlloc(quat.w, 3).Append("]");
+            m_PosBuilder.Clear().Append("[").AppendNoAlloc(info.pos.x, 3).Append(',').AppendNoAlloc(info.pos.y, 3).Append(',').AppendNoAlloc(info.pos.z, 3).Append(',').Append("]");
+		    m_RotBuilder.Clear().Append("[").AppendNoAlloc(info.rot.x, 3).Append(',').AppendNoAlloc(info.rot.y, 3).Append(',').AppendNoAlloc(info.rot.z, 3).Append(',').AppendNoAlloc(info.rot.w, 3).Append("]");
 		
             _ogdLog.BeginEvent("grab_gesture");
             _ogdLog.EventParam("pos", m_PosBuilder.ToString());
             _ogdLog.EventParam("rot", m_RotBuilder.ToString());
-            _ogdLog.EventParam("hand", left ? "LEFT" : "RIGHT");
+            _ogdLog.EventParam("is_grab_toggle", info.is_grab_toggle);
+            _ogdLog.EventParam("hand", EnumLookup.Get(info.hand));
             _ogdLog.SubmitEvent();
         }
     }
 
-    public void LogGrabRelease(bool left, Vector3 pos, Quaternion quat)
+    public void LogGrabRelease(GrabLogInfo info)
     {
         if(_loggingEnabled)
 		{
@@ -261,40 +303,47 @@ public class PennycookAnalytics : SharedStateComponent
 			
 			//m_PosBuilder.Clear().Append("[").AppendNoAlloc(pos.x, 3).Append(',').AppendNoAlloc(pos.y, 3).Append(',').AppendNoAlloc(pos.z, 3).Append(',').Append("]");
 			//m_RotBuilder.Clear().Append("[").AppendNoAlloc(quat.x, 3).Append(',').AppendNoAlloc(quat.y, 3).Append(',').AppendNoAlloc(quat.z, 3).Append(',').AppendNoAlloc(quat.w, 3).Append("]");
-            m_PosBuilder.Clear().Append("[").AppendNoAlloc(pos.x, 3).Append(',').AppendNoAlloc(pos.y, 3).Append(',').AppendNoAlloc(pos.z, 3).Append(',').Append("]");
-		    m_RotBuilder.Clear().Append("[").AppendNoAlloc(quat.x, 3).Append(',').AppendNoAlloc(quat.y, 3).Append(',').AppendNoAlloc(quat.z, 3).Append(',').AppendNoAlloc(quat.w, 3).Append("]");
+            m_PosBuilder.Clear().Append("[").AppendNoAlloc(info.pos.x, 3).Append(',').AppendNoAlloc(info.pos.y, 3).Append(',').AppendNoAlloc(info.pos.z, 3).Append(',').Append("]");
+		    m_RotBuilder.Clear().Append("[").AppendNoAlloc(info.rot.x, 3).Append(',').AppendNoAlloc(info.rot.y, 3).Append(',').AppendNoAlloc(info.rot.z, 3).Append(',').AppendNoAlloc(info.rot.w, 3).Append("]");
 		
-            _ogdLog.BeginEvent("grab_release");
+            _ogdLog.BeginEvent("release_gesture");
             _ogdLog.EventParam("pos", m_PosBuilder.ToString());
             _ogdLog.EventParam("rot", m_RotBuilder.ToString());
-            _ogdLog.EventParam("hand", left ? "LEFT" : "RIGHT");
+            _ogdLog.EventParam("is_grab_toggle", info.is_grab_toggle);
+            _ogdLog.EventParam("hand", EnumLookup.Get(info.hand));
             _ogdLog.SubmitEvent();
         }
     }
 
-    public void LogAudioStarted(string id, string type, string speaker)
+    public void LogAudioStarted(VoxRequestHandle h, StringHash32 lineCode)
     {
         if(_loggingEnabled)
 		{
 			SetGameState();
-			
+
+            string speaker = ReflectionCache.AnalyticsNameUpper(VoxUtility.GetCharacterId(h).ToDebugString());
+            //Debug.Log("AUDIO STARTED: " + lineCode.ToDebugString() + " " + speaker);
+
             _ogdLog.BeginEvent("dialog_audio_start");
-            _ogdLog.EventParam("dialog_id", id);
-            _ogdLog.EventParam("dialog_type", type);
+            _ogdLog.EventParam("dialog_id", lineCode.ToDebugString());
+            _ogdLog.EventParam("dialog_type", "STORY");
             _ogdLog.EventParam("speaker", speaker);
             _ogdLog.SubmitEvent();
         }
     }
 
-    public void LogAudioComplete(string id, string type, string speaker)
+    public void LogAudioComplete(VoxRequestHandle h, StringHash32 lineCode)
     {
         if(_loggingEnabled)
 		{
 			SetGameState();
 			
+            string speaker = ReflectionCache.AnalyticsNameUpper(VoxUtility.GetCharacterId(h).ToDebugString());
+            //Debug.Log("AUDIO COMPLETE: " + lineCode.ToDebugString() + " " + speaker);
+
             _ogdLog.BeginEvent("dialog_audio_end");
-            _ogdLog.EventParam("dialog_id", id);
-            _ogdLog.EventParam("dialog_type", type);
+            _ogdLog.EventParam("dialog_id", lineCode.ToDebugString());
+            _ogdLog.EventParam("dialog_type", "STORY");
             _ogdLog.EventParam("speaker", speaker);
             _ogdLog.SubmitEvent();
         }

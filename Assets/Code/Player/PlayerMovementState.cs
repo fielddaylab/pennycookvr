@@ -47,6 +47,18 @@ namespace Pennycook {
     }
 
     static public class PlayerMovementUtility {
+
+        static public bool IsInside(PlayerMovementState state) {
+            if(state.CurrentWarp == null) {
+                return true;
+            } else {
+                if(state.CurrentWarp.Group == TabletWarpPointGroup.Bluff || state.CurrentWarp.Group == TabletWarpPointGroup.Rookery) {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         static public bool WarpTo(PlayerMovementState state, TabletWarpPoint warpPoint, bool interruptCurrentWarp = false) {
             if (!interruptCurrentWarp && (state.WarpRoutine || state.CurrentState == PlayerMovementState.State.Warping)) {
                 return false;

@@ -35,7 +35,16 @@ namespace Pennycook {
         [LeafMember("LoadNextDay")]
         static private IEnumerator Leaf_LoadNextDay([BindThread] ScriptThread thread) {
             var state = Find.State<PlayerProgressState>();
+            VRGame.Events.Dispatch(GameEvents.DayCompleted, state.DayIndex);
             return Leaf_LoadDay(thread, state.DayIndex + 1);
+        }
+
+        [LeafMember("DayBegin")]
+        static public void DayBegin(int dayIndex) {
+            Data.PennycookAnalytics pa = Find.State<Data.PennycookAnalytics>();
+            if(pa) {
+                pa.LogDayBegin(dayIndex);
+            }
         }
 
         static public IEnumerator LoadDay(int dayIndex) {
