@@ -64,7 +64,7 @@ public enum HandType : byte {
     RIGHT
 }
 
-[Serializable]
+
 public struct GrabLogInfo {
     public Vector3 pos;
     public Quaternion rot;

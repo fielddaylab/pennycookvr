@@ -39,7 +39,7 @@ namespace Pennycook {
                 if (c.Grabber.State == GrabberState.Empty) {
                     if (hand.Buttons.ConsumePress(XRHandButtons.GripButton)) {
                         c.Grabber.State = GrabberState.AttemptGrab;
-                        VRGame.Events.Dispatch(GameEvents.PlayerGrab, EvtArgs.Box(new Data.GrabLogInfo(hand.Pose.position, 
+                        VRGame.Events.Dispatch(GameEvents.PlayerGrab, EvtArgs.Create(new Data.GrabLogInfo(hand.Pose.position, 
                             hand.Pose.rotation, false, (Data.HandType)c.Hand)));
                     }
                 } else if (c.Grabber.State == GrabberState.Holding) {
@@ -52,7 +52,7 @@ namespace Pennycook {
 
                     if (release) {
                         c.Grabber.State = GrabberState.AttemptRelease;
-                        VRGame.Events.Dispatch(GameEvents.PlayerRelease, EvtArgs.Box(new Data.GrabLogInfo(hand.Pose.position, 
+                        VRGame.Events.Dispatch(GameEvents.PlayerRelease, EvtArgs.Create(new Data.GrabLogInfo(hand.Pose.position, 
                             hand.Pose.rotation, c.Grabber.HeldObject.TapToRelease, (Data.HandType)c.Hand)));
                     }
                 }
