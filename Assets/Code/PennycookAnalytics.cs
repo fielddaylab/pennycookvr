@@ -64,6 +64,17 @@ public enum HandType : byte {
     RIGHT
 }
 
+public enum DirectionType : byte {
+    FORWARD,
+    BACKWARD,
+    LEFT,
+    RIGHT
+}
+
+public enum RotationDirectionType : byte {
+    CW,
+    CCW
+}
 
 public struct GrabLogInfo {
     public Vector3 pos;
@@ -76,6 +87,29 @@ public struct GrabLogInfo {
         rot = rotation;
         is_grab_toggle = isGrab;
         hand = h;
+    }
+}
+
+public struct NavigateInfo {
+    public Vector3 pos;
+    public DirectionType dirType;
+    public float navigationAmount;
+    public NavigateInfo(Vector3 position, DirectionType d, float navAmount) {
+        pos = position;
+        dirType = d;
+        navigationAmount = navAmount;
+    }
+}
+
+public struct RotateInfo {
+    public Quaternion rot;
+    public RotationDirectionType dirType;
+    public float rotationAmount;
+
+    public RotateInfo(Quaternion rotation, RotationDirectionType d, float rotAmount) {
+        rot = rotation;
+        dirType = d;
+        rotationAmount = rotAmount;
     }
 }
 
@@ -113,6 +147,8 @@ public class PennycookAnalytics : SharedStateComponent
 		VRGame.Events.Register<int>(GameEvents.DayCompleted, LogDayCompleted);
         VRGame.Events.Register<GrabLogInfo>(GameEvents.PlayerGrab, LogGrabGesture);
         VRGame.Events.Register<GrabLogInfo>(GameEvents.PlayerRelease, LogGrabRelease);
+        VRGame.Events.Register<NavigateInfo>(GameEvents.PlayerNavigate, LogPlayerNavigate);
+        VRGame.Events.Register<RotateInfo>(GameEvents.PlayerRotate, LogPlayerRotate);
         
         m_HardwareId = GenerateHardwareId();
 
@@ -179,7 +215,7 @@ public class PennycookAnalytics : SharedStateComponent
 	
 	void SetGameState()
 	{		
-        XRUserRig player = Find.State<XRUserRig>();
+        XRUserRig player = Find.State<XRUserRig>(); //double check use of XRUserRig here...
         PlayerProgressState state = Find.State<PlayerProgressState>();
         PlayerMovementState moveState = Find.State<PlayerMovementState>();
 
@@ -345,6 +381,38 @@ public class PennycookAnalytics : SharedStateComponent
             _ogdLog.EventParam("dialog_id", lineCode.ToDebugString());
             _ogdLog.EventParam("dialog_type", "STORY");
             _ogdLog.EventParam("speaker", speaker);
+            _ogdLog.SubmitEvent();
+        }
+    }
+
+    public void LogPlayerNavigate(NavigateInfo navInfo) 
+    {
+        if(_loggingEnabled)
+		{
+			SetGameState();
+
+            m_PosBuilder.Clear().Append("[").AppendNoAlloc(navInfo.pos.x, 3).Append(',').AppendNoAlloc(navInfo.pos.y, 3).Append(',').AppendNoAlloc(navInfo.pos.z, 3).Append(',').Append("]");
+
+            _ogdLog.BeginEvent("joystick_navigate");
+            _ogdLog.EventParam("new_pos", m_PosBuilder.ToString());
+            _ogdLog.EventParam("navigation_direction", EnumLookup.Get(navInfo.dirType));
+            _ogdLog.EventParam("navigation_amount", navInfo.navigationAmount);
+            _ogdLog.SubmitEvent();
+        }
+    }
+
+    public void LogPlayerRotate(RotateInfo rotInfo) 
+    {
+        if(_loggingEnabled)
+		{
+			SetGameState();
+
+            m_RotBuilder.Clear().Append("[").AppendNoAlloc(rotInfo.rot.x, 3).Append(',').AppendNoAlloc(rotInfo.rot.y, 3).Append(',').AppendNoAlloc(rotInfo.rot.z, 3).Append(',').AppendNoAlloc(rotInfo.rot.w, 3).Append("]");
+		
+            _ogdLog.BeginEvent("joystick_rotate");
+            _ogdLog.EventParam("new_rot", m_RotBuilder.ToString());
+            _ogdLog.EventParam("rotation_direction", EnumLookup.Get(rotInfo.dirType));
+            _ogdLog.EventParam("rotation_amount", rotInfo.rotationAmount);
             _ogdLog.SubmitEvent();
         }
     }
@@ -886,26 +954,15 @@ public class PennycookAnalytics : SharedStateComponent
 
 	public unsafe bool LogGaze(Vector3 p, Quaternion q, uint gazeLogFrameCount, bool sendToServer=false)//, string scene)
 	{
-		/*if(_loggingEnabled)
+		if(_loggingEnabled)
 		{
 			if(_viewportDataCount < MAX_VIEWPORT_DATA)
 			{
-                PlayerHandRig hands = Find.State<PlayerHandRig>();
+                PlayerRig hands = Find.State<PlayerRig>();
 
                 _viewportData[_viewportDataCount].Write(p, q);
-                //_viewportData[_viewportDataCount].rot = (q.x.ToString("F3")+","+q.y.ToString("F3")+","+q.z.ToString("F3")+","+q.w.ToString("F3"));
-				
-				Vector3 leftPos = Vector3.zero;
-				Quaternion leftRot = Quaternion.identity;;
-				
-				hands.GetHandTransform(true, out leftPos, out leftRot);
-                _leftHandData[_viewportDataCount].Write(leftPos, leftRot);
-				
-				Vector3 rightPos = Vector3.zero;;
-                Quaternion rightRot = Quaternion.identity;
-				
-				hands.GetHandTransform(false, out rightPos, out rightRot);
-                _rightHandData[_viewportDataCount].Write(rightPos, rightRot);
+                _leftHandData[_viewportDataCount].Write(hands.LeftHand.Raw.transform.position, hands.LeftHand.Raw.transform.rotation);
+                _rightHandData[_viewportDataCount].Write(hands.RightHand.Raw.transform.position, hands.RightHand.Raw.transform.rotation);
 
 				_viewportDataCount++;
 			}
@@ -936,7 +993,7 @@ public class PennycookAnalytics : SharedStateComponent
                 _viewportDataCount = 0;
 				return true;
             }
-		}*/
+		}
 		
 		return false;
 		/*if (FirebaseEnabled)

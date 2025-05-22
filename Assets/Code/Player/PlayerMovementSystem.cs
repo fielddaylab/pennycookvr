@@ -14,11 +14,13 @@ namespace Pennycook {
             if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisLeft)) {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
                     move.Rotate(new Vector3(0, -30, 0));
+                    VRGame.Events.Dispatch(GameEvents.PlayerRotate, EvtArgs.Create(new Data.RotateInfo(move.Rig.MoveRoot.rotation, Data.RotationDirectionType.CCW, -30f)));
                 }
             }
             if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisRight)) {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
                     move.Rotate(new Vector3(0, 30, 0));
+                    VRGame.Events.Dispatch(GameEvents.PlayerRotate, EvtArgs.Create(new Data.RotateInfo(move.Rig.MoveRoot.rotation, Data.RotationDirectionType.CW, 30f)));
                 }
             }
 
@@ -31,6 +33,7 @@ namespace Pennycook {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
                     if(TryMove(move.Rig.HeadRoot.position, flattenedLook, m_StateC.CurrentWarp)) {
                         move.Translate(flattenedLook);
+                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position+flattenedLook, Data.DirectionType.FORWARD, 0.8f)));
                         TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
@@ -39,6 +42,7 @@ namespace Pennycook {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
                     if(TryMove(move.Rig.HeadRoot.position, -flattenedLook, m_StateC.CurrentWarp)) {
                         move.Translate(-flattenedLook);
+                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position-flattenedLook, Data.DirectionType.BACKWARD, 0.8f)));
                         TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, -flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
@@ -48,6 +52,7 @@ namespace Pennycook {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
                     if(TryMove(move.Rig.HeadRoot.position, flattenedLook, m_StateC.CurrentWarp)) {
                         move.Translate(flattenedLook);
+                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position+flattenedLook, Data.DirectionType.FORWARD, 0.8f)));
                         TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
@@ -56,6 +61,7 @@ namespace Pennycook {
                 using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
                     if(TryMove(move.Rig.HeadRoot.position, -flattenedLook, m_StateC.CurrentWarp)) {
                         move.Translate(-flattenedLook);
+                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position-flattenedLook, Data.DirectionType.BACKWARD, 0.8f)));
                         TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, -flattenedLook, m_StateC.CurrentWarp);
                     }
                 }

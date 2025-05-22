@@ -351,6 +351,7 @@ $endif
 
 $if chapter:identifiedCount >= 5
 	$call CompleteMainGoal("scan_banded_penguins")
+	$call WarpText->SetText("Warp back to the tent")
 	{@Margo}	Great work kid! You've got your 5 penguins, $[Day1/Rookery/1rm20]
 	{@Player}	Awesome. The Fantastic Five!	$[Day1/Rookery/1rs10]
 	{@Player}	Or . . . the Fintastic Five. Los Cinco Fintasticos?	$[Day1/Rookery/1rs11]

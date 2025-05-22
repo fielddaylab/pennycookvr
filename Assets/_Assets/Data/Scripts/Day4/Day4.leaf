@@ -290,6 +290,7 @@ $call TurnOnSockets(BandSocketChick, false)
 //$call TriggerResponseAndWait(Day4.CheckCompletedTasks)
 $set chapter:finishedObservations = true
 $call SetWarpActive(WarpBluffBack, true)
+$call WarpText->SetText("Warp back to the tent")
 
 {@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/4rm22]
 {@Partner}  Nice work, new kid. $[Day4/Rookery/4rp05]

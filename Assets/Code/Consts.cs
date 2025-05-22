@@ -93,6 +93,11 @@ namespace Pennycook {
         static public readonly StringHash32 PlayerGrab = "player:grab";
         static public readonly StringHash32 PlayerRelease = "player:release";
 
+        static public readonly StringHash32 PlayerNavigate = "player:navigate";
+
+        static public readonly StringHash32 PlayerRotate = "player:rotate";
+
+        static public readonly StringHash32 PlayerBadNavigate = "player:badnavigate";
     }
 
     static public class GameTriggers {

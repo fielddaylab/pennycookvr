@@ -176,6 +176,7 @@ $call CompleteMainGoal("place_leg_trackers")
 {@Margo}	Let’s head back up to the Bluff.	$[Day5/Rookery/5rm13]
 
 $call SetWarpActive(WarpBluffBack, true)
+$call WarpText->SetText("Warp back to the bluff")
 
 :: WarpedBackToBluff
 @trigger    AtWarpPoint
