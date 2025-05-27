@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FieldDay;
 using UnityEngine;
 using OGD;
 
@@ -18,6 +19,9 @@ namespace Pennycook {
         [SerializeField]
         SurveyNextButton    NextButton;
 
+        [SerializeField]
+        TMPro.TextMeshPro PlayerCode;
+
         SurveyPackage OpenGameDataSurvey;
         
         int CurrentSurvey = 0;
@@ -35,8 +39,16 @@ namespace Pennycook {
 
         void Start()
         {
-            if(SurveyAsset != null) {
+            if (SurveyAsset != null)
+            {
                 OpenGameDataSurvey = SurveyPackage.Parse(SurveyAsset.text);
+                if (PlayerCode != null)
+                {
+                    Data.PennycookAnalytics pa = Find.State<Data.PennycookAnalytics>();
+                    if (pa != null) {
+                        PlayerCode.text = "Player Code: " + pa.GetSessionID().ToString();
+                    } 
+                }
             }
         }
 

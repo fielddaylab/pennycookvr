@@ -79,7 +79,8 @@ namespace Pennycook {
         }
      }
 
-    static public class GameEvents {
+    static public class GameEvents
+    {
         static public readonly StringHash32 ObjectHighlighted = "tablet:object-highlighted";
         static public readonly StringHash32 ObjectUnhighlighted = "tablet:object-unhighlighted";
 
@@ -124,8 +125,14 @@ namespace Pennycook {
         static public readonly StringHash32 TriggerPhoto = "tablet:trigger-photo";
         static public readonly StringHash32 PhotoBehavior = "tablet:photo-behavior";
         static public readonly StringHash32 CaseTransform = "case:transform";
-        
+
         static public readonly StringHash32 MargoSync = "tablet:sync";
+
+        static public readonly StringHash32 PlaceTag = "player:place-tag";
+        static public readonly StringHash32 RemoveTag = "player:remove-tag";
+
+        static public readonly StringHash32 DockMargo = "tablet:dock";
+        
     }
 
     static public class GameTriggers {

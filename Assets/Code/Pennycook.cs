@@ -21,9 +21,26 @@ namespace Pennycook {
         static private void OnBoot() {
             XRUtility.SetRefreshRate(90);
             RaycastJobs.Initialize();
+            Data.PennycookAnalytics pa = Find.State<Data.PennycookAnalytics>();
+            if (pa)
+            {
+                pa.LogSessionStart();    
+            }
 
-            Game.Scenes.OnMainSceneReady.Register(() => {
+            Game.Scenes.OnMainSceneReady.Register(() =>
+            {
                 ScriptUtility.Trigger(GameTriggers.SceneReady);
+                PlayerProgressState state = Find.State<PlayerProgressState>();
+                if (state != null)
+                {
+                    if (state.DayIndex == 0)
+                    {
+                        if (pa)
+                        {
+                            pa.LogStartGame();
+                        }
+                    }
+                }
             });
             Game.Scenes.OnMainSceneLateEnable.Register(() => {
                 ScriptUtility.Invoke(GameTriggers.ScenePrepare);

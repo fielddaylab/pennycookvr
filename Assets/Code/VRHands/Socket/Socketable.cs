@@ -5,6 +5,7 @@ using FieldDay.Components;
 using FieldDay.VRHands;
 using FieldDay.Audio;
 using UnityEngine;
+using Pennycook;
 
 namespace FieldDay.Sockets {
     [RequireComponent(typeof(Rigidbody))]
@@ -52,17 +53,19 @@ namespace FieldDay.Sockets {
     static public class SocketUtility {
         #region Add
 
+        static StringHash32 DeskDockID = "DeskDock";
+
         /// <summary>
         /// Attempts to add the given socketable to a socket.
         /// </summary>
-        static public bool TryAddToSocket(Socketable socketable, ObjectSocket socket, bool force, bool playSound=true) {
+        static public bool TryAddToSocket(Socketable socketable, ObjectSocket socket, bool force, bool playSound = true) {
             if (!socketable) {
                 return false;
             }
 
             if (!force && (socket.Locked || socket.Current || !socket.CanAdd(socket, socketable) || !socket.IsSocketAllowed(socketable.SocketType))) {
                 return false;
-			}
+            }
 
             if (socket.Current != socketable) {
                 ReleaseCurrent(socket, socket.Current != socketable);
@@ -72,8 +75,23 @@ namespace FieldDay.Sockets {
                 ReleaseCurrent(socketable.CurrentSocket, false);
             }
 
-            if(playSound && socket != null && socket.AllowedSockets == SocketFlags.Margo && socketable != null && socketable.SocketType == SocketFlags.Margo) {
+            Pennycook.ScriptSocket scriptSocket = socket.GetComponent<Pennycook.ScriptSocket>();
+
+            if (playSound && socket != null && socket.AllowedSockets == SocketFlags.Margo && socketable != null && socketable.SocketType == SocketFlags.Margo)
+            {
                 Pennycook.Tablet.TabletUtility.PlaySfx("Tablet.Placed");
+                if (scriptSocket)
+                {
+                    StringHash32 socketId = FieldDay.Scripting.ScriptUtility.ActorId(scriptSocket);
+                    if (socketId == DeskDockID)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.DockMargo, (int)Pennycook.Data.DockLocation.TENT);
+                    }
+                    else
+                    {
+                        VRGame.Events.Dispatch(GameEvents.DockMargo, (int)Pennycook.Data.DockLocation.CASE);
+                    }
+                }
             }
 
             socket.Current = socketable;
@@ -89,28 +107,56 @@ namespace FieldDay.Sockets {
 
             switch (socket.Mode) {
                 case SocketMode.Reparent: {
-                    socketable.CachedTransform.SetParent(socket.Location, true);
-                    socketable.CachedRB.isKinematic = true;
-                    break;
-                }
+                        socketable.CachedTransform.SetParent(socket.Location, true);
+                        socketable.CachedRB.isKinematic = true;
+                        break;
+                    }
 
                 case SocketMode.FixedJoint: {
-                    if (!socket.CurrentJoint) {
-                        socket.CurrentJoint = socket.gameObject.AddComponent<FixedJoint>();
+                        if (!socket.CurrentJoint) {
+                            socket.CurrentJoint = socket.gameObject.AddComponent<FixedJoint>();
+                        }
+                        socket.CurrentJoint.connectedBody = socketable.CachedRB;
+                        socket.JointConfig.Apply(socket.CurrentJoint);
+                        break;
                     }
-                    socket.CurrentJoint.connectedBody = socketable.CachedRB;
-                    socket.JointConfig.Apply(socket.CurrentJoint);
-                    break;
-                }
             }
+
             
-            Pennycook.ScriptSocket scriptSocket = socket.GetComponent<Pennycook.ScriptSocket>();
-            if(scriptSocket != null) {  
+            if (scriptSocket != null) {
                 StringHash32 socketClass = FieldDay.Scripting.ScriptUtility.ActorType(scriptSocket);//.ClassName;
-                if(socketClass == Socketable.LegSocketCaseClass || socketClass == Socketable.WingBandSocketCaseClass || socketClass == Socketable.BackSocketCaseClass)  {
+                if (socketClass == Socketable.LegSocketCaseClass || socketClass == Socketable.WingBandSocketCaseClass || socketClass == Socketable.BackSocketCaseClass)
+                {
                     Sfx.PlayDetached("Socket.Case", socket.gameObject.transform);
-                } else if(socketClass == Socketable.LegSocketPenguinClass || socketClass == Socketable.WingBandSocketPenguinClass || socketClass == Socketable.BackSocketPenguinClass)  {
+                    if (socketClass == Socketable.LegSocketCaseClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.PlaceTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.CASE, Pennycook.Data.TagType.LEG, "")));
+                    }
+                    else if (socketClass == Socketable.WingBandSocketCaseClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.PlaceTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.CASE, Pennycook.Data.TagType.ARM, "")));
+                    }
+                    else if (socketClass == Socketable.BackSocketCaseClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.PlaceTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.CASE, Pennycook.Data.TagType.BACK, "")));
+                    }
+                }
+                else if (socketClass == Socketable.LegSocketPenguinClass || socketClass == Socketable.WingBandSocketPenguinClass || socketClass == Socketable.BackSocketPenguinClass)
+                {
+                    //how to get the penguin ID here...
                     Sfx.PlayDetached("Socket.Penguin", socket.gameObject.transform);
+                    if (socketClass == Socketable.LegSocketPenguinClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.PlaceTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.PENGUIN, Pennycook.Data.TagType.LEG, "")));
+                    }
+                    else if (socketClass == Socketable.WingBandSocketPenguinClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.PlaceTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.PENGUIN, Pennycook.Data.TagType.ARM, "")));
+                    }
+                    else if (socketClass == Socketable.BackSocketPenguinClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.PlaceTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.PENGUIN, Pennycook.Data.TagType.BACK, "")));
+                    }
                 }
             }
 
@@ -118,7 +164,7 @@ namespace FieldDay.Sockets {
             socket.OnAdded.Invoke(socketable);
             OnObjectAddedToSocket.Invoke(socketable, socket);
 
-            if(socket.HighlightPair) {
+            if (socket.HighlightPair) {
                 socket.HighlightPair.SetActive(false);
             }
 
@@ -198,6 +244,43 @@ namespace FieldDay.Sockets {
                         cachedCurrent.CachedRB.AddForce(force, ForceMode.Impulse);
                     }
                     break;
+                }
+            }
+
+            Pennycook.ScriptSocket scriptSocket = socket.GetComponent<Pennycook.ScriptSocket>();
+
+            if (scriptSocket != null)
+            {
+                StringHash32 socketClass = FieldDay.Scripting.ScriptUtility.ActorType(scriptSocket);//.ClassName;
+                if (socketClass == Socketable.LegSocketCaseClass || socketClass == Socketable.WingBandSocketCaseClass || socketClass == Socketable.BackSocketCaseClass)
+                {
+                    if (socketClass == Socketable.LegSocketCaseClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.RemoveTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.CASE, Pennycook.Data.TagType.LEG, "")));
+                    }
+                    else if (socketClass == Socketable.WingBandSocketCaseClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.RemoveTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.CASE, Pennycook.Data.TagType.ARM, "")));
+                    }
+                    else if (socketClass == Socketable.BackSocketCaseClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.RemoveTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.CASE, Pennycook.Data.TagType.BACK, "")));
+                    }
+                }
+                else if (socketClass == Socketable.LegSocketPenguinClass || socketClass == Socketable.WingBandSocketPenguinClass || socketClass == Socketable.BackSocketPenguinClass)
+                {
+                    if (socketClass == Socketable.LegSocketPenguinClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.RemoveTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.PENGUIN, Pennycook.Data.TagType.LEG, "")));
+                    }
+                    else if (socketClass == Socketable.WingBandSocketPenguinClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.RemoveTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.PENGUIN, Pennycook.Data.TagType.ARM, "")));
+                    }
+                    else if (socketClass == Socketable.BackSocketPenguinClass)
+                    {
+                        VRGame.Events.Dispatch(GameEvents.RemoveTag, EvtArgs.Create(new Pennycook.Data.PlaceTagInfo(Pennycook.Data.TagLocation.PENGUIN, Pennycook.Data.TagType.BACK, "")));
+                    }
                 }
             }
 
