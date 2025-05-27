@@ -34,11 +34,13 @@ namespace Pennycook {
         [LeafMember("Open"), Preserve]
         public void Open() {
 			m_Anim.SetBool("open", true);
+			VRGame.Events.Dispatch(GameEvents.TentDoorOpened);
         }
 		
 		[LeafMember("Close"), Preserve]
         public void Close() {
 			m_Anim.SetBool("open", false);
+			VRGame.Events.Dispatch(GameEvents.TentDoorClosed);
         }
 		
 		[LeafMember("IsOpen"), Preserve]

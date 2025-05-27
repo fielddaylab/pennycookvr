@@ -41,6 +41,11 @@ namespace Pennycook.Tablet {
 
                 countable.Group.CurrentlyCounted.Add(countable);
                 countable.IsCounted = true;
+
+                ScriptActor a = ScriptUtility.Actor(countable);
+                if(a) {
+                    VRGame.Events.Dispatch(GameEvents.PenguinCounted, EvtArgs.Create<Pennycook.Data.CountInfo>(new Pennycook.Data.CountInfo((int)countable.Group.CurrentlyCounted.Count, a.Id)));
+                }
                 
                 TabletCountable.OnCounted.Invoke(countable.Group.CurrentlyCounted.Count, countable.Group.TotalInGroup);
 

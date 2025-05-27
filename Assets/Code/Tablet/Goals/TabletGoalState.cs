@@ -53,6 +53,25 @@ namespace Pennycook.Tablet {
     static public partial class TabletUtility {
         [SharedStateReference]
         static public TabletGoalState Goals { get; set; }
+
+        const int NUM_TAG_TASKS = 17;
+        //these strings are just for logging and used to determine if we should log a "tag" task vs. a "margo" task... (i.e. vs. scan or photo tasks)        
+        static public StringHash32[] TagLoggingTasks = new StringHash32[NUM_TAG_TASKS] {
+            "retrieve_leg_trackers", "place_leg_trackers", "retrieve_back_trackers", "place_back_trackers", "band_chicks",
+            "goal_gps_tracker_1", "goal_gps_tracker_2", "goal_gps_tracker_3", "goal_back_tracker_alfredo", "goal_back_tracker_millie", "goal_back_tracker_winston",
+            "goal_back_tracker_alfredo_get", "goal_back_tracker_millie_get", "goal_back_tracker_winston_get", "goal_place_leg_tracker_1", "goal_place_leg_tracker_2",
+            "goal_place_leg_tracker_3" };
+         static public Data.TagType[] TagLoggingTypes = new Data.TagType[NUM_TAG_TASKS] {
+            Data.TagType.LEG, Data.TagType.LEG, Data.TagType.BACK, Data.TagType.BACK, Data.TagType.ARM,
+            Data.TagType.LEG, Data.TagType.LEG, Data.TagType.LEG, Data.TagType.BACK, Data.TagType.BACK, Data.TagType.BACK,
+            Data.TagType.BACK, Data.TagType.BACK, Data.TagType.BACK, Data.TagType.LEG, Data.TagType.LEG,
+            Data.TagType.LEG
+         };
+        static public Data.TaskType[] TagLoggingTaskTypes = new Data.TaskType[NUM_TAG_TASKS] {
+            Data.TaskType.RECOVER, Data.TaskType.TAG, Data.TaskType.RECOVER, Data.TaskType.TAG, Data.TaskType.TAG,
+            Data.TaskType.RECOVER, Data.TaskType.RECOVER, Data.TaskType.RECOVER, Data.TaskType.TAG, Data.TaskType.TAG, Data.TaskType.TAG,
+            Data.TaskType.RECOVER, Data.TaskType.RECOVER, Data.TaskType.RECOVER, Data.TaskType.TAG, Data.TaskType.TAG, Data.TaskType.TAG
+         };
         
         //this should load the UI elements relevant to the goal, but not necessarily show them yet
         //unless the current tablet mode matches...
@@ -119,6 +138,10 @@ namespace Pennycook.Tablet {
                                         } else {
                                             s.UIElements[j].Check.SetAlpha(1);
                                         }
+
+                                        //could do a bool here in the SubGoals for "Assigned"...
+
+
                                         //s.UIElements[j].Circle.Color = Goals.DayGoals[i].SubGoals[j].Color;
                                         if(Goals.DayGoals[i].Type == TabletGoalType.Capture) {
                                             Goals.RelevantCaptureIds.Add(Goals.DayGoals[i].SubGoals[j].Id);
@@ -173,6 +196,15 @@ namespace Pennycook.Tablet {
             return false;
         }
 
+        static private int IsTagTask(StringHash32 id) {
+            for(int i = 0; i < NUM_TAG_TASKS; ++i) {
+                if(TagLoggingTasks[i] == id) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         [LeafMember("CompleteGoal")]
         static private bool LeafCompleteGoal(StringHash32 id) {
             TabletToolState currTool = Find.State<TabletToolState>();
@@ -183,6 +215,13 @@ namespace Pennycook.Tablet {
                             Goals.DayGoals[i].SubGoals[j].Completed = true;
                             if (Goals.SidePanels[0].UIElements[j].Check != null) {
                                 Goals.SidePanels[0].UIElements[j].Check.SetAlpha(1);
+                            }
+                            
+                            int idx = IsTagTask(id);
+                            if(idx != -1) {
+                                VRGame.Events.Dispatch(GameEvents.TagTaskCompleted, EvtArgs.Create(new Data.TagTaskInfo(id, TagLoggingTaskTypes[idx], TagLoggingTypes[idx])));
+                            } else {
+                                VRGame.Events.Dispatch(GameEvents.MargoTaskCompleted, EvtArgs.Create(new Data.MargoTaskInfo(id, (Data.TaskType)Goals.DayGoals[i].Type)));
                             }
                             return true;
                         }
@@ -199,7 +238,13 @@ namespace Pennycook.Tablet {
             for(int i = 0; i < Goals.DayGoals.Length; ++i) {
                 if(Goals.DayGoals[i].ID == id) {
                     Goals.DayGoals[i].Completed = true;
-
+                    int idx = IsTagTask(id);
+                    if(idx != -1) {
+                        VRGame.Events.Dispatch(GameEvents.TagTaskCompleted, EvtArgs.Create(new Data.TagTaskInfo(id, TagLoggingTaskTypes[idx], TagLoggingTypes[idx])));
+                    } else {
+                        VRGame.Events.Dispatch(GameEvents.MargoTaskCompleted, EvtArgs.Create(new Data.MargoTaskInfo(id, (Data.TaskType)Goals.DayGoals[i].Type)));
+                    }
+                    
                     TabletGoalState goals = Find.State<TabletGoalState>();
                     TabletUtility.LoadGoals(currTool.CurrentToolIndex);
                     return true;
@@ -215,6 +260,12 @@ namespace Pennycook.Tablet {
             for(int i = 0; i < Goals.DayGoals.Length; ++i) {
                 if(Goals.DayGoals[i].ID == id) {
                     Goals.DayGoals[i].Current = true;
+                    int idx = IsTagTask(id);
+                    if(idx != -1) {
+                        VRGame.Events.Dispatch(GameEvents.TagTaskAssigned, EvtArgs.Create(new Data.TagTaskInfo(id, TagLoggingTaskTypes[idx], TagLoggingTypes[idx])));
+                    } else {
+                        VRGame.Events.Dispatch(GameEvents.MargoTaskAssigned, EvtArgs.Create(new Data.MargoTaskInfo(Goals.DayGoals[i].ID, (Data.TaskType)Goals.DayGoals[i].Type)));
+                    }
                     return true;
                 }
             }

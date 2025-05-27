@@ -142,6 +142,8 @@ namespace Pennycook.Tablet {
             InteractMode = TabletToolInteractionMode.Press,
             Interact = (h, c, t) => {
                 PhotoUtility.TakePhoto(h, t);
+                TabletControlState ctrl = Find.State<TabletControlState>();
+                VRGame.Events.Dispatch(GameEvents.TriggerPhoto, EvtArgs.Create(new Data.CaptureInfo(ctrl.gameObject.transform.position, ctrl.gameObject.transform.rotation)));
             },
 
             OnOpen = (c) => {
@@ -212,6 +214,7 @@ namespace Pennycook.Tablet {
                 PlayerMovementState moveState = Find.State<PlayerMovementState>();
                 if (PlayerMovementUtility.WarpTo(moveState, h.CachedWarp)) {
                     TabletUtility.PlayHaptics(0.3f, 0.05f);
+                    VRGame.Events.Dispatch(GameEvents.PlayerWarpWithMargo, EvtArgs.Ref(h.CachedWarp));
                     //TabletUtility.PlaySfx("Tablet.Warp");
                 }
             },

@@ -24,7 +24,7 @@ namespace Pennycook {
             "SCAN", "WARP", "PHOTO", "COUNT"
         };
         public static readonly string[] TaskTypes = new string[] {
-            "SCAN", "COUNT", "CAPTURE", "TAG", "RECOVER"
+            "SCAN", "COUNT", "PHOTO", "TAG", "RECOVER"
         };
 
         public static readonly string[] TagTypes = new string[] {
@@ -98,6 +98,34 @@ namespace Pennycook {
         static public readonly StringHash32 PlayerRotate = "player:rotate";
 
         static public readonly StringHash32 PlayerBadNavigate = "player:badnavigate";
+
+        static public readonly StringHash32 ObjectGrabbed = "player:grab-object";
+        static public readonly StringHash32 ObjectReleased = "player:release-object";
+
+        static public readonly StringHash32 MargoModeSwitch = "tablet:change-mode";
+        static public readonly StringHash32 PlayerWarpWithMargo = "player:warp-with-margo";
+        static public readonly StringHash32 PlayerWarpWalking = "player:warp-walking";
+        static public readonly StringHash32 TentDoorOpened = "player:tent-door-opened";
+        static public readonly StringHash32 TentDoorClosed = "player:tent-door-closed";
+        static public readonly StringHash32 PenguinCounted = "margo:counted";
+
+        static public readonly StringHash32 MargoTaskAssigned = "margo:task-assigned";
+        static public readonly StringHash32 MargoTaskCompleted = "margo:task-completed";
+
+        static public readonly StringHash32 TagTaskAssigned = "player:task-assigned";
+        static public readonly StringHash32 TagTaskCompleted = "player:task-completed";
+
+        static public readonly StringHash32 TutorialShown = "tablet:tutorial-shown";
+        static public readonly StringHash32 TutorialHidden = "tablet:tutorial-hidden";
+
+        static public readonly StringHash32 TriggerScanned = "tablet:trigger-scan";
+        static public readonly StringHash32 ObjectScanned = "tablet:object-scan";
+
+        static public readonly StringHash32 TriggerPhoto = "tablet:trigger-photo";
+        static public readonly StringHash32 PhotoBehavior = "tablet:photo-behavior";
+        static public readonly StringHash32 CaseTransform = "case:transform";
+        
+        static public readonly StringHash32 MargoSync = "tablet:sync";
     }
 
     static public class GameTriggers {

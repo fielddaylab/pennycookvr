@@ -31,6 +31,7 @@ namespace Pennycook {
             if (collided > 0) {
                 TabletWarpPoint warpPoint = m_StateB.CurrentWarp;
                 if (warpPoint) {
+                    VRGame.Events.Dispatch(GameEvents.PlayerBadNavigate, EvtArgs.Create(new Data.BadNavigateInfo(warpPoint.transform.position, m_StateA.BodyCollider.transform.rotation)));
                     PlayerMovementUtility.WarpTo(m_StateB, warpPoint);
                 }
                 Array.Clear(s_ColliderWorkList, 0, collided);

@@ -26,6 +26,7 @@ namespace Pennycook.Tablet {
                     maxTools = maxTools - 1;
                 }
                 int newIdx = (m_StateA.CurrentToolIndex + maxTools + shift) % maxTools;
+                VRGame.Events.Dispatch(GameEvents.MargoModeSwitch, EvtArgs.Create(newIdx));
                 TabletUtility.SetTool(m_StateA, newIdx, true);
             }
         }

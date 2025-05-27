@@ -127,6 +127,8 @@ namespace Pennycook {
 					
 					Sfx.Play(ButtonSound, transform);
 					
+					VRGame.Events.Dispatch(GameEvents.MargoSync);
+
 					//haptics...
 					//todo - optimize
 					/*VRInputState data = Find.State<VRInputState>();

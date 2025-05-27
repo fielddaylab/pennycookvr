@@ -192,7 +192,8 @@ namespace Pennycook.Tablet {
             LeafThreadHandle thread = default;
 
             using (var t = TempVarTable.Alloc()) {
-                t.ActorInfo(ScriptUtility.Actor(highlightable));
+                ScriptActor a = ScriptUtility.Actor(highlightable);
+                t.ActorInfo(a);
                 t.Set("behaviorId", cap ? cap.CaptureId : StringHash32.Null);
                 t.Set("isBadFraming", isBadFraming);
                 t.Set("wasPerformingBehavior", wasPerformingBehavior);
@@ -205,6 +206,15 @@ namespace Pennycook.Tablet {
                     thread = ScriptUtility.Trigger(GameTriggers.TabletNewBehaviorInstanceCaptured, t);
                 } else {
                     ScriptUtility.Invoke(GameTriggers.TabletNewBehaviorInstanceCaptured, t);
+                }
+
+                if(wasPerformingBehavior) {
+                    PlayerProgressState state = Find.State<PlayerProgressState>();
+                    if(state.DayIndex == 1) {
+                        VRGame.Events.Dispatch(GameEvents.PhotoBehavior, EvtArgs.Create(new Data.BehaviorCaptureInfo(a.Id, Data.BehaviorType.MATING_DANCE)));
+                    } else if (state.DayIndex == 2) {
+                        VRGame.Events.Dispatch(GameEvents.PhotoBehavior, EvtArgs.Create(new Data.BehaviorCaptureInfo(a.Id, Data.BehaviorType.REGURGITATION)));
+                    }
                 }
 
                 if (!thread.IsRunning()) {

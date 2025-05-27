@@ -80,6 +80,10 @@ namespace FieldDay.VRHands {
                     if (!GrabUtility.TryFindClosestSnapNode(closest, gripCenter, gripRotation, grabber.Chirality, out snapIndex) && closest.MustGrabAtSnap) {
                         closest = null;
                     }
+                    if(closest) {
+                        //log what was grabbed...
+                        //VRGame.Events.Dispatch(GameEvents.ObjectGrabbed, EvtArgs.Create(new Data.ObjectGrabInfo()))
+                    }
                 }
             }
             Array.Clear(OverlapWorkArray, 0, overlapCount);

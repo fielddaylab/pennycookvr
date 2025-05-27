@@ -87,16 +87,20 @@ namespace Pennycook {
                     Vector3 flatRoot = root;
                     flatRoot.y = warpPoint.Case.transform.position.y;
                     if(Vector3.Distance(flatRoot, warpPoint.Case.transform.position) > 4f) {
+                         Vector3 oldPos = warpPoint.Case.transform.position;
                         warpPoint.Case.transform.position += translation;
 						warpPoint.Case.transform.rotation = Quaternion.LookRotation(caseToPlayer);
+                        VRGame.Events.Dispatch(GameEvents.CaseTransform, EvtArgs.Create(new Data.CaseTransformInfo(warpPoint.Case.transform.position, oldPos)));
                     }
                 } else {
                      if(Vector3.Dot(caseToPlayer, translation) > 0f) {
                         Vector3 flatRoot = root;
                         flatRoot.y = warpPoint.Case.transform.position.y;
                         if(Vector3.Distance(flatRoot, warpPoint.Case.transform.position) > 4f) {
+                            Vector3 oldPos = warpPoint.Case.transform.position;
                             warpPoint.Case.transform.position += translation;
 							warpPoint.Case.transform.rotation = Quaternion.LookRotation(caseToPlayer);
+                            VRGame.Events.Dispatch(GameEvents.CaseTransform, EvtArgs.Create(new Data.CaseTransformInfo(warpPoint.Case.transform.position, oldPos)));
                         }
                      }
                 }
