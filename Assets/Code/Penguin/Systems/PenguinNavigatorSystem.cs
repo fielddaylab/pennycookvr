@@ -101,17 +101,19 @@ namespace Pennycook {
         static private void HandleOutOfNodes(PenguinNavigator nav, float deltaTime) {
             if(nav.Brain.Relationships != null && PenguinUtility.IsPursuing(nav.Brain.Relationships)) {
                 //this turns the penguin towards their Mate after they've reached a spot in front of them.
-                Vector3 currentForward = nav.RotationRoot.forward;
-                Vector3 flattenedCurrentForward = currentForward;
-                flattenedCurrentForward.y = 0;
-                Vector3 mateChickForward = PenguinUtility.GetFacingDirection(nav.Brain.Relationships);
-                mateChickForward.y = 0;
-                Vector3 newFlatForward = Vector3.RotateTowards(flattenedCurrentForward, mateChickForward, deltaTime * nav.TurningSpeed * Mathf.Deg2Rad, 1);
-                nav.RotationRoot.forward = newFlatForward;
-                float angleDelta = Vector3.Dot(newFlatForward, mateChickForward);
-                //Debug.Log("ANGLE: " + angleDelta);
-                if (angleDelta > 0.97f) {
-                    StopPathing(nav);
+                if(PenguinUtility.IsClose(nav.Brain.Relationships)) {
+                    Vector3 currentForward = nav.RotationRoot.forward;
+                    Vector3 flattenedCurrentForward = currentForward;
+                    flattenedCurrentForward.y = 0;
+                    Vector3 mateChickForward = PenguinUtility.GetFacingDirection(nav.Brain.Relationships);
+                    mateChickForward.y = 0;
+                    Vector3 newFlatForward = Vector3.RotateTowards(flattenedCurrentForward, mateChickForward, deltaTime * nav.TurningSpeed * Mathf.Deg2Rad, 1);
+                    nav.RotationRoot.forward = newFlatForward;
+                    float angleDelta = Vector3.Dot(newFlatForward, mateChickForward);
+                    //Debug.Log("ANGLE: " + angleDelta);
+                    if (angleDelta > 0.97f) {
+                        StopPathing(nav);
+                    }
                 }
             } else {
                 StopPathing(nav);
