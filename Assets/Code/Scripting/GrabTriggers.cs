@@ -23,19 +23,24 @@ namespace Pennycook {
         }
 
         static private void OnGrabbed(Grabbable grabbable, Grabber grabber, int snapIndex) {
-            using(var table = TempVarTable.Alloc()) {
+            using (var table = TempVarTable.Alloc())
+            {
                 table.ActorInfo(ScriptUtility.Actor(grabbable));
-                table.Set("hand", ChiralityToSymbol[(int) grabber.Chirality]);
+                table.Set("hand", ChiralityToSymbol[(int)grabber.Chirality]);
                 table.Set("bothHands", grabbable.CurrentGrabberCount >= 2);
                 ScriptUtility.Trigger(ObjectGrabbed, table);
+
+                VRGame.Events.Dispatch(GameEvents.ObjectGrabbed, EvtArgs.Create(new Pennycook.Data.GrababbleInfo(grabbable.gameObject.name, grabbable.Type)));
             }
         }
 
         static private void OnDropped(Grabbable grabbable, Grabber grabber, int snapIndex) {
             if (grabbable.CurrentGrabberCount == 0) {
-                using (var table = TempVarTable.Alloc()) {
+                using (var table = TempVarTable.Alloc())
+                {
                     table.ActorInfo(ScriptUtility.Actor(grabbable));
                     ScriptUtility.Trigger(ObjectDropped, table);
+                    VRGame.Events.Dispatch(GameEvents.ObjectReleased, EvtArgs.Create(new Pennycook.Data.GrababbleInfo(grabbable.gameObject.name, grabbable.Type)));
                 }
             }
         }

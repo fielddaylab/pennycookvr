@@ -27,6 +27,8 @@ namespace FieldDay.VRHands {
         public bool TapToRelease = false;
         public GrabbablePoseAnim GrabberAnim;
 
+        public Pennycook.Data.GrabbableType Type;
+
         [Header("Snap Node Data -- DO NOT EDIT")]
         [HideInInspector] public GrabbableSnapNodeData[] SnapNodes;
         [HideInInspector] public OffsetLengthU16 BothSnapNodeRange;

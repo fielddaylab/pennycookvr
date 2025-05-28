@@ -5,6 +5,7 @@ using FieldDay.Physics;
 using FieldDay.Sockets;
 using FieldDay.Systems;
 using UnityEngine;
+using Pennycook;
 
 namespace FieldDay.VRHands {
     [SysUpdate(GameLoopPhaseMask.FixedUpdate | GameLoopPhaseMask.LateFixedUpdate, 500)]
@@ -79,10 +80,6 @@ namespace FieldDay.VRHands {
                 if (closest) {
                     if (!GrabUtility.TryFindClosestSnapNode(closest, gripCenter, gripRotation, grabber.Chirality, out snapIndex) && closest.MustGrabAtSnap) {
                         closest = null;
-                    }
-                    if(closest) {
-                        //log what was grabbed...
-                        //VRGame.Events.Dispatch(GameEvents.ObjectGrabbed, EvtArgs.Create(new Data.ObjectGrabInfo()))
                     }
                 }
             }
