@@ -212,3 +212,9 @@ $call PenguinCount->ActivateCount(12)
 
 $call FadeOut(10.0)
 $call Wait(10)
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call FadeIn(3.0)
+//show and scroll credits...
+$call Wait(10)
+$call FadeOut(5.0)
+$call LoadNextDay()

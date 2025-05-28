@@ -51,6 +51,7 @@ $call SetWarpActive(WarpBluff, true)
 {@Player}   Step two: Report to Margo, penguin expert and team leader.    $[Day1/Tent/Player_5]
 
 $call Tutorial1->Activate()
+$call Tutorial1->SetTutorial(true)
 $call LeftController->Activate()
 $call RightController->Activate()
 
@@ -73,6 +74,7 @@ $endwhile
 
 $set chapter:hasTalkedToMargo = true
 $call MargoFace->Activate()
+$call Tutorial1->SetTutorial(false)
 $call Tutorial1->Deactivate()
 $call LeftController->Deactivate()
 $call RightController->Deactivate()
@@ -82,6 +84,7 @@ $call MargoHint->StopFX()
 $call Wait(1)
 
 $call Tutorial2->Activate()
+$call Tutorial2->SetTutorial(true)
 
 {@Margo}    Oh, hiya! Welcome to the South Pole, kid!   $[Day1/Tent/Margo_1]
 {@Player}   Oh, uh… I’m not a kid. I’m the new junior researcher.  $[Day1/Tent/Player_7]
@@ -193,8 +196,10 @@ $if local:toolId == "Move", chapter:needWarp == true
 $set chapter:waitingForAction = true
 $set chapter:isCountMode = false
 $set chapter:needWarp = false
+$call Tutorial2->SetTutorial(false)
 $call Tutorial2->Deactivate()
 $call Tutorial3->Activate()
+$call Tutorial3->SetTutorial(true)
 $call XButton->SetMaterial(1)
 $call AButton->SetMaterial(1)
 $call RightControllerTrigger->SetMaterial(0)
@@ -207,6 +212,7 @@ $else
 $set chapter:waitingForAction = false
 $set chapter:isCountMode = true
 $if chapter:needCount == true
+$call Tutorial2->SetTutorial(false)
 $call Tutorial2->Deactivate()
 $set chapter:needCount = false
 {@Margo} Great! Now move me around so I can get a good look at all the penguins. $[Day1/Triggered/margo_move_me]
@@ -226,8 +232,10 @@ $set chapter:needWarp = false
 $set chapter:needCount = true
 $set chapter:warpedToBluff = true
 
+$call Tutorial3->SetTutorial(false)
 $call Tutorial3->Deactivate()
 $call Tutorial2->Activate()
+$call Tutorial2->SetTutorial(true)
 $call LeftController->Deactivate()
 $call RightController->Deactivate()
 
@@ -255,6 +263,7 @@ $goto Day1.Tutorial4Loop
 @interrupt
 @once
 
+$call Tutorial2->SetTutorial(false)
 $call Tutorial2->Deactivate()
 $call SetWarpGroupActive(Rookery, true)
 
@@ -269,6 +278,7 @@ $set chapter:pressWarp = true
 $set chapter:needWarpToRookery = true
 
 $call Tutorial5->Activate()
+$call Tutorial5->SetTutorial(true)
 $goto Day1.Tutorial5Loop
 
 :: WarpedToRookery
@@ -284,6 +294,8 @@ $set chapter:needWarpToRookery = false
 
 $call Wait(1)
 
+$call Tutorial5->SetTutorial(false)
+$call Tutorial2->SetTutorial(false)
 $call Tutorial5->Deactivate()
 $call Tutorial2->Deactivate()
 
@@ -390,12 +402,15 @@ $call MargoDockParticles->PlayFX()
 {@Margo}    Okay, let's have a look at that data!  $[Day1/Tent/1tm14]
 {@Margo}    Dock me in the port by the computer over yonder.   $[Day1/Tent/1tm15]
 
+
 $call Tutorial4->Activate()
+$call Tutorial4->SetTutorial(true)
 
 $while !IsSocketedBy(DeskDock, Margo)
 $call Wait(0.5)
 $endwhile
 
+$call Tutorial4->SetTutorial(false)
 $call Tutorial4->Deactivate()
 
 {@Player}   There ya go. Safe and sound.   $[Day1/Tent/1ts01]
