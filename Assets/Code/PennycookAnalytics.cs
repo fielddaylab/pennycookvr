@@ -372,9 +372,9 @@ namespace Pennycook.Data {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
 
-            //if(RunMode.Current != RunMode.ApplicationRunMode.Device) {
-            _loggingEnabled = false;
-            //}
+            if(RunMode.Current != RunMode.ApplicationRunMode.Device) {
+                _loggingEnabled = false;
+            }
 
             if (!string.IsNullOrEmpty(_firebase.ApiKey))
             {
@@ -580,7 +580,8 @@ namespace Pennycook.Data {
 
         void SetGameState()
         {
-            XRUserRig player = Find.State<XRUserRig>(); //double check use of XRUserRig here...
+            PlayerRig player = Find.State<PlayerRig>();
+
             PlayerProgressState state = Find.State<PlayerProgressState>();
             PlayerMovementState moveState = Find.State<PlayerMovementState>();
 
@@ -591,7 +592,7 @@ namespace Pennycook.Data {
                 _ogdLog.GameStateParam("day", state.DayIndex + 1);
                 _ogdLog.GameStateParam("location", PlayerMovementUtility.IsInside(Find.State<PlayerMovementState>()) ? "INSIDE" : "OUTSIDE");
 
-                LogGazeGameState(player.Head.transform.position, player.Head.transform.rotation);
+                LogGazeGameState(player.HeadRoot.transform.position, player.HeadLook.transform.rotation);
 
                 Tablet.TabletToolState t = Find.State<Tablet.TabletToolState>();
                 if (t != null)
