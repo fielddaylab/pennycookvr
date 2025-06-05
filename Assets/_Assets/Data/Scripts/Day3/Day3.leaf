@@ -6,11 +6,11 @@ $set chapter:scanCount = 0
 $set chapter:finishedScan = false
 $set chapter:dataTrackersStarted = false
 $call ClearGoals()
+$set chapter:cv = GetCulturalVersion(false)
 
 :: StartGame
 @trigger    SceneReady
 @who        Player
-@once
 
 $call LeftController->Deactivate()
 $call RightController->Deactivate()
@@ -30,6 +30,16 @@ $call Terrain3->SetMaterial(2);
 $call Screen->SetEnabled(false)
 $call Penny->LoopToGate()
 $call PennycookSurvey->Deactivate()
+
+$if chapter:cv == 1
+$call NonCulturalAssets->Deactivate()
+$call MexicanCulturalAssets->Activate()
+$call Mex3->Activate()
+$elseif chapter:cv == 2
+$call NonCulturalAssets->Deactivate()
+$call MidAmericanCulturalAssets->Activate()
+$call Mid3->Activate()
+$endif
 
 $call DayBegin(3)
 $call FadeIn(6.0)

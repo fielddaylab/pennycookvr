@@ -6,11 +6,11 @@
 $set chapter:legCount = 0
 $set chapter:legTrackersStarted = false
 $call ClearGoals()
+$set chapter:cv = GetCulturalVersion(false)
 
 :: StartGame
 @trigger    SceneReady
 @who        Player
-@once
 
 $call LeftController->Deactivate()
 $call RightController->Deactivate()
@@ -31,6 +31,16 @@ $call Terrain2->SetMaterial(4);
 $call Terrain3->SetMaterial(4);
 $call Penny->LoopToGate()
 $call PennycookSurvey->ShowSurvey(2, 4)
+
+$if chapter:cv == 1
+$call NonCulturalAssets->Deactivate()
+$call MexicanCulturalAssets->Activate()
+$call Mex5->Activate()
+$elseif chapter:cv == 2
+$call NonCulturalAssets->Deactivate()
+$call MidAmericanCulturalAssets->Activate()
+$call Mid5->Activate()
+$endif
 
 $call DayBegin(5)
 $call FadeIn(6.0)

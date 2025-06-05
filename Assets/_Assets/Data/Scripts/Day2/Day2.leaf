@@ -7,11 +7,11 @@ $set chapter:finishedAllObservations = false
 $set chapter:finishedObservations = false
 $set chapter:trackersStarted = false
 $call ClearGoals()
+$set chapter:cv = GetCulturalVersion(false)
 
 :: StartGame
 @trigger    SceneReady
 @who        Player
-@once
 
 $call LeftController->Deactivate()
 $call RightController->Deactivate()
@@ -33,6 +33,16 @@ $call Screen->SetEnabled(false)
 $call WaterAudio->SetVolume(1.0)
 $call Penny->LoopToGate()
 $call PennycookSurvey->ShowSurvey(1, 2)
+
+$if chapter:cv == 1
+$call NonCulturalAssets->Deactivate()
+$call MexicanCulturalAssets->Activate()
+$call Mex2->Activate()
+$elseif chapter:cv == 2
+$call NonCulturalAssets->Deactivate()
+$call MidAmericanCulturalAssets->Activate()
+$call Mid2->Activate()
+$endif
 
 $call DayBegin(2)
 $call FadeIn(6.0)

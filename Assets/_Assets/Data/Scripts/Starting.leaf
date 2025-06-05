@@ -2,7 +2,6 @@
 
 :: Starting
 @trigger   SceneReady
-@once
 
 $call FadeIn(4.0)
 
@@ -10,6 +9,8 @@ $call FadeIn(4.0)
 //$call uplinkButton->PlayFX()
 
 $call BigButton->SetButtonPressed(false)
+
+$set chapter:cv = GetCulturalVersion(true)
 
 $while !ButtonPressed(BigButton)
 $call Wait(0.5)
@@ -23,6 +24,7 @@ $call FadeOut(4.0)
 $call Wait(4)
 
 $call GameStart->SetDisabled(true)
+
 //$call menu->SetDisabled(true)
 
 $call LoadNextDay()

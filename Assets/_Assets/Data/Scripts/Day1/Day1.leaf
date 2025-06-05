@@ -15,11 +15,11 @@ $set chapter:waitingForAction = false
 $set chapter:warpedToBluff = false
 $set chapter:warpedToRookery = false
 $set chapter:finishedFirstObservations = false
+$set chapter:cv = GetCulturalVersion(false)
 
 :: StartGame
 @trigger    SceneReady
 @who        Player
-@once
 
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call SetAllWarpsActive(false)
@@ -36,6 +36,16 @@ $call GreenAdelie->SetInteractable(false)
 $call BlueAdelie->SetInteractable(false)
 $call PurpleAdelie->SetInteractable(false)
 $call YellowAdelie->SetInteractable(false)
+
+$if chapter:cv == 1
+$call NonCulturalAssets->Deactivate()
+$call MexicanCulturalAssets->Activate()
+$call Mex1->Activate()
+$elseif chapter:cv == 2
+$call NonCulturalAssets->Deactivate()
+$call MidAmericanCulturalAssets->Activate()
+$call Mid1->Activate()
+$endif
 
 $call DayBegin(1)
 $call FadeIn(6.0)

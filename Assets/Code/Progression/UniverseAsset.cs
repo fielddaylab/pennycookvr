@@ -36,13 +36,10 @@ namespace Pennycook {
         static private IEnumerator Leaf_LoadNextDay([BindThread] ScriptThread thread) {
             var state = Find.State<PlayerProgressState>();
             VRGame.Events.Dispatch(GameEvents.DayCompleted, state.DayIndex);
-            if (state.DayIndex + 1 == 5)
-            {
+            if (state.DayIndex + 1 == 5) {
                 state.DayIndex = 0;
                 return Leaf_LoadDay(thread, state.DayIndex);
-            }
-            else
-            {
+            } else {
                 return Leaf_LoadDay(thread, state.DayIndex + 1);
             }
         }
@@ -53,6 +50,16 @@ namespace Pennycook {
             if(pa) {
                 pa.LogDayBegin(dayIndex);
             }
+        }
+
+        [LeafMember("GetCulturalVersion")]
+        static public int GetCulturalVersion(bool forceReRandom) {
+            PlayerProgressState pps = Find.State<PlayerProgressState>();
+            if(pps.CulturalVersion == -1 || forceReRandom) {
+                pps.CulturalVersion = (int)Random.Range(0,3);
+                //Debug.Log("Cultural Version: " + pps.CulturalVersion);
+            }
+            return pps.CulturalVersion;
         }
 
         static public IEnumerator LoadDay(int dayIndex) {
