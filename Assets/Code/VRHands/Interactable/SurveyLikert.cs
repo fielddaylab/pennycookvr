@@ -35,6 +35,7 @@ namespace Pennycook {
 
 		public void SetCustomResponse(string response, int index) {
 			if(ToggleGroup) {
+				ToggleGroup.CurrentPrompt = QuestionText.text;
 				ToggleGroup.SetResponseText(response, index);
 			}
 		}

@@ -397,6 +397,12 @@ namespace Pennycook.Data {
 
         public string GetHardwareID() { return m_HardwareId; }
 
+        public void LogSurvey(StringBuilder s) {
+            if (_loggingEnabled) {
+                _ogdLog.Log("survey_submitted", s);
+            }
+        }
+
         private void LogObjectGrabbed(GrababbleInfo g)
         {
             if (_loggingEnabled)

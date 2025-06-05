@@ -14,10 +14,15 @@ namespace Pennycook {
     public class SurveyToggleButtonGroup : BatchedComponent {
 		
         #region Inspector
+
 		[SerializeField]
 		LoadSurvey ParentSurvey;
+		
 		public List<SurveyToggleButton> ToggleButtons = new List<SurveyToggleButton>();
 		
+		[NonSerialized] public string CurrentPrompt;
+		[NonSerialized] public string CurrentResponse;
+
         #endregion // Inspector
 		
 		private void Awake() {
@@ -41,6 +46,7 @@ namespace Pennycook {
 				}
 			}
 
+			ParentSurvey.TryAddResponse(CurrentPrompt, pressedButton.ResponseText.text);
 			ParentSurvey.ActivateNext();
 		}
 
