@@ -1,0 +1,28 @@
+#basePath   Starting
+
+:: Starting
+@trigger   SceneReady
+@once
+
+$call FadeIn(4.0)
+
+//$call uplinkButton->ShowHighlight()
+//$call uplinkButton->PlayFX()
+
+$call BigButton->SetButtonPressed(false)
+
+$while !ButtonPressed(BigButton)
+$call Wait(0.5)
+$endwhile
+
+//$call uplinkButton->StopHighlight()
+//$call uplinkButton->StopFX()
+$call BigButton->SetButtonPressed(false)
+
+$call FadeOut(4.0)
+$call Wait(4)
+
+$call GameStart->SetDisabled(true)
+//$call menu->SetDisabled(true)
+
+$call LoadNextDay()

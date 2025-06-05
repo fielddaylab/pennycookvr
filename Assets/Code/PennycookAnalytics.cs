@@ -386,6 +386,8 @@ namespace Pennycook.Data {
 
         void OnDestroy()
         {
+            VRGame.Events?.DeregisterAllForContext(this);
+
             if (_ogdLog != null)
             {
                 _ogdLog.Dispose();

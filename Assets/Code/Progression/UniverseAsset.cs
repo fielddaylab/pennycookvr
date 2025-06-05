@@ -106,6 +106,10 @@ namespace Pennycook {
 
         static public DayConfigAsset GetConfigForDay(int dayIndex) {
             UniverseAsset univ = Find.GlobalAsset<UniverseAsset>();
+            if (dayIndex >= univ.Days.Length)
+            {
+                dayIndex = 0;
+            }
             StringHash32 configId = univ.Days[dayIndex];
             return Find.NamedAsset<DayConfigAsset>(configId);
         }
@@ -118,10 +122,11 @@ namespace Pennycook {
                 case PlayerProgressMode.Gameplay:
                 default:
                     if (state.DayIndex >= univ.Days.Length) {
-                        configId = univ.Ending;
-                    } else {
-                        configId = univ.Days[state.DayIndex];
+                        state.DayIndex = 0;
                     }
+
+                    configId = univ.Days[state.DayIndex];
+                    
                     break;
                 case PlayerProgressMode.Title: {
                     configId = univ.Title;

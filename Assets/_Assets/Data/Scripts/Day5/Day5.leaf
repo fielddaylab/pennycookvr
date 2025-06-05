@@ -215,6 +215,8 @@ $call Wait(10)
 $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call FadeIn(3.0)
 //show and scroll credits...
+$call Credits->Activate()
+$call Credits->Scroll(0.0002)
 $call Wait(10)
 $call FadeOut(5.0)
 $call LoadNextDay()
