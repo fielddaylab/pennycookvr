@@ -102,7 +102,7 @@ public class PennyAnimation : ScriptActorComponent
 
 				WalkingAway = !WalkingAway;
 				
-				yield return 2f;
+				yield return 1f;
 			}
 		}
 		
@@ -206,6 +206,7 @@ public class PennyAnimation : ScriptActorComponent
 			_animator.SetTrigger("stand");
 			_animator.SetBool("tinkering", false);
 			_animator.SetBool("kneeling", false);
+			yield return 3f;
 			_currentAnimRoutine.Replace(TurnAround());
 		}
 	}
@@ -213,7 +214,7 @@ public class PennyAnimation : ScriptActorComponent
 	public IEnumerator WalkToStart()
 	{
 		yield return null;
-		_currentAnimRoutine.Replace(Walk(FarPoint, 3f));
+		_currentAnimRoutine.Replace(Walk(FarPoint, 5f));
 	}
 	
 	/*public void SetStartingLocation(int index)
@@ -258,7 +259,7 @@ public class PennyAnimation : ScriptActorComponent
 	{
 		if(_animator != null)
 		{
-			_currentAnimRoutine.Replace(Walk(NearGate, 3f));
+			_currentAnimRoutine.Replace(Walk(NearGate, 5f));
 		}
 	}
 
