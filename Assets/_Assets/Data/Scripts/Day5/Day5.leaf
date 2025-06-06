@@ -176,6 +176,7 @@ $endif
 :: LegTrackersComplete
 @trigger LegTrackersComplete
 @who	Player
+@once
 
 $call CompleteMainGoal("place_leg_trackers")
 
@@ -201,7 +202,7 @@ $call SetWarpGroupActive(Rookery, false)
 
 {@Margo}	Almost done. Your last task of the season is to do one more scan of the chicks and adults in the Rookery.	$[Day5/Bluff/5bm03]
 
-$call PenguinCount->ActivateCount(12)
+$call PenguinCount->ActivateCount(18)
 
 :: ScannedFromBluff
 @trigger	TabletCounted
@@ -226,7 +227,9 @@ $call PlaceAndRotatePlayerAt(WarpDesk, true)
 $call FadeIn(3.0)
 //show and scroll credits...
 $call Credits->Activate()
-$call Credits->Scroll(0.0002)
-$call Wait(10)
+$call Wait(3)
+$call Credits->Scroll(0.0004)
+$call Wait(50)
 $call FadeOut(5.0)
+$call Wait(5)
 $call LoadNextDay()
