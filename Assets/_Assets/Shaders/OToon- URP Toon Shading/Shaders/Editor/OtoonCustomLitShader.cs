@@ -551,7 +551,7 @@ class OToonCustomLitShader : StandardBaseShaderGUI
             //Environment Reflection
             DrawCustomAdvancedOptions(material);
             //OToon has no GPU Instancing Field
-            //DrawAdvancedOptions(material);
+            DrawAdvancedOptions(material);
             OToonDrawQueueOffsetField();
             EditorGUILayout.Space();
         }
