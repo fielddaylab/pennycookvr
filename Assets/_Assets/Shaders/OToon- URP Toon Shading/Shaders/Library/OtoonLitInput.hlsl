@@ -55,14 +55,14 @@ CBUFFER_START(UnityPerMaterial)
     //half _EnabledHairSpec;
     //float4 _SpherizeNormalOrigin;
     //half _SpherizeNormalEnabled;
-    half _HatchingEnabled;
+    /*half _HatchingEnabled;
     half _HatchingDensity;
     half _HatchingRotation;
     half _HatchingDrawStrength;
     half _HatchingSmoothness;
     half _HatchingUpperBound;
     half _HatchingDiffuseOffset;
-    half4 _HatchingColor;
+    half4 _HatchingColor;*/
     half _UseRampColor;
     half _FlattenGI;
 
@@ -190,19 +190,19 @@ void InitializeOtoonPBRSurfaceData(out OtoonPBRSurfaceData otoonSurfaceData)
     //otoonSurfaceData.outlineWidth = _OutlineWidth;
     otoonSurfaceData.shadowColor = _ShadowColor;
     otoonSurfaceData.specShadowStrength = _SpecShadowStrength;
-    otoonSurfaceData.specClipStrength = _SpecularClipStrength;
-    otoonSurfaceData.specClipMaskScale = _SpecClipMaskScale;
+    //otoonSurfaceData.specClipStrength = _SpecularClipStrength;
+    //otoonSurfaceData.specClipMaskScale = _SpecClipMaskScale;
     //otoonSurfaceData.hairSpecColor = _HairSpecColor;
     otoonSurfaceData.originPosWS = 0;
     otoonSurfaceData.posWS = 0;
     otoonSurfaceData.bitangent = 0;
-    otoonSurfaceData.hatchingEnabled = _HatchingEnabled;
+    /*otoonSurfaceData.hatchingEnabled = _HatchingEnabled;
     otoonSurfaceData.hatchingDensity = _HatchingDensity;
     otoonSurfaceData.hatchingRotation = _HatchingRotation;
     otoonSurfaceData.hatchingDrawStrength = _HatchingDrawStrength;
     otoonSurfaceData.hatchingSmoothness = _HatchingSmoothness;
     otoonSurfaceData.hatchingDiffuseOffset = _HatchingDiffuseOffset;
-    otoonSurfaceData.hatchingColor = _HatchingColor;
+    otoonSurfaceData.hatchingColor = _HatchingColor;*/
     //otoonSurfaceData.frontDirectionWS = 0;
     //otoonSurfaceData.rightDirectionWS = 0;
     //otoonSurfaceData.faceShadowMapUV = 0;

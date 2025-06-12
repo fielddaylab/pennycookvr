@@ -91,7 +91,7 @@ float DotShapeValue(float2 uv, float2 scale, float2 offset, float sizeAdjust, fl
 half PrceduralCrossHatching(float2 uv, OtoonPBRSurfaceData surface, half ndotl)
 {
     half hatching = 1.0;
-    half p = 1.0;
+    /*half p = 1.0;
     half realNdotL = 1 - ndotl;
     float2 uv1 = Rotate(uv.xy, float2(0.5, 0.5), surface.hatchingRotation);
     float2 uv2 = Rotate(uv1.xy, float2(0.5, 0.5), 90);
@@ -112,7 +112,7 @@ half PrceduralCrossHatching(float2 uv, OtoonPBRSurfaceData surface, half ndotl)
         {
             break;
         }
-    }
+    }*/
     return hatching;
 }
 
@@ -309,9 +309,9 @@ half clearCoatMask, bool specularHighlightsOff, float3 positionWS, float2 uv, fl
         [branch] if (!specularHighlightsOff)
         {
             spec = brdfData.specular * DirectBRDFToonSpecular(brdfData, normalWS, light.direction, viewDirectionWS, otoonSurface);
-            half specMask = SAMPLE_TEXTURE2D(_SpecularClipMask, sampler_SpecularClipMask, screenUV * otoonSurface.specClipMaskScale).r;
-            half delta = fwidth(specMask);
-            spec *= smoothstep(otoonSurface.specClipStrength - delta, otoonSurface.specClipStrength + delta, specMask);
+            //half specMask = SAMPLE_TEXTURE2D(_SpecularClipMask, sampler_SpecularClipMask, screenUV * otoonSurface.specClipMaskScale).r;
+            //half delta = fwidth(specMask);
+            //spec *= smoothstep(otoonSurface.specClipStrength - delta, otoonSurface.specClipStrength + delta, specMask);
         }
     #endif
 
@@ -338,13 +338,13 @@ half clearCoatMask, bool specularHighlightsOff, float3 positionWS, float2 uv, fl
     }
     //HalfTone Effect
 
-    if (otoonSurface.hatchingEnabled > 0)
+    /*if (otoonSurface.hatchingEnabled > 0)
     {
         half adjustLightAttenuation = lerp(1, lightAttenuation, otoonSurface.halfToneIncludeReceivedShadow);
         half hatchingNdotl = 1 - saturate(adjustLightAttenuation * dot(normalWS, light.direction) - otoonSurface.hatchingDiffuseOffset);
         half hatching = 1 - ObjectUVHatching(uv, otoonSurface, hatchingNdotl);
         outColor = lerp(outColor, otoonSurface.hatchingColor.rgb, hatching);
-    }
+    }*/
 
     //Apply all Speculars
     outColor += lerp(spec * light.shadowAttenuation, spec, otoonSurface.specShadowStrength);
@@ -394,9 +394,9 @@ half3 normalWS, half3 viewDirectionWS, float3 positionWS, float2 uv, float2 scre
         [branch] if (!specularHighlightsOff)
         {
             spec = LightingSpecularToon(light.color, light.direction, normalWS, viewDirectionWS, specColor, otoonSurface.specularSize, otoonSurface.specularFalloff);
-            half specMask = SAMPLE_TEXTURE2D(_SpecularClipMask, sampler_SpecularClipMask, screenUV * otoonSurface.specClipMaskScale).r;
-            half delta = fwidth(specMask);
-            spec *= smoothstep(otoonSurface.specClipStrength - delta, otoonSurface.specClipStrength + delta, specMask);
+            //half specMask = SAMPLE_TEXTURE2D(_SpecularClipMask, sampler_SpecularClipMask, screenUV * otoonSurface.specClipMaskScale).r;
+            //half delta = fwidth(specMask);
+            //spec *= smoothstep(otoonSurface.specClipStrength - delta, otoonSurface.specClipStrength + delta, specMask);
         }
     #endif // _SPECULARHIGHLIGHTS_OFF
 
@@ -423,13 +423,13 @@ half3 normalWS, half3 viewDirectionWS, float3 positionWS, float2 uv, float2 scre
     }
 
     //HalfTone Effect
-    if (otoonSurface.hatchingEnabled > 0)
+    /*if (otoonSurface.hatchingEnabled > 0)
     {
         half adjustLightAttenuation = lerp(1, lightAttenuation, otoonSurface.halfToneIncludeReceivedShadow);
         half hatchingNdotl = 1 - saturate(adjustLightAttenuation * dot(normalWS, light.direction) - otoonSurface.hatchingDiffuseOffset);
         half hatching = 1 - ObjectUVHatching(uv, otoonSurface, hatchingNdotl);
         outColor = lerp(outColor, otoonSurface.hatchingColor.rgb, hatching);
-    }
+    }*/
 
 
     //Apply all Speculars

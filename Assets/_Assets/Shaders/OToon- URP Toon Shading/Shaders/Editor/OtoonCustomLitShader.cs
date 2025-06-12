@@ -409,7 +409,7 @@ class OToonCustomLitShader : StandardBaseShaderGUI
         }
 
         var queueOffset = 0; // queueOffsetRange;
-        var queueOffsetRange = 50;
+        var queueOffsetRange = 5000;
         if (material.HasProperty("_QueueOffset"))
             queueOffset = queueOffsetRange - (int)material.GetFloat("_QueueOffset");
 
@@ -572,7 +572,7 @@ class OToonCustomLitShader : StandardBaseShaderGUI
         {
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = queueOffsetProp.hasMixedValue;
-            var queue = EditorGUILayout.IntSlider(Styles.queueSlider, (int)queueOffsetProp.floatValue, -50, 50);
+            var queue = EditorGUILayout.IntSlider(Styles.queueSlider, (int)queueOffsetProp.floatValue, -5000, 5000);
             if (EditorGUI.EndChangeCheck())
                 queueOffsetProp.floatValue = queue;
             EditorGUI.showMixedValue = false;

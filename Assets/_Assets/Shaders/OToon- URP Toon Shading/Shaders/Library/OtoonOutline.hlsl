@@ -10,16 +10,16 @@ CBUFFER_START(UnityPerMaterial)
     half _BumpScale;
     half _OcclusionStrength;
     half _Surface;
-    half _DitherTexelSize;
-    half _DitherThreshold;
+    //half _DitherTexelSize;
+    //half _DitherThreshold;
     half _StepViaRampTexture;
     half _NoiseScale;
     half _NoiseStrength;
     half _ToonBlending;
     half _DiffuseStep;
     half _HalfToneUvMode;
-    half _SpecClipMaskScale;
-    half _SpecularClipStrength;
+    //half _SpecClipMaskScale;
+    //half _SpecularClipStrength;
     half _SpecularFalloff;
     half _SpecularSize;
     //half _RimPower;
@@ -47,14 +47,14 @@ CBUFFER_START(UnityPerMaterial)
     //half _EnabledHairSpec;
     //float4 _SpherizeNormalOrigin;
     //half _SpherizeNormalEnabled;
-    half _HatchingEnabled;
+    /*half _HatchingEnabled;
     half _HatchingDensity;
     half _HatchingRotation;
     half _HatchingDrawStrength;
     half _HatchingSmoothness;
     half _HatchingUpperBound;
     half _HatchingDiffuseOffset;
-    half4 _HatchingColor;
+    half4 _HatchingColor;*/
     half _UseRampColor;
     half _FlattenGI;
 

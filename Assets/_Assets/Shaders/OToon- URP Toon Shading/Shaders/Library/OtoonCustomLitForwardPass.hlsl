@@ -142,7 +142,7 @@ Varyings LitPassVertexSimple(Attributes input)
 }
 
 //from shader graph
-void UnityDither(float In, float4 ScreenPosition)
+/*void UnityDither(float In, float4 ScreenPosition)
 {
     float2 uv = ScreenPosition.xy * _ScreenParams.xy / _DitherTexelSize;
     float DITHER_THRESHOLDS[16] = {
@@ -153,14 +153,14 @@ void UnityDither(float In, float4 ScreenPosition)
     };
     uint index = (uint(uv.x) % 4) * 4 + uint(uv.y) % 4;
     clip(In - DITHER_THRESHOLDS[index]);
-}
+}*/
 
 // Used for StandardSimpleLighting shader
 half4 LitPassFragmentSimple(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
-    UnityDither(_DitherThreshold, input.screenPos / input.screenPos.w);
+    //UnityDither(_DitherThreshold, input.screenPos / input.screenPos.w);
 
     float2 uv = input.uv;
     half4 diffuseAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap));

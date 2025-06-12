@@ -28,19 +28,19 @@ struct OtoonPBRSurfaceData
     //half outlineWidth;
     half4 shadowColor;
     half specShadowStrength;
-    half specClipStrength;
-    half specClipMaskScale;
+    //half specClipStrength;
+    //half specClipMaskScale;
     //half4 hairSpecColor;
     float3 originPosWS;
     float3 posWS;
     half3 bitangent;
-    half hatchingEnabled;
+    /*half hatchingEnabled;
     half hatchingDensity;
     half hatchingRotation;
     half hatchingDrawStrength;
     half hatchingSmoothness;
     half hatchingDiffuseOffset;
-    half4 hatchingColor;
+    half4 hatchingColor;*/
     //half3 frontDirectionWS;
     //half3 rightDirectionWS;
     //float2 faceShadowMapUV;
