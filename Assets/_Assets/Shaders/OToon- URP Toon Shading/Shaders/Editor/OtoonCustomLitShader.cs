@@ -572,7 +572,7 @@ class OToonCustomLitShader : StandardBaseShaderGUI
         {
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = queueOffsetProp.hasMixedValue;
-            var queue = EditorGUILayout.IntSlider(Styles.queueSlider, (int)queueOffsetProp.floatValue, -5000, 5000);
+            var queue = EditorGUILayout.IntSlider(Styles.queueSlider, (int)queueOffsetProp.floatValue, -50, 50);
             if (EditorGUI.EndChangeCheck())
                 queueOffsetProp.floatValue = queue;
             EditorGUI.showMixedValue = false;
