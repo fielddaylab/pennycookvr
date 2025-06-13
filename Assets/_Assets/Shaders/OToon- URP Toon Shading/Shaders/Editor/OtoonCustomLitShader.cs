@@ -409,7 +409,7 @@ class OToonCustomLitShader : StandardBaseShaderGUI
         }
 
         var queueOffset = 0; // queueOffsetRange;
-        var queueOffsetRange = 5000;
+        var queueOffsetRange = 50;
         if (material.HasProperty("_QueueOffset"))
             queueOffset = queueOffsetRange - (int)material.GetFloat("_QueueOffset");
 
@@ -551,7 +551,7 @@ class OToonCustomLitShader : StandardBaseShaderGUI
             //Environment Reflection
             DrawCustomAdvancedOptions(material);
             //OToon has no GPU Instancing Field
-            DrawAdvancedOptions(material);
+            //DrawAdvancedOptions(material);
             OToonDrawQueueOffsetField();
             EditorGUILayout.Space();
         }

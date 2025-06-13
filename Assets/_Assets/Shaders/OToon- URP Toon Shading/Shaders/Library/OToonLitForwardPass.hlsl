@@ -157,26 +157,11 @@ float2 GetScreenUV(float2 clipPos, float UVscaleFactor)
     return screenUV;
 };
 
-//from shader graph
-void UnityDither(float In, float4 ScreenPosition)
-{
-    float2 uv = ScreenPosition.xy * _ScreenParams.xy / _DitherTexelSize;
-    float DITHER_THRESHOLDS[16] = {
-        1.0 / 17.0, 9.0 / 17.0, 3.0 / 17.0, 11.0 / 17.0,
-        13.0 / 17.0, 5.0 / 17.0, 15.0 / 17.0, 7.0 / 17.0,
-        4.0 / 17.0, 12.0 / 17.0, 2.0 / 17.0, 10.0 / 17.0,
-        16.0 / 17.0, 8.0 / 17.0, 14.0 / 17.0, 6.0 / 17.0
-    };
-    uint index = (uint(uv.x) % 4) * 4 + uint(uv.y) % 4;
-    clip(In - DITHER_THRESHOLDS[index]);
-}
-
 // Used in Standard (Physically Based) shader
 half4 LitPassFragment(Varyings input) : SV_Target
 {
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
-    UnityDither(_DitherThreshold, input.screenPos / input.screenPos.w);
 
     SurfaceData surfaceData;
     InitializeStandardLitSurfaceData(input.uv, surfaceData);
@@ -190,9 +175,6 @@ half4 LitPassFragment(Varyings input) : SV_Target
     otoonSurfaceData.posWS = input.positionWS;
     otoonSurfaceData.originPosWS = input.originWS;
     otoonSurfaceData.bitangent = input.bitangent;
-    //otoonSurfaceData.frontDirectionWS = input.frontDirectionWS;
-    //otoonSurfaceData.rightDirectionWS = input.rightDirectionWS;
-    //otoonSurfaceData.faceShadowMapUV = input.faceShadowUV;
 
     half4 spos = TransformWorldToHClip(input.positionWS);
     half2 clipUv = input.spos.xy / input.spos.w;
