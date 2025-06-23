@@ -179,7 +179,7 @@ void ToonShading(LightStruct light, half4 shadowColor, half3 diffuse, half3 posi
     outColor = lerp(lerp(outColor, customShadowColor.rgb, customShadowColor.a), outColor, StepNdotL);
     
     // CUSTOM SHADOW COLOR
-    outColor = lerp(lerp(outColor, customShadowColor.rgb, customShadowColor.a), outColor, light.shadowAttenuation);
+    outColor = lerp(lerp(outColor, customShadowColor, customShadowColor.a), outColor, light.shadowAttenuation);
     // CUSTOM SHADOW  COLOR
 
     outColor *= light.color * light.distanceAttenuation;
@@ -305,5 +305,33 @@ void RampLighting_float(half4 shadowColor, half3 GI, half3 diffuse, half3 positi
             ToonShading(additionalLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep, rampLighting, rampTex, state, additionalShaded);
             Out += additionalShaded;
         LIGHT_LOOP_END
+    #endif
+}
+
+void RimLighting_half(half4 rimColor, half3 lightDir, half3 normal, half3 viewDir, half rimPower, half rimLightAlign, half rimSmoothmess, out half3 Out)
+{
+    #if defined(SHADERGRAPH_PREVIEW)
+        Out = 0;
+    #else
+        rimPower = 1.0 - rimPower;
+        half NdotL = saturate(dot(lightDir, normal));
+        half rim = saturate((1.0 - dot(viewDir, normal)) * lerp(1, NdotL, saturate(rimLightAlign)) * lerp(1, 1 - NdotL, saturate(-rimLightAlign)));
+        half delta = fwidth(rim);
+        half3 rimLighting = smoothstep(rimPower - delta, rimPower + delta + rimSmoothmess, rim) * rimColor.rgb * rimColor.a;
+        Out = rimLighting;
+    #endif
+}
+
+void RimLighting_float(half4 rimColor, half3 lightDir, half3 normal, half3 viewDir, half rimPower, half rimLightAlign, half rimSmoothmess, out half3 Out)
+{
+    #if defined(SHADERGRAPH_PREVIEW)
+        Out = 0;
+    #else
+        rimPower = 1.0 - rimPower;
+        half NdotL = saturate(dot(lightDir, normal));
+        half rim = saturate((1.0 - dot(viewDir, normal)) * lerp(1, NdotL, saturate(rimLightAlign)) * lerp(1, 1 - NdotL, saturate(-rimLightAlign)));
+        half delta = fwidth(rim);
+        half3 rimLighting = smoothstep(rimPower - delta, rimPower + delta + rimSmoothmess, rim) * rimColor.rgb * rimColor.a;
+        Out = rimLighting;
     #endif
 }
