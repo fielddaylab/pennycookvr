@@ -381,6 +381,9 @@ namespace Pennycook.Data {
                 _ogdLog.UseFirebase(_firebase);
             }
 
+            // output game vents to a local file for validation
+            _ogdLog.ConfigureLocalValidation();
+
             _ogdLog.SetDebug(m_Debug);
         }
 
