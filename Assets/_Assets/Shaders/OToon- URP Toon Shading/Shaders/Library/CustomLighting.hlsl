@@ -7,14 +7,6 @@ struct LightStruct
     uint   layerMask;
 };
 
-struct SpecStruct
-{
-    half3 Color;
-    half3 Size;
-    half Smoothness;
-    half ShadowStrenth;
-};
-
 #ifndef SHADERGRAPH_PREVIEW
 #include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/ShaderPass.hlsl"
 #if (SHADERPASS != SHADERPASS_FORWARD)
@@ -98,39 +90,6 @@ void Shadowmask_half (float2 lightmapUV, out half4 Shadowmask){
     #endif
 }
 
-
-void ToonSpecular_half(half3 lightColor, half3 lightDir, half3 normal, half3 viewDir, half3 specular, half size,
-    half smoothness, out half3 Out)
-{
-    #if defined(SHADERGRAPH_PREVIEW)
-        Out = 0;
-    #else
-        half reverseSize = 1 - size;
-        float3 halfVec = SafeNormalize(float3(lightDir) + float3(viewDir));
-        half NdotH = saturate(dot(normal, halfVec));
-        half spec = pow(NdotH, reverseSize);
-        float modifier = StepFeatherToon(spec, 1, reverseSize,smoothness);
-        float3 specularReflection = specular.rgb * modifier;
-        Out = lightColor * specularReflection;
-    #endif
-}
-
-void ToonSpecular_float(float3 lightColor, float3 lightDir, float3 normal, float3 viewDir, float3 specular, half size,
-    half smoothness, out float3 Out)
-{
-    #if defined(SHADERGRAPH_PREVIEW)
-        Out = 0;
-    #else
-        half reverseSize = 1 - size;
-        float3 halfVec = SafeNormalize(float3(lightDir) + float3(viewDir));
-        half NdotH = saturate(dot(normal, halfVec));
-        half spec = pow(NdotH, reverseSize);
-        float modifier = StepFeatherToon(spec, 1, reverseSize,smoothness);
-        float3 specularReflection = specular.rgb * modifier;
-        Out = lightColor ;
-    #endif
-}
-
 float2 Rotate(float2 UV, float2 Center, float Rotation)
 {
     //rotation matrix
@@ -209,7 +168,7 @@ void ProceduralCrossHatching_float(Texture2D hatchMap, SamplerState state, half2
 }
 
 
-void ToonShading(SpecStruct spec, LightStruct light, half4 shadowColor, half3 diffuse, half3 positionWS, half3 normalWS, half3 viewDirectionWS, float2 UV, float2 screenUV, half diffuseStep, half rampLighting, half useRampColor, Texture2D rampTex, SamplerState state, half overrideShadowColor, out half3 Out)
+void ToonShading(LightStruct light, half4 shadowColor, half3 diffuse, half3 positionWS, half3 normalWS, half3 viewDirectionWS, float2 UV, float2 screenUV, half diffuseStep, half rampLighting, Texture2D rampTex, SamplerState state, out half3 Out)
 {
     // Out = diffuse;
     half3 outColor = diffuse;
@@ -217,55 +176,28 @@ void ToonShading(SpecStruct spec, LightStruct light, half4 shadowColor, half3 di
     half NdotL = saturate(dot(normalWS, light.direction) - diffuseStep);
     half StepNdotL = lerp(step(0.5, NdotL), SAMPLE_TEXTURE2D(rampTex, state, float2(NdotL, 0.5)).r, rampLighting);
 
-    if (useRampColor == 1)
-    {
-        customShadowColor.rgb = lerp(customShadowColor.rgb, diffuse * SAMPLE_TEXTURE2D(rampTex, state, half2(0, 0.5)).rgb, useRampColor * overrideShadowColor);
-        outColor = diffuse * SAMPLE_TEXTURE2D(rampTex, state, float2(NdotL, 0.5)).rgb;
-    }
-    else
-    {
-        outColor = lerp(lerp(outColor, customShadowColor.rgb, customShadowColor.a), outColor, StepNdotL);
-    }
-
-    half3 specular = 0;
+    outColor = lerp(lerp(outColor, customShadowColor.rgb, customShadowColor.a), outColor, StepNdotL);
     
-    #ifdef _SPECULARHIGHLIGHTS
-        ToonSpecular_half(
-            light.color, light.direction, normalWS, viewDirectionWS, spec.Color, spec.Size,
-            spec.Smoothness, specular);
-    #endif
     // CUSTOM SHADOW COLOR
     outColor = lerp(lerp(outColor, customShadowColor, customShadowColor.a), outColor, light.shadowAttenuation);
     // CUSTOM SHADOW  COLOR
-
-    //APPLY SPECULAR
-    outColor += lerp(specular * light.shadowAttenuation, specular, spec.ShadowStrenth);
-    //APPLY SPECULAR
 
     outColor *= light.color * light.distanceAttenuation;
     Out = outColor;
 }
 
-void RampLighting_half(half3 specularColor, half specularSize, half specularSmoothness, half specShadowStrength,
-    half shadowClipPattern, half4 shadowColor, half3 GI, half3 diffuse, half3 positionWS, half3 normalWS,
-    half3 viewDirectionWS, float2 UV, float2 screenUV, half diffuseStep, half rampLighting, half useRampColor,
-    Texture2D rampTex, SamplerState state, half overrideShadowColor, half4 shadowMask, out half3 Out)
+void RampLighting_half(half4 shadowColor, half3 GI, half3 diffuse, half3 positionWS, half3 normalWS,
+    half3 viewDirectionWS, float2 UV, float2 screenUV, half diffuseStep, half rampLighting,
+    Texture2D rampTex, SamplerState state, half4 shadowMask, out half3 Out)
 {
     LightStruct mainLight;
     MainLight_half(positionWS, mainLight.direction, mainLight.color, mainLight.distanceAttenuation, mainLight.shadowAttenuation);
-    mainLight.shadowAttenuation += shadowClipPattern;
     mainLight.shadowAttenuation = saturate(mainLight.shadowAttenuation);
-
-    SpecStruct spec;
-    spec.Color = specularColor;
-    spec.Size = specularSize;
-    spec.Smoothness = specularSmoothness;
-    spec.ShadowStrenth = specShadowStrength;
     
     Out = GI;
     half3 mainLightShaded = 0;
-    ToonShading(spec, mainLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep,
-        rampLighting, useRampColor, rampTex, state, overrideShadowColor, mainLightShaded);
+    ToonShading(mainLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep,
+        rampLighting, rampTex, state, mainLightShaded);
     Out += mainLightShaded;
 
     #ifdef _ADDITIONAL_LIGHTS
@@ -289,7 +221,7 @@ void RampLighting_half(half3 specularColor, half specularSize, half specularSmoo
                 additionalLight.shadowAttenuation = light.shadowAttenuation;
                 additionalLight.layerMask = light.layerMask;
                 half3 additionalShaded = 0;
-                ToonShading(spec, additionalLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep, rampLighting, useRampColor, rampTex, state, overrideShadowColor, additionalShaded);
+                ToonShading(additionalLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep, rampLighting, rampTex, state, additionalShaded);
                 Out += additionalShaded;
             }
         }
@@ -308,33 +240,25 @@ void RampLighting_half(half3 specularColor, half specularSize, half specularSmoo
             additionalLight.shadowAttenuation = light.shadowAttenuation;
             additionalLight.layerMask = light.layerMask;
             half3 additionalShaded = 0;
-            ToonShading(spec, additionalLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep, rampLighting, useRampColor, rampTex, state, overrideShadowColor, additionalShaded);
+            ToonShading(additionalLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep, rampLighting, rampTex, state, additionalShaded);
             Out += additionalShaded;
         LIGHT_LOOP_END
     #endif
 }
 
 
-void RampLighting_float(half3 specularColor, half specularSize, half specularSmoothness, half specShadowStrength,
-    half shadowClipPattern, half4 shadowColor, half3 GI, half3 diffuse, half3 positionWS, half3 normalWS,
-    half3 viewDirectionWS, float2 UV, float2 screenUV, half diffuseStep, half rampLighting, half useRampColor,
-    Texture2D rampTex, SamplerState state, half overrideShadowColor, half4 shadowMask, out half3 Out)
+void RampLighting_float(half4 shadowColor, half3 GI, half3 diffuse, half3 positionWS, half3 normalWS,
+    half3 viewDirectionWS, float2 UV, float2 screenUV, half diffuseStep, half rampLighting,
+    Texture2D rampTex, SamplerState state, half4 shadowMask, out half3 Out)
 {
     LightStruct mainLight;
-    MainLight_half(positionWS, mainLight.direction, mainLight.color, mainLight.distanceAttenuation, mainLight.shadowAttenuation);
-    mainLight.shadowAttenuation += shadowClipPattern;
+    MainLight_float(positionWS, mainLight.direction, mainLight.color, mainLight.distanceAttenuation, mainLight.shadowAttenuation);
     mainLight.shadowAttenuation = saturate(mainLight.shadowAttenuation);
-
-    SpecStruct spec;
-    spec.Color = specularColor;
-    spec.Size = specularSize;
-    spec.Smoothness = specularSmoothness;
-    spec.ShadowStrenth = specShadowStrength;
     
     Out = GI;
     half3 mainLightShaded = 0;
-    ToonShading(spec, mainLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep,
-        rampLighting, useRampColor, rampTex, state, overrideShadowColor, mainLightShaded);
+    ToonShading(mainLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep,
+        rampLighting, rampTex, state, mainLightShaded);
     Out += mainLightShaded;
 
     #ifdef _ADDITIONAL_LIGHTS
@@ -358,7 +282,7 @@ void RampLighting_float(half3 specularColor, half specularSize, half specularSmo
                 additionalLight.shadowAttenuation = light.shadowAttenuation;
                 additionalLight.layerMask = light.layerMask;
                 half3 additionalShaded = 0;
-                ToonShading(spec, additionalLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep, rampLighting, useRampColor, rampTex, state, overrideShadowColor, additionalShaded);
+                ToonShading(additionalLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep, rampLighting, rampTex, state, additionalShaded);
                 Out += additionalShaded;
             }
         }
@@ -378,7 +302,7 @@ void RampLighting_float(half3 specularColor, half specularSize, half specularSmo
             additionalLight.shadowAttenuation = light.shadowAttenuation;
             additionalLight.layerMask = light.layerMask;
             half3 additionalShaded = 0;
-            ToonShading(spec, additionalLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep, rampLighting, useRampColor, rampTex, state, overrideShadowColor, additionalShaded);
+            ToonShading(additionalLight, shadowColor, diffuse, positionWS, normalWS, viewDirectionWS, UV, screenUV, diffuseStep, rampLighting, rampTex, state, additionalShaded);
             Out += additionalShaded;
         LIGHT_LOOP_END
     #endif

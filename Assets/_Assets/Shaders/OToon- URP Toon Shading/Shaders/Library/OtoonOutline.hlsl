@@ -10,22 +10,12 @@ CBUFFER_START(UnityPerMaterial)
     half _BumpScale;
     half _OcclusionStrength;
     half _Surface;
-    half _DitherTexelSize;
-    half _DitherThreshold;
     half _StepViaRampTexture;
-    half _NoiseScale;
-    half _NoiseStrength;
     half _ToonBlending;
     half _DiffuseStep;
     half _HalfToneUvMode;
-    half _SpecClipMaskScale;
-    half _SpecularClipStrength;
     half _SpecularFalloff;
     half _SpecularSize;
-    //half _RimPower;
-    //half _RimLightAlign;
-    //half _RimLightSmoothness;
-    //half4 _RimColor;
     half _HalfToneEnabled;
     half4 _HalfToneColor;
     half _HalftoneNoiseClip;
@@ -37,43 +27,16 @@ CBUFFER_START(UnityPerMaterial)
     half _HalfToneIncludeReceivedShadow;
     half _HalftoneFadeDistance;
     half _HalftoneFadeToColor;
-    //half4 _OutlineColor;
-    //half _OutlineWidth;
-    //half2 _OutlineDistancFade;
-    //half _OutlineMode;
     half4 _ShadowColor;
     half _SpecShadowStrength;
-    //half4 _HairSpecColor;
-    //half _EnabledHairSpec;
-    //float4 _SpherizeNormalOrigin;
-    //half _SpherizeNormalEnabled;
-    half _HatchingEnabled;
-    half _HatchingDensity;
-    half _HatchingRotation;
-    half _HatchingDrawStrength;
-    half _HatchingSmoothness;
-    half _HatchingUpperBound;
-    half _HatchingDiffuseOffset;
-    half4 _HatchingColor;
     half _UseRampColor;
     half _FlattenGI;
 
     float4 _HalfTonePatternMap_ST;
     float4 _HalfToneNoiseMap_ST;
     float4 _HatchingNoiseMap_ST;
-    //float4 _HairSpecNoiseMap_ST;
     float _OverrideShadowColor;
-    //float _HairSpecNoiseStrength;
-    //float _HairSpecExponent;
-    //float _HairSpecScale;
-    //float _HairSpecularSize;
-    //float _HairSpecularSmoothness;
 
-    //float _FaceShadowMapEnabled;
-    //float _FaceShadowMapPow;
-    //float _FaceShadowSmoothness;
-    //half3 _FaceFrontDirection;
-    //half3 _FaceRightDirection;
 CBUFFER_END
 
 struct VertexInput
@@ -111,27 +74,12 @@ VertexOutput vert(VertexInput v)
     return o;
 }
 
-//from shader graph
-void UnityDither(float In, float4 ScreenPosition)
-{
-    float2 uv = ScreenPosition.xy * _ScreenParams.xy / _DitherTexelSize;
-    float DITHER_THRESHOLDS[16] = {
-        1.0 / 17.0, 9.0 / 17.0, 3.0 / 17.0, 11.0 / 17.0,
-        13.0 / 17.0, 5.0 / 17.0, 15.0 / 17.0, 7.0 / 17.0,
-        4.0 / 17.0, 12.0 / 17.0, 2.0 / 17.0, 10.0 / 17.0,
-        16.0 / 17.0, 8.0 / 17.0, 14.0 / 17.0, 6.0 / 17.0
-    };
-    uint index = (uint(uv.x) % 4) * 4 + uint(uv.y) % 4;
-    clip(In - DITHER_THRESHOLDS[index]);
-}
-
 float4 frag(VertexOutput i) : SV_Target
 {
     #ifndef _OUTLINE
         clip(-1);
     #endif
 
-    UnityDither(_DitherThreshold, i.screenPos / i.screenPos.w);
     clip(-_OutlineMode);
     return float4(_OutlineColor);
 }

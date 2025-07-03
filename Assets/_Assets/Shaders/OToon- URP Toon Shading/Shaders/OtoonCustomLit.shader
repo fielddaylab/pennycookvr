@@ -184,7 +184,7 @@ Shader "URP/OToonCustomLit"
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _ _SPECGLOSSMAP _SPECULAR_COLOR
             #pragma shader_feature_local_fragment _GLOSSINESS_FROM_BASE_ALPHA
-            #pragma shader_feature_local _NORMALMAP
+            //#pragma shader_feature_local _NORMALMAP
             #pragma shader_feature_local_fragment _EMISSION
             #pragma shader_feature_local _RECEIVE_SHADOWS_OFF
 
@@ -309,7 +309,7 @@ Shader "URP/OToonCustomLit"
 
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature_local _NORMALMAP
+            //#pragma shader_feature_local _NORMALMAP
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 
@@ -345,7 +345,7 @@ Shader "URP/OToonCustomLit"
 
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature_local _ _NORMALMAP
+            //#pragma shader_feature_local _ _NORMALMAP
             #pragma shader_feature_local_fragment _ALPHATEST_ON
 
             // -------------------------------------

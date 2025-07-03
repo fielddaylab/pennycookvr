@@ -328,7 +328,20 @@ $call YellowAdelie->SetInteractable(true)
 {@Margo}	Just hold me up in front of each penguin.	$[Day1/Rookery/1rm06]
 {@Margo}	Then use "Scan" to scan!	$[Day1/Rookery/1rm07]
 {@Margo}	I’ll ID them and collect their data.	$[Day1/Rookery/1rm08]
-			
+
+$goto Day1.MovementTutorial
+
+:: MovementTutorial
+@trigger MovementTutorial
+@who Player
+
+$call Tutorial6->Activate()
+$call Wait(5)
+$call Tutorial6->Deactivate()
+$call Tutorial7->Activate()
+$call Wait(5)
+$call Tutorial7->Deactivate()
+
 :: OnPenguinIdentified
 @trigger	TabletIdentified
 @who        Player

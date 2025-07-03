@@ -11,7 +11,7 @@ namespace Pennycook {
     static public class ScriptSkipping {
         [InvokeOnBoot]
         static private void Initialize() {
-            GameLoop.OnDebugUpdate.Register(() => {
+            /*GameLoop.OnDebugUpdate.Register(() => {
                 if (DebugInput.ConsumePress(XRHandIndex.Right, XRHandButtons.PrimaryAxisClick) || DebugInput.IsPressed(UnityEngine.KeyCode.K)) {
                     ScriptUtility.ForEachThread((t) => {
                         t.SkipSingle();
@@ -22,7 +22,7 @@ namespace Pennycook {
                     ScriptUtility.KillAllThreads();
                     Sfx.StopAll();
                 }
-            });
+            });*/
         }
     }
 }
