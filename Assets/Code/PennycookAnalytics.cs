@@ -302,7 +302,7 @@ namespace Pennycook.Data {
     public class PennycookAnalytics : SharedStateComponent
     {
         public static bool FirebaseEnabled { get; set; }
-        public static int logVersion = 1;
+        public static int logVersion = 2;
 
         static string _DB_NAME = "PENNYCOOK";
 
@@ -410,6 +410,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("object_grabbed");
                 _ogdLog.EventParam("object_id", g.ID.ToDebugString());
                 _ogdLog.EventParam("object_type", EnumLookup.Get(g.type));
@@ -421,6 +423,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("object_released");
                 _ogdLog.EventParam("object_id", g.ID.ToDebugString());
                 _ogdLog.EventParam("object_type", EnumLookup.Get(g.type));
@@ -432,6 +436,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("place_tag");
                 _ogdLog.EventParam("tag_location", EnumLookup.Get(p.tagLoc));
                 _ogdLog.EventParam("tag_type", EnumLookup.Get(p.tagType));
@@ -452,6 +458,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("remove_tag");
                 _ogdLog.EventParam("tag_location", EnumLookup.Get(p.tagLoc));
                 _ogdLog.EventParam("tag_type", EnumLookup.Get(p.tagType));
@@ -472,6 +480,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("dock_margo");
                 _ogdLog.EventParam("dock_location", EnumLookup.Get((DockLocation)d));
                 _ogdLog.SubmitEvent();
@@ -482,6 +492,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("click_margo_sync");
 
                 _ogdLog.SubmitEvent();
@@ -492,6 +504,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("case_relocated");
 
                 m_PosBuilder.Clear().Append("[").AppendNoAlloc(c.OldPos.x, 3).Append(',').AppendNoAlloc(c.OldPos.y, 3).Append(',').AppendNoAlloc(c.OldPos.z, 3).Append("]");
@@ -510,6 +524,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("trigger_scan");
                 _ogdLog.SubmitEvent();
             }
@@ -518,6 +534,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 m_PosBuilder.Clear().Append("[").AppendNoAlloc(c.pos.x, 3).Append(',').AppendNoAlloc(c.pos.y, 3).Append(',').AppendNoAlloc(c.pos.z, 3).Append("]");
                 m_RotBuilder.Clear().Append("[").AppendNoAlloc(c.rot.x, 3).Append(',').AppendNoAlloc(c.rot.y, 3).Append(',').AppendNoAlloc(c.rot.z, 3).Append(',').AppendNoAlloc(c.rot.w, 3).Append("]");
 
@@ -532,6 +550,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("trigger_image_capture");
                 _ogdLog.EventParam("behavior", EnumLookup.Get(c.Type));
                 _ogdLog.EventParam("penguin_id", c.PenguinID.ToDebugString());
@@ -543,6 +563,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("object_scanned");
                 _ogdLog.EventParam("object_type", EnumLookup.Get(o.ObjType));
                 _ogdLog.EventParam("object_id", o.ID.ToDebugString());
@@ -554,6 +576,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("day_begin");
                 _ogdLog.EventParam("day_index", beginDay);
                 _ogdLog.SubmitEvent();
@@ -564,6 +588,8 @@ namespace Pennycook.Data {
         {
             if (_loggingEnabled)
             {
+                SetGameState();
+
                 _ogdLog.BeginEvent("day_complete");
                 _ogdLog.EventParam("day_index", completedDay);
                 _ogdLog.SubmitEvent();
