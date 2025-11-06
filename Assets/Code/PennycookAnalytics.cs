@@ -309,7 +309,8 @@ namespace Pennycook.Data {
         [NonSerialized] float seconds_at_start = 0f;
 
         OGD.OGDLog _ogdLog;
-
+		
+		[SerializeField]
         OGD.FirebaseConsts _firebase;
 
         [SerializeField]
