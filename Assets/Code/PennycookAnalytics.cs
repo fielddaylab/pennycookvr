@@ -383,7 +383,7 @@ namespace Pennycook.Data {
             }
 
             // output game vents to a local file for validation
-            _ogdLog.ConfigureLocalValidation();
+            //_ogdLog.ConfigureLocalValidation();
 
             _ogdLog.SetDebug(m_Debug);
         }
@@ -414,7 +414,7 @@ namespace Pennycook.Data {
                 SetGameState();
 
                 _ogdLog.BeginEvent("object_grabbed");
-                _ogdLog.EventParam("object_id", g.ID.ToDebugString());
+                _ogdLog.EventParam("object_id", g.ID.ToString());
                 _ogdLog.EventParam("object_type", EnumLookup.Get(g.type));
                 _ogdLog.SubmitEvent();
             }
@@ -427,7 +427,7 @@ namespace Pennycook.Data {
                 SetGameState();
 
                 _ogdLog.BeginEvent("object_released");
-                _ogdLog.EventParam("object_id", g.ID.ToDebugString());
+                _ogdLog.EventParam("object_id", g.ID.ToString());
                 _ogdLog.EventParam("object_type", EnumLookup.Get(g.type));
                 _ogdLog.SubmitEvent();
             }
@@ -445,7 +445,7 @@ namespace Pennycook.Data {
 
                 if (p.tagLoc == Data.TagLocation.PENGUIN)
                 {
-                    _ogdLog.EventParam("penguin_id", p.ID.ToDebugString());
+                    _ogdLog.EventParam("penguin_id", p.ID.ToString());
                 }
                 else
                 {
@@ -467,7 +467,7 @@ namespace Pennycook.Data {
 
                 if (p.tagLoc == TagLocation.PENGUIN)
                 {
-                    _ogdLog.EventParam("penguin_id", p.ID.ToDebugString());
+                    _ogdLog.EventParam("penguin_id", p.ID.ToString());
                 }
                 else
                 {
@@ -555,7 +555,7 @@ namespace Pennycook.Data {
 
                 _ogdLog.BeginEvent("trigger_image_capture");
                 _ogdLog.EventParam("behavior", EnumLookup.Get(c.Type));
-                _ogdLog.EventParam("penguin_id", c.PenguinID.ToDebugString());
+                _ogdLog.EventParam("penguin_id", c.PenguinID.ToString());
                 _ogdLog.SubmitEvent();
             }
         }
@@ -568,7 +568,7 @@ namespace Pennycook.Data {
 
                 _ogdLog.BeginEvent("object_scanned");
                 _ogdLog.EventParam("object_type", EnumLookup.Get(o.ObjType));
-                _ogdLog.EventParam("object_id", o.ID.ToDebugString());
+                _ogdLog.EventParam("object_id", o.ID.ToString());
                 _ogdLog.SubmitEvent();
             }
         }
@@ -766,11 +766,11 @@ namespace Pennycook.Data {
             {
                 SetGameState();
 
-                string speaker = ReflectionCache.AnalyticsNameUpper(VoxUtility.GetCharacterId(h).ToDebugString());
-                //Debug.Log("AUDIO STARTED: " + lineCode.ToDebugString() + " " + speaker);
+                string speaker = ReflectionCache.AnalyticsNameUpper(VoxUtility.GetCharacterId(h).ToString());
+                //Debug.Log("AUDIO STARTED: " + lineCode.ToString() + " " + speaker);
 
                 _ogdLog.BeginEvent("dialog_audio_start");
-                _ogdLog.EventParam("dialog_id", lineCode.ToDebugString());
+                _ogdLog.EventParam("dialog_id", lineCode.ToString());
                 _ogdLog.EventParam("dialog_type", "STORY");
                 _ogdLog.EventParam("speaker", speaker);
                 _ogdLog.SubmitEvent();
@@ -783,11 +783,11 @@ namespace Pennycook.Data {
             {
                 SetGameState();
 
-                string speaker = ReflectionCache.AnalyticsNameUpper(VoxUtility.GetCharacterId(h).ToDebugString());
-                //Debug.Log("AUDIO COMPLETE: " + lineCode.ToDebugString() + " " + speaker);
+                string speaker = ReflectionCache.AnalyticsNameUpper(VoxUtility.GetCharacterId(h).ToString());
+                //Debug.Log("AUDIO COMPLETE: " + lineCode.ToString() + " " + speaker);
 
                 _ogdLog.BeginEvent("dialog_audio_end");
-                _ogdLog.EventParam("dialog_id", lineCode.ToDebugString());
+                _ogdLog.EventParam("dialog_id", lineCode.ToString());
                 _ogdLog.EventParam("dialog_type", "STORY");
                 _ogdLog.EventParam("speaker", speaker);
                 _ogdLog.SubmitEvent();
@@ -862,7 +862,7 @@ namespace Pennycook.Data {
                 ScriptActor actor = ScriptUtility.Actor(warpPoint);
 
                 _ogdLog.BeginEvent("warp_to_point");
-                _ogdLog.EventParam("point_id", actor.Id.ToDebugString());
+                _ogdLog.EventParam("point_id", actor.Id.ToString());
 
                 m_PosBuilder.Clear().Append("[").AppendNoAlloc(warpPoint.transform.position.x, 3).Append(',').AppendNoAlloc(warpPoint.transform.position.y, 3).Append(',').AppendNoAlloc(warpPoint.transform.position.z, 3).Append("]");
 
@@ -881,7 +881,7 @@ namespace Pennycook.Data {
                 ScriptActor actor = ScriptUtility.Actor(warpPoint);
 
                 _ogdLog.BeginEvent("walk_to_warp_point");
-                _ogdLog.EventParam("point_id", actor.Id.ToDebugString());
+                _ogdLog.EventParam("point_id", actor.Id.ToString());
 
                 m_PosBuilder.Clear().Append("[").AppendNoAlloc(warpPoint.transform.position.x, 3).Append(',').AppendNoAlloc(warpPoint.transform.position.y, 3).Append(',').AppendNoAlloc(warpPoint.transform.position.z, 3).Append("]");
 
@@ -919,7 +919,7 @@ namespace Pennycook.Data {
             {
                 SetGameState();
                 _ogdLog.BeginEvent("margo_task_assigned");
-                _ogdLog.EventParam("task_id", taskInfo.ID.ToDebugString());
+                _ogdLog.EventParam("task_id", taskInfo.ID.ToString());
                 _ogdLog.EventParam("task_type", EnumLookup.Get(taskInfo.type));
                 _ogdLog.SubmitEvent();
             }
@@ -931,7 +931,7 @@ namespace Pennycook.Data {
             {
                 SetGameState();
                 _ogdLog.BeginEvent("margo_task_completed");
-                _ogdLog.EventParam("task_id", taskInfo.ID.ToDebugString());
+                _ogdLog.EventParam("task_id", taskInfo.ID.ToString());
                 _ogdLog.EventParam("task_type", EnumLookup.Get(taskInfo.type));
                 _ogdLog.SubmitEvent();
             }
@@ -943,7 +943,7 @@ namespace Pennycook.Data {
             {
                 SetGameState();
                 _ogdLog.BeginEvent("tag_task_assigned");
-                _ogdLog.EventParam("task_id", taskInfo.ID.ToDebugString());
+                _ogdLog.EventParam("task_id", taskInfo.ID.ToString());
                 _ogdLog.EventParam("task_type", EnumLookup.Get(taskInfo.taskType));
                 _ogdLog.EventParam("tag_type", EnumLookup.Get(taskInfo.type));
                 _ogdLog.SubmitEvent();
@@ -956,7 +956,7 @@ namespace Pennycook.Data {
             {
                 SetGameState();
                 _ogdLog.BeginEvent("tag_task_completed");
-                _ogdLog.EventParam("task_id", taskInfo.ID.ToDebugString());
+                _ogdLog.EventParam("task_id", taskInfo.ID.ToString());
                 _ogdLog.EventParam("task_type", EnumLookup.Get(taskInfo.taskType));
                 _ogdLog.EventParam("tag_type", EnumLookup.Get(taskInfo.type));
                 _ogdLog.SubmitEvent();
@@ -969,8 +969,8 @@ namespace Pennycook.Data {
             {
                 SetGameState();
                 _ogdLog.BeginEvent("margo_tooltip_displayed");
-                _ogdLog.EventParam("tooltip_id", tInfo.ID.ToDebugString());
-                _ogdLog.EventParam("tooltip_content", tInfo.Text.ToDebugString());
+                _ogdLog.EventParam("tooltip_id", tInfo.ID.ToString());
+                _ogdLog.EventParam("tooltip_content", tInfo.Text.ToString());
                 _ogdLog.SubmitEvent();
             }
         }
@@ -981,8 +981,8 @@ namespace Pennycook.Data {
             {
                 SetGameState();
                 _ogdLog.BeginEvent("margo_tooltip_hidden");
-                _ogdLog.EventParam("tooltip_id", tInfo.ID.ToDebugString());
-                _ogdLog.EventParam("tooltip_content", tInfo.Text.ToDebugString());
+                _ogdLog.EventParam("tooltip_id", tInfo.ID.ToString());
+                _ogdLog.EventParam("tooltip_content", tInfo.Text.ToString());
                 _ogdLog.SubmitEvent();
             }
         }
@@ -995,7 +995,7 @@ namespace Pennycook.Data {
 
                 _ogdLog.BeginEvent("penguin_counted");
                 _ogdLog.EventParam("running_count", c.currentCount);
-                _ogdLog.EventParam("penguin_id", c.ID.ToDebugString());
+                _ogdLog.EventParam("penguin_id", c.ID.ToString());
                 _ogdLog.SubmitEvent();
             }
         }
