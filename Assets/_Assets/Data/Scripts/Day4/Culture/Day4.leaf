@@ -1,0 +1,401 @@
+#basePath	Day4
+
+:: Prepare
+@function	ScenePrepare
+$set chapter:finishedObservations = false
+$set chapter:wingStarted = false
+$set chapter:wingCount = 0
+$set chapter:dataCount = 0
+$set chapter:trackerStarted = false
+$set chapter:cv = GetCulturalVersion(false)
+$call ClearGoals()
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
+$call BackgroundMusic->PlayIndoor()
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+$call Sky1->Deactivate()
+$call Sky2->Deactivate()
+$call Sky3->Deactivate()
+$call Sky4->Activate()
+$call Sky4->SetSkybox(0.003)
+$call Sky5->Deactivate()
+$call Ocean->SetMaterial(3);
+$call Terrain1->SetMaterial(3);
+$call Terrain2->SetMaterial(3);
+$call Terrain3->SetMaterial(3);
+$call Screen->SetEnabled(false)
+$call Penny->LoopToGate()
+$call PennycookSurvey->Deactivate()
+
+$if chapter:cv == 1
+$call NonCulturalAssets->Deactivate()
+$call MexicanCulturalAssets->Activate()
+$call Mex4->Activate()
+$elseif chapter:cv == 2
+$call NonCulturalAssets->Deactivate()
+$call MidAmericanCulturalAssets->Activate()
+$call Mid4->Activate()
+$endif
+
+$call DayBegin(4)
+$call FadeIn(6.0)
+$call Wait(2)
+
+$call SetWarpActive(WarpBluff, true)
+$call WeighGatePenguin->SetWeighGate()
+
+$call MargoFace->Activate()
+{@Margo}   Mornin'. Happy Valentine's Day! Looks like your family sent you some fun stuff.   $[Day4/Tent/4tm01_midwest]
+{@Margo}    Come on. Let’s get out there and check on those penguins.   $[Day4/Tent/4tm08]
+{@Margo}   Penguins are kinda love birds ya know... they mate for life.    $[Day4/Tent/4tm02_midwest]
+{@Player}   Aw, qué chulos. $[Day4/Tent/PlayerCulture_3]
+
+$call Wait(1)
+
+:: WarpedOutsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Bluff"
+@interrupt
+@once
+
+$call BackgroundMusic->PlayOutdoor()
+
+$call TentDoor->Close()
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluff, false)
+
+$call SetWarpGroupActive(Rookery, true)
+
+:: WarpedToRookery
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Rookery"
+@interrupt
+@once
+
+$call Wait(1)
+
+$call SetWarpGroupActive(Rookery, true)
+
+{@Player}   How’s Polo’s chick doing?   $[Day4/Rookery/Player_2]
+{@Partner}  Seems fine. A little small for her age, but she’s a tough cookie.   $[Day4/Rookery/4rp02]
+{@Player}   Phew. That’s good. I was rooting for her.   $[Day4/Rookery/Player_3]
+{@Margo}    You’ll need to collect data from the weigh bridge—that’s that gate doohickey over there. $[Day4/Rookery/4rm02]
+{@Player}   Got it. Let’s get to work.  $[Day4/Rookery/Player_7]
+
+$call WeighGate->SetInteractable(true)
+
+:: OnWeighGateIdentified
+@trigger	TabletIdentified
+@who        Player
+@when		objectId == "WeighGate"
+@interrupt
+@once
+
+$call CompleteGoal("day4_gate")
+$call SetCurrentMainGoal("retrieve_back_trackers")
+$call CompleteMainGoal("scan_weigh_gate")
+
+{@Margo}    We also need to get the data loggers from the penguins you tagged back at Thanksgiving. $[Day4/Rookery/4rm03]
+
+$call ChickBandPlate->Deactivate()
+$call DataLoggerPlate->Activate()
+
+$if chapter:dataCount < 3
+
+$if chapter:trackerStarted == false
+$call DataTrackerHighlight1->Activate()
+$call DataTrackerHighlight2->Activate()
+$call DataTrackerHighlight3->Activate()
+
+$call GPSSocketRight->ReleaseCurrentSocket(true)
+$call GPSSocketMiddle->ReleaseCurrentSocket(true)
+$call GPSSocketLeft->ReleaseCurrentSocket(true)
+$endif
+
+$set chapter:trackerStarted = true
+
+$call DataTrackerBack1->SetMeshEnabled(true)
+//$call DataTrackerBack2->SetMeshEnabled(true)
+$call DataTrackerBack3->SetMeshEnabled(true)
+$call DataTrackerBack4->SetMeshEnabled(true)
+//$call DataTrackerBack5->SetMeshEnabled(true)
+
+$if chapter:dataCount == 0
+{@Margo}    Wahoo! Looks like all the penguins with data loggers have come back.    $[Day4/Rookery/4rm10]
+{@Margo}    Now we’ll be able to get the stats on their swimming behaviors!     $[Day4/Rookery/4rm11]
+{@Margo}    Just hold the penguin still with one hand and remove their trackers.    $[Day4/Rookery/4rm12]
+{@Margo}    Then drop the tracker into the Pelican Case.    $[Day4/Rookery/4rm13]
+$endif
+
+$endif
+
+:: OnGrabbedBackTracker
+@trigger ObjectGrabbed
+@when   objectType == "DataTracker"
+
+$if local:hand == "Left"
+$call LeftHandCollider->ReduceSize()
+$elseif local:hand == "Right"
+$call RightHandCollider->ReduceSize()
+$endif
+
+:: OnDroppedBackTracker
+@trigger ObjectDropped
+@when   objectType == "DataTracker"
+
+$if local:hand == "Left"
+$call LeftHandCollider->ResetSize()
+$elseif local:hand == "Right"
+$call RightHandCollider->ResetSize()
+$endif
+
+:: OnSocketedTracker1
+@trigger    ObjectSocketed
+@who        Player
+@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true, chapter:dataCount == 0
+@interrupt
+
+$set chapter:dataCount + 1
+
+$if local:objectId == "DataTrackerBack1"
+$call CompleteGoal("goal_back_tracker_alfredo_get")
+$elseif local:objectId == "DataTrackerBack3"
+$call CompleteGoal("goal_back_tracker_millie_get")
+$elseif local:objectId == "DataTrackerBack4"
+$call CompleteGoal("goal_back_tracker_winston_get")
+$endif
+
+:: OnSocketedTracker2
+@trigger    ObjectSocketed
+@who        Player
+@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true, chapter:dataCount == 1
+@interrupt
+
+$set chapter:dataCount + 1
+
+$if local:objectId == "DataTrackerBack1"
+$call CompleteGoal("goal_back_tracker_alfredo_get")
+$elseif local:objectId == "DataTrackerBack3"
+$call CompleteGoal("goal_back_tracker_millie_get")
+$elseif local:objectId == "DataTrackerBack4"
+$call CompleteGoal("goal_back_tracker_winston_get")
+$endif
+
+:: OnSocketedTracker3
+@trigger    ObjectSocketed
+@who        Player
+@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true, chapter:dataCount == 2
+@interrupt
+
+$set chapter:dataCount + 1
+
+$if local:objectId == "DataTrackerBack1"
+$call CompleteGoal("goal_back_tracker_alfredo_get")
+$elseif local:objectId == "DataTrackerBack3"
+$call CompleteGoal("goal_back_tracker_millie_get")
+$elseif local:objectId == "DataTrackerBack4"
+$call CompleteGoal("goal_back_tracker_winston_get")
+$endif
+
+$call SetCurrentMainGoal("band_chicks")
+$call CompleteMainGoal("retrieve_back_trackers")
+
+$call ExclaimCorral->Activate()
+
+$if chapter:wingCount == 0
+{@Margo}    Okay, time to band the chicks. Penny corralled them here to make it a bit easier.   $[Day4/Rookery/4rm14]
+{@Margo}    Fair warning… This job isn’t for the faint of heart.    $[Day4/Rookery/4rm15]
+{@Player}    Oh, come on. They're, like, half the size of the grown-ups. How hard can it be?    $[Day4/Rookery/Player_9]
+{@Margo}    Haven’t you been paying attention for the last three months??   $[Day4/Rookery/4rm16]
+{@Margo}    They’re cuties, but they’re tougher than they look. $[Day4/Rookery/4rm17]
+{@Player}   What do I need to do?   $[Day4/Rookery/Player_11]
+{@Margo}    First you’ll need to hold the penguin in place. $[Day4/Rookery/4rm19]
+{@Margo}    Then grab a wing band from the case and attach it to the penguin’s right wing.  $[Day4/Rookery/4rm20]
+$endif
+
+:: WarpedToRookeryCorral
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-RookeryCorral"
+@interrupt
+
+$call TurnOnSockets(BandSocketChick, true)
+$call ExclaimCorral->Deactivate()
+$call DataLoggerPlate->Deactivate()
+$call ChickBandPlate->Activate()
+
+$call WingBand1->SetMeshEnabled(true)
+$call WingBand2->SetMeshEnabled(true)
+$call WingBand3->SetMeshEnabled(true)
+
+$set chapter:wingStarted = true
+
+:: OnUnsocketedTracker
+@trigger    ObjectUnsocketed
+@when   objectType == "DataTracker", socketType == "TrackerSocket", chapter:trackerStarted == true
+
+$set chapter:dataCount - 1
+
+$if local:objectId == "DataTrackerBack1"
+$call RemoveGoal("goal_back_tracker_alfredo_get")
+$elseif local:objectId == "DataTrackerBack3"
+$call RemoveGoal("goal_back_tracker_millie_get")
+$elseif local:objectId == "DataTrackerBack4"
+$call RemoveGoal("goal_back_tracker_winston_get")
+$endif
+
+:: OnUnsocketedWingBand
+@trigger ObjectUnsocketed
+@who        Player
+@when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true
+
+$set chapter:wingCount - 1
+$if chapter:wingCount == 0
+$call RemoveGoal("goal_place_band_1")
+$elseif chapter:wingCount == 1
+$call RemoveGoal("goal_place_band_2")
+$elseif chapter:wingCount == 2
+$call RemoveGoal("goal_place_band_3")
+$endif
+
+:: OnSocketedWingBand1
+@trigger ObjectSocketed
+@who    Player
+@when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true, chapter:wingCount == 0
+@interrupt
+
+$set chapter:wingCount + 1
+
+$call CompleteGoal("goal_place_band_1")
+
+:: OnSocketedWingBand2
+@trigger ObjectSocketed
+@who    Player
+@when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true, chapter:wingCount == 1
+@interrupt
+$set chapter:wingCount + 1
+
+$call CompleteGoal("goal_place_band_2")
+
+:: OnSocketedWingBand3
+@trigger ObjectSocketed
+@who    Player
+@when   objectType == "WingBand", socketType == "BandSocketChick", chapter:wingStarted == true, chapter:wingCount == 2
+@interrupt
+
+$set chapter:wingCount + 1
+$call CompleteGoal("goal_place_band_3")
+$call CompleteMainGoal("band_chicks")
+
+$call TurnOnSockets(BandSocketChick, false)
+//$call TriggerResponseAndWait(Day4.CheckCompletedTasks)
+$set chapter:finishedObservations = true
+$call SetWarpActive(WarpBluffBack, true)
+$call WarpText->SetText("Warp back to the tent")
+
+{@Margo}   Okey dokey, that’s everything we need!    $[Day4/Rookery/4rm22]
+{@Partner}  Nice work, new kid. $[Day4/Rookery/4rp05]
+{@Partner}  If these penguins come back as adults, the tags will tell us who they are and when they were born. $[Day4/Rookery/4rp06]
+{@Player}   What? What do you mean by, if they come back?  $[Day4/Rookery/Player_18]
+{@Partner}  Well, most penguin chicks don’t make it to adulthood. $[Day4/Rookery/4rp07]
+{@Player}   What!?  $[Day4/Rookery/Player_19]
+{@Partner}  It’s a rough world out there for penguins. The skua are only the tip of the iceberg.    $[Day4/Rookery/4rp08]
+{@Partner}  There’s hungry leopard seals, snow storms, melting sea ice . . .    $[Day4/Rookery/4rp09]
+{@Player}   I guess that’s why you and Margo have such a thick skin. You’re used to it by now.  $[Day4/Rookery/Player_21]
+{@Partner}  Oh, trust me, it bothers me. Those skua drive me crazy. $[Day4/Rookery/4rp11]
+{@Partner}  And some of the parents just can’t seem to figure out how to feed their chicks. $[Day4/Rookery/4rp12]
+{@Partner}  I’ve been here twenty years, and it’s still hard to watch sometimes.    $[Day4/Rookery/4rp13]
+{@Player}   Do you ever try to help them?   $[Day4/Rookery/Player_23]
+{@Partner}  Well, that’s not really my job. I mean, where am I gonna find krill?    $[Day4/Rookery/4rp14]
+{@Partner}  The fact is, we’re not here to rescue penguin chicks.   $[Day4/Rookery/4rp15]
+{@Partner}  We’re here to learn about them, and to teach other people about them.   $[Day4/Rookery/4rp16]
+{@Partner}  Plus I just love this work. I love these birds   $[Day4/Rookery/4rp17]
+{@Player}   Yeah. You’re right. $[Day4/Rookery/Player_24]
+{@Player}   But I still wish there was more I could do. $[Day4/Rookery/Player_25]
+
+{@Partner}  Why don’t you head back to the tent?    $[Day4/Rookery/4rp19]
+{@Partner}  You and Margo need to analyze your data.  $[Day4/Rookery/4rp20]
+
+
+:: WarpedBackToTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Bluff-Back"
+@once
+@interrupt
+
+$call Wait(1)
+$call TentDoor->Open()
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpGroupActive(Rookery, false)
+$call SetWarpActive(WarpDesk, true)
+
+:: WarpedInsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedObservations, targetObject == "WarpTarget-Desk"
+@interrupt
+
+$call BackgroundMusic->PlayIndoor()
+
+$call TentDoor->Close()
+$call Wait(1)
+$call SetWarpActive(WarpDesk, true)
+
+$call DeskGlow->PlayAnimation()
+$call MargoDockParticles->PlayFX()
+
+{@Margo}    Okey dokey, let’s have a look at that data! $[Day4/Tent/4tm09]
+
+$while !IsSocketedBy(DeskDock, Margo)
+$call Wait(0.5)
+$endwhile
+
+$call BigButton->SetButtonPressed(false)
+$call DeskGlow->StopAnimation()
+$call MargoDockParticles->StopFX()
+
+$while !ButtonPressed(BigButton)
+$call Wait(0.5)
+$endwhile
+
+$call MargoTabletFace->SetMeshEnabled(false)
+$call Screen->SetEnabled(true)
+$call Screen->SetTexture(0)
+
+$call Wait(2)
+
+$call MargoQuad->SetMeshEnabled(true)
+$call Screen->SetTexture(9)
+
+{@Margo}    We're getting data back from the penguins you placed trackers on. $[Day4/Tent/4tm10]
+
+$call Screen->SetTexture(10)
+
+{@Margo}    They are still eating mainly krill, and diving pretty deep to get it! $[Day4/Tent/4tm11]
+
+$call Screen->SetTexture(11)
+
+{@Margo}    And thanks to the weigh gate, we can see just how much each penguin is eating. Which is quite a bit! $[Day4/Tent/4tm12]
+{@Player}   Awesome! Thanks, Margo. $[Day4/Tent/Player_8]
+{@Margo}    Don't eat all that candy in one go! $[Day4/Tent/4tm13_midwest]
+{@Player}   Psh. I need the calories en este frío.  $[Day4/Tent/PlayerCulture_4]
+{@Player}   By the way, Margo, I made you a Valentine's card.  $[Day4/Tent/PlayerCulture_5]
+{@Margo}    Oh! Um... Don't you have a girlfriend?  $[Day4/Tent/4tm14_latine]
+{@Player}   Margo, it's Valentine's Day, Día del amor y la amistad! Y eres mi amiga.    $[Day4/Tent/PlayerCulture_6]
+{@Margo}    Oh, haha. Friendship Day. Thanks. Love you, too.  $[Day4/Tent/4tm15_latine]
+
+$call FadeOut(6.0)
+$call Wait(6)
+
+$call LoadNextDay()

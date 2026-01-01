@@ -1,0 +1,477 @@
+#basePath	Day1
+
+:: Prepare
+@function	ScenePrepare
+
+$set chapter:needCount = false
+$set chapter:needWarp = false
+$set chapter:needWarpToRookery = false
+$set chapter:pressWarp = false
+$set chapter:hasTalkedToMargo = false
+$set chapter:isLookingAtDoor = false
+$set chapter:localCount = 0
+$set chapter:isCountMode = false
+$set chapter:waitingForAction = false
+$set chapter:warpedToBluff = false
+$set chapter:warpedToRookery = false
+$set chapter:finishedFirstObservations = false
+$set chapter:cv = GetCulturalVersion(false)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+$call Sky1->Activate()
+$call Sky2->Deactivate()
+$call Sky3->Deactivate()
+$call Sky4->Deactivate()
+$call Sky5->Deactivate()
+$call Penny->LoopToGate()
+$call PennycookSurvey->ShowSurvey(0,1)
+
+$call RedAdelie->SetInteractable(false)
+$call GreenAdelie->SetInteractable(false)
+$call BlueAdelie->SetInteractable(false)
+$call PurpleAdelie->SetInteractable(false)
+$call YellowAdelie->SetInteractable(false)
+
+$if chapter:cv == 1
+$call NonCulturalAssets->Deactivate()
+$call MexicanCulturalAssets->Activate()
+$call Mex1->Activate()
+$elseif chapter:cv == 2
+$call NonCulturalAssets->Deactivate()
+$call MidAmericanCulturalAssets->Activate()
+$call Mid1->Activate()
+$endif
+
+$call DayBegin(1)
+$call FadeIn(6.0)
+$call Wait(2)
+
+$call MargoHint->PlayFX()
+
+$call SetWarpActive(WarpBluff, true)
+
+{@Player}   Wow, I can't believe I'm finally here!  $[Day1/Tent/Player_1Midwest]
+{@Player}	It’s Halloween back home. I bet the kids are running around in costumes right now. $[Day1/Tent/Player_Midwest1]
+{@Player}   Everyone seems dressed up as a penguin here.  $[Day1/Tent/Player_Midwest2]
+{@Player}   Alright, time to get focused. Those penguins aren’t gonna research themselves. $[Day1/Tent/Player_3Midwest]
+{@Player}   Step one: Find research tent. Check.    $[Day1/Tent/Player_4Midwest]
+{@Player}   Step two: Report to Margo, penguin expert and team leader.    $[Day1/Tent/Player_5Midwest]
+
+$call Tutorial1->Activate()
+$call Tutorial1->SetTutorial(true)
+$call LeftController->Activate()
+$call RightController->Activate()
+
+$goto Day1.Tutorial1Loop
+
+:: Tutorial1Loop
+@trigger Tutorial1Loop
+@who	Player
+
+$while !chapter:hasTalkedToMargo
+{@Player}   Hmmm. Where is she?     $[Day1/Tent/Player_6Midwest]
+$call Wait(15)
+$endwhile
+
+:: PickedUpMargo
+@trigger    TabletLifted
+@who        Player
+@interrupt
+@once
+
+$set chapter:hasTalkedToMargo = true
+$call MargoFace->Activate()
+$call Tutorial1->SetTutorial(false)
+$call Tutorial1->Deactivate()
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
+
+$call MargoHint->StopFX()
+
+$call Wait(1)
+
+$call Tutorial2->Activate()
+$call Tutorial2->SetTutorial(true)
+
+{@Margo}    Oh, hiya! Welcome to the South Pole, kid!   $[Day1/Tent/Margo_1]
+{@Player}   Oh, hi! I’m the new researcher here.  $[Day1/Tent/Player_7Midwest]
+{@Margo}    Uh, yah, like I said!   $[Day1/Tent/Margo_2]
+{@Margo}    And just in time, too.   $[Day1/Tent/Margo_3]
+{@Margo}    Spring is in the air… lotsa penguins out there lookin’ for love.   $[Day1/Tent/Margo_4]
+{@Margo}    It’ll be great to have ya on the team.   $[Day1/Tent/Margo_5]
+{@Margo}    I’m Margo, the penguin research coordinator.  $[Day1/Tent/1tm06]
+{@Margo}    Nice to meet ya!    $[Day1/Tent/Margo_7]
+{@Player}   You're Margo?  $[Day1/Tent/Player_9Midwest]
+{@Margo}    Well, yah, last I checked.  $[Day1/Tent/Margo_8]
+{@Player}   Sorry. It's just... I've heard about you. I didn't realize you were a computer!.   $[Day1/Tent/Player_10Midwest]
+{@Margo}	Aw, that's okay, kiddo. Lotsa people make that mistake. $[Day1/Tent/1tm10a]
+{@Margo}    Couldja peek out the front door with me? I can't wait to see who's here! $[Day1/Tent/Margo_12]
+{@Margo}    Let's skedaddle! Use "Warp" to find the waypoint outside!   $[Day1/Tent/Margo_13]
+
+$call LeftController->Activate()
+$call RightController->Activate()
+$call RightControllerSideGrip->SetMaterial(1)
+$call LeftControllerSideGrip->SetMaterial(1)
+$call XButton->SetMaterial(0)
+$call AButton->SetMaterial(0)
+
+$set chapter:needWarp = true
+$goto Day1.Tutorial2Loop
+
+:: Tutorial2Loop
+@trigger Tutorial2Loop
+@who	Player
+
+$while chapter:needWarp
+$call Wait(15)
+{@Margo}   Switch to warp mode and point me at the door.     $[Day1/Triggered/margo_warp_door]
+$endwhile
+
+:: CheckPress
+@trigger TabletTriggered
+@who	Player
+@when	chapter:waitingForAction
+@interrupt
+
+$if !chapter:isLookingAtDoor
+{@Margo}	You have to aim me out the door for warp to work	$[Day1/Triggered/margo_aim_door]
+$elseif !chapter:isCountMode, chapter:needCount
+{@Margo}	You have to switch to count mode first. $[Day1/Triggered/margo_count_first]
+$endif
+
+:: LookAtDoor
+@trigger TabletLookAt
+@who     Margo
+@when    objectId == "TentDoor"
+@priority High
+
+$set chapter:isLookingAtDoor = true
+
+$if !IsOpen(TentDoor)
+$call TentDoor->Open()
+$endif
+
+:: LookAtNonDoor
+@trigger TabletLookAt
+@who     Margo
+@when    objectId != "TentDoor"
+@priority High
+
+$set chapter:isLookingAtDoor = false
+
+:: Tutorial3Loop
+@trigger Tutorial3Loop
+@who	Player
+
+$while chapter:pressWarp, !chapter:warpedToBluff
+$call Wait(15)
+$if chapter:pressWarp
+{@Margo}   Aim me out the door and activate warp.     $[Day1/Triggered/margo_activate_warp]
+$endif
+$endwhile
+
+:: Tutorial4Loop
+@trigger Tutorial4Loop
+@who	Player
+
+$while chapter:needCount, !chapter:isCountMode
+$call Wait(15)
+$if chapter:needCount, !chapter:isCountMode
+{@Margo}   Switch to count mode.     $[Day1/Triggered/margo_switch_count]
+$endif
+$endwhile
+
+:: Tutorial5Loop
+@trigger Tutorial5Loop
+@who	Player
+
+$while chapter:pressWarp
+$call Wait(15)
+$if chapter:pressWarp, !chapter:warpedToRookery
+{@Margo}   Switch to warp mode and aim me at a warp point.     $[Day1/Triggered/margo_switch_warp]
+$endif
+$endwhile
+
+
+:: UserChangedModes
+@trigger ChangedTabletTool
+@who	player
+
+$if local:toolId != "Count"
+$set chapter:isCountMode = false
+$if local:toolId == "Move", chapter:needWarp == true
+$set chapter:waitingForAction = true
+$set chapter:isCountMode = false
+$set chapter:needWarp = false
+$call Tutorial2->SetTutorial(false)
+$call Tutorial2->Deactivate()
+$call Tutorial3->Activate()
+$call Tutorial3->SetTutorial(true)
+$call XButton->SetMaterial(1)
+$call AButton->SetMaterial(1)
+$call RightControllerTrigger->SetMaterial(0)
+$call LeftControllerTrigger->SetMaterial(0)
+$set chapter:pressWarp = true
+{@Margo} Nice! Ok, let's head out there! $[Day1/Triggered/margo_nice_okay]
+$goto Day1.Tutorial3Loop
+$endif
+$else
+$set chapter:waitingForAction = false
+$set chapter:isCountMode = true
+$if chapter:needCount == true
+$call Tutorial2->SetTutorial(false)
+$call Tutorial2->Deactivate()
+$set chapter:needCount = false
+{@Margo} Great! Now move me around so I can get a good look at all the penguins. $[Day1/Triggered/margo_move_me]
+$endif
+$endif
+
+:: WarpedOutsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Bluff"
+@interrupt
+@once
+
+$set chapter:waitingForAction = false
+$set chapter:pressWarp = false
+$set chapter:needWarp = false
+$set chapter:needCount = true
+$set chapter:warpedToBluff = true
+
+$call Tutorial3->SetTutorial(false)
+$call Tutorial3->Deactivate()
+$call Tutorial2->Activate()
+$call Tutorial2->SetTutorial(true)
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
+
+$call BackgroundMusic->PlayOutdoor()
+
+$call TentDoor->Close()
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluff, false)
+
+$call PenguinCount->ActivateCount(12)
+
+{@Margo}    Let's get started. Your first job is pretty simple. $[Day1/Bluff/1bm01]
+{@Margo}    We need a population count from up here on the Bluff. $[Day1/Bluff/1bm02]
+{@Margo}    Just turn on Count Mode and point me at the colony. $[Day1/Bluff/1bm05]
+{@Margo}    I'll collect all the data! $[Day1/Bluff/1bm06]
+
+$set chapter:waitingForAction = true
+$goto Day1.Tutorial4Loop
+
+:: ScannedFromBluff
+@trigger	TabletCounted
+@who		Player
+@interrupt
+@once
+
+$call Tutorial2->SetTutorial(false)
+$call Tutorial2->Deactivate()
+$call SetWarpGroupActive(Rookery, true)
+
+{@Margo}	Nice work, kiddo! We've got our initial population count. $[Day1/Bluff/1bm08]
+{@Partner}  Oh, hey there new guy! I see you've met Margo. I'm Penny. $[Day1/Bluff/1bp01]
+{@Player}	Wow! I remember when you talked to my 5th grade class at Gompers Elementary. $[Day1/Bluff/1bs07]
+{@Partner}	Hmm. That would've been, what, 12 or 13 years ago?  $[Day1/Bluff/1bp02]
+{@Player}	15, I think.	$[Day1/Bluff/1bs08Midwest]
+{@Margo}	Let's get on down there and say hello! Find a waypoint in the rookery. 	$[Day1/Bluff/1bm11]
+
+$set chapter:pressWarp = true
+$set chapter:needWarpToRookery = true
+
+$call Tutorial5->Activate()
+$call Tutorial5->SetTutorial(true)
+$goto Day1.Tutorial5Loop
+
+:: WarpedToRookery
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Rookery"
+@once
+@interrupt
+
+$set chapter:pressWarp = false
+$set chapter:warpedToRookery = true
+$set chapter:needWarpToRookery = false
+
+$call Wait(1)
+
+$call Tutorial5->SetTutorial(false)
+$call Tutorial2->SetTutorial(false)
+$call Tutorial5->Deactivate()
+$call Tutorial2->Deactivate()
+
+$call SetWarpGroupActive(Rookery, true)
+
+//$call Daisy->SetInteractable(false)
+//$call Meatball->SetInteractable(false)
+//$call Billy->SetInteractable(false)
+//$call Benni->SetInteractable(false)
+//$call Wendy->SetInteractable(false)
+
+$call RedAdelie->SetInteractable(true)
+$call GreenAdelie->SetInteractable(true)
+$call BlueAdelie->SetInteractable(true)
+$call PurpleAdelie->SetInteractable(true)
+$call YellowAdelie->SetInteractable(true)
+
+{@Margo}	Remember, you're just looking for five adult penguins with trackers on their wings.	$[Day1/Rookery/1rm05]
+{@Player}	How do I scan them?	$[Day1/Rookery/1rs04Midwest]
+{@Margo}	Just hold me up in front of each penguin.	$[Day1/Rookery/1rm06]
+{@Margo}	Then use "Scan" to scan!	$[Day1/Rookery/1rm07]
+{@Margo}	I’ll ID them and collect their data.	$[Day1/Rookery/1rm08]
+
+$goto Day1.MovementTutorial
+
+:: MovementTutorial
+@trigger MovementTutorial
+@who Player
+
+$call Tutorial6->Activate()
+$call Wait(5)
+$call Tutorial6->Deactivate()
+$call Tutorial7->Activate()
+$call Wait(5)
+$call Tutorial7->Deactivate()
+
+:: OnPenguinIdentified
+@trigger	TabletIdentified
+@who        Player
+@when		objectType == "BandedPenguin", chapter:finishedFirstObservations == false
+@interrupt
+
+$set	chapter:identifiedCount + 1
+$if chapter:identifiedCount >= 5
+	$call SetWarpActive(WarpBluffBack, true)
+	$set chapter:finishedFirstObservations = true
+$endif
+
+$if local:objectId == "RedAdelie"
+	$call ScanUI1->SetText("Millie")
+	$call CompleteGoal("band_red")
+	{@Margo}	Aw, Millie’s back! She had chicks for the first time last year. Great mom, too.	$[Day1/Rookery/1rm09]
+	{@Margo}	A little strict, maybe. But neither of her chicks got eaten by skua, so that’s always a good sign.	$[Day1/Rookery/1rm10]
+$elseif local:objectId == "YellowAdelie"
+	$call ScanUI2->SetText("Polo")
+	$call CompleteGoal("band_yellow")
+	{@Margo}	Oh, I'm so glad Polo made it back! He is my favorite. Such a cutie.	$[Day1/Rookery/1rm15]
+	{@Player}	Are you sure we should be picking favorites?	$[Day1/Rookery/1rs05Midwest]
+	{@Player}	I thought scientists were supposed to be objective.	$[Day1/Rookery/1rs06Midwest]
+	{@Margo}	Polo is objectively the cutest penguin you’ll ever meet.	$[Day1/Rookery/1rm17]
+$elseif local:objectId == "GreenAdelie"
+	$call ScanUI3->SetText("Winston")
+	$call CompleteGoal("band_green")
+	{@Margo}	Aw, good old Winston. $[Day1/Rookery/1rm18]
+	{@Margo}	We can always count on him to make an appearance. $[Day1/Rookery/1rm19]
+$elseif local:objectId == "BlueAdelie"
+	$call ScanUI5->SetText("Alfredo")
+	$call CompleteGoal("band_blue")
+	{@Margo}	Ooh, Alfredo’s back! I haven’t seen her since she was a chick.	$[Day1/Rookery/1rm11]
+	{@Player}	Alfredo? Why does that sound familiar?	$[Day1/Rookery/1rs08Midwest]
+	{@Margo}	Oh, I’m sure you know her. She’s internet famous.	$[Day1/Rookery/1rm12]
+	{@Margo}	Penny used to keep her page updated. Alfredo’s baby videos got two billion views!	$[Day1/Rookery/1rm13]
+$elseif local:objectId == "PurpleAdelie"
+	$call ScanUI4->SetText("Fuzz")
+	$call CompleteGoal("band_purple")
+	{@Margo}	Aw, it’s Fuzz! I remember him. His hair was crazy when he was growing. 	$[Day1/Rookery/1rm14]
+$endif
+
+$if chapter:identifiedCount >= 5
+	$call CompleteMainGoal("scan_banded_penguins")
+	$call WarpText->SetText("Warp back to the tent")
+	{@Margo}	Great work kid! You've got your 5 penguins, $[Day1/Rookery/1rm20]
+	{@Player}	Awesome. The Fantastic Five!	$[Day1/Rookery/1rs10Midwest]
+	{@Margo}	Yikes. You are new, huh? Penguins have flippers, not fins.	$[Day1/Rookery/1rm21]
+	{@Player}	Let's head back. It's freezing out here! 	$[Day1/Rookery/1rs12Midwest]
+$endif
+
+:: WarpedBackToTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedFirstObservations, targetObject == "WarpTarget-Bluff-Back"
+@once
+@interrupt
+
+$call Wait(1)
+$call TentDoor->Open()
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpGroupActive(Rookery, false)
+$call SetWarpActive(WarpDesk, true)
+
+:: WarpedInsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedFirstObservations, targetObject == "WarpTarget-Desk"
+@interrupt
+
+$call BackgroundMusic->PlayIndoor()
+
+$call TentDoor->Close()
+$call Wait(1)
+$call SetWarpActive(WarpDesk, true)
+
+$call DeskGlow->PlayAnimation()
+$call MargoDockParticles->PlayFX()
+
+{@Margo}    Okay, let's have a look at that data!  $[Day1/Tent/1tm14]
+{@Margo}    Dock me in the port by the computer over yonder.   $[Day1/Tent/1tm15]
+
+
+$call Tutorial4->Activate()
+$call Tutorial4->SetTutorial(true)
+
+$while !IsSocketedBy(DeskDock, Margo)
+$call Wait(0.5)
+$endwhile
+
+$call Tutorial4->SetTutorial(false)
+$call Tutorial4->Deactivate()
+
+{@Player}   There ya go. Safe and sound.   $[Day1/Tent/1ts01Midwest]
+{@Player}   And now the big ole button! $[Day1/Tent/Player_12Midwest]
+
+$call BigButton->SetButtonPressed(false)
+$call DeskGlow->StopAnimation()
+$call MargoDockParticles->StopFX()
+
+$while !ButtonPressed(BigButton)
+$call Wait(0.5)
+$endwhile
+
+$call MargoTabletFace->SetMeshEnabled(false)
+$call Screen->SetEnabled(true)
+$call Screen->SetTexture(0)
+
+$call Wait(2)
+
+$call Screen->SetTexture(1)
+$call MargoQuad->SetMeshEnabled(true)
+
+{@Margo}    There are 25 penguins who have returned to the colony, most are adults, but a few are juveniles.    $[Day1/Tent/1tm16]
+
+{@Margo}    Penny counted the rest of the rookery, and in total there are 1527 returners!    $[Day1/Tent/1tm17]
+
+$call Screen->SetTexture(2)
+
+{@Margo}	Your cohort includes five penguins, two females and three males. Alfredo, Fuzz, Polo, Millie, and Winston.	$[Day1/Tent/1tm18]
+{@Margo}	Great first day, kiddo! Get some rest now, why don'tcha?  	$[Day1/Tent/Margo_16]
+{@Margo}	We'll get back at it bright and early tomorrow.  	$[Day1/Tent/1tm25]
+{@Player}	Isn't it always bright here? 	$[Day1/Tent/1ts02Midwest]
+{@Margo}	Yep. Pro tip: invest in a good sleep mask.   	$[Day1/Tent/1tm26]
+{@Margo}	See ya tomorrow, kid!   	$[Day1/Tent/1tm27]
+
+$call FadeOut(6.0)
+$call Wait(6)
+
+$call LoadNextDay()
+ 

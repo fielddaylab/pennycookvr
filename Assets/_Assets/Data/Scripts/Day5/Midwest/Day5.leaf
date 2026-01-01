@@ -1,0 +1,235 @@
+#basePath	Day5
+
+:: Prepare
+@function	ScenePrepare
+
+$set chapter:legCount = 0
+$set chapter:legTrackersStarted = false
+$call ClearGoals()
+$set chapter:cv = GetCulturalVersion(false)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
+$call BackgroundMusic->PlayIndoor()
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+$call DataLoggerPlate->Deactivate()
+$call ChickBandPlate->Deactivate()
+$call Sky1->Deactivate()
+$call Sky2->Deactivate()
+$call Sky3->Deactivate()
+$call Sky4->Deactivate()
+$call Sky5->Activate()
+$call Sky5->SetSkybox(0.003)
+$call Ocean->SetMaterial(4);
+$call Terrain1->SetMaterial(4);
+$call Terrain2->SetMaterial(4);
+$call Terrain3->SetMaterial(4);
+$call Penny->LoopToGate()
+$call PennycookSurvey->ShowSurvey(2, 4)
+
+$if chapter:cv == 1
+$call NonCulturalAssets->Deactivate()
+$call MexicanCulturalAssets->Activate()
+$call Mex5->Activate()
+$elseif chapter:cv == 2
+$call NonCulturalAssets->Deactivate()
+$call MidAmericanCulturalAssets->Activate()
+$call Mid5->Activate()
+$endif
+
+$call DayBegin(5)
+$call FadeIn(6.0)
+$call Wait(2)
+
+$call SetWarpActive(WarpBluff, true)
+$call MargoFace->Activate()
+
+{@Margo}   Mornin', kiddo!   $[Day5/Tent/5tm01]
+{@Margo}   This is it. Just think… this time tomorrow you’ll be back in Wisconsin.  $[Day5/Tent/5tm02]
+{@Margo}   Aw, what’s the matter? I thought you’d be happy.  $[Day5/Tent/5tm03]
+{@Player}   Well, yes . . . and no.   $[Day5/Tent/Player_1Midwest]
+{@Player}   I can't wait to see Lola and my family. But I’m really gonna miss this place.     $[Day5/Tent/Player_2Midwest]
+{@Margo}   Well, if it makes you feel any better, the penguins are movin’ on out, too. They’ll spend the next few months out on the open sea.   $[Day5/Tent/5tm04]
+{@Margo}	This place is about to get real dark, and real quiet.	$[Day5/Tent/5tm05]
+{@Player}	Good point. We’d better get started.	$[Day5/Tent/Player_3Midwest]
+{@Player}	What’s on the list today?	$[Day5/Tent/Player_4Midwest]
+{@Margo}	Welp, since the season’s just about over, we’ll start by lookin’ over all the data we collected.	$[Day5/Tent/5tm06]
+{@Margo}	We followed our five breeding pairs over the season. 	$[Day5/Tent/5tm07]
+{@Margo}	The parents worked hard to hatch their eggs and keep their chicks safe.	$[Day5/Tent/5tm08]
+{@Margo}	Some of them succeeded . . . 	$[Day5/Tent/5tm09]
+{@Margo}	The ones who didnt hung around the empty nest for a few days, and then got back to the business of bein' penguins. 	$[Day5/Tent/5tm10]
+{@Margo}	The other three chicks are lookin' good, too.	$[Day5/Tent/5tm11]
+{@Margo}	The parents' jobs are over until next year. 	$[Day5/Tent/5tm12]
+{@Margo}	It's almost time for the chicks to head out over the sea ice and fend for themselves. 	$[Day5/Tent/5tm13]
+{@Player}	Awesome. Thanks, Margo.	$[Day5/Tent/Player_5Midwest]
+{@Player}	Not a bad season for the penguins.	$[Day5/Tent/Player_6Midwest]
+{@Margo}	Yep. And not a bad first season for you, either. 	$[Day5/Tent/5tm14]
+{@Margo}	We’ve still got a few more tasks left to wrap things up. 	$[Day5/Tent/5tm15]
+{@Margo}	Whenever you’re ready, let’s head out to the Bluff. 	$[Day5/Tent/5tm16]
+
+
+:: WarpedOutsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Bluff"
+@once
+@interrupt
+
+$call BackgroundMusic->PlayOutdoor()
+
+$call TentDoor->Close()
+
+$call Wait(1)
+
+$call SetWarpGroupActive(Rookery, true)
+
+
+{@Margo}   Okay, kiddo. Just one task down at the Rookery today. $[Day5/Bluff/5bm01]
+{@Margo}   We need to put trackers on the penguins who had chicks this year. $[Day5/Bluff/5bm02]
+
+:: WarpedToRookery
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Rookery"
+@once
+@interrupt
+
+$call GPSTrackerPlate->Activate()
+$call LegTracker1->SetMeshEnabled(true)
+$call LegTracker2->SetMeshEnabled(true)
+$call LegTracker3->SetMeshEnabled(true)
+
+$set chapter:legTrackersStarted = true
+
+$call Wait(1)
+
+
+{@Player}	Wow… it’s so quiet here.	$[Day5/Rookery/Player_1Midwest]
+{@Margo}	Looks like some of our Adelie colony has already headed out to sea.	$[Day5/Rookery/5rm01]
+{@Margo}	Luckily, your Fliptastic Five is still here!	$[Day5/Rookery/5rm02]
+{@Margo}	Though technically we’re just lookin’ for the Fliptastic Four.	$[Day5/Rookery/5rm03]
+{@Margo}	Since Fuzz didn’t have any successful chicks this year, he won’t get a tracker.	$[Day5/Rookery/5rm04]
+{@Player}	Oh, yeah. Poor Fuzz and Daisy.	$[Day5/Rookery/Player_2Midwest]
+{@Player}	Do you think it’ll go better for them next season?	$[Day5/Rookery/Player_3Midwest]
+{@Margo}	I sure hope so, kiddo.	$[Day5/Rookery/5rm05]
+{@Margo}	Either way, we’ll be here to cheer ‘em on.	$[Day5/Rookery/5rm06]
+{@Margo}	Time to band those penguin parents.	$[Day5/Rookery/5rm07]
+{@Player}	Got it.	$[Day5/Rookery/Player_4Midwest]
+
+:: OnGrabbedLegTracker
+@trigger ObjectGrabbed
+@when   objectType == "LegTracker"
+
+$if local:hand == "Left"
+$call LeftHandCollider->ReduceSize()
+$elseif local:hand == "Right"
+$call RightHandCollider->ReduceSize()
+$endif
+
+:: OnDroppedLegTracker
+@trigger ObjectDropped
+@when   objectType == "LegTracker"
+
+$if local:hand == "Left"
+$call LeftHandCollider->ResetSize()
+$elseif local:hand == "Right"
+$call RightHandCollider->ResetSize()
+$endif
+
+:: OnSocketedLegTracker
+@trigger ObjectSocketed
+@when   objectType == "LegTracker", socketType == "LegSocket", chapter:legTrackersStarted == true
+@interrupt
+
+$set chapter:legCount + 1
+
+$if chapter:legCount == 1
+$call CompleteGoal("goal_place_leg_tracker_1")
+$elseif chapter:legCount == 2
+$call CompleteGoal("goal_place_leg_tracker_2")
+$elseif chapter:legCount == 3
+$call CompleteGoal("goal_place_leg_tracker_3")
+$endif
+
+$if chapter:legCount >= 3
+$goto Day5.LegTrackersComplete
+$endif
+
+:: OnUnsocketedLegTracker
+@trigger ObjectUnsocketed
+@when   objectType == "LegTracker", socketType == "LegSocket", chapter:legTrackersStarted == true
+$set chapter:legCount - 1
+
+$if chapter:legCount == 0
+$call RemoveGoal("goal_place_leg_tracker_1")
+$elseif chapter:legCount == 1
+$call RemoveGoal("goal_place_leg_tracker_2")
+$elseif chapter:legCount == 2
+$call RemoveGoal("goal_place_leg_tracker_3")
+$endif
+
+:: LegTrackersComplete
+@trigger LegTrackersComplete
+@who	Player
+@once
+
+$call CompleteMainGoal("place_leg_trackers")
+
+{@Margo}	Great work, kiddo.	$[Day5/Rookery/5rm10]
+{@Margo}	Your penguins are all ready to head out into the world.	$[Day5/Rookery/5rm11]
+{@Player}	Yeah. So are we, I guess.	$[Day5/Rookery/Player_7Midwest]
+{@Margo}	Ah ah ah... Not so fast. Just one more job.	$[Day5/Rookery/5rm12]
+{@Margo}	Let’s head back up to the Bluff.	$[Day5/Rookery/5rm13]
+
+$call SetWarpActive(WarpBluffBack, true)
+$call WarpText->SetText("Warp back to the bluff")
+
+:: WarpedBackToBluff
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Bluff-Back"
+@once
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpGroupActive(Rookery, false)
+
+{@Margo}	Almost done. Your last task of the season is to do one more scan of the chicks and adults in the Rookery.	$[Day5/Bluff/5bm03]
+
+$call PenguinCount->ActivateCount(18)
+
+:: ScannedFromBluff
+@trigger	TabletCounted
+@who		Player
+@interrupt
+@once
+
+{@Margo}	They’ll be back next year, around the same time you are.	$[Day5/Bluff/5bm05]
+{@Partner}	Hey, kid. You ready? The plane’s waiting.	$[Day5/Bluff/5bp01]
+{@Player}	Yeah. I’m ready.	$[Day5/Bluff/Player_1Midwest]
+{@Player}	Margo, you coming?	$[Day5/Bluff/Player_2Midwest]
+{@Margo}	Nah. Somebody’s gotta watch over this place while you’re gone.	$[Day5/Bluff/5bm06]
+{@Player}	You’re staying here? All winter??	$[Day5/Bluff/Player_3Midwest]
+{@Margo}	Aw, don’t worry, kiddo. I’m literally built for this.	$[Day5/Bluff/5bm07]
+{@Margo}	That’s what Hibernate Mode is for!	$[Day5/Bluff/5bm08]
+{@Player}	Okay. See you next year, Margo.	$[Day5/Bluff/Player_4Midwest]
+{@Margo}	You too, kiddo.	$[Day5/Bluff/5bm10]
+
+$call FadeOut(10.0)
+$call Wait(10)
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call FadeIn(3.0)
+//show and scroll credits...
+$call Credits->Activate()
+$call Wait(3)
+$call Credits->Scroll(0.0004)
+$call Wait(50)
+$call FadeOut(5.0)
+$call Wait(5)
+$call LoadNextDay()

@@ -1,0 +1,424 @@
+#basePath	Day2
+
+:: Prepare
+@function	ScenePrepare
+$set chapter:identifiedCount = 0
+$set chapter:finishedAllObservations = false
+$set chapter:finishedObservations = false
+$set chapter:trackersStarted = false
+$call ClearGoals()
+$set chapter:cv = GetCulturalVersion(false)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
+$call BackgroundMusic->PlayIndoor()
+
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+$call Sky1->Deactivate()
+$call Sky2->Activate()
+$call Sky2->SetSkybox(0.008)
+$call Sky3->Deactivate()
+$call Sky4->Deactivate()
+$call Sky5->Deactivate()
+$call Ocean->SetMaterial(1);
+$call Terrain1->SetMaterial(1);
+$call Terrain2->SetMaterial(1);
+$call Terrain3->SetMaterial(1);
+$call Screen->SetEnabled(false)
+$call WaterAudio->SetVolume(1.0)
+$call Penny->LoopToGate()
+$call PennycookSurvey->ShowSurvey(1, 2)
+
+$if chapter:cv == 1
+$call NonCulturalAssets->Deactivate()
+$call MexicanCulturalAssets->Activate()
+$call Mex2->Activate()
+$elseif chapter:cv == 2
+$call NonCulturalAssets->Deactivate()
+$call MidAmericanCulturalAssets->Activate()
+$call Mid2->Activate()
+$endif
+
+$call DayBegin(2)
+$call FadeIn(6.0)
+$call Wait(2)
+
+$call SetWarpActive(WarpBluff, true)
+
+$call Daisy->SetMatingDance()
+$call Meatball->SetMatingDance()
+$call Billy->SetMatingDance()
+$call Benni->SetMatingDance()
+$call Wendy->SetMatingDance()
+
+$call RedAdelie->SetMatingDance()
+$call GreenAdelie->SetMatingDance()
+$call YellowAdelie->SetMatingDance()
+$call PurpleAdelie->SetMatingDance()
+$call BlueAdelie->SetMatingDance()
+
+{@Margo}   Well, good mornin!   $[Day2/Tent/2tm00]
+
+:: PickedUpMargo2
+@trigger    TabletLifted
+@who        Player
+@interrupt
+@once
+
+$call MargoFace->Activate()
+$call SetWarpActive(WarpBluff, true)
+
+$call Wait(1)
+
+{@Player}   It’s weird… back home the leaves would be falling. Here, it’s just ice and more ice.    $[Day2/Tent/Player_Midwest1]
+{@Margo}	Paper leaves, hand turkey, zero pie. A very Antarctic Thanksgiving.	$[Day2/Tent/2tm01_culture]
+{@Margo}    Maybe we can rustle up some turkey soup tonight.    $[Day2/Tent/2tm02_midwest]
+{@Margo}    Got your cold weather gear on?   $[Day2/Tent/2tm06]
+{@Player}    All five layers, plus some extra hand warmers. I'm sure thankful for good gear.    $[Day2/Tent/Player_1Midwest]
+{@Margo}    Whenever you're ready, point me at the door, and we'll head out to the Bluff!     $[Day2/Tent/2tm09]
+
+
+:: WarpedOutsideTent2
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Bluff"
+@interrupt
+@once
+
+$call BackgroundMusic->PlayOutdoor()
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluff, false)
+
+$call TentDoor->Close()
+
+$call PenguinCount->ActivateCount(16)
+
+{@Player}    Wow, look at them all! $[Day2/Bluff/Player_1Midwest]
+{@Partner}	We've got some new arrivals, think you can get a population count from up there?  $[Day2/Bluff/2bp01]
+
+
+:: ScannedFromBluff2
+@trigger	TabletCounted
+@who		Player
+@interrupt
+@once
+
+{@Partner}  Great job, kid! We’ve got a new population count.  $[Day2/Bluff/2bp02]
+
+$call SetWarpGroupActive(Rookery, true)
+
+:: WarpedToRookery2
+@trigger    AtWarpPoint
+@who        Player
+@when       targetObject == "WarpTarget-Rookery"
+@once
+
+$call Wait(1)
+
+$call FuzzLegTracker->SetMeshEnabled(true)
+$call AlfredoLegTracker->SetMeshEnabled(true)
+$call WinstonLegTracker->SetMeshEnabled(true)
+$call MillieLegTracker->SetMeshEnabled(true)
+$call PoloLegTracker->SetMeshEnabled(true)
+$call AdelieLegTracker1->SetMeshEnabled(true)
+$call AdelieLegTracker2->SetMeshEnabled(true)
+
+$call Daisy->SetInteractable(false)
+$call Meatball->SetInteractable(false)
+$call Billy->SetInteractable(false)
+$call Benni->SetInteractable(false)
+$call Wendy->SetInteractable(false)
+
+$call Daisy->SetIdentified(false)
+$call Meatball->SetIdentified(false)
+$call Billy->SetIdentified(false)
+$call Benni->SetIdentified(false)
+$call Wendy->SetIdentified(false)
+
+$call ExclaimPolo->Activate()
+$call ExclaimMillie->Activate()
+$call ExclaimFuzz->Activate()
+$call ExclaimWinston->Activate()
+$call ExclaimAlfredo->Activate()
+
+{@Margo}   Okey dokey. Time to track down the Funtastic Five $[Day2/Rookery/2rm01]
+{@Player}  The Fliptastic Five. $[Day2/Rookery/Player_1]
+{@Margo}    And get an ID on their mates. $[Day2/Rookery/2rm02]
+{@Player}   How can I tell who their mates are? $[Day2/Rookery/Player_2Midwest]
+{@Margo}    You will need to look for the mating dances.    $[Day2/Rookery/2rm03]
+{@Player}   Oh. Right. Got it.  $[Day2/Rookery/Player_3Midwest]
+
+:: OnBillyIdentified
+@trigger	TabletBehaviorInstanceCaptured
+@who        Player
+@when		behaviorId == "id_millie"
+@interrupt
+@once
+
+$set	chapter:identifiedCount + 1
+$call CompleteGoal("id_millie")
+$call ExclaimMillie->Deactivate()
+
+{@Player}   Looks like Millie paired up with her same mate from last year - Billie!  $[Day2/Rookery/Player_4Midwest]
+{@Player}	Hmmm, Millie and Billie. Cute. $[Day2/Rookery/Player_5Midwest]
+
+$if chapter:identifiedCount >= 5
+$goto Day2.CheckScanComplete
+$endif
+
+:: OnMeatballIdentified
+@trigger	TabletBehaviorInstanceCaptured
+@who        Player
+@when		behaviorId == "id_alfredo"
+@interrupt
+@once
+
+$set	chapter:identifiedCount + 1
+$call CompleteGoal("id_alfredo")
+$call ExclaimAlfredo->Deactivate()
+
+
+{@Margo}    Hmmm. Alfredo’s mate doesn’t have a tag. Looks like a newbie.   $[Day2/Rookery/2rm04]
+{@Margo}    Why don’t you go ahead and name him?    $[Day2/Rookery/2rm05]
+{@Player}   Okay, let’s see. Alfredo and…. um….how about . . . $[Day2/Rookery/Player_6Midwest]
+{@Player}    . . Meatball?  $[Day2/Rookery/Player_7Midwest]
+{@Player}   Now I’m getting hungry. Wish I could eat some candybars out here but I don't want to accidentaly liter. I'll wait till I'm back in the tent.     $[Day2/Rookery/Player_8Midwest]
+
+$if chapter:identifiedCount >= 5
+$goto Day2.CheckScanComplete
+$endif
+
+:: OnDaisyIdentified
+@trigger	TabletBehaviorInstanceCaptured
+@who        Player
+@when		behaviorId == "id_fuzz"
+@interrupt
+@once
+
+$set	chapter:identifiedCount + 1
+$call CompleteGoal("id_fuzz")
+$call ExclaimFuzz->Deactivate()
+
+{@Margo}    Hmm. Fuzz and Daisy. Interesting.   $[Day2/Rookery/2rm07]
+{@Player}   What's interesting?  $[Day2/Rookery/Player_9Midwest]
+{@Margo}    I just hope Fuzz is ready to be a parent. He’s so easily distracted.    $[Day2/Rookery/2rm08]
+{@Margo}    And it’s the first mating season for both of these penguins.    $[Day2/Rookery/2rm09]
+{@Player}   I’m sure they’ll be fine. It’s instinct for them, right?    $[Day2/Rookery/Player_10Midwest]
+{@Margo}    You’d be surprised, kid. Not all penguins make good parents.    $[Day2/Rookery/2rm10]
+{@Player}   We’ll just have to wait and see.    $[Day2/Rookery/Player_11Midwest]
+
+$if chapter:identifiedCount >= 5
+$goto Day2.CheckScanComplete
+$endif
+
+
+:: OnWendyIdentified
+@trigger	TabletBehaviorInstanceCaptured
+@who        Player
+@when		behaviorId == "id_winston"
+@interrupt
+@once
+
+$set	chapter:identifiedCount + 1
+$call CompleteGoal("id_winston")
+$call ExclaimWinston->Deactivate()
+
+{@Margo}    Aw, Winston and Wendy! I was hopin' they'd find each other again. $[Day2/Rookery/2rm11]
+{@Margo}   They've had successful chicks every year. I keep worrying their luck's gonna run out, but so far, so good. $[Day2/Rookery/2rm12]
+
+$if chapter:identifiedCount >= 5
+$goto Day2.CheckScanComplete
+$endif
+
+:: OnBenniIdentified
+@trigger	TabletBehaviorInstanceCaptured
+@who        Player
+@when		behaviorId == "id_polo"
+@interrupt
+@once
+
+$set	chapter:identifiedCount + 1
+$call CompleteGoal("id_polo")
+$call ExclaimPolo->Deactivate()
+
+
+{@Margo}   Ooh, Benni and Polo! What a good match.  $[Day2/Rookery/2rm13]
+{@Margo}   Polo is such a sweetie. I bet he'll make a great dad.  $[Day2/Rookery/2rm14]
+
+$if chapter:identifiedCount >= 5
+$goto Day2.CheckScanComplete
+$endif
+
+:: CheckScanComplete
+@trigger    CheckScanComplete
+@who        Player
+@once
+
+$call SetCurrentMainGoal("retrieve_leg_trackers")
+$call CompleteMainGoal("identify_mates")
+
+
+$call GPSTrackerPlate->Activate()
+
+$call LegTrackerHighlight1->Activate()
+$call LegTrackerHighlight2->Activate()
+$call LegTrackerHighlight3->Activate()
+
+$call CaseLegSocketRight->ReleaseCurrentSocket(true)
+$call CaseLegSocketLeft->ReleaseCurrentSocket(true)
+$call CaseLegSocketMiddle->ReleaseCurrentSocket(true)
+
+$call Wait(2)
+
+$set chapter:trackersStarted = true
+
+{@Margo}    Okay, kid. This is the tricky part. You’ll need to remove each penguin’s GPS tracker. $[Day2/Rookery/2rm15]
+{@Margo}    Place one hand on a penguin to hold it still.    $[Day2/Rookery/2rm16]
+{@Margo}    Then use your other hand to grab the tracker from its leg.   $[Day2/Rookery/2rm17]
+{@Margo}   And release it near the Pelican Case to drop it inside.   $[Day2/Rookery/2rm18]
+{@Player}   Got it. No problem. $[Day2/Rookery/Player_12Midwest]
+{@Margo}    Just watch out for their beaks. $[Day2/Rookery/2rm19]
+{@Margo}    These little sweeties might look harmless, but they'll nip ya when they feel threatened.    $[Day2/Rookery/2rm20]
+{@Margo}    And they've got a mean bite.    $[Day2/Rookery/2rm21]
+
+:: OnFuzzTrackerRemoved
+@trigger TrackerRemoved
+@when   objectId == "FuzzLegTracker"
+@interrupt
+@once
+
+{@Player}   Ouch! Fuzz, just hold still!    $[Day2/Rookery/Player_14Midwest]
+
+:: OnPenguinLegTrackerSocketed
+@trigger	ObjectSocketed
+@when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
+$set	chapter:removedCount + 1
+
+$if chapter:removedCount == 1
+$call CompleteGoal("goal_gps_tracker_1")
+$elseif chapter:removedCount == 2
+$call CompleteGoal("goal_gps_tracker_2")
+$elseif chapter:removedCount == 3
+$call CompleteGoal("goal_gps_tracker_3")
+$endif
+
+$if chapter:removedCount >= 3
+	$call TriggerResponse(TrackersCompleted)
+$endif
+
+:: OnPenguinLegTrackerUnsocketed
+@trigger	ObjectUnsocketed
+@when		objectType == "LegTracker", socketType == "CaseLegSocket", chapter:trackersStarted == true
+$set	chapter:removedCount - 1
+
+$if chapter:removedCount == 0
+$call RemoveGoal("goal_gps_tracker_1")
+$elseif chapter:removedCount == 1
+$call RemoveGoal("goal_gps_tracker_2")
+$elseif chapter:removedCount == 2
+$call RemoveGoal("goal_gps_tracker_3")
+$endif
+
+:: TrackersCompleted
+@trigger	TrackersCompleted
+@who		Player
+@when		chapter:finishedTrackers == false
+@interrupt
+
+$set chapter:finishedTrackers = true
+$call CompleteMainGoal("retrieve_leg_trackers")
+
+$call Wait(0.3)
+{@Margo}  Nice work, kid! That’s all the GPS trackers.   $[Day2/Rookery/2rm24]
+$call SetWarpActive(WarpBluffBack, true)
+$set chapter:finishedAllObservations = true
+$call WarpText->SetText("Warp back to the tent")
+{@Margo}    Okay, that’s all the data we need!  $[Day2/Rookery/2rm25]
+{@Margo}    When you're ready we can head back to the research tent and analyze our data.   $[Day2/Rookery/2rm26]
+
+:: WarpedBackToTent2
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Bluff-Back"
+@once
+
+$call Wait(1)
+$call TentDoor->Open()
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpGroupActive(Rookery, false)
+$call SetWarpActive(WarpDesk, true)
+
+:: WarpedInsideTent2
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:finishedAllObservations, targetObject == "WarpTarget-Desk"
+@interrupt
+
+$call BackgroundMusic->PlayIndoor()
+
+$call TentDoor->Close()
+$call Wait(1)
+$call SetWarpActive(WarpDesk, true)
+
+$call DeskGlow->PlayAnimation()
+$call MargoDockParticles->PlayFX()
+
+{@Margo}    Okay dokey! Just dock me in the port there, and I’ll take a look at our data. $[Day2/Tent/2tm9]
+
+$while !IsSocketedBy(DeskDock, Margo)
+$call Wait(0.5)
+$endwhile
+
+$call BigButton->SetButtonPressed(false)
+$call DeskGlow->StopAnimation()
+$call MargoDockParticles->StopFX()
+
+$while !ButtonPressed(BigButton)
+$call Wait(0.5)
+$endwhile
+
+$call MargoTabletFace->SetMeshEnabled(false)
+$call Screen->SetEnabled(true)
+$call Screen->SetTexture(0)
+
+$call Wait(2)
+
+$call Screen->SetTexture(3)
+$call MargoQuad->SetMeshEnabled(true)
+
+{@Margo}    Looks like the population has increased as more penguins show up for mating season.    $[Day2/Tent/2tm10]
+
+$call Wait(1)
+
+$call Screen->SetTexture(4)
+
+{@Margo}    All five of your penguins have formed breeding pairs!    $[Day2/Tent/2tm11]
+{@Margo}    Most penguin parents lay two eggs each season . . . but not all of them end up hatching.    $[Day2/Tent/2tm12]
+{@Margo}    We'll have to wait and see what happens.    $[Day2/Tent/2tm13]
+
+$call Screen->SetTexture(5)
+
+{@Margo}	I combined GPS data from Penny along with data from your group and now we have a better picture for where the Adelie stay overwinter. $[Day2/Tent/2tm01]
+
+$call MargoQuad->SetMeshEnabled(false)
+
+$call Wait(1)
+
+$call Screen->SetTexture(6)
+
+{@Margo}	Looks like they really like staying on the ice floes! Makes sense, that’s where the food is. $[Day2/Tent/2tm02]
+{@Margo}    Happy Thanksgiving! Time for you to dig into that Turkey soup.     $[Day2/Tent/2tm03_midwest]
+{@Player}   That sounds great. I might even have a cracker and some apple sauce. That's almost an apple pie, right?     $[Day2/Tent/Player_Midwest2]
+{@Margo}    Ehh.. totally!    $[Day2/Tent/2tm04_midwest]
+
+$call FadeOut(6.0)
+$call Wait(6)
+
+$call LoadNextDay()

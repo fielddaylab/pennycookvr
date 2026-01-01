@@ -1,0 +1,453 @@
+#basePath	Day3
+
+:: Prepare
+@function	ScenePrepare
+$set chapter:scanCount = 0
+$set chapter:finishedScan = false
+$set chapter:dataTrackersStarted = false
+$call ClearGoals()
+$set chapter:cv = GetCulturalVersion(false)
+
+:: StartGame
+@trigger    SceneReady
+@who        Player
+
+$call LeftController->Deactivate()
+$call RightController->Deactivate()
+$call BackgroundMusic->PlayIndoor()
+$call PlaceAndRotatePlayerAt(WarpDesk, true)
+$call SetAllWarpsActive(false)
+$call Sky1->Deactivate()
+$call Sky2->Deactivate()
+$call Sky3->Activate()
+$call Sky3->SetSkybox(0.003)
+$call Sky4->Deactivate()
+$call Sky5->Deactivate()
+$call Ocean->SetMaterial(2);
+$call Terrain1->SetMaterial(2);
+$call Terrain2->SetMaterial(2);
+$call Terrain3->SetMaterial(2);
+$call Screen->SetEnabled(false)
+$call Penny->LoopToGate()
+$call PennycookSurvey->Deactivate()
+
+$if chapter:cv == 1
+$call NonCulturalAssets->Deactivate()
+$call MexicanCulturalAssets->Activate()
+$call Mex3->Activate()
+$elseif chapter:cv == 2
+$call NonCulturalAssets->Deactivate()
+$call MidAmericanCulturalAssets->Activate()
+$call Mid3->Activate()
+$endif
+
+$call DayBegin(3)
+$call FadeIn(6.0)
+$call Wait(2)
+
+$call SetWarpActive(WarpBluff, true)
+
+$call Wendy->SetRegurgitation()
+//$call Billy->SetRegurgitation()
+
+$call MargoFace->Activate()
+
+{@Margo}   Mornin’, kiddo! You’re up awfully early.   $[Day3/Tent/3tm01]
+{@Player}   I couldn't fall back asleep after I realized what day it is. ¡Es dia de las Posadas Navideñas!  $[Day3/Tent/PlayerCulture_2]
+{@Player}   I think I dreamed last night that one of the penguins knocked on my door pidiendo posada, just like Maria y Jose.   $[Day3/Tent/PlayerCulture_3]
+{@Margo}    Well, they do have their own babies on the way. $[Day3/Tent/3tm01b_latine]
+{@Player}   I was too excited to sleep last night.   $[Day3/Tent/Player_1]
+{@Player}   Some of the eggs have probably already hatched!  $[Day3/Tent/Player_2]
+{@Player}   I hope Alfredo’s doing okay. $[Day3/Tent/Player_3]
+{@Player}   And hopefully Fuzz has figured things out by now . . . I don’t know what he was thinking yesterday.  $[Day3/Tent/Player_4]
+{@Margo}   Hey, what happened to not playin’ favorites?     $[Day3/Tent/3tm02]
+{@Player}   Oh, uh . . . I just . . .    $[Day3/Tent/Player_5]
+{@Margo}   I’m just teasin’.     $[Day3/Tent/3tm03]
+{@Margo}    Let’s get out there and see how your Fabulous Five are doin’.    $[Day3/Tent/3tm04]
+
+:: WarpedOutsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       targetId == "WarpBluff"
+@once
+@interrupt
+
+$call BackgroundMusic->PlayOutdoor()
+
+$call TentDoor->Close()
+
+$call Wait(1)
+
+$call SetWarpActive(WarpBluff, false)
+
+$call SetWarpGroupActive(Rookery, true)
+
+{@Player}	Boy the rookery sure is pink... $[Day3/Bluff/3bs1]
+{@Player}   So.. what's on our list today?  $[Day3/Bluff/Player_1]
+{@Margo}   Guano from eating krill. Penguin's turn so much snow in antarctica pink from krill that it's visible from the International Space Station!   $[Day3/Bluff/3bm01]
+{@Margo}	We need to get some data on those chicks, and see how the parents are doin'.  $[Day3/Bluff/3bm02]
+
+:: WarpedToRookery
+@trigger    AtWarpPoint
+@who        Player
+@when       targetId == "WarpRookery"
+@once
+@interrupt
+
+$call Wait(1)
+
+$call SetWarpGroupActive(Rookery, true)
+
+$call FuzzEgg->Activate()
+$call AlfredoEgg->Activate()
+$call MillieEgg->Activate()
+$call PoloEgg->Activate()
+
+$call AlfredoEgg->SetIdentified(false)
+$call MillieBillyChick->SetIdentified(false)
+$call FuzzEgg->SetIdentified(false)
+$call WinstonWendyChick->SetIdentified(false)
+
+{@Partner}  This is our favorite time of year around here.   $[Day3/Rookery/3rp03]
+{@Player}   The skua are pretty active today   $[Day3/Rookery/Player_2]
+{@Partner}  Harmless to adult penguins, but they love a nice breakfast of penguin chicks and eggs.  $[Day3/Rookery/3rp05]
+{@Player}   I want to help them.  $[Day3/Rookery/Player_4]
+{@Partner}    Help the chicks? Yeah, I wish.  $[Day3/Rookery/3rp06]
+{@Partner}    We cant interfere.  $[Day3/Rookery/3rp07]
+{@Partner}    You just keep an eye on your—what did you call them? $[Day3/Rookery/3rp08]
+{@Player}    Oh, uh… the Fliptastic Five? $[Day3/Rookery/Player_5]
+{@Partner}   Right. Take a look at which eggs hatched and how the chicks are doing.  $[Day3/Rookery/3rp09]
+{@Partner}  You’ll also need to document what the parents are feeding their chicks. $[Day3/Rookery/3rp10]
+{@Player}   Got it. $[Day3/Rookery/Player_6]
+
+{@Margo}    Scan the nests to see if eggs are hatched or missing.   $[Day3/Rookery/3rm01]
+//{@Margo}    We need to see how many eggs are hatched and if any are missing.    $[Day3/Rookery/3rm02]
+
+:: OnMillieBillyIdentified
+@trigger	TabletIdentified
+@who        Player
+@when		objectId == "MillieBillyChick"
+@once
+@interrupt
+
+$set	chapter:scanCount + 1
+$if chapter:scanCount >= 5 
+    $set	chapter:finishedScan = true
+$endif
+$call CompleteGoal("id_millie_nest")
+
+{@Player}   Yes! Millie and Billy have hatched a healthy chick! $[Day3/Rookery/Player_8]
+{@Margo}    Aw, good for them. Two years in a row!  $[Day3/Rookery/3rm03]
+
+$goto Day3.CheckScanComplete
+
+:: OnAlfredoEggIdentified
+@trigger	TabletIdentified
+@who        Player
+@when		objectId == "AlfredoEgg"
+@once
+@interrupt
+
+$set	chapter:scanCount + 1
+$if chapter:scanCount >= 5 
+    $set	chapter:finishedScan = true
+$endif
+//play egg hatching animation
+$call AlfredoEgg->Hatch()
+$call CompleteGoal("id_alfredo_nest")
+
+{@Player}   Look, Alfredo’s egg is hatching!  $[Day3/Rookery/Player_9]
+{@Margo}    I betcha those’ll be the most famous Adelie chicks on Youtube.  $[Day3/Rookery/3rm05]
+
+$goto Day3.CheckScanComplete
+
+:: OnFuzzEggIdentified
+@trigger	TabletIdentified
+@who        Player
+@when		objectId == "FuzzEgg"
+@once
+@interrupt
+
+$set chapter:scanCount + 1
+$if chapter:scanCount >= 5 
+    $set	chapter:finishedScan = true
+$endif
+$call CompleteGoal("id_fuzz_nest")
+
+{@Player}   Uh oh. Something’s not right here.  $[Day3/Rookery/Player_10]
+{@Player}    Maybe the eggs aren’t ready yet?  $[Day3/Rookery/Player_11]
+{@Margo}    I don’t know, kid.  $[Day3/Rookery/3rm06]
+{@Margo}    Looks like Daisy’s out gettin’ some food. It’s all up to Fuzz here. $[Day3/Rookery/3rm07]
+{@Margo}    He’s not warmin’ the egg like he’s supposed to. And it’s awful cold out here.  $[Day3/Rookery/3rm08]
+{@Player}   He’s brand new at this. Maybe he’ll figure it out.  $[Day3/Rookery/Player_12]
+{@Margo}    Well, he’d better hurry. Those eggs are gonna freeze fast.  $[Day3/Rookery/3rm09]
+
+$goto Day3.CheckScanComplete
+
+:: OnWinstonWendyIdentified
+@trigger	TabletIdentified
+@who        Player
+@when		objectId == "WinstonWendyChick"
+@once
+@interrupt
+
+$set chapter:scanCount + 1
+$if chapter:scanCount >= 5 
+    $set	chapter:finishedScan = true
+$endif
+$call CompleteGoal("id_winston_nest")
+
+{@Player}   Nice. A new chick for Winston and Wendy! $[Day3/Rookery/Player_13]
+{@Margo}    No surprise there. There’s a reason we call them “Old Faithful.”  $[Day3/Rookery/3rm10]
+{@Margo}    Winston and Wendy have had a successful chick every year.  $[Day3/Rookery/3rm11]
+{@Player}   Wow. Penguin Parents of the Year award! Keep it up, you two.    $[Day3/Rookery/Player_14]
+
+$goto Day3.CheckScanComplete
+
+:: OnPoloNestIdentified
+@trigger	TabletIdentified
+@who        Player
+@when		objectType == "PoloNest"
+@once
+@interrupt
+
+$set chapter:scanCount + 1
+$if chapter:scanCount >= 5 
+    $set	chapter:finishedScan = true
+$endif
+
+$call CompleteGoal("id_polo_nest")
+
+{@Player}   Whoa, wait a second. Weren’t there an egg here yesterday?   $[Day3/Rookery/Player_15]
+{@Player}   What happened to the egg?   $[Day3/Rookery/Player_16]
+{@Margo}    Oh no. Poor Polo.   $[Day3/Rookery/3rm12]
+{@Margo}    The skua must’ve been here. $[Day3/Rookery/3rm13]
+
+$goto Day3.CheckScanComplete
+
+::TabletIdentifiedRegurgWendy
+@trigger TabletBehaviorInstanceCaptured
+@who        Player
+@when	behaviorId == "day3_regurg"
+@once
+@interrupt
+
+$call ExclaimRegurg->Deactivate()
+$set chapter:regurgDone = true
+$call CompleteGoal("day3_regurg")
+
+$call SetCurrentMainGoal("place_back_trackers")
+$call CompleteMainGoal("capture_regurgitation")
+
+
+{@Player}	Wow… that’s slightly disgusting.	$[Day3/Rookery/Player_18]
+{@Margo}	Okay, looks like we’ve got enough feeding data! Nice work, kid.	$[Day3/Rookery/3rm17]
+
+$call DataLoggerPlate->Activate()
+$call DataTracker1->SetMeshEnabled(true)
+$call DataTracker2->SetMeshEnabled(true)
+$call DataTracker3->SetMeshEnabled(true)
+
+$set chapter:dataTrackersStarted = true
+//$call TurnOnSockets(DataSocketPenguin, true)
+$call DataTrackerBackHighlight1->Activate()
+$call DataTrackerBackHighlight3->Activate()
+$call DataTrackerBackHighlight4->Activate()
+
+{@Margo}	We need more data on what the parents get up to when they leave the nest. 	$[Day3/Rookery/3rm18]
+{@Margo}	You’ll need to attach a data logger to their backs.	$[Day3/Rookery/3rm19]
+{@Margo}	Grab a data logger from the Pelican Case.	$[Day3/Rookery/3rm20]
+{@Margo}	Place one hand on the penguin to stop them, and then attach the logger to their back.	$[Day3/Rookery/3rm21]
+
+
+:: OnGrabbedBackTracker
+@trigger ObjectGrabbed
+@when   objectType == "DataTracker"
+
+$if local:hand == "Left"
+$call LeftHandCollider->ReduceSize()
+$elseif local:hand == "Right"
+$call RightHandCollider->ReduceSize()
+$endif
+
+:: OnDroppedBackTracker
+@trigger ObjectDropped
+@when   objectType == "DataTracker"
+
+$if local:hand == "Left"
+$call LeftHandCollider->ResetSize()
+$elseif local:hand == "Right"
+$call RightHandCollider->ResetSize()
+$endif
+
+::	TrackerSocketed1
+@trigger ObjectSocketed
+@who	Player
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true, chapter:trackerSocketedCount == 0
+@interrupt
+
+$set chapter:trackerSocketedCount + 1
+{@Margo}	Nice work! Let’s do two more. 	$[Day3/Rookery/3rm22]
+
+$if local:socketId == "DataSocketBack1"
+$call CompleteGoal("goal_back_tracker_alfredo")
+$elseif local:socketId == "DataSocketBack3"
+$call CompleteGoal("goal_back_tracker_millie")
+$elseif local:socketId == "DataSocketBack4"
+$call CompleteGoal("goal_back_tracker_winston")
+$endif
+
+::	TrackerSocketed2
+@trigger ObjectSocketed
+@who	Player
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true, chapter:trackerSocketedCount == 1
+@interrupt
+
+$set chapter:trackerSocketedCount + 1
+
+$if local:socketId == "DataSocketBack1"
+$call CompleteGoal("goal_back_tracker_alfredo")
+$elseif local:socketId == "DataSocketBack3"
+$call CompleteGoal("goal_back_tracker_millie")
+$elseif local:socketId == "DataSocketBack4"
+$call CompleteGoal("goal_back_tracker_winston")
+$endif
+
+::	TrackerSocketed3
+@trigger ObjectSocketed
+@who	Player
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true, chapter:trackerSocketedCount == 2
+@interrupt
+
+$if local:socketId == "DataSocketBack1"
+$call CompleteGoal("goal_back_tracker_alfredo")
+$elseif local:socketId == "DataSocketBack3"
+$call CompleteGoal("goal_back_tracker_millie")
+$elseif local:socketId == "DataSocketBack4"
+$call CompleteGoal("goal_back_tracker_winston")
+$endif
+
+$set chapter:trackerSocketedCount + 1
+$set chapter:trackersSocketed = true
+$call CompleteMainGoal("place_back_trackers")
+
+{@Margo}	Great job. That should get us plenty of data.	$[Day3/Rookery/3rm23]
+//$call TurnOnSockets(DataSocketPenguin, false)
+$goto Day3.CheckAllComplete
+
+::	TrackerUnsocketed
+@trigger ObjectUnsocketed
+@who	Player
+@when 	objectType == "DataTracker", socketType == "DataSocketPenguin", chapter:dataTrackersStarted == true
+$set chapter:trackerSocketedCount - 1
+
+$if local:socketId == "DataSocketBack1"
+$call RemoveGoal("goal_back_tracker_alfredo")
+$elseif local:socketId == "DataSocketBack3"
+$call RemoveGoal("goal_back_tracker_millie")
+$elseif local:socketId == "DataSocketBack3"
+$call RemoveGoal("goal_back_tracker_winston")
+$endif
+
+
+:: CheckScanComplete
+@trigger	CheckScanComplete
+@who		Player
+
+$if chapter:finishedScan == true
+
+$call SetCurrentMainGoal("capture_regurgitation")
+$call CompleteMainGoal("scan_eggs_and_chicks")
+
+$call ExclaimRegurg->Activate()
+//$call Wendy->SetRegurgitation()
+
+{@Margo}	See if you can get some pictures of them feeding. I’ll let you know when we’ve got enough data.	$[Day3/Rookery/3rm15]
+
+//$call Billy->SetRegurgitation()
+
+$endif
+
+:: CheckAllComplete
+@trigger	CheckAllComplete
+@who		Player
+
+$if chapter:trackersSocketed == true, chapter:regurgDone == true, chapter:finishedScan == true
+$set chapter:day3AllComplete = true
+$call SetWarpActive(WarpBluffBack, true)
+$call WarpText->SetText("Warp back to the tent")
+{@Player}	Okay. Is that everything for today?	$[Day3/Rookery/Player_20]
+{@Margo}	Yep, looks like we've got all the data we need!	$[Day3/Rookery/3rm24]
+{@Player}	Phew, good. All this running around in the cold is making me hungry. $[Day3/Rookery/Player_21]
+$endif
+
+:: WarpedBackToTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:day3AllComplete, targetId == "WarpBluffBack"
+@interrupt
+@once
+
+$call Wait(1)
+$call TentDoor->Open()
+$call SetWarpActive(WarpBluffBack, false)
+$call SetWarpGroupActive(Rookery, false)
+$call SetWarpActive(WarpDesk, true)
+
+:: WarpedInsideTent
+@trigger    AtWarpPoint
+@who        Player
+@when       chapter:day3AllComplete, targetId == "WarpDesk"
+@interrupt
+
+$call BackgroundMusic->PlayIndoor()
+
+$call Wait(1)
+$call SetWarpActive(WarpDesk, true)
+
+$call DeskGlow->PlayAnimation()
+$call MargoDockParticles->PlayFX()
+
+{@Margo}    Okay, kiddo. Put me in the dock and let’s have a look at our findings! $[Day3/Tent/3tm5]
+
+$while !IsSocketedBy(DeskDock, Margo)
+$call Wait(0.5)
+$endwhile
+
+$call BigButton->SetButtonPressed(false)
+$call DeskGlow->StopAnimation()
+$call MargoDockParticles->StopFX()
+
+$while !ButtonPressed(BigButton)
+$call Wait(0.5)
+$endwhile
+
+$call MargoTabletFace->SetMeshEnabled(false)
+$call Screen->SetEnabled(true)
+$call Screen->SetTexture(0)
+
+$call Wait(2)
+
+$call MargoQuad->SetMeshEnabled(true)
+$call Screen->SetTexture(7)
+
+{@Margo}    You've got three successful breeding pairs. $[Day3/Tent/3tm6]
+
+{@Margo}    Millie and Billy, Alfredo and Meatball, and Winston and Wendy.  $[Day3/Tent/3tm7]
+{@Margo}    All the chicks seem to be doing well so far.    $[Day3/Tent/3tm8]
+{@Player}    Fuzz and Daisy's egg isnt lookin' too good.     $[Day3/Tent/3tm9]
+{@Margo}    Fuzz hasn't figured out how to keep it warm... I've got a bad feelin' that we won't see their egg hatch.    $[Day3/Tent/3tm10]
+{@Margo}    Polo and Benni lost their egg.    $[Day3/Tent/3tm11]
+
+$call Screen->SetTexture(8)
+
+{@Margo}    All the parents are feedin' their little ones krill, which is what we'd expect to see this time of year. Hence all the pink.    $[Day3/Tent/3tm12]
+{@Margo}    A month from now, the chicks should be waddlin' around on their own...  $[Day3/Tent/3tm13]
+{@Player}    Assuming the skua don't get to 'em first.   $[Day3/Tent/3tm14]
+{@Margo}    Another good day's work! And Merry Christmas! Are ya planning anything tonight? $[Day3/Tent/3tm15_latine]
+{@Player}   Oh, I think I'll have some ponche and call my family. They're probably out there partying with the neighbors.   $[Day3/Tent/PlayerCulture_4]
+
+$call FadeOut(6.0)
+$call Wait(6)
+
+$call LoadNextDay()

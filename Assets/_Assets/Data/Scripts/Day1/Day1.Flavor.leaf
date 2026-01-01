@@ -75,6 +75,25 @@
 
 {@Player}   I never ate so many candy bars at home, but I have to to keep my calories up here. $[Day1/Grab/CandyBar_Player_1]
 
+:: PickUpCandySkull
+@trigger    ObjectGrabbed
+@who        Player
+@when       objectType == "CandySkull"
+@priority	Low
+@once
+
+{@Player}	I remember as a kid I always wanted to eat these...	$[Day1/Tent/PlayerCulture_4]
+{@Player}	Do not recommend... Even though they're mostly sugar. 	$[Day1/Tent/PlayerCulture_5]
+
+:: PickUpTrumpo
+@trigger    ObjectGrabbed
+@who        Player
+@when       objectType == "Trumpo"
+@priority	Low
+@once
+
+{@Player}	Hmm, I lost the string to this trompo. ¿Dónde quedó?	$[Day1/Tent/PlayerCulture_6]
+
 :: LookAtBandedPenguin
 @trigger	PlayerLookAt
 @who		Player
