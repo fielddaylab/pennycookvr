@@ -62,7 +62,20 @@ namespace Pennycook {
             return pps.CulturalVersion;
         }
 
-        static public IEnumerator LoadDay(int dayIndex) {
+        static public int GetScriptVersion()
+        {
+            PlayerProgressState pps = Find.State<PlayerProgressState>();
+            //Debug.Log(pps.DayIndex);
+            if (pps.DayIndex == 0)
+            {
+                pps.ScriptVersion = (int)Random.Range(0, 3);
+            }
+
+            return pps.ScriptVersion;
+        }
+
+        static public IEnumerator LoadDay(int dayIndex)
+        {
             Find.State<PlayerProgressState>().DayIndex = dayIndex;
             return Routine.Start(GameLoop.Host, LoadDayRoutine(dayIndex)).Wait();
         }

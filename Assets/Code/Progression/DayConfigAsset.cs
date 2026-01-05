@@ -11,6 +11,11 @@ namespace Pennycook {
     public sealed class DayConfigAsset : NamedAsset {
         public SceneReference Scene;
         public LeafAsset[] Scripts;
+
+        public LeafAsset[] CulturalScripts;
+
+        public LeafAsset[] MidwestScripts;
+        
         public SceneReference[] AuxScenes;
 
         public GoalConfigAsset[] Goals;

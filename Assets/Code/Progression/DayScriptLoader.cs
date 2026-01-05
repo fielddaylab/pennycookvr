@@ -20,10 +20,33 @@ namespace Pennycook {
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             DayConfigAsset config = UniverseUtility.GetConfigForCurrentState();
+            int scriptVersion = UniverseUtility.GetScriptVersion();
 
-            m_LoadHandles = new UniqueId16[config.Scripts.Length];
-            for (int i = 0; i < config.Scripts.Length; i++) {
-                m_LoadHandles[i] = ScriptDBUtility.Load(config.Scripts[i]);
+            //Debug.Log("***: " + scriptVersion);
+            
+            if (scriptVersion == 0)
+            {
+                m_LoadHandles = new UniqueId16[config.Scripts.Length];
+                for (int i = 0; i < config.Scripts.Length; i++)
+                {
+                    m_LoadHandles[i] = ScriptDBUtility.Load(config.Scripts[i]);
+                }
+            }
+            else if (scriptVersion == 1)
+            {
+                m_LoadHandles = new UniqueId16[config.CulturalScripts.Length];
+                for (int i = 0; i < config.CulturalScripts.Length; i++)
+                {
+                    m_LoadHandles[i] = ScriptDBUtility.Load(config.CulturalScripts[i]);
+                }
+            }
+            else if (scriptVersion == 2)
+            {
+                m_LoadHandles = new UniqueId16[config.MidwestScripts.Length];
+                for (int i = 0; i < config.MidwestScripts.Length; i++)
+                {
+                    m_LoadHandles[i] = ScriptDBUtility.Load(config.MidwestScripts[i]);
+                }
             }
 
             UniverseUtility.LoadGoals(config);
