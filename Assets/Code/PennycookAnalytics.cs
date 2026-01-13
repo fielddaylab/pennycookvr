@@ -377,7 +377,7 @@ namespace Pennycook.Data {
                 _loggingEnabled = false;
             }
 
-            if (!string.IsNullOrEmpty(_firebase.ApiKey))
+            //if (!string.IsNullOrEmpty(_firebase.ApiKey))
             {
                 _ogdLog.UseFirebase(_firebase);
             }

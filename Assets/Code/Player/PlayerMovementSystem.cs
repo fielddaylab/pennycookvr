@@ -9,16 +9,26 @@ using Pennycook.Tablet;
 namespace Pennycook {
     [SysUpdate(GameLoopPhase.Update, 10)]
     public class PlayerMovementSystem : SharedStateSystemBehaviour<PlayerRig, XRInputState, PlayerMovementState> {
-        public override void ProcessWork(float deltaTime) {
+        
+        float _gazeLogTimer = 0f;
+		const float GAZE_LOG_TIMER_SEND = 1.0f;
+		uint _gazeLogFrameCount = 0;
+
+        public override void ProcessWork(float deltaTime)
+        {
             var eitherHandButtons = m_StateB.LeftHand.Buttons | m_StateB.RightHand.Buttons;
-            if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisLeft)) {
-                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
+            if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisLeft))
+            {
+                using (var move = new PlayerRigUtils.MovementRequest(m_StateA))
+                {
                     move.Rotate(new Vector3(0, -30, 0));
                     VRGame.Events.Dispatch(GameEvents.PlayerRotate, EvtArgs.Create(new Data.RotateInfo(move.Rig.MoveRoot.rotation, Data.RotationDirectionType.CCW, -30f)));
                 }
             }
-            if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisRight)) {
-                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
+            if (eitherHandButtons.ConsumePress(XRHandButtons.PrimaryAxisRight))
+            {
+                using (var move = new PlayerRigUtils.MovementRequest(m_StateA))
+                {
                     move.Rotate(new Vector3(0, 30, 0));
                     VRGame.Events.Dispatch(GameEvents.PlayerRotate, EvtArgs.Create(new Data.RotateInfo(move.Rig.MoveRoot.rotation, Data.RotationDirectionType.CW, 30f)));
                 }
@@ -29,39 +39,51 @@ namespace Pennycook {
             flattenedLook.Normalize();
             flattenedLook *= 0.8f;
 
-            if (m_StateB.LeftHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisUp)) {
-                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
-                    if(TryMove(move.Rig.HeadRoot.position, flattenedLook, m_StateC.CurrentWarp)) {
+            if (m_StateB.LeftHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisUp))
+            {
+                using (var move = new PlayerRigUtils.MovementRequest(m_StateA))
+                {
+                    if (TryMove(move.Rig.HeadRoot.position, flattenedLook, m_StateC.CurrentWarp))
+                    {
                         move.Translate(flattenedLook);
-                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position+flattenedLook, Data.DirectionType.FORWARD, 0.8f)));
+                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position + flattenedLook, Data.DirectionType.FORWARD, 0.8f)));
                         TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
             }
-            if (m_StateB.LeftHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisDown)) {
-                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
-                    if(TryMove(move.Rig.HeadRoot.position, -flattenedLook, m_StateC.CurrentWarp)) {
+            if (m_StateB.LeftHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisDown))
+            {
+                using (var move = new PlayerRigUtils.MovementRequest(m_StateA))
+                {
+                    if (TryMove(move.Rig.HeadRoot.position, -flattenedLook, m_StateC.CurrentWarp))
+                    {
                         move.Translate(-flattenedLook);
-                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position-flattenedLook, Data.DirectionType.BACKWARD, 0.8f)));
+                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position - flattenedLook, Data.DirectionType.BACKWARD, 0.8f)));
                         TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, -flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
             }
 
-            if (m_StateB.RightHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisUp)) {
-                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
-                    if(TryMove(move.Rig.HeadRoot.position, flattenedLook, m_StateC.CurrentWarp)) {
+            if (m_StateB.RightHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisUp))
+            {
+                using (var move = new PlayerRigUtils.MovementRequest(m_StateA))
+                {
+                    if (TryMove(move.Rig.HeadRoot.position, flattenedLook, m_StateC.CurrentWarp))
+                    {
                         move.Translate(flattenedLook);
-                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position+flattenedLook, Data.DirectionType.FORWARD, 0.8f)));
+                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position + flattenedLook, Data.DirectionType.FORWARD, 0.8f)));
                         TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
             }
-            if (m_StateB.RightHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisDown)) {
-                using (var move = new PlayerRigUtils.MovementRequest(m_StateA)) {
-                    if(TryMove(move.Rig.HeadRoot.position, -flattenedLook, m_StateC.CurrentWarp)) {
+            if (m_StateB.RightHand.Buttons.ConsumePress(XRHandButtons.PrimaryAxisDown))
+            {
+                using (var move = new PlayerRigUtils.MovementRequest(m_StateA))
+                {
+                    if (TryMove(move.Rig.HeadRoot.position, -flattenedLook, m_StateC.CurrentWarp))
+                    {
                         move.Translate(-flattenedLook);
-                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position-flattenedLook, Data.DirectionType.BACKWARD, 0.8f)));
+                        VRGame.Events.Dispatch(GameEvents.PlayerNavigate, EvtArgs.Create(new Data.NavigateInfo(move.Rig.MoveRoot.position - flattenedLook, Data.DirectionType.BACKWARD, 0.8f)));
                         TryMoveCase(move.Rig.HeadRoot.position, flattenedLook, -flattenedLook, m_StateC.CurrentWarp);
                     }
                 }
@@ -75,6 +97,30 @@ namespace Pennycook {
             }
 
 #endif // UNITY_EDITOR
+
+            Data.PennycookAnalytics w = Find.State<Data.PennycookAnalytics>();
+			if(w != null) {
+				
+				float t = UnityEngine.Time.time;
+
+				if(t - _gazeLogTimer > GAZE_LOG_TIMER_SEND) {
+					_gazeLogTimer = t;
+
+					w.LogGaze(m_StateA.HeadRoot.position, m_StateA.HeadLook.rotation, _gazeLogFrameCount, true);
+					
+					_gazeLogFrameCount++;
+				}
+				else {
+					if(_gazeLogFrameCount % 2 == 0) {
+						bool sentData = w.LogGaze(m_StateA.HeadRoot.position, m_StateA.HeadLook.rotation, _gazeLogFrameCount);
+						if(sentData) {
+							_gazeLogTimer = t;
+						}
+					}
+					
+					_gazeLogFrameCount++;
+				}
+			}
         }
 
         private void TryMoveCase(Vector3 root, Vector3 look, Vector3 translation, TabletWarpPoint warpPoint) {
