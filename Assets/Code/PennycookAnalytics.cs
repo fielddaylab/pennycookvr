@@ -661,7 +661,7 @@ namespace Pennycook.Data {
         
         public long GetSessionID() { return _ogdLog.GetSessionId();}
 
-        public void LogStartGame()
+        public void LogStartGame(string assetStyle, string scriptStyle)
         {
             if (_loggingEnabled)
             {
@@ -679,6 +679,9 @@ namespace Pennycook.Data {
                 _ogdLog.SubmitEvent();
 
                 _ogdLog.BeginEvent("game_start");
+                _ogdLog.EventParam("asset_style", assetStyle);
+                _ogdLog.EventParam("script_style", scriptStyle);
+                
                 _ogdLog.SubmitEvent();
             }
         }

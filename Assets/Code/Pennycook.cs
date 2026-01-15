@@ -3,6 +3,7 @@ using FieldDay.HID.XR;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
 using UnityEngine.SceneManagement;
+using UnityEngine;
 
 namespace Pennycook {
     public class VRGame : Game {
@@ -37,7 +38,38 @@ namespace Pennycook {
                     {
                         if (pa)
                         {
-                            pa.LogStartGame();
+                            string assetStyle = "";
+                            string scriptStyle = "";
+
+                            if (state.CulturalVersion == 0)
+                            {
+                                assetStyle = "DEFAULT";
+                            }
+                            else if (state.CulturalVersion == 1)
+                            {
+                                assetStyle = "MEXICAN_AMERICAN";
+                            }
+                            else if (state.CulturalVersion == 2)
+                            {
+                                assetStyle = "MIDDLE_AMERICAN";
+                            }
+
+                            if (state.ScriptVersion == 0)
+                            {
+                                scriptStyle = "DEFAULT";
+                            }
+                            else if (state.ScriptVersion == 1)
+                            {
+                                scriptStyle = "CULTURAL";
+                            }
+                            else if (state.ScriptVersion == 2)
+                            {
+                                scriptStyle = "MIDWEST";
+                            }
+
+                            //Debug.Log(assetStyle + " " + scriptStyle);
+
+                            pa.LogStartGame(assetStyle, scriptStyle);
                         }
                     }
                 }
