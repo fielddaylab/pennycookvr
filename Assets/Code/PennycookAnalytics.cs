@@ -302,7 +302,7 @@ namespace Pennycook.Data {
     public class PennycookAnalytics : SharedStateComponent
     {
         public static bool FirebaseEnabled { get; set; }
-        public static int logVersion = 2;
+        public static int logVersion = 3;
 
         static string _DB_NAME = "PENNYCOOK";
 
