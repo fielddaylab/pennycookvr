@@ -60,7 +60,7 @@ namespace Pennycook {
                             }
                             else if (state.ScriptVersion == 1)
                             {
-                                scriptStyle = "CULTURAL";
+                                scriptStyle = "MEXICAN_AMERICAN";
                             }
                             else if (state.ScriptVersion == 2)
                             {
