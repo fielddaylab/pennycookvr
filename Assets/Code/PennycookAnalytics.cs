@@ -302,7 +302,7 @@ namespace Pennycook.Data {
     public class PennycookAnalytics : SharedStateComponent
     {
         public static bool FirebaseEnabled { get; set; }
-        public static int logVersion = 3;
+        public static int logVersion = 4;
 
         static string _DB_NAME = "PENNYCOOK";
 
@@ -315,6 +315,9 @@ namespace Pennycook.Data {
 
         [SerializeField]
         bool _loggingEnabled = true;
+
+        [SerializeField]
+        string ServerURL;
 
         [NonSerialized] int _viewportDataCount = 0;
         const int MAX_VIEWPORT_DATA = 36;
@@ -386,6 +389,8 @@ namespace Pennycook.Data {
             //_ogdLog.ConfigureLocalValidation();
 
             _ogdLog.SetDebug(m_Debug);
+
+            OGD.Core.Configure(ServerURL, _DB_NAME);
         }
 
         void OnDestroy()
@@ -608,11 +613,11 @@ namespace Pennycook.Data {
 
         #region Logging
 
-        public void SetUserID(int code)
+        public void SetUserID(string code)
         {
             if (_loggingEnabled)
             {
-                _ogdLog.SetUserId(code.ToString());
+                _ogdLog.SetUserId(code);
             }
         }
 
